@@ -4,41 +4,24 @@ import { FetchStockReport, FetchStockReportExcel } from "redux/actions/report/in
 import connect from "react-redux/es/connect/connect";
 import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
 import StockReportExcel from "components/App/modals/report/inventory/stock_report/form_stock_report_excel";
-import moment from "moment";
 import { FetchStockReportDetailSatuan } from "redux/actions/report/inventory/stock_report.action";
 import { HEADERS } from "redux/actions/_constants";
-import { CURRENT_DATE, dateRange, generateNo, getStorage, getWhere, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
-import LokasiCommon from "../../../common/LokasiCommon";
-import SelectCommon from "../../../common/SelectCommon";
+import { CURRENT_DATE, float, generateNo, getFetchWhere, getPeriode, getStorage, isEmptyOrUndefined, noData, parseToRp } from "../../../../../helper";
+
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
 import { STATUS_STOK } from "../../../../../helperStatus";
-
-const dateFromStorage = "dateFromReportStock";
-const dateToStorage = "dateToReportStock";
-const locationStorage = "locationReportStock";
-const filterStorage = "filterReportStock";
-const searchByStorage = "searchByReportStock";
-const anyStorage = "anyReportStock";
-const activeDateRangePickerStorage = "activeDateReportStock";
 
 class InventoryReport extends Component {
   constructor(props) {
     super(props);
-    this.handleSelect = this.handleSelect.bind(this);
     this.handleModal = this.handleModal.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
     this.state = {
       where_data: `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`,
-      isSelected: false,
-      location: "",
-      location_data: [],
+      periode: "",
       bukaHarga: false,
-      status: "",
-      any: "",
-      startDate: CURRENT_DATE,
-      endDate: CURRENT_DATE,
-      search_by: "br.kd_brg",
+      location: "",
       search_by_data: [
         { value: "", label: "Semua" },
         { value: "br.kd_brg", label: "Kode Barang" },
@@ -54,80 +37,40 @@ class InventoryReport extends Component {
     this.setState({ isModalDetail: false, isModalExcel: false });
   }
 
-  componentDidMount() {
-    this.handleService();
-  }
-  componentWillMount() {
-    this.handleService();
-  }
   handlePageChange(pageNumber) {
-    this.handleService(pageNumber);
+    this.handleService(this.state.where_data, pageNumber);
   }
 
-  handleService(page = 1) {
-    let getDateFrom = getStorage(dateFromStorage);
-    let getDateTo = getStorage(dateToStorage);
-    let getLocation = getStorage(locationStorage);
-    let getStatus = getStorage(filterStorage);
-    let getSearchBy = getStorage(searchByStorage);
-    let getAny = getStorage(anyStorage);
-
-    let where = `page=${page}`;
-    let state = { bukaHarga: false };
-
-    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
-      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
-      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
-    } else {
-      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where, bukaHarga: false, location: "" };
+      let lokasi = getStorage("locationStorageReportStock");
+      if (isEmptyOrUndefined(lokasi)) {
+        Object.assign(state, { location: lokasi, bukaHarga: true });
+      }
+      this.setState(state);
+      this.props.dispatch(FetchStockReport(where));
     }
-    if (isEmptyOrUndefined(getLocation)) {
-      where += `&lokasi=${getLocation}`;
-      Object.assign(state, { location: getLocation, bukaHarga: true });
-    }
-
-    if (isEmptyOrUndefined(getStatus)) {
-      where += `&filter_stock=${getStatus}`;
-      Object.assign(state, { status: getStatus });
-    }
-    if (isEmptyOrUndefined(getSearchBy)) {
-      where += `&search_by=${getSearchBy}`;
-      Object.assign(state, { search_by: getSearchBy });
-    }
-    if (isEmptyOrUndefined(getAny)) {
-      where += `&q=${getAny}`;
-      Object.assign(state, { any: getAny });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-    this.props.dispatch(FetchStockReport(where));
   }
-  handleSelect(state, res) {
-    if (state === "location") setStorage(locationStorage, res.value);
-    if (state === "status") setStorage(filterStorage, res.value);
-    if (state === "search_by") setStorage(searchByStorage, res.value);
-    this.setState({ [state]: res.value });
-    this.handleService();
-  }
+
   handleModal(param, obj) {
-    let whereState = getWhere(this.state.where_data);
-    let where = `page=1${whereState}&lokasi=${this.state.location}`;
-    let state = {};
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let state = { periode: periode, where_data: where };
+
     if (param === "formSaleExcel") {
       Object.assign(state, { isModalExcel: true });
       this.props.dispatch(FetchStockReportExcel(1, where, obj.total));
     } else {
+      console.log(this.state.location);
       if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
       Object.assign(obj, { where_data: where });
       Object.assign(state, { isModalDetail: true, detail: obj });
       this.props.dispatch(FetchStockReportDetailSatuan(obj.kd_brg, where));
     }
     this.setState(state);
-  }
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService(1);
   }
 
   render() {
@@ -145,8 +88,9 @@ class InventoryReport extends Component {
     let total_stock_harga_beli_per = 0;
     let total_stock_harga_jual_per = 0;
 
-    const { bukaHarga, startDate, endDate, location, status, any, search_by_data, search_by, isModalExcel, isModalDetail } = this.state;
-
+    const { bukaHarga, periode, search_by_data, location, detail, isModalExcel, isModalDetail } = this.state;
+    const startDate = periode.split("-")[0];
+    const endDate = periode.split("-")[1];
     let head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
@@ -172,62 +116,20 @@ class InventoryReport extends Component {
 
     return (
       <Layout page="Laporan Stock">
-        <div className="row">
-          <div className="col-6 col-xs-6 col-md-2">
-            {dateRange(
-              (first, last, isActive) => {
-                setStorage(activeDateRangePickerStorage, isActive);
-                setStorage(dateFromStorage, first);
-                setStorage(dateToStorage, last);
-                this.handleService();
-              },
-              `${toDate(startDate)} - ${toDate(endDate)}`,
-              getStorage(activeDateRangePickerStorage)
-            )}
-          </div>
-
-          <div className="col-6 col-xs-6 col-md-2">
-            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
-          </div>
-
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Status" options={STATUS_STOK} callback={(res) => this.handleSelect("status", res)} dataEdit={status} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Kolom" options={search_by_data} callback={(res) => this.handleSelect("search_by", res)} dataEdit={search_by} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <label>Cari</label>
-            <div className="input-group">
-              <input
-                type="search"
-                name="any"
-                className="form-control"
-                placeholder="tulis sesuatu disini"
-                value={any}
-                onChange={(e) => this.setState({ any: e.target.value })}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") this.handleSearch(e);
-                }}
-              />
-              <span className="input-group-append">
-                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-                <button
-                  className="btn btn-primary ml-1"
-                  onClick={(e) => {
-                    this.handleModal("formSaleExcel", {
-                      total: last_page * per_page,
-                    });
-                  }}
-                >
-                  {isProgress(this.props.download)}
-                </button>
-              </span>
-            </div>
-          </div>
-        </div>
+        <HeaderReportCommon
+          col="col-md-2"
+          pathName="ReportStock"
+          isLocation={true}
+          isStatus={true}
+          isColumn={true}
+          statusData={STATUS_STOK}
+          columnData={search_by_data}
+          otherStatus="filter_stock"
+          otherColumn="search_by"
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal("formSaleExcel", { total: last_page * per_page })}
+          excelData={this.props.download}
+        />
         <TableCommon
           head={head}
           rowSpan={rowSpan}
@@ -241,13 +143,13 @@ class InventoryReport extends Component {
           renderRow={
             typeof data === "object"
               ? data.map((v, i) => {
-                  const stockAwal = parseFloat(v.stock_awal);
-                  const stockMasuk = parseFloat(v.stock_masuk);
-                  const stockKeluar = parseFloat(v.stock_keluar);
-                  const hrgBeliPerLokasi = parseFloat(v.harga_beli_lokasi);
-                  const hrgJualPerLokasi = parseFloat(v.harga_lokasi);
-                  const stockPenjualan = parseFloat(v.stock_penjualan);
-                  const stockAkhir = stockAwal + stockMasuk - (stockKeluar + parseFloat(v.stock_penjualan));
+                  const stockAwal = float(v.stock_awal);
+                  const stockMasuk = float(v.stock_masuk);
+                  const stockKeluar = float(v.stock_keluar);
+                  const hrgBeliPerLokasi = float(v.harga_beli_lokasi);
+                  const hrgJualPerLokasi = float(v.harga_lokasi);
+                  const stockPenjualan = float(v.stock_penjualan);
+                  const stockAkhir = float(stockAwal + stockMasuk - (stockKeluar + parseFloat(v.stock_penjualan)));
 
                   total_stock_harga_beli_item_per += hrgBeliPerLokasi;
                   total_stock_harga_jual_item_per += hrgJualPerLokasi;
@@ -276,16 +178,16 @@ class InventoryReport extends Component {
                       <td className="middle nowrap">{v.nm_brg}</td>
                       <td className="middle nowrap">{v.nama_kel}</td>
 
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgBeliPerLokasi)}</td>
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgJualPerLokasi)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgBeliPerLokasi)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgJualPerLokasi)}</td>
 
-                      <td className="text-right middle nowrap">{stockAwal}</td>
-                      <td className="text-right middle nowrap">{stockMasuk}</td>
-                      <td className="text-right middle nowrap">{stockKeluar}</td>
-                      <td className="text-right middle nowrap">{v.stock_penjualan}</td>
-                      <td className="text-right middle nowrap">{stockAkhir}</td>
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgBeliPerLokasi * stockAkhir)}</td>
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgJualPerLokasi * stockAkhir)}</td>
+                      <td className="text-right middle nowrap">{parseToRp(stockAwal)}</td>
+                      <td className="text-right middle nowrap">{parseToRp(stockMasuk)}</td>
+                      <td className="text-right middle nowrap">{parseToRp(stockKeluar)}</td>
+                      <td className="text-right middle nowrap">{parseToRp(v.stock_penjualan)}</td>
+                      <td className="text-right middle nowrap">{parseToRp(stockAkhir)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgBeliPerLokasi * stockAkhir)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgJualPerLokasi * stockAkhir)}</td>
                       <td className="middle nowrap">{v.supplier}</td>
                       <td className="middle nowrap">{v.sub_dept}</td>
                     </tr>
@@ -297,37 +199,37 @@ class InventoryReport extends Component {
             {
               data: [
                 { colSpan: 7, label: "Total perhalaman", className: "text-left" },
-                { colSpan: 1, label: toRp(total_stock_harga_beli_item_per), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: toRp(total_stock_harga_jual_item_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: toRp(total_stock_awal_per) },
-                { colSpan: 1, label: toRp(total_stock_masuk_per) },
-                { colSpan: 1, label: toRp(total_stock_keluar_per) },
-                { colSpan: 1, label: toRp(total_stock_penjualan_per) },
-                { colSpan: 1, label: toRp(total_stock_akhir_per) },
-                { colSpan: 1, label: toRp(total_stock_harga_beli_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: toRp(total_stock_harga_jual_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_stock_harga_beli_item_per), className: `text-right ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_stock_harga_jual_item_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_stock_awal_per) },
+                { colSpan: 1, label: parseToRp(total_stock_masuk_per) },
+                { colSpan: 1, label: parseToRp(total_stock_keluar_per) },
+                { colSpan: 1, label: parseToRp(total_stock_penjualan_per) },
+                { colSpan: 1, label: parseToRp(total_stock_akhir_per) },
+                { colSpan: 1, label: parseToRp(total_stock_harga_beli_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_stock_harga_jual_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
                 { colSpan: 2, label: "" },
               ],
             },
             {
               data: [
                 { colSpan: 7, label: "Total keseluruhan", className: "text-left" },
-                { colSpan: 1, label: toRp(total_harga_beli), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: toRp(total_harga_jual), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: toRp(total_stock_awal) },
-                { colSpan: 1, label: toRp(total_stock_masuk) },
-                { colSpan: 1, label: toRp(total_stock_keluar) },
-                { colSpan: 1, label: toRp(total_stock_penjualan) },
-                { colSpan: 1, label: toRp(total_stock_akhir) },
-                { colSpan: 1, label: toRp(total_harga_beli_qty), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: toRp(total_harga_jual_qty), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_harga_beli), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_harga_jual), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_stock_awal) },
+                { colSpan: 1, label: parseToRp(total_stock_masuk) },
+                { colSpan: 1, label: parseToRp(total_stock_keluar) },
+                { colSpan: 1, label: parseToRp(total_stock_penjualan) },
+                { colSpan: 1, label: parseToRp(total_stock_akhir) },
+                { colSpan: 1, label: parseToRp(total_harga_beli_qty), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_harga_jual_qty), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
                 { colSpan: 2, label: "" },
               ],
             },
           ]}
         />
-        {this.props.isOpen && isModalDetail ? <DetailStockReportSatuan stockReportDetailSatuan={this.props.stockReportDetailSatuan} detail={this.state.detail} /> : null}
-        {this.props.isOpen && isModalExcel ? <StockReportExcel startDate={startDate} endDate={endDate} lokasi={this.state.location} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailStockReportSatuan stockReportDetailSatuan={this.props.stockReportDetailSatuan} detail={detail} /> : null}
+        {this.props.isOpen && isModalExcel ? <StockReportExcel startDate={startDate} endDate={endDate} lokasi={location} /> : null}
       </Layout>
     );
   }
@@ -340,9 +242,7 @@ const mapStateToProps = (state) => {
     stockReportExcel: state.stockReportReducer.report_excel,
     total_stock: state.stockReportReducer.total_stock,
     auth: state.auth,
-    isLoading: state.stockReportReducer.isLoading,
     stockReportDetailSatuan: state.stockReportReducer.dataDetailSatuan,
-    isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

@@ -1,93 +1,101 @@
-import React,{Component} from 'react';
-import {ModalBody, ModalHeader} from "reactstrap";
+import React, { Component } from "react";
+import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle} from "redux/actions/modal.action";
-import { toCurrency } from '../../../../../../helper';
-class DetailProduction extends Component{
-    constructor(props){
-        super(props);
-        this.toggle = this.toggle.bind(this);
-    }
-    toggle(e){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        localStorage.removeItem("code");
-        localStorage.removeItem("barcode");
-        localStorage.removeItem("name");
-    };
+import { ModalToggle } from "redux/actions/modal.action";
+import { noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../../../helper";
+import { statusProduksi } from "../../../../../../helperStatus";
+import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
+import TableCommon from "../../../../common/TableCommon";
 
-    render(){
-        
-        const {data} = this.props.productionDetail;
-        
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let t_amount = 0;
-        return (
-            <div>
-                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduction"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
-                    <ModalHeader toggle={this.toggle}>Detail Production</ModalHeader>
-                    <ModalBody>
-                        <div className="table-responsive" style={{overflowX: "auto"}}>
-                            <table className="table table-hover table-bordered">
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Product Code</th>
-                                    <th className="text-black" style={columnStyle}>Code</th>
-                                    <th className="text-black" style={columnStyle}>Product Name</th>
-                                    <th className="text-black" style={columnStyle}>Barcode</th>
-                                    <th className="text-black" style={columnStyle}>Type</th>
-                                    <th className="text-black" style={columnStyle}>Qty</th>
-                                    <th className="text-black" style={columnStyle}>Buy Price</th>
-                                    <th className="text-black" style={columnStyle}>Amount</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    (
-                                        typeof data === 'object' ? data.length > 0 ?
-                                            data.map((v,i)=>{
-                                                t_amount +=parseFloat(v.harga_beli*v.qty);
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={{textAlign:"right"}}>{v.kd_produksi}</td>
-                                                        <td style={{textAlign:"right"}}>{v.kd_brg}</td>
-                                                        <td style={{textAlign:"right"}}>{v.nm_brg}</td>
-                                                        <td style={{textAlign:"right"}}>{v.barcode}</td>
-                                                        <td style={{textAlign:"right"}}>{v.satuan}</td>
-                                                        <td style={{textAlign:"right"}}>{v.qty}</td>
-                                                        <td style={{textAlign:"right"}}>{toCurrency(v.harga_beli)}</td>
-                                                        <td style={{textAlign:"right"}}>{toCurrency(v.harga_beli*v.qty)}</td>
-                                                    </tr>
-                                                )
-                                            }) : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
-                                }
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colSpan="7">Total</td>
-                                        <td style={{textAlign:"right"}}>{toCurrency(t_amount)}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </ModalBody>
+class DetailProduction extends Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+  }
+  toggle(e) {
+    e.preventDefault();
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+  }
 
-                </WrapperModal>
-            </div>
-        );
-    }
+  render() {
+    const { data } = this.props.productionDetail;
+    let master = this.props.detail;
+    let totalAmountPerHalaman = 0;
+    let totalQtyPerHalaman = 0;
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { colSpan: 4, label: "Bahan" },
+      { rowSpan: 2, label: "Qty" },
+      { rowSpan: 2, label: "Harga jual" },
+      { rowSpan: 2, label: "Total" },
+    ];
+    const rowSpan = [{ label: "Kode" }, { label: "Barcode" }, { label: "Nama" }, { label: "Satuan" }];
+    return (
+      <div>
+        <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduction"} size="lg">
+          <ModalHeader toggle={this.toggle}>Detail laporan produksi</ModalHeader>
+          <ModalBody>
+            <HeaderDetailCommon
+              data={[
+                { title: "Kode produksi", desc: master.kd_produksi },
+                { title: "Tanggal", desc: toDate(master.tanggal) },
+                { title: "Paket", desc: master.nm_brg },
+                { title: "Qty estimasi", desc: parseToRp(master.qty_estimasi) },
+                { title: "Lokasi", desc: master.nama_toko },
+                { title: "Hpp", desc: parseToRp(master.hpp) },
+                { title: "Status", desc: statusProduksi(master.status.toString()) },
+                { title: "Operator", desc: rmSpaceToStrip(master.operator) },
+              ]}
+            />
+            <TableCommon
+              head={head}
+              rowSpan={rowSpan}
+              renderRow={
+                typeof data === "object"
+                  ? data.length > 0
+                    ? data.map((v, i) => {
+                        totalAmountPerHalaman += parseFloat(v.harga_beli * v.qty);
+                        totalQtyPerHalaman += parseFloat(v.qty);
+                        return (
+                          <tr key={i}>
+                            <td className="middle nowrap">{i + 1}</td>
+                            <td className="middle nowrap">{v.kd_brg}</td>
+                            <td className="middle nowrap">{v.barcode}</td>
+                            <td className="middle nowrap">{v.nm_brg}</td>
+                            <td className="middle nowrap">{v.satuan}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.qty)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.harga_beli)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.harga_beli * v.qty)}</td>
+                          </tr>
+                        );
+                      })
+                    : noData(head.length)
+                  : noData(head.length)
+              }
+              footer={[
+                {
+                  data: [
+                    { colSpan: 5, label: "Total perhalaman", className: "text-left" },
+                    { colSpan: 1, label: parseToRp(totalQtyPerHalaman) },
+                    { colSpan: 1, label: "" },
+                    { colSpan: 1, label: parseToRp(totalAmountPerHalaman) },
+                  ],
+                },
+              ]}
+            />
+          </ModalBody>
+        </WrapperModal>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    
-    return {
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-        // stockReportDetailProduction:state.stockReportReducer.dataDetailTransaksi,
-        isLoading: state.stockReportReducer.isLoading,
-    }
-}
-// const mapDispatch
+  return {
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+  };
+};
 export default connect(mapStateToProps)(DetailProduction);

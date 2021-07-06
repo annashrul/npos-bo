@@ -51,11 +51,10 @@ class StockReportExcel extends Component {
             props[i].push(parseFloat(v.harga_beli_lokasi) * stockAkhir);
             props[i].push(parseFloat(v.harga_lokasi) * stockAkhir);
           }
-          return props;
         });
       }
     }
-    // return props;
+    return props;
   }
   isNull(val) {
     if (val) {
@@ -88,7 +87,7 @@ class StockReportExcel extends Component {
     let header = this.handleHeader();
     let content = this.handleContent();
     let footer = this.handleFooter();
-    toExcel("LAPORAN STOK", `${this.props.startDate} - ${this.props.endDate}`, header, content, footer, param);
+    toExcel(`LAPORAN STOK ${this.props.lokasi.replaceAll("/", "")}`, `${this.props.startDate} - ${this.props.endDate}`, header, content, footer, param);
     this.props.dispatch(ModalToggle(false));
   }
 

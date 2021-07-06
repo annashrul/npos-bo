@@ -13,7 +13,7 @@ class SaleReturReportExcel extends Component {
   }
 
   handleHeader() {
-    return ["NO", "KODE TRANSAKSI", "TANGGAL", "NAMA", "NILAI RETUR", "DISKON ITEM"];
+    return ["NO", "KODE TRANSAKSI", "NAMA", "NILAI RETUR", "DISKON ITEM", "LOKASI", "TANGGAL"];
   }
 
   handleContent(cek = "excel") {
@@ -22,7 +22,7 @@ class SaleReturReportExcel extends Component {
     if (data !== undefined) {
       if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
-          props.push([i + 1, data[i].kd_trx, toDate(data[i].tgl), data[i].nama, data[i].nilai_retur, data[i].diskon_item]);
+          props.push([i + 1, data[i].kd_trx, data[i].nama, data[i].nilai_retur, data[i].diskon_item, data[i].lokasi, toDate(data[i].tgl)]);
           cek === "excel" && props[i].shift();
         }
       }

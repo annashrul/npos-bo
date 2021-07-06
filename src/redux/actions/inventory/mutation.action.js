@@ -276,10 +276,10 @@ export const FetchMutation = (where = "") => {
   };
 };
 
-export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchMutationExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let url = `mutasi/report?page=${page}&perpage=${perpage}`;
-    if (where !== "") url += where;
+    let url = `mutasi/report?perpage=${perpage}`;
+    if (where !== "") url += `&${where}`;
     handleGetExport(
       url,
       (res) => {

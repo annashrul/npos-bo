@@ -3,8 +3,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { setLoadingbrg } from "../masterdata/product/product.action";
-import { handleGet } from "../handleHttp";
+import { handleGet, handleGetExport, handlePost } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+import { swal } from "../../../helper";
 
+export function setDownload(load) {
+  return { type: PRODUKSI.DOWNLOAD, load };
+}
 export function setLoading(load) {
   return { type: PRODUKSI.LOADING, load };
 }
@@ -49,14 +54,7 @@ export const FetchCodeProduksi = (lokasi) => {
   };
 };
 
-export const FetchBrgProduksiBahan = (
-  page = 1,
-  by = "barcode",
-  q = "",
-  lokasi = null,
-  db,
-  perpage = ""
-) => {
+export const FetchBrgProduksiBahan = (page = 1, by = "barcode", q = "", lokasi = null, db, perpage = "") => {
   return (dispatch) => {
     let url = `barang/get?page=${page}&kategori=4`;
     if (q !== "") url += `&q=${q}&searchby=${by}`;
@@ -70,6 +68,7 @@ export const FetchBrgProduksiBahan = (
           const barang = data.result.data;
           const cek = db(barang[0].kd_brg, barang);
           cek.then((re) => {
+            console.log(re);
             dispatch(setProduksiBahan(data));
             dispatch(setLoading(false));
           });
@@ -111,12 +110,7 @@ export const FetchBrgProduksiBahan = (
     //   });
   };
 };
-export const FetchBrgProduksiPaket = (
-  page = 1,
-  by = "barcode",
-  q = "",
-  lokasi = null
-) => {
+export const FetchBrgProduksiPaket = (page = 1, by = "barcode", q = "", lokasi = null) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     let url = `barang/get?page=${page}&kategori=2`;
@@ -144,7 +138,7 @@ export const FetchBrgProduksiPaket = (
   };
 };
 
-export const storeProduksi = (data) => {
+export const storeProduksi = (data, callback) => {
   return (dispatch) => {
     Swal.fire({
       allowOutsideClick: false,
@@ -169,19 +163,13 @@ export const storeProduksi = (data) => {
           html: `<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(
             data.result.total_hpp,
             10
-          )}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(
-            data.result.hpp_peritem,
-            10
-          )}</td></tr></tbody></table>`,
+          )}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem, 10)}</td></tr></tbody></table>`,
           icon: "success",
           showCancelButton: false,
           cancelButtonColor: "#2196F3",
           cancelButtonText: "Oke!",
         }).then((result) => {
-          destroy("production");
-          localStorage.removeItem("location_produksi");
-          localStorage.removeItem("barang_paket_produksi");
-          window.location.reload(false);
+          callback();
         });
         dispatch(setLoading(false));
       })
@@ -192,8 +180,7 @@ export const storeProduksi = (data) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -202,120 +189,56 @@ export const storeProduksi = (data) => {
   };
 };
 
-export const storeApproval = (data) => {
+export const storeApproval = (data, where = "") => {
+  return (dispatch) => {
+    handlePost(`production/approve`, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchProduction(where));
+      }
+    });
+  };
+};
+
+export const FetchProduction = (where = "") => {
+  return (dispatch) => {
+    let url = `production/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(url, (res) => dispatch(setProduction(res.data)), true);
+  };
+};
+
+export const FetchProductionExcel = (where = "", perpage = 999) => {
+  return (dispatch) => {
+    let url = `production/report?perpage=${perpage}`;
+    if (where !== "") url += `&${where}`;
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setProductionExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formProductionExcel"));
+      },
+      (res) => dispatch(setDownload(res))
+    );
+  };
+};
+export const FetchProductionData = (code, where = "", isModal = false) => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    const url = HEADERS.URL + `production/approve`;
-    axios
-      .post(url, data)
-      .then(function (response) {
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "Berhasil Diapprove!",
-          icon: "success",
-          showCancelButton: false,
-          confirmButtonColor: "#ff9800",
-          confirmButtonText: "Ok",
-        }).then((result) => {
-          destroy("production");
-          localStorage.removeItem("code_for_approval");
-          window.location.reload(false);
-        });
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "Failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
+    let url = `production/report/${code}`;
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setProductionData(res.data));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailProduction"));
         }
-      });
-  };
-};
-
-export const FetchProduction = (page = 1, where = "") => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    let url = `production/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }`;
-    if (where !== "") {
-      url += where;
-    }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setProduction(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
-  };
-};
-
-export const FetchProductionExcel = (page = 1, where = "", perpage = "") => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    let url = `production/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }&perpage=${perpage}`;
-    if (where !== "") {
-      url += where;
-    }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setProductionExcel(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
-  };
-};
-export const FetchProductionData = (
-  page = 1,
-  code,
-  dateFrom = "",
-  dateTo = "",
-  location = ""
-) => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    let que = "";
-    if (dateFrom === "" && dateTo === "" && location === "") {
-      que = `production/report/${code}?page=${page}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location === "") {
-      que = `production/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location !== "") {
-      que = `production/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-    }
-    if (location !== "") {
-      que = `production/report/${code}?page=${page}&lokasi=${location}`;
-    }
-
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setProductionData(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+      },
+      true
+    );
   };
 };

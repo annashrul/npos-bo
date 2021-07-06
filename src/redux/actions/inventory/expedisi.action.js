@@ -1,7 +1,11 @@
 import { EXPEDISI, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet } from "../handleHttp";
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+export function setDownload(load) {
+  return { type: EXPEDISI.DOWNLOAD, load };
+}
 export function setLoading(load) {
   return { type: EXPEDISI.LOADING, load };
 }
@@ -40,36 +44,26 @@ export const FetchPostingExpedisi = (page = 1, where = "") => {
       .catch(function (error) {});
   };
 };
-export const FetchExpedisi = (page = 1, where = "") => {
+export const FetchExpedisi = (where = "") => {
   return (dispatch) => {
-    let url = `expedisi/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }`;
-    if (where !== "") {
-      url += where;
-    }
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setExpedisi(data));
-    });
+    let url = `expedisi/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(url, (res) => dispatch(setExpedisi(res.data)));
   };
 };
-export const FetchExpedisiExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchExpedisiExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let url = `expedisi/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }&perpage=${perpage}`;
-    if (where !== "") {
-      url += where;
-    }
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setExpedisiExcel(data));
-    });
+    let url = `expedisi/report?perpage=${perpage}`;
+    if (where !== "") url += `&${where}`;
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setExpedisiExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formExpedisiExcel"));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
 
@@ -141,8 +135,7 @@ export const storeExpedisi = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -178,8 +171,7 @@ export const storeExpedisiPosting = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {

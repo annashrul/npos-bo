@@ -1,47 +1,30 @@
 import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import { FetchReportSaleByCust } from "redux/actions/sale/sale_by_cust.action";
 import SaleByCustReportExcel from "components/App/modals/report/sale/form_sale_by_cust_excel";
-import { FetchReportDetailSaleByCust, FetchReportSaleByCustExcel } from "redux/actions/sale/sale_by_cust.action";
-import DetailSaleByCustReport from "../../modals/report/sale/detail_sale_by_cust_report";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { dateRange, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, setStorage, toDate } from "../../../../helper";
-import SelectCommon from "../../common/SelectCommon";
-import SelectSortCommon from "../../common/SelectSortCommon";
+import { FetchReportSaleByCust, FetchReportSaleByCustExcel } from "redux/actions/sale/sale_by_cust.action";
+import { float, generateNo, getFetchWhere, getPeriode, noData, parseToRp } from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
-
-const dateFromStorage = "dateFromReportSaleByCust";
-const dateToStorage = "dateToReportSaleByCust";
-const columnStorage = "columnReportSaleByCust";
-const sortStorage = "sortReportSaleByCust";
-const anyStorage = "anyReportSaleByCust";
-const activeDateRangePickerStorage = "activeDateRangeReportSale";
+import HeaderReportCommon from "../../common/HeaderReportCommon";
 
 class SaleByCustArchive extends Component {
   constructor(props) {
     super(props);
-    this.handleChangeSelect = this.handleChangeSelect.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleDetail = this.handleDetail.bind(this);
+    this.handleService = this.handleService.bind(this);
+    this.handleModal = this.handleModal.bind(this);
     this.state = {
       where_data: "",
-      any: "",
-      sort: "",
-      column: "",
-      isModalDetail: false,
+      periode: "",
       isModalExport: false,
-      startDate: toDate(new Date()),
-      endDate: toDate(new Date()),
       column_data: [
-        { kode: "kd_cust", value: "Kode Cust." },
-        { kode: "nama", value: "Nama" },
-        { kode: "qty", value: "QTY" },
-        { kode: "gross_sales", value: "Gross Sales" },
-        { kode: "diskon_item", value: "Diskon Item" },
-        { kode: "diskon_trx", value: "Diskon Trx" },
-        { kode: "tax", value: "Tax" },
-        { kode: "service", value: "Service" },
+        { value: "kd_cust", label: "Kode Cust." },
+        { value: "nama", label: "Nama" },
+        { value: "qty", label: "QTY" },
+        { value: "gross_sales", label: "Gross Sales" },
+        { value: "diskon_item", label: "Diskon Item" },
+        { value: "diskon_trx", label: "Diskon Trx" },
+        { value: "tax", label: "Tax" },
+        { value: "service", label: "Service" },
       ],
     };
   }
@@ -50,148 +33,103 @@ class SaleByCustArchive extends Component {
     this.setState({ isModalDetail: false, isModalExport: false });
   }
 
-  componentWillMount() {
-    this.handleService(1);
-  }
-
   handlePageChange(pageNumber) {
     this.handleService(pageNumber);
   }
 
-  handleDetail(e, kode) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailSaleByCustReport"));
-    this.props.dispatch(FetchReportDetailSaleByCust(kode));
+  handleModal(total) {
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    this.setState({ isModalExport: true, periode: periode, where_data: where });
+    this.props.dispatch(FetchReportSaleByCustExcel(where, total));
   }
 
-  toggleModal(e, total) {
-    e.preventDefault();
-    this.setState({ isModalExport: true });
-    this.props.dispatch(ModalType("formSaleByCustExcel"));
-    this.props.dispatch(FetchReportSaleByCustExcel(1, this.state.where_data, total));
-  }
-
-  handleChangeSelect(state, res) {
-    this.setState({ [state]: res.value });
-    if (state === "column") setStorage(columnStorage, res.value);
-    if (state === "sort") setStorage(sortStorage, res.value);
-    this.handleService();
-  }
-
-  handleService(page = 1) {
-    let getDateFrom = getStorage(dateFromStorage);
-    let getDateTo = getStorage(dateToStorage);
-    let getColumn = getStorage(columnStorage);
-    let getSort = getStorage(sortStorage);
-    let getAny = getStorage(anyStorage);
-
-    let where = `page=${page}`;
-    let state = {};
-
-    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
-      where += `&datefrom=${toDate(getDateFrom, "-")}&dateto=${toDate(getDateTo, "-")}`;
-      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
-    } else {
-      where += `&datefrom=${toDate(this.state.startDate, "-")}&dateto=${toDate(this.state.endDate, "-")}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      this.setState({ where_data: where });
+      this.props.dispatch(FetchReportSaleByCust(where));
     }
-    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
-      where += `&sort${getColumn}|${getSort}`;
-      Object.assign(state, { column: getColumn, sort: getSort });
-    }
-    if (isEmptyOrUndefined(getAny)) {
-      where += `&q=${getAny}`;
-      Object.assign(state, { any: getAny });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-
-    this.props.dispatch(FetchReportSaleByCust(where));
-  }
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService();
   }
 
   render() {
     const { total, last_page, per_page, current_page, data } = this.props.sale_by_custReport;
-    const { startDate, endDate, column, sort, column_data, any, isModalDetail, isModalExport } = this.state;
+    const { periode, column_data, isModalExport } = this.state;
+    const startDate = periode.split("-")[0];
+    const endDate = periode.split("-")[1];
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "Kode Customer", width: "5%" },
+      { rowSpan: 2, label: "Nama" },
+      { rowSpan: 2, label: "Gross sales", width: "1%" },
+      { colSpan: 2, label: "Diskon", width: "1%" },
+      { rowSpan: 2, label: "Service", width: "1%" },
+      { rowSpan: 2, label: "Qty", width: "1%" },
+    ];
+
+    let totalGrossSalePerHalaman = 0;
+    let totalDiskonItemPerHalaman = 0;
+    let totalDiskonTransaksiPerHalaman = 0;
+    let totalServicePerHalaman = 0;
+    let totalQtyPerHalaman = 0;
     return (
-      <Layout page="Laporan Arsip Penjualan">
-        <div className="row">
-          <div className="col-6 col-xs-6 col-md-2">
-            {dateRange(
-              (first, last, isActive) => {
-                setStorage(activeDateRangePickerStorage, isActive);
-                setStorage(dateFromStorage, first);
-                setStorage(dateToStorage, last);
-                this.handleService();
-              },
-              `${toDate(startDate)} - ${toDate(endDate)}`,
-              getStorage(activeDateRangePickerStorage)
-            )}
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Kolom" options={handleDataSelect(column_data, "kode", "value")} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <label>Cari</label>
-            <div className="input-group">
-              <input
-                type="search"
-                name="any"
-                className="form-control"
-                placeholder="tulis sesuatu disini"
-                value={any}
-                onChange={(e) => this.setState({ any: e.target.value })}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") this.handleSearch(e);
-                }}
-              />
-              <span className="input-group-append">
-                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-                <button className="btn btn-primary ml-1" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
-                  {isProgress(this.props.download)}
-                </button>
-              </span>
-            </div>
-          </div>
-        </div>
+      <Layout page="Laporan arsip penjualan by customer">
+        <HeaderReportCommon
+          pathName="ReportSaleByCustomer"
+          isColumn={true}
+          columnData={column_data}
+          isSort={true}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal(last_page * per_page, per_page)}
+          excelData={this.props.download}
+        />
+
         <TableCommon
-          head={[
-            { label: "No", className: "text-center", width: "1%" },
-            { label: "Kode Customer", width: "5%" },
-            { label: "Nama" },
-            { label: "Gross sales", width: "1%" },
-            { label: "Diskon item", width: "1%" },
-            { label: "Diskon trx", width: "1%" },
-            { label: "Service", width: "1%" },
-            { label: "Qty", width: "1%" },
-          ]}
+          head={head}
+          rowSpan={[{ label: "Item" }, { label: "Transaksi" }]}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
-          body={typeof data === "object" && data}
-          label={[
-            { label: "kd_cust" },
-            { label: "nama" },
-            { label: "gross_sales", isCurrency: true, className: "text-right" },
-            { label: "diskon_item", isCurrency: true, className: "text-right" },
-            { label: "diskon_trx", isCurrency: true, className: "text-right" },
-            { label: "service", isCurrency: true, className: "text-right" },
-            { label: "qty", isCurrency: true, className: "text-right" },
-          ]}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((val, key) => {
+                    totalGrossSalePerHalaman += float(val.gross_sales);
+                    totalDiskonItemPerHalaman += float(val.diskon_item);
+                    totalDiskonTransaksiPerHalaman += float(val.diskon_trx);
+                    totalServicePerHalaman += float(val.service);
+                    totalQtyPerHalaman += float(val.qty);
+                    return (
+                      <tr key={key}>
+                        <td className="middle nowrap text-center">{generateNo(key, current_page)}</td>
+                        <td className="middle nowrap">{val.kd_cust}</td>
+                        <td className="middle nowrap">{val.nama}</td>
+                        <td className="middle nowrap text-right">{parseToRp(val.gross_sales)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(val.diskon_item)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(val.diskon_trx)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(val.service)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(val.qty)}</td>
+                      </tr>
+                    );
+                  })
+                : noData(head.length)
+              : noData(head.length)
+          }
+          footer={[
+            {
+              data: [
+                { colSpan: 3, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 1, label: parseToRp(totalGrossSalePerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonItemPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonTransaksiPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalServicePerHalaman) },
+                { colSpan: 1, label: parseToRp(totalQtyPerHalaman) },
+              ],
+            },
+          ]}
         />
         {this.props.isOpen && isModalExport ? <SaleByCustReportExcel startDate={startDate} endDate={endDate} /> : null}
-        {this.props.isOpen && isModalDetail ? <DetailSaleByCustReport detailSaleByCust={this.props.detailSaleByCust} /> : null}
       </Layout>
     );
   }
@@ -203,8 +141,6 @@ const mapStateToProps = (state) => {
     sale_by_custReport: state.sale_by_custReducer.report,
     download: state.sale_by_custReducer.download,
     sale_by_custReportExcel: state.sale_by_custReducer.report_excel,
-    totalPenjualanExcel: state.sale_by_custReducer.total_penjualan_excel,
-    detailSaleByCust: state.sale_by_custReducer.dataDetail,
     auth: state.auth,
   };
 };

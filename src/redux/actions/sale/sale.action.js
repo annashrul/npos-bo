@@ -8,8 +8,8 @@ import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.act
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
 import { isEmptyOrUndefined, ToastQ } from "../../../helper";
 import { ModalType } from "../modal.action";
-import moment from 'moment'
-import Cookies from 'js-cookie'
+import moment from "moment";
+import Cookies from "js-cookie";
 
 export function setLoading(load) {
   return {
@@ -178,7 +178,9 @@ export const storeSale = (data, param) => {
               "<br>" +
               '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
               '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
-              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning" ' + (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ? 'style="visibility:hidden' : '') + '>Re-Print</button>',
+              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning" ' +
+              (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ? 'style="visibility:hidden' : "") +
+              ">Re-Print</button>",
 
             showCancelButton: true,
             cancelButtonText: "Selesai",
@@ -191,8 +193,8 @@ export const storeSale = (data, param) => {
               dispatch(FetchSalesAll(datum.result.lokasi));
             }
           });
-          const elReprint=document.getElementById("btnReprint")
-          if (elReprint){
+          const elReprint = document.getElementById("btnReprint");
+          if (elReprint) {
             elReprint.addEventListener("click", () => {
               handlePost("pos/reprint/" + btoa(datum.result.kode), [], (res, msg, status) => {
                 ToastQ.fire({
@@ -202,7 +204,6 @@ export const storeSale = (data, param) => {
                 goSwal();
               });
             });
-
           }
           document.getElementById("btnNotaPdf").addEventListener("click", () => {
             const win = window.open(datum.result.nota, "_blank");
@@ -275,15 +276,19 @@ export const FetchReportSaleExcel = (where = "", perpage = "") => {
   };
 };
 
-export const FetchReportDetailSale = (kd_trx) => {
+export const FetchReportDetailSale = (kd_trx, where = "", isModal = false) => {
   return (dispatch) => {
+    let url = `report/arsip_penjualan/${kd_trx}`;
+    if (where !== "") url += `?${where}`;
     handleGet(
-      `report/arsip_penjualan/${kd_trx}`,
+      url,
       (res) => {
         const data = res.data;
         dispatch(setSaleReportData(data));
-        dispatch(ModalToggle(true));
-        dispatch(ModalType("detailSaleReport"));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailSaleReport"));
+        }
       },
       true
     );
@@ -291,62 +296,56 @@ export const FetchReportDetailSale = (kd_trx) => {
 };
 
 export const deleteReportSale = (datum) => {
-   const kd_trx = btoa(datum.id+"|"+datum.id_trx)
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        Swal.fire({allowOutsideClick: false,
-            title: 'Silahkan tunggu.',
-            html: 'Memproses permintaan..',
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-            onClose: () => {}
-        })
-        const url = HEADERS.URL + `pos/remove_penjualan/${kd_trx}`;
-        axios.delete(url)
-            .then(function (response) {
-                Swal.close()
-                const data = (response.data);
-                
-                if (data.status === 'success') {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'Success',
-                        type: 'success',
-                        text: data.msg,
-                    });
-                } else {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'failed',
-                        type: 'error',
-                        text: data.msg,
-                    });
-                }
-                dispatch(setLoadingReport(false));
-                let dateFrom=localStorage.getItem("date_from_sale_report");
-                let dateTo=localStorage.getItem("date_to_sale_report");
-                let where='';
-                if(dateFrom!==undefined&&dateFrom!==null){
-                    if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
-                }else{
-                    if(where!==''){where+='&'}where+=`datefrom=${moment(new Date()).format("yyyy-MM-DD")}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`
-                }
-                dispatch(FetchReportSale(1,where));
-            })
-            .catch(function (error) {
-                Swal.close()
-                dispatch(setLoadingReport(false));
-                
-                Swal.fire({allowOutsideClick: false,
-                    title: 'failed',
-                    type: 'error',
-                    text: error.response === undefined?'error!':error.response.data.msg,
-                });
-                if (error.response) {
-                    
-                }
-            })
-    }
+  const kd_trx = btoa(datum.id + "|" + datum.id_trx);
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    Swal.fire({
+      allowOutsideClick: false,
+      title: "Silahkan tunggu.",
+      html: "Memproses permintaan..",
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      onClose: () => {},
+    });
+    const url = HEADERS.URL + `pos/remove_penjualan/${kd_trx}`;
+    axios
+      .delete(url)
+      .then(function (response) {
+        Swal.close();
+        const data = response.data;
 
+        if (data.status === "success") {
+          Swal.fire({ allowOutsideClick: false, title: "Success", type: "success", text: data.msg });
+        } else {
+          Swal.fire({ allowOutsideClick: false, title: "failed", type: "error", text: data.msg });
+        }
+        dispatch(setLoadingReport(false));
+        let dateFrom = localStorage.getItem("date_from_sale_report");
+        let dateTo = localStorage.getItem("date_to_sale_report");
+        let where = "";
+        if (dateFrom !== undefined && dateFrom !== null) {
+          if (where !== "") {
+            where += "&";
+          }
+          where += `datefrom=${dateFrom}&dateto=${dateTo}`;
+        } else {
+          if (where !== "") {
+            where += "&";
+          }
+          where += `datefrom=${moment(new Date()).format("yyyy-MM-DD")}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`;
+        }
+        dispatch(FetchReportSale(1, where));
+      })
+      .catch(function (error) {
+        Swal.close();
+        dispatch(setLoadingReport(false));
+
+        Swal.fire({ allowOutsideClick: false, title: "failed", type: "error", text: error.response === undefined ? "error!" : error.response.data.msg });
+        if (error.response) {
+        }
+      });
+  };
 };
 
 export const FetchSaleReturReport = (where = "") => {
@@ -364,11 +363,11 @@ export const FetchSaleReturReport = (where = "") => {
   };
 };
 
-export const FetchSaleReturReportExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchSaleReturReportExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let url = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
+    let url = `report/penjualan/retur?perpage=${perpage}`;
     if (where !== "") {
-      url += `${where}`;
+      url += `&${where}`;
     }
     handleGetExport(
       url,

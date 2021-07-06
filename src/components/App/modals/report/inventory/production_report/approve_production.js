@@ -1,155 +1,121 @@
-import React,{Component} from 'react';
-import {ModalBody, ModalHeader} from "reactstrap";
+import React, { Component } from "react";
+import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {storeApproval} from "redux/actions/inventory/produksi.action";
-import Swal from 'sweetalert2';
-import {ModalToggle} from "redux/actions/modal.action";
-class ApproveProduction extends Component{
-    constructor(props){
-        super(props);
-        this.toggle = this.toggle.bind(this);
-        this.HandleCommonInputChange = this.HandleCommonInputChange.bind(this);
-        this.state = {
-            txtHpp: "",
-            txtSisaApproval:"",
-            txtKdTrx:"",
-            error:{
-                txtHpp:"",
-                txtSisaApproval:"",
-            },
-        }
-    }
-    UNSAFE_componentWillReceiveProps(nextProps){
-        
-        this.setState({
-            txtHpp: parseInt(nextProps.hpp,10),
-            txtSisaApproval: nextProps.qty,
-            txtKdTrx: nextProps.code
-        })
-    }
-    toggle(e){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        localStorage.removeItem("code");
-        localStorage.removeItem("barcode");
-        localStorage.removeItem("name");
+import { storeApproval } from "redux/actions/inventory/produksi.action";
+import Swal from "sweetalert2";
+import { ModalToggle } from "redux/actions/modal.action";
+import { handleError, isEmptyOrUndefined, parseToRp, rmComma, setFocus, swalWithCallback, toCurrency } from "../../../../../../helper";
+class ApproveProduction extends Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+    this.HandleSubmit = this.HandleSubmit.bind(this);
+    this.state = {
+      txtHpp: "",
+      txtSisaApproval: "",
+      txtKdTrx: "",
     };
+  }
 
-    HandleCommonInputChange(e,errs=true,st=0){
-        const column = e.target.name;
-        const val = e.target.value;
-        this.setState({
-            [column]: val
-        });
-        if(errs){
-            let err = Object.assign({}, this.state.error, {
-                [column]: ""
-            });
-            this.setState({
-                error: err
-            });
-        }
+  getProps(props) {
+    console.log("props", props);
+    this.setState({
+      txtHpp: parseInt(props.detail.hpp, 10),
+      txtSisaApproval: props.detail.qty_estimasi,
+      txtKdTrx: props.detail.kd_produksi,
+    });
+    setFocus(this, "txtSisaApproval");
+  }
+
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+
+  toggle(e) {
+    e.preventDefault();
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+  }
+
+  HandleSubmit(e) {
+    e.preventDefault();
+    let sisa = rmComma(this.state.txtSisaApproval);
+
+    console.log(sisa);
+    if (!isEmptyOrUndefined(sisa, "Sisa approval") || parseInt(sisa, 10) < 1 || isNaN(sisa)) {
+      handleError("Sisa approval");
+      setFocus(this, "txtSisaApproval");
+      return;
     }
+    swalWithCallback("Pastikan data yang anda masukan sudah benar", () => {
+      let data = {};
+      data["hpp"] = this.state.txtHpp;
+      data["sisa_approval"] = sisa;
+      data["kd_trx"] = this.state.txtKdTrx;
+      this.props.dispatch(storeApproval(data, this.props.detail.where));
+    });
+  }
 
-    HandleSubmit(e){
-        e.preventDefault();
-        let err = this.state.error;
-        // if (this.state.txtHpp === "" || this.state.txtSisaApproval === ""){
-        if (this.state.txtSisaApproval === ""){
-            // if(this.state.txtHpp===""){
-            //     err = Object.assign({}, err, {
-            //         txtHpp:"Hpp tidak boleh kosong."
-            //     });
-            // }
-            if (this.state.txtSisaApproval) {
-                err = Object.assign({}, err, {
-                    txtSisaApproval: "Sisa Approval tidak boleh kosong."
-                });
-            }
-            this.setState({
-                error: err
-            })
-        }else{
-            Swal.fire({allowOutsideClick: false,
-                title: 'Approve?',
-                text: "Pastikan data yang anda masukan sudah benar!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Tidak!'
-            }).then((result) => {
-                if (result.value) {
-                    let data={};
-                    data['hpp'] = this.state.txtHpp;
-                    data['sisa_approval'] = this.state.txtSisaApproval;
-                    data['kd_trx'] = this.state.txtKdTrx;
-                    this.props.dispatch(storeApproval(data));
-                }
-            })
-        }
-    }
-
-    render(){
-        
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        return (
-            <div>
-                <WrapperModal isOpen={this.props.isOpen && this.props.type === "approveProduction"} size="md">
-                <ModalHeader toggle={this.toggle}>Approve Production {localStorage.getItem('code_for_approve')}</ModalHeader>
-                    <ModalBody>
-                        <div className="table-responsive" style={{overflowX: "auto"}}>
-                            <table className="table table-hover table-bordered">
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>HPP</th>
-                                    <th className="text-black" style={columnStyle}>Sisa Approval</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={{textAlign:"center"}}>
-                                            <input type="number" className="form-control" name="txtHpp" value={this.state.txtHpp} readOnly="true" onChange={(e => this.HandleCommonInputChange(e))}></input>
-                                            <div className="invalid-feedback"
-                                                     style={this.state.error.txtHpp !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                    {this.state.error.txtHpp}
-                                                </div>
-                                        </td>
-                                        <td style={{textAlign:"center"}}>
-                                            <input type="number" className="form-control" name="txtSisaApproval" value={this.state.txtSisaApproval} onChange={(e => this.HandleCommonInputChange(e))}></input>
-                                            <div className="invalid-feedback"
-                                                     style={this.state.error.txtSisaApproval !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                    {this.state.error.txtSisaApproval}
-                                                </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot className="bg-light">
-                                    <tr>
-                                        <td colSpan="2"><button type="button" className="btn btn-primary btn-block" onClick={(e => this.HandleSubmit(e))}>APPROVE</button></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </ModalBody>
-
-                </WrapperModal>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <WrapperModal isOpen={this.props.isOpen && this.props.type === "approveProduction"} size="md">
+          <ModalHeader toggle={this.toggle}>Form penerimaan #{this.props.detail.kd_produksi}</ModalHeader>
+          <ModalBody>
+            <form onSubmit={this.HandleSubmit}>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label>Hpp</label>
+                    <input type="text" className="form-control" name="txtHpp" value={toCurrency(this.state.txtHpp)} disabled={true} />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label>Sisa</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="txtSisaApproval"
+                      autoFocus={true}
+                      value={toCurrency(this.state.txtSisaApproval)}
+                      onChange={(e) => this.setState({ txtSisaApproval: e.target.value })}
+                      ref={(input) => {
+                        if (input !== null) {
+                          this[`txtSisaApproval`] = input;
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-12">
+                  <button type="submit" className="btn-block btn btn-primary">
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            </form>
+          </ModalBody>
+        </WrapperModal>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    
-    return {
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-        // stockReportApproveProduction:state.stockReportReducer.dataApproveTransaksi,
-        // isLoading: state.stockReportReducer.isLoading,
-    }
-}
+  return {
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+    // stockReportApproveProduction:state.stockReportReducer.dataApproveTransaksi,
+    // isLoading: state.stockReportReducer.isLoading,
+  };
+};
 // const mapDispatch
 export default connect(mapStateToProps)(ApproveProduction);

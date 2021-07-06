@@ -29,16 +29,11 @@ export const getFetchWhere = (res, page = 1) => {
 
 export const getPeriode = (val) => {
   let newVal = [];
-  console.log("1", val);
   let getPeriode = val.splice(1, 2);
-  console.log("2", getPeriode);
-
   getPeriode.forEach((res) => {
     let anyinh = res.split("=");
     newVal.push(anyinh[1]);
   });
-  console.log("3", newVal);
-
   return `${toDate(newVal[0])} - ${toDate(newVal[1])}`;
 };
 
@@ -48,11 +43,20 @@ export const getWhere = (res) => {
 };
 
 export const parseToRp = (val) => {
-  return toRp(parseFloat(rmToZero(val)));
+  return toRp(floatToFix(val));
+};
+export const floatToFix = (val) => {
+  return parseFloat(rmToZero(val)).toFixed(2);
+};
+export const float = (val) => {
+  return parseFloat(rmToZero(val));
 };
 
-export const toDate = (val, type = "/") => {
+export const toDate = (val, type = "/", isTime = false) => {
   moment.locale("id");
+  if (isTime) {
+    return moment(val).format("hh:mm:ss");
+  }
   return type === "/" ? moment(val).format("DD/MM/YYYY") : moment(val).format("YYYY-MM-DD");
 };
 
@@ -445,26 +449,31 @@ export const convertBase64 = (file) => {
   });
 };
 
-export const swallOption = (msg, callback) => {
+export const swallOption = (msg, callback, isCancel) => {
   Swal.fire({
-    title: "Information !!!",
+    title: "Informasi !!!",
     html: `${msg}`,
     icon: "warning",
     allowOutsideClick: false,
     confirmButtonColor: "#3085d6",
     confirmButtonText: `Oke`,
+    cancelButtonText: "Batal",
     showCancelButton: true,
     cancelButtonColor: "#d33",
   }).then(async (result) => {
     if (result.value) {
       callback();
+    } else {
+      if (isCancel) {
+        isCancel();
+      }
     }
   });
 };
 
 export const swalWithCallback = (msg, callback) => {
   Swal.fire({
-    title: "Information !!!",
+    title: "Informasi !!!",
     html: `${msg}`,
     icon: "warning",
     allowOutsideClick: false,
@@ -478,7 +487,7 @@ export const swalWithCallback = (msg, callback) => {
 };
 export const swal = (msg) => {
   Swal.fire({
-    title: "Information !!!",
+    title: "Informasi !!!",
     html: `${msg}`,
     icon: "warning",
     allowOutsideClick: false,

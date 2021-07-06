@@ -39,11 +39,11 @@ export const FetchAdjustment = (where = "") => {
     handleGet(url, (res) => dispatch(setAdjustment(res.data)));
   };
 };
-export const FetchAdjustmentExcel = (page = "", where = "", perpage = "") => {
+export const FetchAdjustmentExcel = (where = "", perpage = "") => {
   return (dispatch) => {
-    let url = `adjustment/report?page=${page}&perpage=${perpage}`;
+    let url = `adjustment/report?perpage=${perpage}`;
     if (where !== "") {
-      url += where;
+      url += `&${where}`;
     }
 
     handleGetExport(
@@ -213,12 +213,6 @@ export const FetchAdjustmentDetail = (code, where = "", isModal = false) => {
 
 export const FetchCodeAdjustment = (lokasi) => {
   return (dispatch) => {
-    axios
-      .get(HEADERS.URL + `adjustment/getcode?lokasi=${lokasi}`)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setCodeAdjusment(data));
-      })
-      .catch(function (error) {});
+    handleGet(`adjustment/getcode?lokasi=${lokasi}`, (res) => dispatch(setCodeAdjusment(res.data)), true);
   };
 };

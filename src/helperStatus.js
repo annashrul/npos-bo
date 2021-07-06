@@ -55,6 +55,11 @@ export const STATUS_PURCHASE_ORDER = [
   { value: "1", label: "Order", color: "info" },
   { value: "2", label: "Receive", color: "primary" },
 ];
+export const STATUS_PRODUKSI = [
+  { value: "", label: "Semua" },
+  { value: "0", label: "Ditolak", color: "danger" },
+  { value: "1", label: "Diterima", color: "primary" },
+];
 const handleLoop = (res, data, isButton) => {
   let val = "";
   for (let i = 0; i < data.length; i++) {
@@ -88,4 +93,7 @@ export const statusPacking = (res, isButton = false) => {
 };
 export const statusPurchaseOrder = (res, isButton = false) => {
   return handleLoop(res, STATUS_PACKING_DAN_EXPEDISI, isButton);
+};
+export const statusProduksi = (res, isButton = false) => {
+  return handleLoop(res, STATUS_PRODUKSI, isButton);
 };

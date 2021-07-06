@@ -15,9 +15,11 @@ class HeaderReportCommon extends Component {
       column: "",
       sort: "",
       any: "",
+      other: "",
       status_data: [],
       column_data: [],
       sort_data: [],
+      other_data: [],
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -34,6 +36,9 @@ class HeaderReportCommon extends Component {
     }
     if (props.sortData !== undefined && props.sortData.length > 0) {
       Object.assign(state, { sort_data: props.sortData });
+    }
+    if (props.otherData !== undefined && props.otherData.length > 0) {
+      Object.assign(state, { other_data: props.otherData });
     }
     this.setState(state);
   }
@@ -57,6 +62,7 @@ class HeaderReportCommon extends Component {
     let getColumn = getStorage(`columnStorage${path}`);
     let getSort = getStorage(`sortStorage${path}`);
     let getAny = getStorage(`anyStorage${path}`);
+    let getOther = props.isOther ? getStorage(`${props.otherState}Storage${path}`) : "";
     let where = `page=1`;
     let state = {};
 
@@ -70,9 +76,14 @@ class HeaderReportCommon extends Component {
       where += `&lokasi=${getLocation}`;
       Object.assign(state, { location: getLocation });
     }
-
+    if (this.props.isOther) {
+      if (isEmptyOrUndefined(getOther)) {
+        where += `&${props.otherState}=${getOther}`;
+        Object.assign(state, { other: getOther });
+      }
+    }
     if (isEmptyOrUndefined(getStatus)) {
-      where += `&status=${getStatus}`;
+      where += `&${props.otherStatus ? props.otherStatus : "status"}=${getStatus}`;
       Object.assign(state, { status: getStatus });
     }
     if (props.sortNotColumn) {
@@ -82,7 +93,7 @@ class HeaderReportCommon extends Component {
       }
     } else {
       if (isEmptyOrUndefined(getColumn)) {
-        where += `&sort=${getColumn}`;
+        where += `&${props.otherColumn ? props.otherColumn : "sort"}=${getColumn}`;
         Object.assign(state, { column: getColumn });
         if (isEmptyOrUndefined(getSort)) {
           where += `|${getSort}`;
@@ -101,6 +112,10 @@ class HeaderReportCommon extends Component {
 
   handleSelect(state, res) {
     this.setState({ [state]: res.value });
+    if (this.props.isOther) {
+      if (state === this.props.otherState) setStorage(`${state}Storage${this.props.pathName}`, res.value);
+      this.setState({ other: res.value });
+    }
     if (state === "location") setStorage(`locationStorage${this.props.pathName}`, res.value);
     if (state === "status") setStorage(`statusStorage${this.props.pathName}`, res.value);
     if (state === "column") setStorage(`columnStorage${this.props.pathName}`, res.value);
@@ -123,10 +138,14 @@ class HeaderReportCommon extends Component {
   }
 
   render() {
-    const { dateFrom, dateTo, location, status, column, sort, any, status_data, column_data, sort_data } = this.state;
+    const { dateFrom, dateTo, location, status, column, sort, any, status_data, column_data, sort_data, other, other_data } = this.state;
+    let col = "col-md-3";
+    if (this.props.col) {
+      col = this.props.col;
+    }
     return (
       <div className="row">
-        <div className="col-6 col-xs-6 col-md-3">
+        <div className={`col-6 col-xs-6 ${col}`}>
           {dateRange(
             (first, last, isActive) => {
               setStorage(`activeDateRangePickerStorage${this.props.pathName}`, isActive);
@@ -140,32 +159,37 @@ class HeaderReportCommon extends Component {
         </div>
 
         {this.props.isAll || this.props.isLocation ? (
-          <div className="col-6 col-xs-6 col-md-3">
+          <div className={`col-6 col-xs-6 ${col}`}>
             <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
           </div>
         ) : null}
+        {this.props.isOther && (
+          <div className={`col-6 col-xs-6 ${col}`}>
+            <SelectCommon label={this.props.otherName} options={other_data} callback={(res) => this.handleSelect(this.props.otherState, res)} dataEdit={other} />
+          </div>
+        )}
         {this.props.isAll || this.props.isStatus ? (
-          <div className="col-6 col-xs-6 col-md-3">
+          <div className={`col-6 col-xs-6 ${col}`}>
             <SelectCommon label="Status" options={status_data} callback={(res) => this.handleSelect("status", res)} dataEdit={status} />
           </div>
         ) : null}
         {this.props.isAll || this.props.isColumn ? (
-          <div className="col-6 col-xs-6 col-md-3">
+          <div className={`col-6 col-xs-6 ${col}`}>
             <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleSelect("column", res)} dataEdit={column} />
           </div>
         ) : null}
 
         {this.props.isAll || this.props.isSort || this.props.sortData ? (
-          <div className="col-6 col-xs-6 col-md-3">
+          <div className={`col-6 col-xs-6 ${col}`}>
             {this.props.sortData !== undefined ? (
-              <SelectCommon label="Sort" options={sort_data} callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
+              <SelectCommon label="Urutan" options={sort_data} callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
             ) : (
               <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
             )}
           </div>
         ) : null}
 
-        <div className="col-6 col-xs-6 col-md-3">
+        <div className={`col-6 col-xs-6 col-md-3`}>
           <label>Cari</label>
           <div className="input-group">
             <input

@@ -510,6 +510,10 @@
       border-radius: 4px 0px 0px 4px !important;
     }
 
+    input:disabled {
+      cursor: not-allowed !important;
+    }
+
     button:disabled {
       cursor: not-allowed !important;
     }
@@ -592,7 +596,8 @@
       cursor: pointer;
     }
 
-    input[readonly].input-custom {
+    input[readonly].input-custom,
+    input:disabled {
       background-color: transparent !important;
     }
 

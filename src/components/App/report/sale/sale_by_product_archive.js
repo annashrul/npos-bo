@@ -1,40 +1,15 @@
 import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import { FetchReportSaleByProduct } from "redux/actions/sale/sale_by_product.action";
-import SaleByProductReportExcel from "components/App/modals/report/sale/form_sale_by_product_excel";
-import { FetchReportDetailSaleByProduct, FetchReportSaleByProductExcel } from "redux/actions/sale/sale_by_product.action";
+import { FetchReportSaleByProduct, FetchReportDetailSaleByProduct, FetchReportSaleByProductExcel } from "redux/actions/sale/sale_by_product.action";
 import DetailSaleByProductReport from "../../modals/report/sale/detail_sale_by_product_report";
+import SaleByProductReportExcel from "../../modals/report/sale/form_sale_by_product_excel";
 import { ModalType } from "redux/actions/modal.action";
-import {
-  dateRange,
-  generateNo,
-  getFetchWhere,
-  getPeriode,
-  getStorage,
-  getWhere,
-  handleDataSelect,
-  isEmptyOrUndefined,
-  isProgress,
-  noData,
-  parseToRp,
-  rmSpaceToStrip,
-  rmToZero,
-  setStorage,
-  toDate,
-} from "../../../../helper";
-import SelectCommon from "../../common/SelectCommon";
-import LokasiCommon from "../../common/LokasiCommon";
+import { generateNo, getFetchWhere, getPeriode, noData, parseToRp, rmSpaceToStrip, rmToZero, toDate } from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
 
-const dateFromStorage = "dateFromReportSaleByProduct";
-const dateToStorage = "dateToReportSaleByProduct";
-const locationStorage = "locationReportSaleByProduct";
-const sortStorage = "sortReportSaleByProduct";
-const anyStorage = "anyReportSaleByProduct";
-const activeDateRangePickerStorage = "activeDateReportSaleByProduct";
 class SaleByProductArchive extends Component {
   constructor(props) {
     super(props);
@@ -72,7 +47,7 @@ class SaleByProductArchive extends Component {
     let whereState = this.state.where_data;
     let where = getFetchWhere(whereState);
     let periode = getPeriode(where.split("&"));
-    let state = { periode: periode };
+    let state = { periode: periode, where_data: where };
     if (param === "excel") {
       Object.assign(state, { isModalExport: true });
       this.props.dispatch(FetchReportSaleByProductExcel(where, total));
@@ -110,8 +85,6 @@ class SaleByProductArchive extends Component {
     let totalPajakPerHalaman = 0;
     let totalServicePerHalaman = 0;
 
-    console.log(this.props);
-
     return (
       <Layout page="Laporan penjualan by barang">
         <HeaderReportCommon
@@ -140,7 +113,6 @@ class SaleByProductArchive extends Component {
                     totalPajakPerHalaman += parseFloat(rmToZero(val.tax));
                     totalServicePerHalaman += parseFloat(rmToZero(val.service));
 
-                    console.log(totalQtyPerHalaman);
                     return (
                       <tr key={key}>
                         <td className="middle nowrap text-center">{generateNo(key, current_page)}</td>

@@ -2,28 +2,15 @@ import React, { Component } from "react";
 
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import moment from "moment";
-import { toRp, CapitalizeEachWord } from "helper";
-import { FetchReportSale } from "redux/actions/sale/sale.action";
-import { deleteReportSale, FetchReportDetailSale, FetchReportSaleExcel, FetchNotaReceipt } from "redux/actions/sale/sale.action";
+import { FetchReportSale, deleteReportSale, FetchReportDetailSale, FetchReportSaleExcel, FetchNotaReceipt } from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import Otorisasi from "../../modals/otorisasi.modal";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, parseToRp, rmSpaceToStrip, rmToZero, setStorage, swallOption, toDate } from "../../../../helper";
-import LokasiCommon from "../../common/LokasiCommon";
-import SelectCommon from "../../common/SelectCommon";
+import { CapitalizeEachWord, generateNo, getFetchWhere, getPeriode, noData, parseToRp, swallOption, toDate, float } from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
+import HeaderReportCommon from "../../common/HeaderReportCommon";
 import { STATUS_ARSIP_PENJUALAN } from "../../../../helperStatus";
-
-const dateFromStorage = "dateFromReportSaleArchive";
-const dateToStorage = "dateToReportSaleArchive";
-const locationStorage = "locationReportSaleArchive";
-const typeStorage = "typeReportSaleArchive";
-const statusStorage = "statusReportSaleArchive";
-const anyStorage = "anyReportSaleArchive";
-const activeDateRangePickerStorage = "activeDateReportSale";
 
 class SaleArchive extends Component {
   constructor(props) {
@@ -31,38 +18,24 @@ class SaleArchive extends Component {
     this.state = {
       where_data: "",
       type_data: [
-        { kode: "", value: "Semua" },
-        { kode: "0", value: "Tunai" },
-        { kode: "1", value: "Non Tunai" },
-        { kode: "2", value: "Gabungan" },
-        { kode: "3", value: "Void" },
+        { value: "", label: "Semua" },
+        { value: "0", label: "Tunai" },
+        { value: "1", label: "Non Tunai" },
+        { value: "2", label: "Gabungan" },
+        { value: "3", label: "Void" },
       ],
-      type: "",
-      status_data: [
-        { kode: "", value: "Semua" },
-        { kode: "0", value: "Belum Lunas" },
-        { kode: "1", value: "Lunas" },
-      ],
-      status: "",
-      lokasi: "",
-      any: "",
       id_trx: "",
-      prevLoc: [],
-      startDate: toDate(new Date()),
-      endDate: toDate(new Date()),
       isModalDetail: false,
       isModalExcel: false,
       isModalOtorisasi: false,
       totalExcel: 0,
-      page: 1,
       detail: {},
+      periode: "",
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleModal = this.handleModal.bind(this);
     this.onDone = this.onDone.bind(this);
-    this.handleChangeSelect = this.handleChangeSelect.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
+    this.handleService = this.handleService.bind(this);
   }
 
   onDone(id, id_trx) {
@@ -79,79 +52,32 @@ class SaleArchive extends Component {
       isModalOtorisasi: false,
     });
   }
-  componentWillMount() {
-    this.handleService();
-  }
 
-  handleService(page = 1) {
-    let getDateFrom = getStorage(dateFromStorage);
-    let getDateTo = getStorage(dateToStorage);
-    let getLocation = getStorage(locationStorage);
-    let getType = getStorage(typeStorage);
-    let getStatus = getStorage(statusStorage);
-    let getAny = getStorage(anyStorage);
-
-    let where = `page=${page}`;
-    let state = {};
-
-    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
-      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
-      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
-    } else {
-      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      this.setState({ where_data: where });
+      this.props.dispatch(FetchReportSale(where));
     }
-    if (isEmptyOrUndefined(getLocation)) {
-      where += `&lokasi=${getLocation}`;
-      Object.assign(state, { lokasi: getLocation });
-    }
-    if (isEmptyOrUndefined(getType)) {
-      where += `&type=${getType}`;
-      Object.assign(state, { type: getType });
-    }
-    if (isEmptyOrUndefined(getStatus)) {
-      where += `&status=${getStatus}`;
-      Object.assign(state, { status: getStatus });
-    }
-    if (isEmptyOrUndefined(getAny)) {
-      where += `&q=${getAny}`;
-      Object.assign(state, { any: getAny });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-    this.props.dispatch(FetchReportSale(where));
-  }
-
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-  handleChangeSelect(state, res) {
-    if (state === "lokasi") setStorage(locationStorage, res.value);
-    if (state === "type") setStorage(typeStorage, res.value);
-    if (state === "status") setStorage(statusStorage, res.value);
-    this.setState({ [state]: res.value });
-    this.handleService();
   }
 
   handlePageChange(pageNumber) {
-    this.handleService(pageNumber);
-  }
-
-  handleFetchModal(page) {
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType(page));
+    this.handleService(this.state.where_data, pageNumber);
   }
 
   handleModal(page, param) {
-    let state = {};
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let state = { periode: periode, where_data: where };
     if (page === "detail") {
       Object.assign(state, { isModalDetail: true, detail: param });
-      this.props.dispatch(FetchReportDetailSale(param.kd_trx));
-    }
-    if (page === "formSaleExcel") {
+      this.props.dispatch(FetchReportDetailSale(param.kd_trx, where, true));
+    } else {
       Object.assign(state, { isModalExcel: true, totalExcel: param.total });
-      this.props.dispatch(FetchReportSaleExcel(this.state.where_data, param.total));
+      this.props.dispatch(FetchReportSaleExcel(where, param.total));
     }
+
     this.setState(state);
   }
 
@@ -165,30 +91,27 @@ class SaleArchive extends Component {
     });
   }
 
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService(1);
-  }
-
   render() {
+    const startDate = this.state.periode.split("-")[0];
+    const endDate = this.state.periode.split("-")[1];
     const { total, last_page, per_page, current_page, data } = this.props.saleReport;
     const { omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit, hpp, total_tunai_all } = this.props.totalPenjualan;
-    let omset_per = 0;
-    let profit_per = 0;
-    let hpp_per = 0;
-    let dis_item_per = 0;
-    let dis_persen_per = 0;
-    let dis_rp_per = 0;
-    let kas_lain_per = 0;
-    let gt_per = 0;
-    let bayar_per = 0;
-    let jml_kartu_per = 0;
-    let charge_per = 0;
-    let change_per = 0;
-    let voucher_per = 0;
-    let rounding_per = 0;
-    let total_tunai = 0;
+
+    let totalOmsetPerHalaman = 0;
+    let totalProfitPerHalaman = 0;
+    let totalHppPerHalaman = 0;
+    let totalDiskonItemPerHalaman = 0;
+    let totalDiskonPersenPerHalaman = 0;
+    let totalDiskonRpPerHalaman = 0;
+    let totalKasLainPerHalaman = 0;
+    let totalGtPerHalaman = 0;
+    let totalBayarPerHalaman = 0;
+    let totalJumlahKartuPerHalaman = 0;
+    let totalChargePerHalaman = 0;
+    let totalChangePerHalaman = 0;
+    let totalRoundingPerHalaman = 0;
+    let totalTunaiPerHalaman = 0;
+
     const head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
@@ -220,60 +143,21 @@ class SaleArchive extends Component {
     ];
     return (
       <Layout page="Laporan Arsip Penjualan">
-        {/* <HeaderReportCommon /> */}
-        <div className="row">
-          <div className="col-6 col-xs-6 col-md-2">
-            {dateRange(
-              (first, last, isActive) => {
-                setStorage(activeDateRangePickerStorage, isActive);
-                setStorage(dateFromStorage, first);
-                setStorage(dateToStorage, last);
-                this.handleService();
-              },
-              `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`,
-              getStorage(activeDateRangePickerStorage)
-            )}
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <LokasiCommon callback={(res) => this.handleChangeSelect("lokasi", res)} isAll={true} dataEdit={this.state.lokasi} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Jenis" options={handleDataSelect(this.state.type_data, "kode", "value")} callback={(res) => this.handleChangeSelect("type", res)} dataEdit={this.state.type} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Status" options={handleDataSelect(STATUS_ARSIP_PENJUALAN, "value", "label")} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={this.state.status} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <label>Cari</label>
-            <div className="input-group">
-              <input
-                type="search"
-                name="any"
-                className="form-control"
-                placeholder="tulis sesuatu disini"
-                value={this.state.any}
-                autoFocus={true}
-                onChange={(e) => {
-                  let val = e.target.value;
-                  if (val === "") {
-                    setStorage(anyStorage, val);
-                    this.handleService();
-                  }
-                  this.setState({ any: val });
-                }}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") this.handleSearch(e);
-                }}
-              />
-              <span className="input-group-append">
-                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-                {isProgress(this.props.percent, () => this.handleModal("formSaleExcel", { total: last_page * per_page }))}
-              </span>
-            </div>
-          </div>
-        </div>
+        <HeaderReportCommon
+          pathName="ReportSale"
+          col="col-md-2"
+          isLocation={true}
+          isOther={true}
+          otherName="Jenis"
+          otherState="type"
+          otherData={this.state.type_data}
+          isStatus={true}
+          statusData={STATUS_ARSIP_PENJUALAN}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal("formSaleExcel", { total: last_page * per_page })}
+          excelData={this.props.percent}
+        />
+
         <TableCommon
           head={head}
           rowSpan={[{ label: "Item" }, { label: "Total (rp)" }, { label: "Total (%)" }]}
@@ -288,21 +172,21 @@ class SaleArchive extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    omset_per += parseFloat(v.omset);
-                    profit_per += parseFloat(v.profit);
-                    dis_item_per = dis_item_per + parseFloat(v.diskon_item);
-                    dis_persen_per = dis_persen_per + parseFloat(v.dis_persen);
-                    dis_rp_per = dis_rp_per + parseFloat(v.dis_rp);
-                    kas_lain_per = kas_lain_per + parseInt(v.kas_lain, 10);
-                    gt_per = gt_per + parseFloat(v.gt);
-                    bayar_per = bayar_per + parseInt(v.bayar, 10);
-                    jml_kartu_per = jml_kartu_per + parseFloat(v.jml_kartu);
-                    charge_per = charge_per + parseFloat(v.charge);
-                    change_per = change_per + parseFloat(v.change);
-                    voucher_per = voucher_per + parseInt(v.voucher, 10);
-                    rounding_per = rounding_per + parseInt(v.rounding, 10);
-                    hpp_per += parseFloat(v.hrg_beli);
-                    total_tunai += parseFloat(v.bayar) - parseFloat(v.change);
+                    totalOmsetPerHalaman += float(v.omset);
+                    totalProfitPerHalaman += float(v.profit);
+                    totalHppPerHalaman += float(v.hrg_beli);
+                    totalDiskonItemPerHalaman += float(v.diskon_item);
+                    totalDiskonPersenPerHalaman += float(v.dis_persen);
+                    totalDiskonRpPerHalaman += float(v.dis_rp);
+                    totalKasLainPerHalaman += float(v.kas_lain);
+                    totalGtPerHalaman += float(v.gt);
+                    totalBayarPerHalaman += float(v.bayar);
+                    totalJumlahKartuPerHalaman += float(v.jml_kartu);
+                    totalChargePerHalaman += float(v.charge);
+                    totalChangePerHalaman += float(v.change);
+                    totalRoundingPerHalaman += float(v.rounding);
+                    totalTunaiPerHalaman += float(v.bayar) - float(v.change);
+
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -319,33 +203,32 @@ class SaleArchive extends Component {
                         </td>
 
                         <td className="middle nowrap">{v.kd_trx}</td>
-                        <td className="middle nowrap">{moment(v.tgl).format("yyyy/MM/DD")}</td>
-                        <td className="middle nowrap">{moment(v.jam).format("hh:mm:ss")}</td>
+                        <td className="middle nowrap">{toDate(v.tgl)}</td>
+                        <td className="middle nowrap">{toDate(v.jam, "/", true)}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{CapitalizeEachWord(v.status)}</td>
                         <td className="middle nowrap">{v.jenis_trx}</td>
                         <td className="middle nowrap">{v.customer}</td>
                         <td className="middle nowrap">{v.nama}</td>
                         <td className="middle nowrap">{v.sales}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.omset))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.diskon_item))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.dis_rp))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.dis_persen).toFixed(0))}</td>
-                        <td className="middle nowrap text-right">{toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.hrg_beli))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.hrg_jual))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.profit))}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.omset)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.diskon_item)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.dis_rp)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.dis_persen)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(float(v.hrg_jual) * (float(v.tax) / 100))}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.hrg_jual)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.profit)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.kas_lain)}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.gt))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.bayar))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.change))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.bayar) - parseFloat(v.change))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.rounding))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.jml_kartu))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.charge))}</td>
-                        <td className="middle nowrap">{v.kartu}</td>
-
-                        <td className="middle nowrap">{v.ket_kas_lain}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.gt)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.bayar)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.change)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(float(v.bayar) - float(v.change))}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.rounding)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.jml_kartu)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.charge)}</td>
+                        <td className="middle nowrap text-right">{v.kartu}</td>
+                        <td className="middle nowrap text-right">{v.ket_kas_lain}</td>
                       </tr>
                     );
                   })
@@ -355,33 +238,23 @@ class SaleArchive extends Component {
           footer={[
             {
               data: [
-                {
-                  colSpan: 11,
-                  label: "Total perhalaman",
-                  className: "text-left",
-                },
-                { colSpan: 1, label: toRp(parseFloat(omset_per)) },
-                {
-                  colSpan: 1,
-                  label: toRp(parseFloat(dis_item_per).toFixed(0)),
-                },
-                { colSpan: 1, label: toRp(parseFloat(dis_rp_per).toFixed(0)) },
-                {
-                  colSpan: 1,
-                  label: toRp(parseFloat(dis_persen_per).toFixed(0)),
-                },
+                { colSpan: 11, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 1, label: parseToRp(totalOmsetPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonItemPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonRpPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonPersenPerHalaman) },
                 { colSpan: 1, label: "" },
-                { colSpan: 1, label: toRp(parseFloat(hpp_per)) },
+                { colSpan: 1, label: parseToRp(totalHppPerHalaman) },
                 { colSpan: 1, label: "" },
-                { colSpan: 1, label: toRp(parseFloat(profit_per)) },
-                { colSpan: 1, label: toRp(parseFloat(kas_lain_per)) },
-                { colSpan: 1, label: toRp(parseFloat(gt_per)) },
-                { colSpan: 1, label: toRp(parseFloat(bayar_per)) },
-                { colSpan: 1, label: toRp(parseFloat(change_per)) },
-                { colSpan: 1, label: toRp(parseFloat(total_tunai)) },
-                { colSpan: 1, label: toRp(parseFloat(rounding_per)) },
-                { colSpan: 1, label: toRp(parseFloat(jml_kartu_per)) },
-                { colSpan: 1, label: toRp(parseFloat(charge_per)) },
+                { colSpan: 1, label: parseToRp(totalProfitPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalKasLainPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalGtPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalBayarPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalChangePerHalaman) },
+                { colSpan: 1, label: parseToRp(totalTunaiPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalRoundingPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalJumlahKartuPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalChargePerHalaman) },
                 { colSpan: 2, label: "" },
               ],
             },
@@ -392,23 +265,22 @@ class SaleArchive extends Component {
                   label: "Total keseluruhan",
                   className: "text-left",
                 },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(omset))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(dis_item)).toFixed(0)) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(dis_rp)).toFixed(0)) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(dis_persen)).toFixed(0)) },
+                { colSpan: 1, label: parseToRp(omset) },
+                { colSpan: 1, label: parseToRp(dis_item) },
+                { colSpan: 1, label: parseToRp(dis_rp) },
+                { colSpan: 1, label: parseToRp(dis_persen) },
                 { colSpan: 1, label: "" },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(hpp))) },
+                { colSpan: 1, label: parseToRp(hpp) },
                 { colSpan: 1, label: "" },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(profit))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(kas_lain))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(gt))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(bayar))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(change))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(total_tunai_all))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(rounding))) },
-
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(jml_kartu))) },
-                { colSpan: 1, label: toRp(parseFloat(rmToZero(charge))) },
+                { colSpan: 1, label: parseToRp(profit) },
+                { colSpan: 1, label: parseToRp(kas_lain) },
+                { colSpan: 1, label: parseToRp(gt) },
+                { colSpan: 1, label: parseToRp(bayar) },
+                { colSpan: 1, label: parseToRp(change) },
+                { colSpan: 1, label: parseToRp(total_tunai_all) },
+                { colSpan: 1, label: parseToRp(rounding) },
+                { colSpan: 1, label: parseToRp(jml_kartu) },
+                { colSpan: 1, label: parseToRp(charge) },
                 { colSpan: 2, label: "" },
               ],
             },
@@ -417,14 +289,7 @@ class SaleArchive extends Component {
 
         {this.props.isOpen && this.state.isModalDetail ? <DetailSaleReport detailSale={this.props.detailSale} detail={this.state.detail} /> : null}
         {this.props.isOpen && this.state.isModalExcel ? (
-          <SaleReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            location={this.state.lokasi}
-            totalPenjualan={this.props.totalPenjualan}
-            totalPenjualanExcel={this.props.totalPenjualanExcel}
-            totalRow={this.state.totalExcel}
-          />
+          <SaleReportExcel startDate={startDate} endDate={endDate} totalPenjualan={this.props.totalPenjualan} totalPenjualanExcel={this.props.totalPenjualanExcel} totalRow={this.state.totalExcel} />
         ) : null}
         {this.props.isOpen && this.state.isModalOtorisasi ? (
           <Otorisasi

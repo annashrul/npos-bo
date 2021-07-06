@@ -2,7 +2,7 @@ import { TRANSACTION, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { setLoading } from "../masterdata/customer/customer.action";
-import { handleGet, handleGetExport } from "../handleHttp";
+import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
 export function setDownload(load) {
   return {
@@ -145,11 +145,11 @@ export const FetchTransaction = (where = "") => {
   };
 };
 
-export const FetchTransactionExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchTransactionExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let url = `alokasi_trx/report?page=${page === "NaN" || page === null || page === "" || page === undefined ? 1 : page}&perpage=${perpage}`;
+    let url = `alokasi_trx/report?perpage=${perpage}`;
     if (where !== "") {
-      url += where;
+      url += `&${where}`;
     }
     handleGetExport(
       url,
@@ -162,46 +162,11 @@ export const FetchTransactionExcel = (page = 1, where = "", perpage = 99999) => 
     );
   };
 };
-export const DeleteTransaction = (id) => {
+export const DeleteTransaction = (val) => {
   return (dispatch) => {
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Silahkan tunggu.",
-      html: "Sedang menghapus data..",
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      onClose: () => {},
+    handleDelete(`alokasi/${val.id}`, () => {
+      dispatch(FetchTransaction(val.where));
     });
-    let url = `alokasi/${id}`;
-    axios
-      .delete(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-        Swal.close();
-        if (data.status === "success") {
-          Toast.fire({
-            icon: "success",
-            title: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(FetchTransaction(1));
-      })
-      .catch(function (error) {
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text: JSON.stringify(error),
-        });
-      });
   };
 };
 export const FetchTransactionData = (code, where = "", isModal = false) => {

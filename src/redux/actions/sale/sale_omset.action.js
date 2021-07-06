@@ -74,14 +74,14 @@ export function setDownload(load) {
 }
 export const FetchReportSaleOmset = (where = "") => {
   return (dispatch) => {
-    let url = `report/penjualan/omset`;
-    if (where !== "") url += `?${where}`;
+    let url = `report/penjualan/omset?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(url, (res) => dispatch(setReport(res.data)));
   };
 };
-export const FetchReportSaleOmsetExcel = (page = 1, where = "", perpage = 10000) => {
+export const FetchReportSaleOmsetExcel = (where = "", perpage = 10000) => {
   return (dispatch) => {
-    let url = `report/penjualan/omset?page=${page}&perpage=${perpage}`;
+    let url = `report/penjualan/omset?perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }

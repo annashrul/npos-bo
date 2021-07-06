@@ -12,7 +12,8 @@ import Datetime from "react-datetime";
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from "reactstrap";
 import SaleOmsetPeriodeDetail from "../../modals/report/sale/form_sale_omset_periode_detail";
 import Swal from "sweetalert2";
-import { generateNo } from "../../../../helper";
+import { float, generateNo, noData, parseToRp, rmToZero } from "../../../../helper";
+import TableCommon from "../../common/TableCommon";
 
 class SaleOmsetPeriodeArchive extends Component {
   constructor(props) {
@@ -292,28 +293,30 @@ class SaleOmsetPeriodeArchive extends Component {
   }
 
   render() {
-    const {
-      // total,
-      last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.data;
+    const { total, last_page, per_page, current_page, data } = this.props.data;
 
-    let tot_omset_sebelum = 0;
-    let tot_transaksi_sebelum = 0;
-    let tot_rata_sebelum = 0;
-    let tot_omset_sekarang = 0;
-    let tot_transaksi_sekarang = 0;
-    let tot_rata_sekarang = 0;
-    let tot_pertumbuhan = 0;
-    let tot_persen_pertumbuhan = 0;
+    let totalOmsetSebelumPerHalaman = 0;
+    let totalTransaksiSebelumPerHalaman = 0;
+    let totalRataRataSebelumPerHalaman = 0;
+    let totalOmsetSekarangPerHalaman = 0;
+    let totalTransaksiSekarangPerHalaman = 0;
+    let totalRataRataSekarangPerHalaman = 0;
+    let totalPertumbuhanPerHalaman = 0;
+    let totalPertumbuhanPersenPerHalaman = 0;
 
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "Lokasi" },
+      { colSpan: 3, label: "Bulan lalu" },
+      { colSpan: 3, label: "Bulan sekarang" },
+      { rowSpan: 2, label: "Pertumbuhan" },
+      { rowSpan: 2, label: "Persentase" },
+    ];
+    const rowSpan = [{ label: "Omset" }, { label: "Transaksi" }, { label: "Rata-rata" }, { label: "Omset" }, { label: "Transaksi" }, { label: "Rata-rata" }];
     return (
       <Layout page="Laporan Arsip Penjualan">
-        <div className="row" style={{ zoom: "90%" }}>
+        <div className="row">
           <div className="col-md-10">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3">
@@ -334,13 +337,6 @@ class SaleOmsetPeriodeArchive extends Component {
             <div className="row">
               <div className="col-12 col-xs-12 col-md-12">
                 <div className="form-group text-right">
-                  {/* <button
-                        style={{ marginTop: "28px", marginRight: "5px" }}
-                        className="btn btn-primary"
-                        onClick={this.handleSearch}
-                      >
-                        <i className="fa fa-search" />
-                      </button> */}
                   <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
                     <i className="fa fa-print" /> Export
                   </button>
@@ -348,156 +344,102 @@ class SaleOmsetPeriodeArchive extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-12">
-            <div style={{ overflowX: "auto" }}>
-              <table className="table table-hover table-noborder">
-                <thead className="bg-light">
-                  <tr>
-                    <th className="text-black text-center middle nowrap">No</th>
-                    <th className="text-black text-center middle nowrap">#</th>
-                    <th className="text-black middle nowrap">Lokasi</th>
-                    <th className="text-black middle nowrap">
-                      Omset
-                      <br />
-                      Bulan Lalu
-                    </th>
-                    <th className="text-black middle nowrap">
-                      Transaksi
-                      <br />
-                      Bulan Lalu
-                    </th>
-                    <th className="text-black middle nowrap">
-                      Rata - Rata Transaksi
-                      <br />
-                      Bulan Lalu
-                    </th>
-                    <th className="text-black middle nowrap">
-                      Omset
-                      <br />
-                      Bulan Sekarang
-                    </th>
-                    <th className="text-black middle nowrap">
-                      Transaksi
-                      <br />
-                      Bulan Sekarang
-                    </th>
-                    <th className="text-black middle nowrap">
-                      Rata - Rata Transaksi
-                      <br />
-                      Bulan Sekarang
-                    </th>
-                    <th className="text-black middle nowrap">Pertumbuhan</th>
-                    <th className="text-black middle nowrap">Persentase</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {typeof data === "object"
-                    ? data.length > 0
-                      ? data.map((v, i) => {
-                          tot_omset_sebelum = tot_omset_sebelum + parseInt(v.omset_sebelum, 10);
-                          tot_transaksi_sebelum = tot_transaksi_sebelum + parseInt(v.transaksi_sebelum, 10);
-                          tot_rata_sebelum =
-                            tot_rata_sebelum + (!Number.isNaN(parseFloat(v.omset_sebelum) / parseFloat(v.transaksi_sebelum)) ? parseFloat(v.omset_sebelum) / parseFloat(v.transaksi_sebelum) : 0);
-                          tot_omset_sekarang = tot_omset_sekarang + parseInt(v.omset_sekarang, 10);
-                          tot_transaksi_sekarang = tot_transaksi_sekarang + parseInt(v.transaksi_sekarang, 10);
-                          tot_rata_sekarang =
-                            tot_rata_sekarang + (!Number.isNaN(parseFloat(v.omset_sekarang) / parseFloat(v.transaksi_sekarang)) ? parseFloat(v.omset_sekarang) / parseFloat(v.transaksi_sekarang) : 0);
-                          tot_pertumbuhan = tot_pertumbuhan + (parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10));
-                          tot_persen_pertumbuhan =
-                            tot_persen_pertumbuhan +
-                            (!Number.isNaN(((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum)) * 100) &&
-                            ((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum)) * 100 !== Infinity
-                              ? ((parseFloat(v.omset_sekarang, 10) - parseFloat(v.omset_sebelum, 10)) / parseFloat(v.omset_sebelum, 10)) * 100
-                              : 0);
-
-                          return (
-                            <tr key={i}>
-                              <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
-                              <td className="text-center middle nowrap">
-                                <div className="btn-group">
-                                  <UncontrolledButtonDropdown>
-                                    <DropdownToggle caret></DropdownToggle>
-                                    <DropdownMenu>
-                                      <DropdownItem onClick={(e) => this.handleDetail(e, v)}>Detail</DropdownItem>
-                                    </DropdownMenu>
-                                  </UncontrolledButtonDropdown>
-                                </div>
-                              </td>
-                              <td className="middle nowrap">{v.nama_toko}</td>
-                              <td className="text-right middle nowrap">{toRp(parseInt(v.omset_sebelum, 10))}</td>
-                              <td className="text-right middle nowrap">{toRp(parseInt(v.transaksi_sebelum, 10))}</td>
-                              <td className="text-right middle nowrap">
-                                {toRp(
-                                  !Number.isNaN(parseInt(v.omset_sebelum, 10) / parseInt(v.transaksi_sebelum, 10))
-                                    ? parseFloat(parseFloat(v.omset_sebelum) / parseFloat(v.transaksi_sebelum)).toFixed(2)
-                                    : 0
-                                )}
-                              </td>
-                              <td className="text-right middle nowrap">{toRp(parseInt(v.omset_sekarang, 10))}</td>
-                              <td className="text-right middle nowrap">{toRp(parseInt(v.transaksi_sekarang, 10))}</td>
-                              <td className="text-right middle nowrap">
-                                {toRp(
-                                  !Number.isNaN(parseInt(v.omset_sekarang, 10) / parseInt(v.transaksi_sekarang, 10))
-                                    ? parseFloat(parseFloat(v.omset_sekarang) / parseFloat(v.transaksi_sekarang)).toFixed(2)
-                                    : 0
-                                )}
-                              </td>
-                              <td className="text-right middle nowrap">{toRp(parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10))}</td>
-                              <td className="text-right middle nowrap">
-                                {toRp(
-                                  !Number.isNaN(((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum)) * 100) &&
-                                    ((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum)) * 100 !== Infinity
-                                    ? ((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum)) * 100
-                                    : 0
-                                )}
-                                %
-                              </td>
-                            </tr>
-                          );
-                        })
-                      : "No data."
-                    : "No data."}
-                </tbody>
-
-                <tfoot>
-                  <tr>
-                    <td colSpan={3}> Total</td>
-
-                    <td className="text-right middle nowrap">{toRp(parseInt(tot_omset_sebelum, 10))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseInt(tot_transaksi_sebelum, 10))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseFloat(tot_rata_sebelum).toFixed(2))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseInt(tot_omset_sekarang, 10))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseInt(tot_transaksi_sekarang, 10))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseFloat(tot_rata_sekarang).toFixed(2))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseInt(tot_pertumbuhan, 10))}</td>
-                    <td className="text-right middle nowrap">{toRp(parseInt(tot_persen_pertumbuhan, 10))}%</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            <div style={{ marginTop: "20px", float: "right" }}>
-              <Paginationq current_page={parseInt(current_page, 10)} per_page={parseInt(per_page, 10)} total={parseInt(last_page * per_page, 10)} callback={this.handlePageChange.bind(this)} />
-            </div>
-            {this.props.saleOmsetPeriodeReportExcel.data !== undefined && this.props.saleOmsetPeriodeReportExcel.data.length > 0 ? (
-              <SaleOmsetPeriodeReportExcel
-                startDate={moment.unix(this.state.startDate / 1000).format("yyyy-MM-DD")}
-                endDate={moment.unix(this.state.endDate / 1000).format("yyyy-MM-DD")}
-                location={this.state.location}
-              />
-            ) : (
-              ""
-            )}
-            {typeof this.props.detail === "object" ? (
-              <SaleOmsetPeriodeDetail
-                startDate={moment.unix(this.state.startDate / 1000).format("yyyy-MM-DD")}
-                endDate={moment.unix(this.state.endDate / 1000).format("yyyy-MM-DD")}
-                dataDetail={this.props.detail}
-              />
-            ) : (
-              ""
-            )}
-          </div>
         </div>
+        <TableCommon
+          head={head}
+          rowSpan={rowSpan}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
+                    let omsetSebelum = float(v.omset_sebelum);
+                    let transaksiSebelum = float(v.transaksi_sebelum);
+                    let rataRataSebelum = float(omsetSebelum / transaksiSebelum);
+                    let omsetSekarang = float(v.omset_sekarang);
+                    let transaksiSekarang = float(v.transaksi_sekarang);
+                    let rataRataSekarang = float(omsetSekarang / transaksiSekarang);
+                    let pertumbuhan = float(omsetSekarang / omsetSebelum);
+                    let pertumbuhanPersen = float(((omsetSekarang - omsetSebelum) / omsetSebelum) * 100);
+
+                    rataRataSebelum = rataRataSebelum !== Infinity ? rataRataSebelum : float(0);
+                    pertumbuhan = pertumbuhan !== Infinity ? pertumbuhan : float(0);
+                    pertumbuhanPersen = pertumbuhanPersen !== Infinity ? pertumbuhanPersen : float(0);
+                    rataRataSekarang = rataRataSekarang !== Infinity ? rataRataSekarang : float(0);
+
+                    totalOmsetSebelumPerHalaman += omsetSebelum;
+                    totalTransaksiSebelumPerHalaman += transaksiSebelum;
+                    totalRataRataSebelumPerHalaman += rataRataSebelum;
+                    totalOmsetSekarangPerHalaman += omsetSekarang;
+                    totalTransaksiSekarangPerHalaman += transaksiSekarang;
+                    totalRataRataSekarangPerHalaman += rataRataSekarang;
+                    totalPertumbuhanPerHalaman += pertumbuhan;
+                    totalPertumbuhanPersenPerHalaman += pertumbuhanPersen;
+
+                    return (
+                      <tr key={i}>
+                        <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
+                        <td className="text-center middle nowrap">
+                          <div className="btn-group">
+                            <UncontrolledButtonDropdown>
+                              <DropdownToggle caret></DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem onClick={(e) => this.handleDetail(e, v)}>Detail</DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledButtonDropdown>
+                          </div>
+                        </td>
+                        <td className="middle nowrap">{v.nama_toko}</td>
+                        <td className="text-right middle nowrap">{parseToRp(omsetSebelum)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(transaksiSebelum)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(rataRataSebelum)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(omsetSekarang)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(transaksiSekarang)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(rataRataSekarang)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(pertumbuhan)}</td>
+                        <td className="text-right middle nowrap">{parseToRp(pertumbuhanPersen)} %</td>
+                      </tr>
+                    );
+                  })
+                : noData(head.length)
+              : noData(head.length)
+          }
+          footer={[
+            {
+              data: [
+                { colSpan: 3, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 1, label: parseToRp(totalOmsetSebelumPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalTransaksiSebelumPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalRataRataSebelumPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalOmsetSekarangPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalTransaksiSekarangPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalRataRataSekarangPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalPertumbuhanPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalPertumbuhanPersenPerHalaman) + " %" },
+              ],
+            },
+          ]}
+        />
+        {this.props.saleOmsetPeriodeReportExcel.data !== undefined && this.props.saleOmsetPeriodeReportExcel.data.length > 0 ? (
+          <SaleOmsetPeriodeReportExcel
+            startDate={moment.unix(this.state.startDate / 1000).format("yyyy-MM-DD")}
+            endDate={moment.unix(this.state.endDate / 1000).format("yyyy-MM-DD")}
+            location={this.state.location}
+          />
+        ) : (
+          ""
+        )}
+        {typeof this.props.detail === "object" ? (
+          <SaleOmsetPeriodeDetail
+            startDate={moment.unix(this.state.startDate / 1000).format("yyyy-MM-DD")}
+            endDate={moment.unix(this.state.endDate / 1000).format("yyyy-MM-DD")}
+            dataDetail={this.props.detail}
+          />
+        ) : (
+          ""
+        )}
       </Layout>
     );
   }

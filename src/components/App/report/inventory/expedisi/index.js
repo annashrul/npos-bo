@@ -1,504 +1,110 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
-import {
-  FetchExpedisi,
-  FetchExpedisiExcel,
-} from "redux/actions/inventory/expedisi.action";
+import { FetchExpedisi, FetchExpedisiExcel } from "redux/actions/inventory/expedisi.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import ExpedisiReportExcel from "components/App/modals/report/inventory/expedisi_report/form_expedisi_excel";
-import Select from "react-select";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import { statusQ } from "helper";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import TableCommon from "../../../common/TableCommon";
+import { statusPacking, STATUS_PACKING_DAN_EXPEDISI } from "../../../../../helperStatus";
+import { generateNo, getFetchWhere, getPeriode, noData, rmSpaceToStrip, toDate } from "../../../../../helper";
+
 class ExpedisiReport extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleService = this.handleService.bind(this);
     this.state = {
       where_data: "",
-      any: "",
-      location: "",
-      location_data: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
-      sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
-      status: "",
-      status_data: [],
+      startDate: "",
+      endDate: "",
+      column_data: [
+        { value: "kd_expedisi", label: "Kode Ekspedisi" },
+        { value: "tgl_expedisi", label: "Tanggal" },
+        { value: "status", label: "Status" },
+        { value: "pengirim", label: "Pengirim" },
+      ],
       isModalExport: false,
     };
   }
-  componentWillUnmount() {
-    this.setState({ isModalExport: false });
-  }
-  componentWillMount() {
-    let page = localStorage.page_expedisi_report;
-    this.handleParameter(page !== undefined && page !== null ? page : 1);
-  }
-  componentDidMount() {
-    if (
-      localStorage.location_expedisi_report !== undefined &&
-      localStorage.location_expedisi_report !== ""
-    ) {
-      this.setState({ location: localStorage.location_expedisi_report });
-    }
-    if (
-      localStorage.any_expedisi_report !== undefined &&
-      localStorage.any_expedisi_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_expedisi_report });
-    }
-    if (
-      localStorage.date_from_expedisi_report !== undefined &&
-      localStorage.date_from_expedisi_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_expedisi_report });
-    }
-    if (
-      localStorage.date_to_expedisi_report !== undefined &&
-      localStorage.date_to_expedisi_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_expedisi_report });
-    }
-    if (
-      localStorage.sort_expedisi_report !== undefined &&
-      localStorage.sort_expedisi_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_expedisi_report });
-    }
-    if (
-      localStorage.filter_expedisi_report !== undefined &&
-      localStorage.filter_expedisi_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_expedisi_report });
-    }
-    if (
-      localStorage.status_expedisi_report !== undefined &&
-      localStorage.status_expedisi_report !== null
-    ) {
-      this.setState({ status: localStorage.status_expedisi_report });
-    }
-  }
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_expedisi_report", pageNumber);
-    this.props.dispatch(FetchExpedisi(pageNumber));
-  }
-  toggle(e, code, barcode, name) {
-    e.preventDefault();
-    localStorage.setItem("code", code);
-    localStorage.setItem("barcode", barcode);
-    localStorage.setItem("name", name);
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailExpedisi"));
-    // this.props.dispatch(FetchExpedisiData(code))
-  }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_expedisi_report", `${awal}`);
-    localStorage.setItem("date_to_expedisi_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
-  handleSearch(e) {
-    e.preventDefault();
-    localStorage.setItem("any_expedisi_report", this.state.any);
-    this.handleParameter(1);
-  }
-  handleParameter(pageNumber) {
-    let dateFrom = localStorage.date_from_expedisi_report;
-    let dateTo = localStorage.date_to_expedisi_report;
-    let lokasi = localStorage.location_expedisi_report;
-    let any = localStorage.any_expedisi_report;
-    let sort = localStorage.sort_expedisi_report;
-    let filter = localStorage.filter_expedisi_report;
-    let status = localStorage.status_expedisi_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&datefrom=${dateFrom}&dateto=${dateTo}`;
-    }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      where += `&lokasi=${lokasi}`;
-    }
-    if (status !== undefined && status !== null && status !== "") {
-      where += `&status=${status}`;
-    }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    this.props.dispatch(FetchExpedisi(pageNumber, where));
-    // this.props.dispatch(FetchExpedisiExcel(pageNumber,where))
-  }
-  componentWillReceiveProps = (nextProps) => {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "kd_expedisi", value: "Kode Ekspedisi" },
-      { kode: "tgl_expedisi", value: "Tanggal" },
-      { kode: "status", value: "Status" },
-      { kode: "pengirim", value: "Pengirim" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let status = [
-      { kode: "", value: "Semua" },
-      { kode: "0", value: "Proses" },
-      { kode: "1", value: "Dikirim" },
-      { kode: "2", value: "Diterima" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      status_data: data_status,
-    });
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-
-    localStorage.setItem(
-      "status_expedisi_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_expedisi_report
-    );
-    localStorage.setItem(
-      "sort_expedisi_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_expedisi_report
-    );
-    localStorage.setItem(
-      "filter_expedisi_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_expedisi_report
-    );
-  };
-  HandleChangeLokasi(lk) {
-    this.setState({
-      location: lk.value,
-    });
-    localStorage.setItem("location_expedisi_report", lk.value);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.handleService(this.state.where_data, pageNumber);
   }
 
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_expedisi_report", sr.value);
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(FetchExpedisi(where));
+    }
   }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_expedisi_report", fl.value);
-  }
-  HandleChangeStatus(st) {
-    this.setState({
-      status: st.value,
-    });
-    localStorage.setItem("status_expedisi_report", st.value);
-  }
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    this.setState({ isModalExport: true });
 
-    const bool = !this.props.isOpen;
-    // let range = total*perpage;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formExpedisiExcel"));
-    this.props.dispatch(FetchExpedisiExcel(1, this.state.where_data, total));
+  handleModal(total) {
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let getDate = periode.split("-");
+    this.setState({ isModalExport: true, startDate: getDate[0], endDate: getDate[1], where_data: where });
+    this.props.dispatch(FetchExpedisiExcel(this.state.where_data, total));
   }
 
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
-    const {
-      per_page,
-      last_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.expedisiReport;
+    const { per_page, last_page, current_page, total, data } = this.props.expedisiReport;
+    const { startDate, endDate, column_data, isModalExport } = this.state;
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "No Expedisi", width: "1%" },
+      { rowSpan: 2, label: "Pengirim" },
+      { colSpan: 2, label: "Lokasi", width: "1%" },
+      { rowSpan: 2, label: "Operator" },
+      { rowSpan: 2, label: "Status", width: "1%" },
+      { rowSpan: 2, label: "Tanggal", width: "1%" },
+    ];
+    const rowSpan = [{ label: "Asal" }, { label: "Tujuan" }];
     return (
       <Layout page="Laporan Expedisi">
-        <div className="row">
-          <div className="col-md-10" style={{ zoom: "85%" }}>
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
-              </div>
+        <HeaderReportCommon
+          pathName="ReportExpedisi"
+          isLocation={true}
+          isColumn={true}
+          isSort={true}
+          isStatus={true}
+          columnData={column_data}
+          statusData={STATUS_PACKING_DAN_EXPEDISI}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal(last_page * per_page)}
+          excelData={this.props.download}
+        />
 
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor="">Lokasi</label>
-                  <Select
-                    options={this.state.location_data}
-                    onChange={this.HandleChangeLokasi}
-                    placeholder="Pilih Lokasi"
-                    value={this.state.location_data.find((op) => {
-                      return op.value === this.state.location;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Status</label>
-                  <Select
-                    options={this.state.status_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeStatus}
-                    value={this.state.status_data.find((op) => {
-                      return op.value === this.state.status;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-6 col-xs-6 col-md-2"
-            style={{ zoom: "85%", textAlign: "right" }}
-          >
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
-                    <i className="fa fa-print"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="table-responsive" style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
-            <thead className="bg-light">
-              <tr>
-                {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Kode Expedisi.
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Tanggal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Pengirim
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Asal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Tujuan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Nama Operator
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.length > 0 ? (
-                  data.map((v, i) => {
+        <TableCommon
+          head={head}
+          rowSpan={rowSpan}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td style={columnStyle}>
-                          {" "}
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                        </td>
-
-                        <td style={columnStyle}>{v.kd_expedisi}</td>
-                        <td style={columnStyle}>
-                          {moment(v.tgl_expedisi).format("DD-MM-YYYY")}
-                        </td>
-                        <td style={columnStyle}>{v.pengirim}</td>
-                        <td style={columnStyle}>{v.nama_lokasi_asal}</td>
-                        <td style={columnStyle}>{v.nama_lokasi_tujuan}</td>
-                        <td style={columnStyle}>{v.nama_operator}</td>
-                        <td style={columnStyle}>
-                          {
-                            v.status === "0"
-                              ? statusQ("danger", "Belum Expedisi")
-                              : v.status === "1"
-                              ? statusQ("warning", "Sudah Expedisi")
-                              : ""
-                            // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                          }
-                        </td>
+                        <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.kd_expedisi)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.pengirim)}</td>
+                        <td className="middle nowrap">{v.nama_lokasi_asal}</td>
+                        <td className="middle nowrap">{v.nama_lokasi_asal}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.nama_operator)}</td>
+                        <td className="middle nowrap">{statusPacking(v.status, true)}</td>
+                        <td className="middle nowrap">{toDate(v.tgl_expedisi)}</td>
                       </tr>
                     );
                   })
-                ) : (
-                  <tr>
-                    <td colSpan={8}>No Data</td>
-                  </tr>
-                )
-              ) : (
-                <tr>
-                  <td colSpan={8}>No Data</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={parseInt(current_page, 10)}
-            per_page={parseInt(per_page, 10)}
-            total={parseInt(per_page, 10) * parseInt(last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-        {/* <DetailExpedisi expedisiDetail={this.props.expedisiDetail}/> */}
-        {this.state.isModalExport ? (
-          <ExpedisiReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            location={this.state.location}
-          />
-        ) : null}
+                : noData(head.length)
+              : noData(head.length)
+          }
+        />
+
+        {this.props.isOpen && isModalExport ? <ExpedisiReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );
   }
@@ -506,13 +112,10 @@ class ExpedisiReport extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    download: state.expedisiReducer.download,
     expedisiReport: state.expedisiReducer.report,
-    isLoadingDetail: state.expedisiReducer.isLoadingDetail,
     expedisiReportExcel: state.expedisiReducer.report_excel,
     auth: state.auth,
-    isLoading: state.expedisiReducer.isLoading,
-    // expedisiDetail:state.expedisiReducer.expedisi_data,
-    // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

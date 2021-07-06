@@ -5,53 +5,22 @@ import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
-import {
-  CURRENT_DATE,
-  dateRange,
-  DEFAULT_WHERE,
-  generateNo,
-  getStorage,
-  getWhere,
-  handleDataSelect,
-  isEmptyOrUndefined,
-  isProgress,
-  noData,
-  rmSpaceToStrip,
-  setStorage,
-  toDate,
-} from "../../../../../helper";
-import LokasiCommon from "../../../common/LokasiCommon";
-import SelectCommon from "../../../common/SelectCommon";
-import SelectSortCommon from "../../../common/SelectSortCommon";
+import { CURRENT_DATE, DEFAULT_WHERE, generateNo, getFetchWhere, getPeriode, noData, rmSpaceToStrip, toDate } from "../../../../../helper";
+
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import { statusAlokasi, STATUS_ALOKASI } from "../../../../../helperStatus";
-
-const dateFromStorage = "dateFromReportAlokasi";
-const dateToStorage = "dateToReportAlokasi";
-const locationStorage = "locationReportAlokasi";
-const statusStorage = "statusReportAlokasi";
-const columnStorage = "columnReportAlokasi";
-const sortStorage = "sortReportAlokasi";
-const anyStorage = "anyReportAlokasi";
-const activeDateRangePickerStorage = "activeDateReportAlokasi";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
 
 class AlokasiReport extends Component {
   constructor(props) {
     super(props);
     this.handleModal = this.handleModal.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
       where_data: DEFAULT_WHERE,
-      any: "",
-      location: "",
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
-      status: "",
-      sort: "",
-      column: "",
       column_data: [
         { value: "no_faktur_mutasi", label: "Faktur Mutasi" },
         { value: "tgl_mutasi", label: "Tanggal Mutasi" },
@@ -68,74 +37,29 @@ class AlokasiReport extends Component {
     });
   }
 
-  componentWillMount() {
-    this.handleService();
-  }
-  componentDidMount() {
-    this.handleService();
-  }
-  handleService(page = 1) {
-    let getDateFrom = getStorage(dateFromStorage);
-    let getDateTo = getStorage(dateToStorage);
-    let getLocation = getStorage(locationStorage);
-    let getStatus = getStorage(statusStorage);
-    let getColumn = getStorage(columnStorage);
-    let getSort = getStorage(sortStorage);
-    let getAny = getStorage(anyStorage);
-
-    let where = `page=${page}`;
-    let state = {};
-
-    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
-      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
-      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
-    } else {
-      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(FetchAlokasi(where));
     }
-    if (isEmptyOrUndefined(getLocation)) {
-      where += `&lokasi=${getLocation}`;
-      Object.assign(state, { location: getLocation });
-    }
-    if (isEmptyOrUndefined(getStatus)) {
-      where += `&status=${getStatus}`;
-      Object.assign(state, { status: getStatus });
-    }
-
-    if (isEmptyOrUndefined(getColumn)) {
-      where += `&sort=${getColumn}`;
-      Object.assign(state, { column: getColumn });
-      if (isEmptyOrUndefined(getSort)) {
-        where += `|${getSort}`;
-        Object.assign(state, { sort: getSort });
-      }
-    }
-
-    if (isEmptyOrUndefined(getAny)) {
-      where += `&q=${getAny}`;
-      Object.assign(state, { any: getAny });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-    this.props.dispatch(FetchAlokasi(where));
   }
 
   handlePageChange(page) {
-    this.handleService(page);
-  }
-
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService();
+    this.handleService(this.state.where_data, page);
   }
 
   handleModal(type, obj) {
-    let whereState = getWhere(this.state.where_data);
-    let where = `page=1${whereState}`;
-    let setState = { where_data: whereState };
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let getDate = periode.split("-");
+    let setState = { startDate: getDate[0], endDate: getDate[1], where_data: where };
+
     if (type === "excel") {
       Object.assign(setState, { isModalExcel: true });
-      this.props.dispatch(FetchAlokasiExcel(1, where, obj.total));
+      this.props.dispatch(FetchAlokasiExcel(where, obj.total));
     } else if (type === "detail") {
       Object.assign(setState, { isModalDetail: true });
       this.props.dispatch(FetchAlokasiDetail(obj.no_faktur_mutasi, where));
@@ -144,22 +68,12 @@ class AlokasiReport extends Component {
   }
 
   handleRePrint(id) {
-    // e.preventDefault();
     this.props.dispatch(rePrintFaktur(id));
-  }
-
-  handleSelect(state, res) {
-    if (state === "location") setStorage(locationStorage, res.value);
-    if (state === "status") setStorage(statusStorage, res.value);
-    if (state === "column") setStorage(columnStorage, res.value);
-    if (state === "sort") setStorage(sortStorage, res.value);
-    this.setState({ [state]: res.value });
-    this.handleService();
   }
 
   render() {
     const { per_page, last_page, current_page, data, total } = this.props.alokasiReport;
-    const { startDate, endDate, location, status, column, column_data, sort, any, isModalExcel, isModalDetail } = this.state;
+    const { startDate, endDate, column_data, isModalExcel, isModalDetail } = this.state;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
@@ -171,64 +85,18 @@ class AlokasiReport extends Component {
     ];
     return (
       <Layout page="Laporan Alokasi">
-        <div className="row">
-          <div className="col-6 col-xs-6 col-md-3">
-            {dateRange(
-              (first, last, isActive) => {
-                setStorage(activeDateRangePickerStorage, isActive);
-                setStorage(dateFromStorage, first);
-                setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
-              },
-              `${toDate(startDate)} - ${toDate(endDate)}`,
-              getStorage(activeDateRangePickerStorage)
-            )}
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Status" options={handleDataSelect(STATUS_ALOKASI, "value", "label")} dataEdit={status} callback={(res) => this.handleSelect("status", res)} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Kolom" options={column_data} dataEdit={column} callback={(res) => this.handleSelect("column", res)} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <SelectSortCommon dataEdit={sort} callback={(res) => this.handleSelect("sort", res)} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <label>Cari</label>
-            <div className="input-group">
-              <input
-                type="search"
-                name="any"
-                className="form-control"
-                placeholder="tulis sesuatu disini"
-                value={any}
-                onChange={(e) => this.setState({ any: e.target.value })}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") this.handleSearch(e);
-                }}
-              />
-              <span className="input-group-append">
-                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-                <button
-                  className="btn btn-primary ml-1"
-                  onClick={(e) => {
-                    this.handleModal("excel", {
-                      total: last_page * per_page,
-                    });
-                  }}
-                >
-                  {isProgress(this.props.download)}
-                </button>
-              </span>
-            </div>
-          </div>
-        </div>
-
+        <HeaderReportCommon
+          pathName="ReportAlokasi"
+          isLocation={true}
+          isColumn={true}
+          isSort={true}
+          isStatus={true}
+          columnData={column_data}
+          statusData={STATUS_ALOKASI}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
+          excelData={this.props.download}
+        />
         <TableCommon
           head={head}
           rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}

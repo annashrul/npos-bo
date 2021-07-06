@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
-import { ModalToggle } from "../modal.action";
+import { ModalToggle, ModalType } from "../modal.action";
 
 export function setDownload(load) {
   return {
@@ -142,9 +142,9 @@ export const FetchReportSaleByCust = (where = "") => {
     });
   };
 };
-export const FetchReportSaleByCustExcel = (page = 1, where = "", perpage = 10000) => {
+export const FetchReportSaleByCustExcel = (where = "", perpage = 10000) => {
   return (dispatch) => {
-    let url = `report/penjualan/by_cust?page=${page}&perpage=${perpage}`;
+    let url = `report/penjualan/by_cust?perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
@@ -152,6 +152,7 @@ export const FetchReportSaleByCustExcel = (page = 1, where = "", perpage = 10000
       url,
       (res) => {
         dispatch(setReportExcel(res.data));
+        dispatch(ModalType("formSaleByCustExcel"));
         dispatch(ModalToggle(true));
       },
       (res) => {

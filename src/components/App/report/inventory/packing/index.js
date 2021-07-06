@@ -1,526 +1,125 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
-import {
-  FetchPacking,
-  FetchPackingExcel,
-} from "redux/actions/inventory/packing.action";
+import { FetchPacking, FetchPackingExcel } from "redux/actions/inventory/packing.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import PackingReportExcel from "components/App/modals/report/inventory/packing_report/form_packing_excel";
-import Select from "react-select";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import { statusQ } from "helper";
-import {
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledButtonDropdown,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import TableCommon from "../../../common/TableCommon";
+import { statusPacking, STATUS_PACKING_DAN_EXPEDISI } from "../../../../../helperStatus";
+import { generateNo, getFetchWhere, getPeriode, noData, rmSpaceToStrip, toDate } from "../../../../../helper";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
+
 class PackingReport extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleService = this.handleService.bind(this);
     this.state = {
       where_data: "",
-      any: "",
-      location: "",
-      location_data: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
-      sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
-      status: "",
-      status_data: [],
+      startDate: "",
+      endDate: "",
+      column_data: [
+        { value: "kd_packing", label: "Kode Packing" },
+        { value: "tgl_packing", label: "Tanggal" },
+        { value: "status", label: "Status" },
+        { value: "pengirim", label: "Pengirim" },
+      ],
       isModalExport: false,
     };
   }
-  componentWillUnmount() {
-    this.setState({ isModalExport: false });
-  }
-  componentWillMount() {
-    let page = localStorage.page_packing_report;
-    this.handleParameter(page !== undefined && page !== null ? page : 1);
-  }
-  componentDidMount() {
-    if (
-      localStorage.location_packing_report !== undefined &&
-      localStorage.location_packing_report !== ""
-    ) {
-      this.setState({ location: localStorage.location_packing_report });
-    }
-    if (
-      localStorage.any_packing_report !== undefined &&
-      localStorage.any_packing_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_packing_report });
-    }
-    if (
-      localStorage.date_from_packing_report !== undefined &&
-      localStorage.date_from_packing_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_packing_report });
-    }
-    if (
-      localStorage.date_to_packing_report !== undefined &&
-      localStorage.date_to_packing_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_packing_report });
-    }
-    if (
-      localStorage.sort_packing_report !== undefined &&
-      localStorage.sort_packing_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_packing_report });
-    }
-    if (
-      localStorage.filter_packing_report !== undefined &&
-      localStorage.filter_packing_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_packing_report });
-    }
-    if (
-      localStorage.status_packing_report !== undefined &&
-      localStorage.status_packing_report !== null
-    ) {
-      this.setState({ status: localStorage.status_packing_report });
-    }
-  }
+
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_packing_report", pageNumber);
-    this.props.dispatch(FetchPacking(pageNumber));
-  }
-  toggle(e, code, barcode, name) {
-    e.preventDefault();
-
-    localStorage.setItem("code", code);
-    localStorage.setItem("barcode", barcode);
-    localStorage.setItem("name", name);
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailPacking"));
-    // this.props.dispatch(FetchPackingData(code))
-  }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_packing_report", `${awal}`);
-    localStorage.setItem("date_to_packing_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
-  handleSearch(e) {
-    e.preventDefault();
-    localStorage.setItem("any_packing_report", this.state.any);
-    this.handleParameter(1);
-  }
-  handleParameter(pageNumber) {
-    let dateFrom = localStorage.date_from_packing_report;
-    let dateTo = localStorage.date_to_packing_report;
-    let lokasi = localStorage.location_packing_report;
-    let any = localStorage.any_packing_report;
-    let sort = localStorage.sort_packing_report;
-    let filter = localStorage.filter_packing_report;
-    let status = localStorage.status_packing_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&datefrom=${dateFrom}&dateto=${dateTo}`;
-    }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      where += `&lokasi=${lokasi}`;
-    }
-    if (status !== undefined && status !== null && status !== "") {
-      where += `&status=${status}`;
-    }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    this.props.dispatch(FetchPacking(pageNumber, where));
-    // this.props.dispatch(FetchPackingExcel(pageNumber,where))
-  }
-  componentWillReceiveProps = (nextProps) => {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "kd_packing", value: "Kode Ekspedisi" },
-      { kode: "tgl_packing", value: "Tanggal" },
-      { kode: "status", value: "Status" },
-      { kode: "pengirim", value: "Pengirim" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let status = [
-      { kode: "", value: "Semua" },
-      { kode: "0", value: "Proses" },
-      { kode: "1", value: "Dikirim" },
-      { kode: "2", value: "Diterima" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      status_data: data_status,
-    });
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-
-    localStorage.setItem(
-      "status_packing_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_packing_report
-    );
-    localStorage.setItem(
-      "sort_packing_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_packing_report
-    );
-    localStorage.setItem(
-      "filter_packing_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_packing_report
-    );
-  };
-  HandleChangeLokasi(lk) {
-    this.setState({
-      location: lk.value,
-    });
-    localStorage.setItem("location_packing_report", lk.value);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.handleService(this.state.where_data, pageNumber);
   }
 
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_packing_report", sr.value);
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(FetchPacking(where));
+    }
   }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_packing_report", fl.value);
-  }
-  HandleChangeStatus(st) {
-    this.setState({
-      status: st.value,
-    });
-    localStorage.setItem("status_packing_report", st.value);
-  }
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    const bool = !this.props.isOpen;
 
-    // let range = total*perpage;
-    this.setState({ isModalExport: true });
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formPackingExcel"));
-    this.props.dispatch(FetchPackingExcel(1, this.state.where_data, total));
+  handleModal(total) {
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let getDate = periode.split("-");
+    this.setState({ isModalExport: true, startDate: getDate[0], endDate: getDate[1], where_data: where });
+    this.props.dispatch(FetchPackingExcel(this.state.where_data, total));
   }
 
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
-    const {
-      per_page,
-      last_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.packingReport;
+    const { per_page, last_page, current_page, total, data } = this.props.packingReport;
+    const { startDate, endDate, column_data, isModalExport } = this.state;
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
+      { colSpan: 4, label: "No faktur", width: "1%" },
+      { rowSpan: 2, label: "Pengirim" },
+      { rowSpan: 2, label: "Penerima" },
+      { colSpan: 2, label: "Lokasi", width: "1%" },
+      { rowSpan: 2, label: "Operator" },
+      { rowSpan: 2, label: "Status", width: "1%" },
+      { rowSpan: 2, label: "Tanggal", width: "1%" },
+    ];
+    const rowSpan = [{ label: "Packing" }, { label: "Beli" }, { label: "Delivery note" }, { label: "Mutasi" }, { label: "Asal" }, { label: "Tujuan" }];
     return (
       <Layout page="Laporan Packing">
-        <div className="row">
-          <div className="col-md-10" style={{ zoom: "85%" }}>
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
-              </div>
+        <HeaderReportCommon
+          pathName="ReportPacking"
+          isLocation={true}
+          isColumn={true}
+          isSort={true}
+          isStatus={true}
+          columnData={column_data}
+          statusData={STATUS_PACKING_DAN_EXPEDISI}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal(last_page * per_page)}
+          excelData={this.props.download}
+        />
 
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor="">Lokasi</label>
-                  <Select
-                    options={this.state.location_data}
-                    onChange={this.HandleChangeLokasi}
-                    placeholder="Pilih Lokasi"
-                    value={this.state.location_data.find((op) => {
-                      return op.value === this.state.location;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Status</label>
-                  <Select
-                    options={this.state.status_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeStatus}
-                    value={this.state.status_data.find((op) => {
-                      return op.value === this.state.status;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="col-6 col-xs-6 col-md-2"
-            style={{ zoom: "85%", textAlign: "right" }}
-          >
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
-                    <i className="fa fa-print"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  #
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Kode Packing.
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Tanggal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Pengirim
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Asal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Tujuan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Nama Operator
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.length > 0 ? (
-                  data.map((v, i) => {
+        <TableCommon
+          head={head}
+          rowSpan={rowSpan}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td style={columnStyle}>
-                          {" "}
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                        <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
+                          <ButtonActionCommon
+                            action={[{ label: "3ply" }]}
+                            callback={(e) => {
+                              if (e === 0) this.props.history.push(`../packing3ply/${v.kd_packing}`);
+                            }}
+                          />
                         </td>
-
-                        <td style={columnStyle}>
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                {/* <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem> */}
-                                <Link to={`../packing3ply/${v.kd_packing}`}>
-                                  <DropdownItem>3ply</DropdownItem>
-                                </Link>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        <td style={columnStyle}>{v.kd_packing}</td>
-                        <td style={columnStyle}>
-                          {moment(v.tgl_packing).format("DD-MM-YYYY")}
-                        </td>
-                        <td style={columnStyle}>{v.pengirim}</td>
-                        <td style={columnStyle}>{v.nama_lokasi_asal}</td>
-                        <td style={columnStyle}>{v.nama_lokasi_tujuan}</td>
-                        <td style={columnStyle}>{v.nama_operator}</td>
-                        <td style={columnStyle}>
-                          {
-                            v.status === "0"
-                              ? statusQ("danger", "Belum Packing")
-                              : v.status === "1"
-                              ? statusQ("warning", "Sudah Packing")
-                              : ""
-                            // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                          }
-                        </td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.kd_packing)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.no_faktur_beli)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.delivery_note)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.no_faktur_mutasi)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.pengirim)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.penerima)}</td>
+                        <td className="middle nowrap">{v.kd_lokasi_1}</td>
+                        <td className="middle nowrap">{v.kd_lokasi_2}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.nama_operator)}</td>
+                        <td className="middle nowrap">{statusPacking(v.status, true)}</td>
+                        <td className="middle nowrap">{toDate(v.tgl_packing)}</td>
                       </tr>
                     );
                   })
-                ) : (
-                  <tr>
-                    <td colSpan={9}>No Data</td>
-                  </tr>
-                )
-              ) : (
-                <tr>
-                  <td colSpan={9}>No Data</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={per_page * last_page}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-        {this.state.isModalExport ? (
-          <PackingReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            location={this.state.location}
-          />
-        ) : null}
+                : noData(head.length)
+              : noData(head.length)
+          }
+        />
+        {this.props.isOpen && isModalExport ? <PackingReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );
   }
@@ -528,13 +127,10 @@ class PackingReport extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    download: state.packingReducer.download,
     packingReport: state.packingReducer.report,
-    isLoadingDetail: state.packingReducer.isLoadingDetail,
     packingReportExcel: state.packingReducer.report_excel,
     auth: state.auth,
-    isLoading: state.packingReducer.isLoading,
-    // packingDetail:state.packingReducer.packing_data,
-    // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

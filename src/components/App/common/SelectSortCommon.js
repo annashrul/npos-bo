@@ -10,8 +10,8 @@ class SelectSortCommon extends Component {
     super(props);
     this.state = {
       dataArray: [
-        { value: "desc", label: "DESCENDING" },
-        { value: "asc", label: "ASCENDING" },
+        { value: "desc", label: "Terbawah" },
+        { value: "asc", label: "Teratas" },
       ],
       dataObject: "desc",
     };
@@ -41,8 +41,8 @@ class SelectSortCommon extends Component {
   render() {
     return (
       <div className="form-group">
-        <label>Sort</label>
-        <Select options={this.state.dataArray} placeholder={`Pilih sort`} onChange={(value, actionMeta) => this.onChange(value)} value={this.state.dataObject} />
+        <label>Urutan</label>
+        <Select options={this.state.dataArray} placeholder={`Pilih`} onChange={(value, actionMeta) => this.onChange(value)} value={this.state.dataObject} />
       </div>
     );
   }

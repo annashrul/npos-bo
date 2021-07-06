@@ -3,13 +3,12 @@ import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import { ModalToggle } from "redux/actions/modal.action";
-import { toRp } from "helper";
 import DetailStockReportTransaction from "./detail_stock_report_transaction";
 import { FetchStockReportDetailTransaction } from "redux/actions/report/inventory/stock_report.action";
 import Cookies from "js-cookie";
 import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
 import TableCommon from "../../../../common/TableCommon";
-import { generateNo, noData } from "../../../../../../helper";
+import { generateNo, noData, parseToRp } from "../../../../../../helper";
 import { FetchStockReportDetailSatuan } from "redux/actions/report/inventory/stock_report.action";
 
 class DetailStockReportSatuan extends Component {
@@ -127,31 +126,30 @@ class DetailStockReportSatuan extends Component {
                         <tr key={i}>
                           <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                           <td className="middle nowrap">
-                            {/* <button style={{ fontSize: "10px" }} className="btn btn-sm btn-primary" onClick={(e) => this.handelDetailTrx(e, v.kd_brg, v.lokasi, v.barcode, v.nm_brg)}> */}
                             <button style={{ fontSize: "10px" }} className="btn btn-sm btn-primary" onClick={(e) => this.handelDetailTrx(e, v)}>
                               Detail
                             </button>
                           </td>
                           <td className={`middle nowrap`}>{v.nama_toko}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga2)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga3)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga4)}</td>
-                          <td className={`middle nowrap text-right`}>{v.stock_awal}</td>
-                          <td className={`middle nowrap text-right`}>{v.stock_masuk}</td>
-                          <td className={`middle nowrap text-right`}>{v.stock_keluar}</td>
-                          <td className={`middle nowrap text-right`}>{v.stock_akhir}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga_beli)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga4)}</td>
+                          <td className={`middle nowrap text-right`}>{parseToRp(v.stock_awal)}</td>
+                          <td className={`middle nowrap text-right`}>{parseToRp(v.stock_masuk)}</td>
+                          <td className={`middle nowrap text-right`}>{parseToRp(v.stock_keluar)}</td>
+                          <td className={`middle nowrap text-right`}>{parseToRp(v.stock_akhir)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga_beli)}</td>
 
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg1)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg2)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg3)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg4)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg1)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg4)}</td>
 
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg1)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg2)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg3)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg4)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg1)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg4)}</td>
                         </tr>
                       );
                     })
@@ -161,33 +159,30 @@ class DetailStockReportSatuan extends Component {
                 {
                   data: [
                     { colSpan: 3, label: "Total", className: "text-left" },
-                    { colSpan: 1, label: toRp(totPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: totFirstStock },
-                    { colSpan: 1, label: totStockIn },
-                    { colSpan: 1, label: totStockOut },
-                    { colSpan: 1, label: totLastStock },
-                    { colSpan: 1, label: toRp(totHpp), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totProfitPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totProfitPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totProfitPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(totProfitPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(sumTotPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(sumTotPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(sumTotPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: toRp(sumTotPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totFirstStock) },
+                    { colSpan: 1, label: parseToRp(totStockIn) },
+                    { colSpan: 1, label: parseToRp(totStockOut) },
+                    { colSpan: 1, label: parseToRp(totLastStock) },
+                    { colSpan: 1, label: parseToRp(totHpp), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
                   ],
                 },
               ]}
             />
           </ModalBody>
         </WrapperModal>
-        {this.props.isOpen && this.state.isModal ? (
-          // <DetailStockReportTransaction lok={this.props.lokasi} startDate={this.props.startDate} endDate={this.props.endDate} code={localStorage.getItem("codeDetailTrx")} />
-          <DetailStockReportTransaction detail={this.state.detail} />
-        ) : null}
+        {this.props.isOpen && this.state.isModal ? <DetailStockReportTransaction detail={this.state.detail} /> : null}
       </div>
     );
   }

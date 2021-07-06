@@ -5,36 +5,23 @@ import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import DetailTransaction from "components/App/modals/report/inventory/transaction_report/detail_transaction";
 import TransactionReportExcel from "components/App/modals/report/inventory/transaction_report/form_transaction_excel";
-import Swal from "sweetalert2";
 import { DeleteTransaction } from "../../../../../redux/actions/inventory/transaction.action";
-import { CURRENT_DATE, dateRange, generateNo, getStorage, getWhere, isEmptyOrUndefined, isProgress, noData, parseToRp, rmSpaceToStrip, setStorage, toDate } from "../../../../../helper";
-import SelectCommon from "../../../common/SelectCommon";
-import SelectSortCommon from "../../../common/SelectSortCommon";
+import { CURRENT_DATE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../../helper";
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import { statusArsipPenjualan, statusMutasi } from "../../../../../helperStatus";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
 
-const dateFromStorage = "dateFromReportReceive";
-const dateToStorage = "dateToReportReceive";
-const columnStorage = "columnReportReveive";
-const sortStorage = "sortReportReveive";
-const anyStorage = "anyReportReveive";
-const activeDateRangePickerStorage = "activeDateRangeReportReveive";
 class TransactionReport extends Component {
   constructor(props) {
     super(props);
     this.handleModal = this.handleModal.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
+    this.handleService = this.handleService.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
       where_data: `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`,
-      any: "",
-      location: "",
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
-      sort: "",
-      column: "",
       column_data: [
         { value: "no_faktur_mutasi", label: "Kode Mutasi" },
         { value: "tgl_mutasi", label: "Tanggal" },
@@ -45,50 +32,25 @@ class TransactionReport extends Component {
     };
   }
 
-  handleService(page = 1) {
-    let getDateFrom = getStorage(dateFromStorage);
-    let getDateTo = getStorage(dateToStorage);
-    let getColumn = getStorage(columnStorage);
-    let getSort = getStorage(sortStorage);
-    let getAny = getStorage(anyStorage);
-
-    let where = `page=${page}`;
-    let state = {};
-    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
-      where = `page=${page}&datefrom=${getDateFrom}&dateto=${getDateTo}`;
-      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
-    } else {
-      where = `page=${page}&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(FetchTransaction(where));
     }
-
-    if (isEmptyOrUndefined(getColumn)) {
-      where += `&sort=${getColumn}`;
-      Object.assign(state, { column: getColumn });
-      if (isEmptyOrUndefined(getSort)) {
-        where += `|${getSort}`;
-        Object.assign(state, { sort: getSort });
-      }
-    }
-    if (isEmptyOrUndefined(getAny)) {
-      where += `&q=${getAny}`;
-      Object.assign(state, { any: getAny });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-    this.props.dispatch(FetchTransaction(where));
   }
-  handleSelect(state, res) {
-    if (state === "column") setStorage(columnStorage, res.value);
-    if (state === "sort") setStorage(sortStorage, res.value);
-    setTimeout(() => this.handleService(1), 500);
-  }
+
   handleModal(type, obj) {
-    let state = {};
-    let whereState = getWhere(this.state.where_data);
-    let where = `page=1${whereState}`;
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let getDate = periode.split("-");
+    let state = { startDate: getDate[0], endDate: getDate[1], where_data: where };
+
     if (type === "excel") {
       Object.assign(state, { isModalExport: true });
-      this.props.dispatch(FetchTransactionExcel(1, where, obj.total));
+      this.props.dispatch(FetchTransactionExcel(where, obj.total));
     } else {
       Object.assign(state, { isModalDetail: true, where_data: where });
       this.props.dispatch(FetchTransactionData(obj.no_faktur_mutasi, where, true));
@@ -100,20 +62,8 @@ class TransactionReport extends Component {
     this.setState({ isModalDetail: false, isModalExport: false });
   }
 
-  componentWillMount() {
-    this.handleService();
-  }
-  componentDidMount() {
-    this.handleService();
-  }
   handlePageChange(pageNumber) {
-    this.handleService(pageNumber);
-  }
-
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService();
+    this.handleService(this.state.where_data, pageNumber);
   }
 
   handleRePrint(id) {
@@ -121,25 +71,13 @@ class TransactionReport extends Component {
   }
 
   HandleRemove(id) {
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this! ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(DeleteTransaction(id));
-      }
-    });
+    let data = { id: id, where: this.state.where_data };
+    this.props.dispatch(DeleteTransaction(data));
   }
 
   render() {
     const { per_page, last_page, current_page, total_periode, data, total } = this.props.transactionReport;
-    const { startDate, endDate, column, column_data, sort, any, where_data, isModalDetail, isModalExport } = this.state;
+    const { startDate, endDate, column_data, where_data, isModalDetail, isModalExport } = this.state;
 
     let totalNetSalePerHalaman = 0;
     let totalHppPerHalaman = 0;
@@ -158,57 +96,15 @@ class TransactionReport extends Component {
     ];
     return (
       <Layout page="Laporan Alokasi Transaksi">
-        <div className="row">
-          <div className="col-6 col-xs-6 col-md-2">
-            {dateRange(
-              (first, last, isActive) => {
-                setStorage(activeDateRangePickerStorage, isActive);
-                setStorage(dateFromStorage, first);
-                setStorage(dateToStorage, last);
-                this.handleService();
-              },
-              `${toDate(startDate)} - ${toDate(endDate)}`,
-              getStorage(activeDateRangePickerStorage)
-            )}
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleSelect("column", res)} dataEdit={column} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <label>Cari</label>
-            <div className="input-group">
-              <input
-                type="search"
-                name="any"
-                className="form-control"
-                placeholder="tulis sesuatu disini"
-                value={any}
-                onChange={(e) => this.setState({ any: e.target.value })}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") this.handleSearch(e);
-                }}
-              />
-              <span className="input-group-append">
-                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-                <button
-                  className="btn btn-primary ml-1"
-                  onClick={(e) => {
-                    this.handleModal("excel", {
-                      total: last_page * per_page,
-                    });
-                  }}
-                >
-                  {isProgress(this.props.download)}
-                </button>
-              </span>
-            </div>
-          </div>
-        </div>
+        <HeaderReportCommon
+          pathName="ReportAlokasiTransaksi"
+          isColumn={true}
+          isSort={true}
+          columnData={column_data}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
+          excelData={this.props.download}
+        />
         <TableCommon
           head={head}
           rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }, { label: "Penerimaan" }, { label: "Pembayaran" }]}
@@ -293,12 +189,9 @@ const mapStateToProps = (state) => {
   return {
     download: state.transactionReducer.download,
     transactionReport: state.transactionReducer.report,
-    isLoadingDetail: state.transactionReducer.isLoadingApproval,
     auth: state.auth,
-    isLoading: state.transactionReducer.isLoadingApproval,
     transactionDetail: state.transactionReducer.report_data,
     transactionReportExcel: state.transactionReducer.report_excel,
-    // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

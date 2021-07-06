@@ -2,94 +2,42 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import { FetchMutation, FetchMutationExcel, FetchMutationData, rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import DetailMutation from "components/App/modals/report/inventory/mutation_report/detail_mutation";
 import MutationReportExcel from "components/App/modals/report/inventory/mutation_report/form_mutation_excel";
-import { statusQ, dateRange, handleDataSelect } from "helper";
-import { CURRENT_DATE, generateNo, getStorage, getWhere, isEmptyOrUndefined, isProgress, noData, parseToRp, rmSpaceToStrip, setStorage, toDate, toRp } from "../../../../../helper";
+import { CURRENT_DATE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, rmSpaceToStrip, toDate, toRp } from "../../../../../helper";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import TableCommon from "../../../common/TableCommon";
-import SelectSortCommon from "../../../common/SelectSortCommon";
-import LokasiCommon from "../../../common/LokasiCommon";
-import SelectCommon from "../../../common/SelectCommon";
 import { statusMutasi, STATUS_MUTASI } from "../../../../../helperStatus";
-
-const dateFromStorage = "dateFromReportMutasi";
-const dateToStorage = "dateToReportMutasi";
-const statusStorage = "statusReportMutasi";
-const locationStorage = "locationReportMutasi";
-const columnStorage = "columnReportMutasi";
-const sortStorage = "sortReportMutasi";
-const anyStorage = "anyReportMutasi";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
 
 class MutationReport extends Component {
   constructor(props) {
     super(props);
     this.handleModal = this.handleModal.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
+    this.handleService = this.handleService.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
       where_data: `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`,
-      any: "",
-      location: "",
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
-      sort: "",
-      column: "",
       column_data: [
         { value: "", label: "Semua" },
         { value: "no_faktur_mutasi", label: "Kode Mutasi" },
         { value: "tgl_mutasi", label: "Tanggal" },
         { value: "status", label: "Status" },
       ],
-      status: "",
       isModalDetail: false,
       isModalExport: false,
     };
   }
 
-  handleService(page = 1) {
-    let getDateFrom = getStorage(dateFromStorage);
-    let getDateTo = getStorage(dateToStorage);
-    let getLocation = getStorage(locationStorage);
-    let getColumn = getStorage(columnStorage);
-    let getSort = getStorage(sortStorage);
-    let getStatus = getStorage(statusStorage);
-    let getAny = getStorage(anyStorage);
-
-    let where = `page=${page}`;
-    let state = {};
-
-    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
-      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
-      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
-    } else {
-      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(FetchMutation(where));
     }
-    if (isEmptyOrUndefined(getLocation)) {
-      where += `&lokasi=${getLocation}`;
-      Object.assign(state, { location: getLocation });
-    }
-    if (isEmptyOrUndefined(getStatus)) {
-      where += `&status=${getStatus}`;
-      Object.assign(state, { status: getStatus });
-    }
-    if (isEmptyOrUndefined(getColumn)) {
-      where += `&sort=${getColumn}`;
-      Object.assign(state, { column: getColumn });
-      if (isEmptyOrUndefined(getSort)) {
-        where += `|${getSort}`;
-        Object.assign(state, { sort: getSort });
-      }
-    }
-    if (isEmptyOrUndefined(getAny)) {
-      where += `&q=${getAny}`;
-      Object.assign(state, { any: getAny });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-    this.props.dispatch(FetchMutation(where));
   }
 
   componentWillUnmount() {
@@ -99,43 +47,24 @@ class MutationReport extends Component {
     });
   }
 
-  componentWillMount() {
-    this.handleService();
-  }
-  componentDidMount() {
-    this.handleService();
-  }
   handlePageChange(pageNumber) {
-    this.handleService(pageNumber);
+    this.handleService(this.state.where_data, pageNumber);
   }
   handleModal(type, obj) {
-    let state = {};
-    let whereState = getWhere(this.state.where_data);
-    let where = `page=1${whereState}`;
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let getDate = periode.split("-");
+    let state = { startDate: getDate[0], endDate: getDate[1], where_data: where };
+
     if (type === "excel") {
       Object.assign(state, { isModalExport: true });
-      this.props.dispatch(FetchMutationExcel(1, where, obj.total));
+      this.props.dispatch(FetchMutationExcel(where, obj.total));
     } else {
       Object.assign(state, { isModalDetail: true, where_data: where });
       this.props.dispatch(FetchMutationData(obj.no_faktur_mutasi, where, true));
     }
     this.setState(state);
-  }
-
-  handleSearch(e) {
-    e.preventDefault();
-    let any = this.state.any;
-    setStorage(anyStorage, any);
-    this.handleService();
-  }
-
-  handleSelect(state, res) {
-    if (state === "location") setStorage(locationStorage, res.value);
-    if (state === "column") setStorage(columnStorage, res.value);
-    if (state === "sort") setStorage(sortStorage, res.value);
-    if (state === "status") setStorage(statusStorage, res.value);
-    this.setState({ [state]: res.value });
-    this.handleService();
   }
 
   handleRePrint(id) {
@@ -144,7 +73,7 @@ class MutationReport extends Component {
 
   render() {
     const { per_page, last_page, current_page, data, total } = this.props.mutationReport;
-    const { startDate, endDate, location, status, column, column_data, sort, any, isModalDetail, isModalExport } = this.state;
+    const { startDate, endDate, column_data, isModalDetail, isModalExport } = this.state;
     const head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
@@ -156,12 +85,24 @@ class MutationReport extends Component {
       { rowSpan: "2", label: "Status", width: "1%" },
       { rowSpan: "2", label: "Tanggal mutasi", width: "1%" },
     ];
-    let totQtyPer = 0;
-    let totAmountPer = 0;
+    let totalQtyPerHalaman = 0;
+    let totalAmounPerHalaman = 0;
 
     return (
       <Layout page="Laporan Mutasi">
-        <div className="row">
+        <HeaderReportCommon
+          pathName="ReportMutasi"
+          isLocation={true}
+          isColumn={true}
+          isSort={true}
+          isStatus={true}
+          columnData={column_data}
+          statusData={STATUS_MUTASI}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
+          excelData={this.props.download}
+        />
+        {/* <div className="row">
           <div className="col-6 col-xs-6 col-md-3">
             {dateRange((first, last) => {
               setStorage(dateFromStorage, first);
@@ -211,7 +152,7 @@ class MutationReport extends Component {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
         <TableCommon
           head={head}
           rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}
@@ -230,8 +171,8 @@ class MutationReport extends Component {
                     if (v.status !== "0") {
                       action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }];
                     }
-                    totQtyPer = totQtyPer + parseInt(v.total_qty);
-                    totAmountPer = totAmountPer + parseInt(v.total);
+                    totalQtyPerHalaman = totalQtyPerHalaman + parseInt(v.total_qty);
+                    totalAmounPerHalaman = totalAmounPerHalaman + parseInt(v.total);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -272,8 +213,8 @@ class MutationReport extends Component {
                   label: "Total perhalaman",
                   className: "text-left",
                 },
-                { colSpan: 1, label: toRp(parseFloat(totQtyPer)) },
-                { colSpan: 1, label: toRp(parseFloat(totAmountPer)) },
+                { colSpan: 1, label: toRp(parseFloat(totalQtyPerHalaman)) },
+                { colSpan: 1, label: toRp(parseFloat(totalAmounPerHalaman)) },
                 { colSpan: 3, label: "" },
               ],
             },

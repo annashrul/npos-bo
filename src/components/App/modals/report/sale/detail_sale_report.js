@@ -38,6 +38,7 @@ class DetailSaleReport extends Component {
         <ModalHeader toggle={this.toggle}>Detail laporan penjualan</ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
+            md="col-md-6"
             data={[
               { title: "Kode transaksi", desc: master.kd_trx },
               { title: "Tanggal", desc: toDate(master.tgl) },

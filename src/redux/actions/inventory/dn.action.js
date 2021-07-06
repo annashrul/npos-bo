@@ -89,12 +89,12 @@ export const FetchDn = (where = "") => {
   };
 };
 
-export const FetchDnExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchDnExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    let url = `deliverynote/report?page=${page}&perpage=${perpage}`;
+    let url = `deliverynote/report?perpage=${perpage}`;
     if (where !== "") {
-      url += where;
+      url += `&${where}`;
     }
     handleGetExport(
       url,

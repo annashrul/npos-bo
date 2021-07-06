@@ -2,7 +2,12 @@ import { PACKING, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../handleHttp";
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+export function setDownload(load) {
+  return { type: PACKING.DOWNLOAD, load };
+}
+
 export function setLoading(load) {
   return { type: PACKING.LOADING, load };
 }
@@ -121,10 +126,7 @@ export const storePacking = (data, param) => {
           // param({
           //     pathname: `/packing3ply/${response.data.result.insertId}`
           // })
-          const win = window.open(
-            `/packing3ply/${response.data.result.insertId}`,
-            "_blank"
-          );
+          const win = window.open(`/packing3ply/${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -170,33 +172,27 @@ export const FetchBrgPackingTrx = (kode) => {
   };
 };
 
-export const FetchPacking = (page = 1, where = "") => {
+export const FetchPacking = (where = "") => {
   return (dispatch) => {
-    let url = `packing/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }`;
-    if (where !== "") url += where;
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setPacking(data));
-    });
+    let url = `packing/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(url, (res) => dispatch(setPacking(res.data)));
   };
 };
-export const FetchPackingExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchPackingExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let url = `packing/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }&perpage=${perpage}`;
-    if (where !== "") url += where;
-
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setPackingExcel(data));
-    });
+    let url = `packing/report?perpage=${perpage}`;
+    if (where !== "") url += `&${where}`;
+    handleGetExport(
+      url,
+      (res) => {
+        let data = res.data;
+        dispatch(setPackingExcel(data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formPackingExcel"));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
 

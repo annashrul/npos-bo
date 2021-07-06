@@ -28,6 +28,7 @@ class DetailDn extends Component {
           <ModalHeader toggle={this.toggle}>Detail laporan delivery note</ModalHeader>
           <ModalBody>
             <DetailHeaderCommon
+              md="col-md-6"
               data={[
                 { title: "Faktur DN", desc: master.no_delivery_note },
                 { title: "Operator", desc: master.operator },
@@ -72,9 +73,6 @@ const mapStateToProps = (state) => {
   return {
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
-    // stockReportDetailTransaction:state.stockReportReducer.dataDetailTransaksi,
-    isLoading: state.stockReportReducer.isLoading,
   };
 };
-// const mapDispatch
 export default connect(mapStateToProps)(DetailDn);

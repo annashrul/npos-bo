@@ -170,7 +170,7 @@ class Paket extends Component {
       });
       if (isNaN(parseFloat(brgval[i].qty)) || parseFloat(brgval[i].qty) < 1) {
         handleError("qty");
-        setTimeout(() => this && this[`qty-adjust-${btoa(brgval[i].barcode)}`].focus(), 500);
+        setTimeout(() => this && this[`qty-${btoa(brgval[i].barcode)}`].focus(), 500);
         return;
         // break;
       }
@@ -245,7 +245,7 @@ class Paket extends Component {
                       });
                     }}
                     callbackSetFocus={(res) => {
-                      setTimeout(() => this && this[`qty-adjust-${btoa(res.barcode)}`].focus(), 500);
+                      setTimeout(() => this && this[`qty-${btoa(res.barcode)}`].focus(), 500);
                     }}
                   />
                 </div>
@@ -351,21 +351,6 @@ class Paket extends Component {
                                     value={toCurrency(this.state.brgval[index].qty)}
                                     className="form-control in-table"
                                   />
-                                  {/* {isNaN(this.state.brgval[index].qty_adjust) ||
-                                  parseFloat(
-                                    this.state.brgval[index].qty_adjust
-                                  ) <= 0 ? (
-                                    <small
-                                      style={{
-                                        fontWeight: "bold",
-                                        color: "red",
-                                      }}
-                                    >
-                                      Qty Tidak boleh 0
-                                    </small>
-                                  ) : (
-                                    ""
-                                  )} */}
                                 </td>
                                 <td className="middle nowrap">
                                   <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
