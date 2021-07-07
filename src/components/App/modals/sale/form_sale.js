@@ -179,6 +179,7 @@ class FormSale extends Component {
     let propsMaster = this.props.master;
     let field = {};
     field["master"] = {
+      cetak_nota: true,
       tempo: propsMaster.tempo,
       kd_cust: propsMaster.kd_cust,
       change: propsMaster.change,
