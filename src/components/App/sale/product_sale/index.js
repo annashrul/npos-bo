@@ -17,11 +17,12 @@ import Spinner from "Spinner";
 import Cookies from "js-cookie";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
-import { getStorage, handleDataSelect, isEmptyOrUndefined, setStorage, swal, swallOption } from "../../../../helper";
+import { getStorage, handleDataSelect, isEmptyOrUndefined, noData, setStorage, swal, swallOption } from "../../../../helper";
 import { handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
 import FormHoldBill from "../../modals/sale/form_hold_bill";
 import ListHoldBill from "../../modals/sale/list_hold_bill";
 import KeyHandler, { KEYPRESS } from "react-key-handler";
+import TableCommon from "../../common/TableCommon";
 
 const table = "sale";
 const Toast = Swal.mixin({
@@ -59,7 +60,7 @@ class Sale extends Component {
           label: "UMUM",
         },
       ],
-      catatan: "-",
+      catatan: "",
       jenis_trx: "Tunai",
       userid: 0,
       searchby: 1,
@@ -74,11 +75,6 @@ class Sale extends Component {
       isScroll: false,
       isClick: 0,
       toggleSide: false,
-      error: {
-        location: "",
-        customer: "",
-        catatan: "",
-      },
       detail: [],
       master: {},
       dataHoldBill: [],
@@ -479,9 +475,10 @@ class Sale extends Component {
           let disc2 = 0;
           let ppn = 0;
           let hrg = parseInt(rmComma(item.harga), 10);
-          let ppnInt = parseInt(item.ppn, 10);
-          let disc_rp = parseInt(item.diskon_nominal, 10);
-          let disc_per = parseInt(item.diskon_persen, 10);
+          let ppnInt = parseInt(rmComma(item.ppn), 10);
+          let disc_rp = parseInt(rmComma(item.diskon_nominal), 10);
+          let disc_per = parseInt(rmComma(item.diskon_persen), 10);
+          let qty = parseInt(rmComma(item.qty), 10);
           if (disc_per !== 0) {
             disc1 = hrg - hrg * (disc_per / 100);
             disc2 = disc1;
@@ -499,18 +496,18 @@ class Sale extends Component {
             ppn = hrg * (ppnInt / 100);
           }
 
-          subtotal += (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10);
+          subtotal += (disc2 === 0 ? hrg + ppn : disc2 + ppn) * qty;
           detail.push({
             kode_trx: this.props.nota,
-            subtotal: (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10),
-            price: rmComma(item.harga),
-            qty: item.qty,
-            diskon: item.qty * item.harga * (item.diskon_persen / 100),
+            subtotal: (disc2 === 0 ? hrg + ppn : disc2 + ppn) * qty,
+            price: hrg,
+            qty: qty,
+            diskon: qty * hrg * (disc_per / 100),
             kategori: item.kategori,
-            tax: item.ppn,
+            tax: ppnInt,
             services: item.services === undefined ? "0" : item.services,
             sku: item.barcode,
-            open_price: rmComma(item.harga) === rmComma(item.harga_old) ? 0 : rmComma(item.harga),
+            open_price: hrg === rmComma(item.harga_old) ? 0 : hrg,
             hrg_beli: item.hrg_beli,
             nm_brg: item.nm_brg,
             satuan: item.satuan,
@@ -552,7 +549,7 @@ class Sale extends Component {
           kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? "Z" : "Q",
           jns_kartu: "Debit",
           status: "LUNAS",
-          optional_note: this.state.catatan,
+          optional_note: isEmptyOrUndefined(this.state.catatan) ? this.state.catatan : "-",
         };
 
         this.setState({
@@ -568,7 +565,7 @@ class Sale extends Component {
 
   HandleSubmit(e) {
     e.preventDefault();
-    if (!isEmptyOrUndefined(this.state.catatan, "catatan")) return;
+    // if (!isEmptyOrUndefined(this.state.catatan, "catatan")) return;
     if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
     if (!isEmptyOrUndefined(this.state.customer, "customer")) return;
     if (!isEmptyOrUndefined(this.state.sales, "sales")) return;
@@ -767,6 +764,16 @@ class Sale extends Component {
   render() {
     if (this.state.isScroll === true) this.handleScroll();
     let totalsub = 0;
+    const head = [
+      { label: "Barang" },
+      { label: "Harga" },
+      { label: "Stok" },
+      { label: "Qty" },
+      { label: "Disc (%)" },
+      { label: "Ppn" },
+      { label: "Subtotal" },
+      { label: "#", className: "text-center", width: "1%" },
+    ];
     return (
       <React.Fragment>
         {!this.props.isOpen && !this.state.isModalForm ? (
@@ -800,25 +807,25 @@ class Sale extends Component {
         ) : null}
         <Layout page="Penjualan Barang">
           <div className="card">
-            <div className="card-header">
+            <div className="card-header  d-flex justify-content-between">
               <h4 style={{ float: "left" }}>
                 <button onClick={this.handleClickToggle} className={this.state.toggleSide ? "btn btn-danger mr-3" : "btn btn-outline-dark text-dark mr-3"}>
                   <i className={this.state.toggleSide ? "fa fa-remove" : "fa fa-bars"} />
                 </button>
-                Penjualan Barang
+                Penjualan Barang #{this.props.nota}
               </h4>
-              {atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? (
-                <h4 style={{ float: "right" }}>
-                  <button className={"btn btn-primary"} onClick={(e) => this.handleClosing(e)}>
-                    Closing
-                  </button>
-                  <button className="btn btn-outline-info ml-1" onClick={(e) => this.handleHoldBill(e, "listHoldBill")}>
-                    List Hold bill
-                  </button>
-                </h4>
-              ) : (
-                ""
-              )}
+              <h4 className="text-right   d-flex justify-content-between" style={{ width: "50%" }}>
+                <input type="date" name={"tgl_order"} className={"form-control  nbt nbr nbl bt"} value={this.state.tgl_order} onChange={(e) => this.HandleCommonInputChange(e)} />
+                <input
+                  placeholder="Tambahkan catatan disini ...."
+                  type="text"
+                  style={{ height: "39px" }}
+                  className="form-control nbt nbr nbl bt"
+                  value={this.state.catatan}
+                  onChange={(e) => this.HandleCommonInputChange(e)}
+                  name="catatan"
+                />
+              </h4>
             </div>
             <div style={{ display: "flex", alignItems: "flex-start" }}>
               <StickyBox
@@ -914,17 +921,7 @@ class Sale extends Component {
                                       >
                                         {i.nm_brg}
                                       </div>
-                                      <div
-                                        className="status"
-                                        style={{
-                                          color: "#a1887f",
-                                          fontWeight: "bold",
-                                          wordBreak: "break-all",
-                                          fontSize: "12px",
-                                        }}
-                                      >
-                                        ({i.kd_brg})
-                                      </div>
+                                      <div className="subtitle">({i.barcode})</div>
                                     </div>
                                   </li>
                                 );
@@ -959,277 +956,220 @@ class Sale extends Component {
                 <div className="card">
                   <div className="card-body">
                     <form className="">
-                      <div className="row" style={{ zoom: "80%" }}>
-                        <div className="col-md-2">
-                          <div className="form-group">
-                            <label>No. Transaksi</label>
-                            <input type="text" readOnly className="form-control" id="nota" value={this.props.nota} />
-                          </div>
-                        </div>
-                        <div className="col-md-2">
-                          <div className="form-group">
-                            <label>Tanggal Order</label>
-                            <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e) => this.HandleCommonInputChange(e)} />
-                          </div>
-                        </div>
-                        <div className="col-md-2">
+                      <div className="row">
+                        <div className="col-md-4">
                           <LokasiCommon callback={(res) => this.HandleChangeSelect("location_tr", res)} dataEdit={this.state.location} />
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-4">
                           <SelectCommon label="Customer" options={this.state.customer_data} callback={(res) => this.HandleChangeSelect("customer_tr", res)} dataEdit={this.state.customer} />
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-4">
                           <SelectCommon label="Sales" options={this.state.opSales} callback={(res) => this.HandleChangeSelect("sales_tr", res)} dataEdit={this.state.sales} />
-                        </div>
-                        <div className="col-md-2">
-                          <div className="form-group">
-                            <label>Catatan</label>
-                            <textarea
-                              style={{ height: "39px" }}
-                              className="form-control"
-                              id="exampleTextarea1"
-                              rows={3}
-                              defaultValue={this.state.catatan}
-                              onChange={(e) => this.HandleCommonInputChange(e)}
-                              name="catatan"
-                            />
-                          </div>
                         </div>
                       </div>
                     </form>
-                    <div style={{ overflowX: "auto" }}>
-                      <table className="table table-hover table-noborder">
-                        <thead>
-                          <tr>
-                            <th className="middle nowrap text-center">#</th>
-                            <th className="middle nowrap">barang</th>
-                            <th className="middle nowrap">satuan</th>
-                            <th className="middle nowrap">harga</th>
-                            <th className="middle nowrap">stock</th>
-                            <th className="middle nowrap">qty</th>
-                            <th className="middle nowrap">disc 1 (%)</th>
-                            <th className="middle nowrap">ppn</th>
-                            <th className="middle nowrap">Subtotal</th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {this.state.databrg.map((item, index) => {
-                            let disc1 = 0;
-                            let disc2 = 0;
-                            let ppn = 0;
-                            let hrg = parseFloat(rmComma(item.harga));
-                            let ppnInt = parseFloat(item.ppn);
-                            let disc_rp = parseFloat(item.diskon_nominal);
-                            let disc_per = parseFloat(item.diskon_persen);
-                            // 2000-(2000*(10/100)) = 1800 // diskon 1 (%)
-                            // 1800-(1800*(10/100)) = 1620 // diskon 2 (%)
-                            // 2000+(2000*(10/100)) = 2200 // ppn
-                            if (disc_per !== 0) {
-                              disc1 = hrg - hrg * (disc_per / 100);
-                              disc2 = disc1;
-                              if (disc_rp !== 0) {
-                                disc2 = disc1 - disc1 * (disc_rp / 100);
-                              }
-                            } else if (disc_rp !== 0) {
-                              disc1 = hrg - hrg * (disc_rp / 100);
-                              disc2 = disc1;
+                    <TableCommon
+                      head={head}
+                      renderRow={
+                        this.state.databrg.length > 0
+                          ? this.state.databrg.map((item, index) => {
+                              let disc1 = 0;
+                              let disc2 = 0;
+                              let ppn = 0;
+                              let hrg = parseFloat(rmComma(item.harga));
+                              let ppnInt = parseFloat(item.ppn);
+                              let disc_rp = parseFloat(item.diskon_nominal);
+                              let disc_per = parseFloat(item.diskon_persen);
                               if (disc_per !== 0) {
-                                disc2 = disc1 - disc1 * (disc_per / 100);
+                                disc1 = hrg - hrg * (disc_per / 100);
+                                disc2 = disc1;
+                                if (disc_rp !== 0) {
+                                  disc2 = disc1 - disc1 * (disc_rp / 100);
+                                }
+                              } else if (disc_rp !== 0) {
+                                disc1 = hrg - hrg * (disc_rp / 100);
+                                disc2 = disc1;
+                                if (disc_per !== 0) {
+                                  disc2 = disc1 - disc1 * (disc_per / 100);
+                                }
                               }
-                            }
 
-                            if (ppnInt !== 0) {
-                              ppn = hrg * (ppnInt / 100);
-                            }
-                            const subtot = (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseFloat(item.qty);
-                            totalsub += subtot;
+                              if (ppnInt !== 0) {
+                                ppn = hrg * (ppnInt / 100);
+                              }
+                              const subtot = (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseFloat(item.qty);
+                              totalsub += subtot;
 
-                            return (
-                              <tr key={index}>
-                                <td className="middle nowrap">
-                                  <a
-                                    style={{
-                                      height: "20px",
-                                      width: "20px",
-                                      padding: "0px",
-                                      margin: "0px",
-                                    }}
-                                    href="about:blank"
-                                    className="btn btn-danger btn-sm mr-1"
-                                    onClick={(e) => this.HandleRemove(e, item.id)}
-                                  >
-                                    <i className="fa fa-trash" />
-                                  </a>
-                                </td>
-                                <td className="middle nowrap" style={{ zoom: "80%" }}>
-                                  {item.nm_brg}
-                                  <br />
-                                  {item.barcode}
-                                </td>
-                                <td className="middle nowrap">{item.satuan}</td>
-                                <td className="middle nowrap">
-                                  {this.state.brgval[index].isOpenPrice ? (
+                              return (
+                                <tr key={index}>
+                                  <td className="middle nowrap">
+                                    {item.nm_brg} <br />
+                                    <div className="subtitle">
+                                      {item.kd_brg} ( {item.satuan} )
+                                    </div>
+                                  </td>
+                                  <td className="middle nowrap">
+                                    {this.state.brgval[index].isOpenPrice ? (
+                                      <input
+                                        type="text"
+                                        style={{ width: "100px" }}
+                                        className={"form-control in-table"}
+                                        value={toCurrency(this.state.brgval[index].harga)}
+                                        name="harga"
+                                        onBlur={(e) => this.HandleOnBlur(e, index)}
+                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                      />
+                                    ) : (
+                                      <select
+                                        className="form-control in-table"
+                                        style={{ width: "100px" }}
+                                        name="harga"
+                                        onBlur={(e) => this.HandleOnBlur(e, index)}
+                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                      >
+                                        <option
+                                          value={this.state.brgval[index].harga}
+                                          style={{
+                                            display: this.state.brgval[index].harga === "" || this.state.brgval[index].harga === "0" ? "none" : "",
+                                          }}
+                                        >
+                                          {toCurrency(this.state.brgval[index].harga)}
+                                        </option>
+                                        <option
+                                          value={this.state.brgval[index].harga2}
+                                          style={{
+                                            display: this.state.brgval[index].harga2 === "" || this.state.brgval[index].harga2 === "0" ? "none" : "",
+                                          }}
+                                        >
+                                          {toCurrency(this.state.brgval[index].harga2)}
+                                        </option>
+                                        <option
+                                          value={this.state.brgval[index].harga3}
+                                          style={{
+                                            display: this.state.brgval[index].harga3 === "" || this.state.brgval[index].harga3 === "0" ? "none" : "",
+                                          }}
+                                        >
+                                          {toCurrency(this.state.brgval[index].harga3)}
+                                        </option>
+                                        <option
+                                          value={this.state.brgval[index].harga4}
+                                          style={{
+                                            display: this.state.brgval[index].harga4 === "" || this.state.brgval[index].harga4 === "0" ? "none" : "",
+                                          }}
+                                        >
+                                          {toCurrency(this.state.brgval[index].harga4)}
+                                        </option>
+                                      </select>
+                                    )}
+                                    <div
+                                      className="row"
+                                      style={{
+                                        marginTop: "1px",
+                                      }}
+                                    >
+                                      <div
+                                        className="col-md-3"
+                                        style={{
+                                          paddingRight: "0px",
+                                          paddingLeft: "0px",
+                                        }}
+                                      ></div>
+                                      <div
+                                        className="col-md-"
+                                        style={{
+                                          marginTop: "-3px",
+                                          textAlign: "left",
+                                          paddingLeft: "0px",
+                                        }}
+                                      ></div>
+                                    </div>
+                                    <input
+                                      style={{
+                                        height: "17px",
+                                        width: "17px",
+                                      }}
+                                      id="isOpenPrice"
+                                      type="checkbox"
+                                      name="isOpenPrice"
+                                      checked={this.state.brgval[index].isOpenPrice}
+                                      onChange={(e) => this.handleChecked(e, index, item.barcode)}
+                                    />{" "}
+                                    <label htmlFor="isOpenPrice" style={{ fontSize: "10px" }}>
+                                      Open Price
+                                    </label>
+                                  </td>
+                                  <td className="middle nowrap">
+                                    <input disabled={true} type="text" value={toCurrency(item.stock)} className="form-control text-right in-table" style={{ width: "70px" }} />
+                                  </td>
+
+                                  <td className="middle nowrap">
                                     <input
                                       type="text"
-                                      style={{ width: "100px" }}
-                                      className={"form-control in-table"}
-                                      value={toCurrency(this.state.brgval[index].harga)}
-                                      name="harga"
+                                      name="qty"
+                                      style={{ width: "70px" }}
+                                      ref={(input) => {
+                                        if (input !== null) {
+                                          this[`qty-${btoa(item.barcode)}`] = input;
+                                        }
+                                      }}
+                                      onFocus={(e) => this.HandleFocusInputReset(e, index)}
                                       onBlur={(e) => this.HandleOnBlur(e, index)}
+                                      className="form-control text-right in-table"
                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                      value={this.state.brgval[index].qty}
                                     />
-                                  ) : (
-                                    <select
-                                      className="form-control in-table"
-                                      style={{ width: "100px" }}
-                                      name="harga"
+                                    <div
+                                      className="invalid-feedback text-center"
+                                      style={
+                                        parseFloat(this.state.brgval[index].autoSetQty) > parseFloat(item.stockautoSetQty)
+                                          ? {
+                                              display: "block",
+                                            }
+                                          : {
+                                              display: "none",
+                                            }
+                                      }
+                                    >
+                                      Qty Melebihi Stock.
+                                    </div>
+                                  </td>
+                                  <td className="middle nowrap">
+                                    <input
+                                      type="text"
+                                      name="diskon_persen"
+                                      style={{ width: "70px" }}
+                                      className="form-control in-table text-right"
                                       onBlur={(e) => this.HandleOnBlur(e, index)}
                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                    >
-                                      <option
-                                        value={this.state.brgval[index].harga}
-                                        style={{
-                                          display: this.state.brgval[index].harga === "" || this.state.brgval[index].harga === "0" ? "none" : "",
-                                        }}
-                                      >
-                                        {toCurrency(this.state.brgval[index].harga)}
-                                      </option>
-                                      <option
-                                        value={this.state.brgval[index].harga2}
-                                        style={{
-                                          display: this.state.brgval[index].harga2 === "" || this.state.brgval[index].harga2 === "0" ? "none" : "",
-                                        }}
-                                      >
-                                        {toCurrency(this.state.brgval[index].harga2)}
-                                      </option>
-                                      <option
-                                        value={this.state.brgval[index].harga3}
-                                        style={{
-                                          display: this.state.brgval[index].harga3 === "" || this.state.brgval[index].harga3 === "0" ? "none" : "",
-                                        }}
-                                      >
-                                        {toCurrency(this.state.brgval[index].harga3)}
-                                      </option>
-                                      <option
-                                        value={this.state.brgval[index].harga4}
-                                        style={{
-                                          display: this.state.brgval[index].harga4 === "" || this.state.brgval[index].harga4 === "0" ? "none" : "",
-                                        }}
-                                      >
-                                        {toCurrency(this.state.brgval[index].harga4)}
-                                      </option>
-                                    </select>
-                                  )}
-                                  <div
-                                    className="row"
-                                    style={{
-                                      marginTop: "1px",
-                                    }}
-                                  >
-                                    <div
-                                      className="col-md-3"
-                                      style={{
-                                        paddingRight: "0px",
-                                        paddingLeft: "0px",
-                                      }}
-                                    ></div>
-                                    <div
-                                      className="col-md-"
-                                      style={{
-                                        marginTop: "-3px",
-                                        textAlign: "left",
-                                        paddingLeft: "0px",
-                                      }}
-                                    ></div>
-                                  </div>
-                                  <input
-                                    style={{
-                                      height: "17px",
-                                      width: "17px",
-                                      // paddingTop: "10px",
-                                    }}
-                                    id="isOpenPrice"
-                                    type="checkbox"
-                                    name="isOpenPrice"
-                                    checked={this.state.brgval[index].isOpenPrice}
-                                    onChange={(e) => this.handleChecked(e, index, item.barcode)}
-                                  />{" "}
-                                  <label htmlFor="isOpenPrice" style={{ fontSize: "10px" }}>
-                                    Open Price
-                                  </label>
-                                </td>
-                                <td className="middle nowrap">
-                                  <input readOnly={true} type="number" value={item.stock} className="form-control text-right in-table" style={{ width: "70px" }} />
-                                </td>
+                                      value={toCurrency(this.state.brgval[index].diskon_persen)}
+                                    />
+                                  </td>
+                                  <td className="middle nowrap">
+                                    <input
+                                      type="text"
+                                      name="ppn"
+                                      style={{ width: "70px" }}
+                                      className="form-control in-table text-right"
+                                      onBlur={(e) => this.HandleOnBlur(e, index)}
+                                      onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                      value={toCurrency(this.state.brgval[index].ppn)}
+                                    />
+                                  </td>
 
-                                <td className="middle nowrap">
-                                  <input
-                                    type="text"
-                                    name="qty"
-                                    style={{ width: "70px" }}
-                                    ref={(input) => {
-                                      if (input !== null) {
-                                        this[`qty-${btoa(item.barcode)}`] = input;
-                                      }
-                                    }}
-                                    onFocus={(e) => this.HandleFocusInputReset(e, index)}
-                                    onBlur={(e) => this.HandleOnBlur(e, index)}
-                                    className="form-control text-right in-table"
-                                    onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                    value={this.state.brgval[index].qty}
-                                  />
-                                  <div
-                                    className="invalid-feedback text-center"
-                                    style={
-                                      parseFloat(this.state.brgval[index].autoSetQty) > parseFloat(item.stockautoSetQty)
-                                        ? {
-                                            display: "block",
-                                          }
-                                        : {
-                                            display: "none",
-                                          }
-                                    }
-                                  >
-                                    Qty Melebihi Stock.
-                                  </div>
-                                </td>
-                                <td className="middle nowrap">
-                                  <input
-                                    type="number"
-                                    name="diskon_persen"
-                                    style={{ width: "70px" }}
-                                    className="form-control in-table text-right"
-                                    onBlur={(e) => this.HandleOnBlur(e, index)}
-                                    onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                    value={this.state.brgval[index].diskon_persen}
-                                  />
-                                </td>
-                                <td className="middle nowrap">
-                                  <input
-                                    type="number"
-                                    name="ppn"
-                                    style={{ width: "70px" }}
-                                    className="form-control in-table text-right"
-                                    onBlur={(e) => this.HandleOnBlur(e, index)}
-                                    onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                    value={this.state.brgval[index].ppn}
-                                  />
-                                </td>
-
-                                <td className="middle nowrap">
-                                  <input readOnly={true} type="text" value={toCurrency(subtot)} className="form-control text-right in-table" style={{ width: "100px" }} />
-                                </td>
-                                {/*<td>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>*/}
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                        <tfoot>
-                          <tr style={{ background: "#eee" }}></tr>
-                        </tfoot>
-                      </table>
-                    </div>
+                                  <td className="middle nowrap">
+                                    <input disabled={true} type="text" value={toCurrency(subtot)} className="form-control text-right in-table" style={{ width: "100px" }} />
+                                  </td>
+                                  <td className="middle nowrap text-center">
+                                    <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
+                                      <i className="fa fa-trash" />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          : noData(head.length)
+                      }
+                    />
                     <hr />
                     <div className="row">
                       <div className="col-md-7">
@@ -1237,19 +1177,29 @@ class Sale extends Component {
                           <button onClick={(e) => this.HandleSubmit(e)} className="btn btn-primary ml-1">
                             Bayar
                           </button>
+
+                          {atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ? (
+                            ""
+                          ) : (
+                            <button className={"btn btn-outline-info ml-1"} onClick={(e) => this.handleHoldBill(e, "formHoldBill")}>
+                              Hold bill
+                            </button>
+                          )}
+                          {atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? (
+                            <div>
+                              <button className={"btn btn-outline-info ml-1"} onClick={(e) => this.handleClosing(e)}>
+                                Closing
+                              </button>
+                              <button className="btn btn-outline-info ml-1" onClick={(e) => this.handleHoldBill(e, "listHoldBill")}>
+                                List Hold bill
+                              </button>
+                            </div>
+                          ) : (
+                            ""
+                          )}
                           <button onClick={(e) => this.HandleReset(e)} className="btn btn-warning ml-1">
                             Reset
                           </button>
-                          {
-                            atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg"?
-                            ''
-                            :
-                            (
-                              <button className={"btn btn-primary  ml-1"} onClick={(e) => this.handleHoldBill(e, "formHoldBill")}>
-                                Hold bill
-                              </button>
-                            )
-                          }
                         </div>
                       </div>
                       <div className="col-md-5">

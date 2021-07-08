@@ -15,6 +15,13 @@ export const CURRENT_DATE = moment(new Date()).format("yyyy-MM-DD");
 
 export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`;
 
+export const rmPage = (res) => {
+  let whereProps = res.split("&");
+  whereProps.shift();
+  let where = whereProps.join("&");
+  return `&${where}`;
+};
+
 export const getFetchWhere = (res, page = 1) => {
   let where = res;
   let toArray = where.split("&");
@@ -628,7 +635,9 @@ export const rmStorage = (key) => {
 export const noData = (colSpan) => {
   return (
     <tr>
-      <td colSpan={colSpan}>Tidak ada data</td>
+      <td colSpan={colSpan}>
+        <img src="https://tirtaloka.gapensi.or.id/v2/assets/images/illustration/no-data.png" alt="nodata" />
+      </td>
     </tr>
   );
 };

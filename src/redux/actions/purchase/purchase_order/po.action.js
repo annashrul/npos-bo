@@ -186,8 +186,7 @@ export const storePo = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -205,9 +204,10 @@ export const fetchPoReport = (where = "") => {
   };
 };
 
-export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
+export const fetchPoReportExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let url = `purchaseorder/report?page=${page}&perpage=${perpage}`;
+    let url = `purchaseorder/report?perpage=${perpage}`;
+    if (where !== "") url += `&${where}`;
     handleGetExport(
       url,
       (res) => {
@@ -220,14 +220,15 @@ export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
   };
 };
 
-export const poReportDetail = (page = 1, code) => {
+export const poReportDetail = (code, where = "", isModal = false) => {
   return (dispatch) => {
-    let url = `purchaseorder/report/${code}?page=${page}&perpage=${HEADERS.PERPAGE}`;
+    let url = `purchaseorder/report/${code}?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
         dispatch(setPoReportDetail(res.data));
-        dispatch(ModalToggle(true));
+        if (isModal) dispatch(ModalToggle(true));
       },
       true
     );
@@ -242,11 +243,7 @@ export const FetchPurchaseBySupplierReport = (where = "") => {
   };
 };
 
-export const FetchPurchaseBySupplierReportExcel = (
-  page = 1,
-  where = "",
-  perpage = 99999
-) => {
+export const FetchPurchaseBySupplierReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
     let que = `report/pembelian/by_supplier?page=${page}&perpage=${perpage}`;
     if (where !== "") {

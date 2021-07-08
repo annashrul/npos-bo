@@ -192,7 +192,7 @@ export const updateReceive = (data, kode) => {
           localStorage.removeItem("data_master_receive");
           localStorage.removeItem("data_detail_receive");
 
-          window.location.href = `/receive_report`;
+          window.location.href = `/report/receive`;
         });
         dispatch(setLoading(false));
       })

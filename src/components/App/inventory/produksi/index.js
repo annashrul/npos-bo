@@ -6,10 +6,26 @@ import Swal from "sweetalert2";
 import { storeProduksi, FetchCodeProduksi, FetchBrgProduksiPaket } from "redux/actions/inventory/produksi.action";
 import StickyBox from "react-sticky-box";
 import FormPaket from "../../modals/masterdata/paket/form_paket";
-import { btnSave, btnSCancel, CURRENT_DATE, getStorage, handleError, isEmptyOrUndefined, rmComma, rmStorage, setStorage, swallOption, swalWithCallback, toCurrency, toDate } from "../../../../helper";
+import {
+  btnSave,
+  btnSCancel,
+  CURRENT_DATE,
+  getStorage,
+  handleError,
+  isEmptyOrUndefined,
+  noData,
+  rmComma,
+  rmStorage,
+  setStorage,
+  swallOption,
+  swalWithCallback,
+  toCurrency,
+  toDate,
+} from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import ProductCommon from "../../common/ProductCommon";
 import SelectCommon from "../../common/SelectCommon";
+import TableCommon from "../../common/TableCommon";
 import { actionDataCommon, getDataCommon, handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
 import { readProductTrx } from "../../../../redux/actions/masterdata/product/product.action";
 
@@ -30,8 +46,8 @@ class Production extends Component {
       brgval: [],
       location: "",
       tgl_order: CURRENT_DATE,
-      qty_estimasi: "",
-      catatan: "-",
+      qty_estimasi: "1",
+      catatan: "",
     };
     this.HandleRemove = this.HandleRemove.bind(this);
     this.HandleReset = this.HandleReset.bind(this);
@@ -39,6 +55,7 @@ class Production extends Component {
     this.HandleOnBlur = this.HandleOnBlur.bind(this);
     this.HandleChangeSelect = this.HandleChangeSelect.bind(this);
     this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this);
+    this.HandleSubmit = this.HandleSubmit.bind(this);
   }
 
   getProps(param) {
@@ -101,7 +118,6 @@ class Production extends Component {
       this.props.dispatch(FetchCodeProduksi(getLocation));
       this.props.dispatch(readProductTrx(`page=1&kategori=4&lokasi=${getLocation}`));
       this.props.dispatch(FetchBrgProduksiPaket(1, "", "", getLocation));
-      destroy(table);
       getDataCommon(table, (res, brg) => {
         this.setState({ databrg: res, brgval: brg });
       });
@@ -115,11 +131,11 @@ class Production extends Component {
       setStorage(paketStorage, val);
       setState = { paket: val };
     } else {
+      destroy(table);
       setStorage(locationStorage, val);
       setState = { location: val };
       this.handleFetch();
     }
-
     this.setState(setState);
   }
 
@@ -191,7 +207,9 @@ class Production extends Component {
       }
     }
   }
-  HandleValidate() {
+
+  HandleSubmit(e) {
+    e.preventDefault();
     let { location, brgval, paket, qty_estimasi, catatan } = this.state;
     if (!isEmptyOrUndefined(location)) {
       handleError("lokasi");
@@ -205,36 +223,27 @@ class Production extends Component {
       handleError("Qty estimasi");
       return;
     }
-    if (!isEmptyOrUndefined(catatan)) {
-      handleError("Catatan");
-      return;
-    }
     if (brgval.length < 1) {
       handleError("barang");
       return;
     }
-    return true;
-  }
-
-  HandleSubmit(e) {
-    e.preventDefault();
-    let validate = this.HandleValidate();
-    if (!validate) return validate;
     this.HandleSave();
   }
 
   HandleSave() {
+    let { location, brgval, paket, qty_estimasi, catatan } = this.state;
+    let props = this.props;
     swallOption("Pastikan data yang anda masukan sudah benar!", async () => {
       let detail = [];
-      let exp = this.state.paket.split("|", 2);
+      let exp = paket.split("|", 2);
       let data = {};
       data["brcd_hasil"] = exp[1].trim();
       data["kd_brg_hasil"] = exp[0].trim();
-      data["userid"] = this.props.auth.user.id;
+      data["userid"] = props.auth.user.id;
       data["tanggal"] = toDate(this.state.tgl_order, "-");
-      data["lokasi"] = this.state.location;
-      data["keterangan"] = this.state.catatan;
-      data["qty_estimasi"] = this.state.qty_estimasi;
+      data["lokasi"] = location;
+      data["keterangan"] = isEmptyOrUndefined(catatan) ? catatan : "-";
+      data["qty_estimasi"] = qty_estimasi;
       const geTable = get(table);
       geTable.then((res) => {
         res.map((item) => {
@@ -251,20 +260,20 @@ class Production extends Component {
         for (let x = 0; x < res.length; x++) {
           if (parseFloat(res[x].qty) > parseFloat(res[x].stock)) {
             swallOption("ada qty yang melebihi stok. Anda yakin akan melanjutkan transaksi ini ??", () => {
-              this.props.dispatch(
+              props.dispatch(
                 storeProduksi(data, () => {
                   this.handleClear();
                   this.getData();
-                  this.props.dispatch(FetchCodeProduksi(this.state.location));
+                  props.dispatch(FetchCodeProduksi(this.state.location));
                 })
               );
             });
           } else {
-            this.props.dispatch(
+            props.dispatch(
               storeProduksi(data, () => {
                 this.handleClear();
                 this.getData();
-                this.props.dispatch(FetchCodeProduksi(this.state.location));
+                props.dispatch(FetchCodeProduksi(this.state.location));
               })
             );
             break;
@@ -276,11 +285,20 @@ class Production extends Component {
 
   render() {
     let totHargaBeli = 0;
+    const head = [{ label: "Bahan" }, { label: "Harga beli" }, { label: "Stok" }, { label: "Qty" }, { label: "#", className: "text-center", width: "1%" }];
     return (
       <Layout page="Produksi">
         <div className="card">
-          <div className="card-header">
+          <div className="card-header d-flex justify-content-between">
             <h4>Produksi #{this.props.nota}</h4>
+            <div>
+              <button className="btn btn-primary mr-1" disabled={this.state.databrg.length < 1} onClick={this.HandleSubmit}>
+                Simpan
+              </button>
+              <button className="btn btn-warning" disabled={this.state.databrg.length < 1} onClick={this.HandleReset}>
+                Batal
+              </button>
+            </div>
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             {/*START LEFT*/}
@@ -310,20 +328,14 @@ class Production extends Component {
             <div style={{ width: "70%" }}>
               <div className="card">
                 <div className="card-body">
-                  <div className="row" style={{ zoom: "85%" }}>
-                    <div className="col-md-2">
-                      <div className="form-group">
-                        <label>Tanggal Order</label>
-                        <input type="date" name="tgl_order" className="form-control" value={this.state.tgl_order} onChange={(e) => this.HandleOnChange(e, null)} />
-                      </div>
-                    </div>
-                    <div className="col-md-3">
+                  <div className="row">
+                    <div className="col-md-4">
                       <LokasiCommon callback={(val) => this.HandleChangeSelect(val, "lokasi")} dataEdit={this.state.location} isRequired={true} />
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-4">
                       <SelectCommon label="paket" options={this.state.dataPaket} callback={(res) => this.HandleChangeSelect(res, "paket")} dataEdit={this.state.paket} isRequired={true} />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-4">
                       <div className="form-group">
                         <label>
                           Qty Estimasi <span className="text-danger">*</span>
@@ -331,77 +343,29 @@ class Production extends Component {
                         <input type="text" name="qty_estimasi" className="form-control" value={this.state.qty_estimasi} onChange={(e) => this.HandleOnChange(e, null)} />
                       </div>
                     </div>
-                    <div className="col-md-2">
-                      <div className="form-group">
-                        <label>
-                          Catatan <span className="text-danger">*</span>
-                        </label>
-                        <input type="text" name="catatan" className="form-control" value={this.state.catatan} onChange={(e) => this.HandleOnChange(e, null)} />
-                      </div>
-                    </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-12" style={{ overflowX: "auto" }}>
-                      <table className="table table-hover table-noborder">
-                        <thead>
-                          <tr>
-                            <th className="middle nowrap">Bahan</th>
-                            <th className="middle nowrap" style={{ width: "15%" }}>
-                              Harga Beli
-                            </th>
-                            <th className="middle nowrap" style={{ width: "15%" }}>
-                              Stok
-                            </th>
-                            <th className="middle nowrap" style={{ width: "15%" }}>
-                              Qty
-                            </th>
-                            <th className="text-center middle nowrap" width="1%">
-                              #
-                            </th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {this.state.databrg.map((item, index) => {
+                  <TableCommon
+                    head={head}
+                    renderRow={
+                      this.state.databrg.length > 0
+                        ? this.state.databrg.map((item, index) => {
                             totHargaBeli += parseInt(item.harga_beli, 10) * parseInt(item.qty, 10);
                             return (
                               <tr key={index}>
                                 <td className="middle nowrap">
-                                  {item.nm_brg}
-                                  <br />{" "}
-                                  <small style={{ fontWeight: "bold" }}>
+                                  {item.nm_brg} <br />
+                                  <div className="subtitle">
                                     {item.kd_brg} ( {item.satuan} )
-                                  </small>
+                                  </div>
+                                </td>
+                                <td className="middle nowrap">
+                                  <input disabled={true} type="text" name="harga_beli" value={toCurrency(parseInt(item.harga_beli, 10))} className="form-control in-table text-right" />
+                                </td>
+                                <td className="middle nowrap">
+                                  <input disabled={true} type="text" name="stock" value={toCurrency(parseInt(item.stock, 10))} className="form-control in-table text-right" />
                                 </td>
                                 <td className="middle nowrap">
                                   <input
-                                    style={{
-                                      textAlign: "right",
-                                    }}
-                                    disabled={true}
-                                    type="text"
-                                    name="harga_beli"
-                                    value={toCurrency(parseInt(item.harga_beli, 10))}
-                                    className="form-control in-table"
-                                  />
-                                </td>
-                                <td className="middle nowrap">
-                                  <input
-                                    style={{
-                                      textAlign: "right",
-                                    }}
-                                    disabled={true}
-                                    type="text"
-                                    name="stock"
-                                    value={toCurrency(parseInt(item.stock, 10))}
-                                    className="form-control in-table"
-                                  />
-                                </td>
-                                <td className="middle nowrap">
-                                  <input
-                                    style={{
-                                      textAlign: "right",
-                                    }}
                                     type="text"
                                     name="qty"
                                     ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)}
@@ -409,7 +373,7 @@ class Production extends Component {
                                     onBlur={(e) => this.HandleOnBlur(e, index)}
                                     onChange={(e) => this.HandleOnChange(e, index)}
                                     value={toCurrency(this.state.brgval[index].qty)}
-                                    className="form-control in-table"
+                                    className="form-control in-table text-right"
                                   />
                                 </td>
                                 <td className="middle nowrap">
@@ -419,44 +383,27 @@ class Production extends Component {
                                 </td>
                               </tr>
                             );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                          })
+                        : noData(head.length)
+                    }
+                  />
                 </div>
                 <div className="card-header d-flex justify-content-between">
-                  <div style={{ width: "50%" }}>
-                    {btnSave("", (e) => {
-                      this.HandleSubmit(e);
-                    })}
-                    {btnSCancel("ml-1", (e) => {
-                      this.HandleReset(e);
-                    })}
-                  </div>
+                  <input type="date" name="tgl_order" className="form-control  nbt nbl nbr bt" value={this.state.tgl_order} onChange={(e) => this.HandleOnChange(e, null)} />
+
+                  <input
+                    type="text"
+                    name="catatan"
+                    className="form-control nbt nbl nbr bt"
+                    placeholder="Tambahkan catatan disini ...."
+                    value={this.state.catatan}
+                    onChange={(e) => this.HandleOnChange(e, null)}
+                  />
                 </div>
               </div>
             </div>
             {/*END RIGHT*/}
           </div>
-          {this.props.isOpen ? (
-            <FormPaket
-              detail={{
-                harga_beli: totHargaBeli,
-                nama: this.state.paket.split("|")[2],
-              }}
-              callback={(e) => {
-                if (e === null) {
-                  this.setState({ isUpdatePaket: false });
-                } else {
-                  this.setState({
-                    total_hrg_beli: e.harga_beli,
-                    total_hrg_jual: e.harga_jual,
-                  });
-                }
-              }}
-            />
-          ) : null}
         </div>
       </Layout>
     );

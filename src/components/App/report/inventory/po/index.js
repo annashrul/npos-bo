@@ -4,44 +4,24 @@ import connect from "react-redux/es/connect/connect";
 import { fetchPoReport, fetchPoReportExcel } from "redux/actions/purchase/purchase_order/po.action";
 import { ModalType } from "redux/actions/modal.action";
 import { poReportDetail } from "redux/actions/purchase/purchase_order/po.action";
-import moment from "moment";
 import DetailPoReport from "components/App/modals/report/purchase/purchase_order/detail_po_report";
 import PoReportExcel from "components/App/modals/report/purchase/purchase_order/form_po_excel";
-
-import { CURRENT_DATE, dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate } from "../../../../../helper";
+import { CURRENT_DATE, generateNo, getFetchWhere, getPeriode, noData, toDate } from "../../../../../helper";
 import { STATUS_PURCHASE_ORDER, statusPurchaseOrder } from "../../../../../helperStatus";
-import LokasiCommon from "../../../common/LokasiCommon";
-import SelectCommon from "../../../common/SelectCommon";
-import SelectSortCommon from "../../../common/SelectSortCommon";
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
-
-const dateFromStorage = "dateFromReportPo";
-const dateToStorage = "dateToReportPo";
-const locationStorage = "locationReportPo";
-const columnStorage = "columnReportPo";
-const sortStorage = "sortReportPo";
-const statusStorage = "statusReportPo";
-const anyStorage = "anyReportPo";
-const activeDateRangePickerStorage = "activeDateRangeReportPo";
+import HeaderReportCommon from "../../../common/HeaderReportCommon";
 
 class PoReport extends Component {
   constructor(props) {
     super(props);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeSelect = this.handleChangeSelect.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleService = this.handleService.bind(this);
     this.state = {
       master: {},
-      where_data: CURRENT_DATE,
-      any: "",
-      location: "",
+      where_data: "",
       dateFrom: CURRENT_DATE,
       dateTo: CURRENT_DATE,
-      sort: "",
-      column: "",
-      status: "",
       column_data: [
         { value: "no_po", label: "No. PO" },
         { value: "tgl_po", label: "Tanggal PO" },
@@ -55,93 +35,46 @@ class PoReport extends Component {
     };
   }
 
-  handleService(page = 1) {
-    let tglAwal = getStorage(dateFromStorage);
-    let tglAkhir = getStorage(dateToStorage);
-    let lokasi = getStorage(locationStorage);
-    let kolom = getStorage(columnStorage);
-    let urutan = getStorage(sortStorage);
-    let stts = getStorage(statusStorage);
-    let any = getStorage(anyStorage);
-    let where = `page=${page}`;
-    let state = {};
-
-    if (isEmptyOrUndefined(tglAwal) && isEmptyOrUndefined(tglAkhir)) {
-      where += `&datefrom=${tglAwal}&dateto=${tglAkhir}`;
-      Object.assign(state, { dateFrom: tglAwal, dateTo: tglAkhir });
-    } else {
-      where += `&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(fetchPoReport(where));
     }
-    if (isEmptyOrUndefined(lokasi)) {
-      where += `&lokasi=${lokasi}`;
-      Object.assign(state, { location: lokasi });
-    }
-    if (isEmptyOrUndefined(kolom)) {
-      if (isEmptyOrUndefined(urutan)) {
-        where += `&sort=${kolom}|${urutan}`;
-        Object.assign(state, { sort: urutan, column: kolom });
-      }
-    }
-    if (isEmptyOrUndefined(stts)) {
-      where += `&status=${stts}`;
-      Object.assign(state, { status: stts });
-    }
-    if (isEmptyOrUndefined(any)) {
-      where += `&q=${any}`;
-      Object.assign(state, { any: any });
-    }
-    Object.assign(state, { where_data: where });
-    this.setState(state);
-    this.props.dispatch(fetchPoReport(where));
-  }
-  handleChangeSelect(state, res) {
-    if (state === "location") setStorage(locationStorage, res.value);
-    if (state === "column") setStorage(columnStorage, res.value);
-    if (state === "sort") setStorage(sortStorage, res.value);
-    if (state === "status") setStorage(statusStorage, res.value);
-    this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(1), 500);
   }
 
   componentWillUnmount() {
     this.setState({ isModalDetail: false, isModalExport: false });
   }
-  componentWillMount() {
-    this.handleService(1);
-  }
-  componentDidMount() {
-    this.handleService(1);
-  }
-
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
 
   handlePageChange(pageNumber) {
-    this.handleService(pageNumber);
-  }
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService(this.state.any, 1);
-    // setTimeout(() => this.handleService(1), 300);
-  }
-  toggle(i) {
-    this.props.dispatch(poReportDetail(1, this.props.poReport.data[i].no_po));
-    this.setState({ isModalDetail: true, master: this.props.poReport.data[i] });
-    this.props.dispatch(ModalType("poReportDetail"));
+    this.handleService(this.state.where_data, pageNumber);
   }
 
-  toggleModal(e, total) {
-    e.preventDefault();
-    this.props.dispatch(fetchPoReportExcel(1, this.state.where_data, total));
-    this.setState({ isModalExport: true });
-    this.props.dispatch(ModalType("formPoExcel"));
+  handleModal(type, obj) {
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let periode = getPeriode(where.split("&"));
+    let getDate = periode.split("-");
+    let setState = { dateFrom: getDate[0], dateTo: getDate[1], where_data: where };
+
+    if (type === "excel") {
+      Object.assign(setState, { isModalExport: true });
+      this.props.dispatch(fetchPoReportExcel(where, obj.total));
+      this.props.dispatch(ModalType("formPoExcel"));
+    } else {
+      Object.assign(obj, { where: where });
+      this.props.dispatch(poReportDetail(obj.no_po, where, true));
+      Object.assign(setState, { isModalDetail: true, master: obj });
+      this.props.dispatch(ModalType("poReportDetail"));
+    }
+    this.setState(setState);
   }
 
   render() {
     const { total, last_page, per_page, current_page, data } = this.props.poReport;
-    const { status, column, column_data, location, sort, any, dateFrom, dateTo, isModalDetail, isModalExport, master } = this.state;
+    const { column_data, dateFrom, dateTo, isModalDetail, isModalExport, master } = this.state;
 
     const head = [
       { label: "No", className: "text-center", width: "1%" },
@@ -158,53 +91,15 @@ class PoReport extends Component {
 
     return (
       <Layout page="Laporan Purchase Order">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-3">
-                {dateRange(
-                  (first, last, isActive) => {
-                    setStorage(activeDateRangePickerStorage, isActive);
-                    setStorage(dateFromStorage, first);
-                    setStorage(dateToStorage, last);
-                    this.handleService();
-                  },
-                  `${toDate(dateFrom)} - ${toDate(dateTo)}`,
-                  getStorage(activeDateRangePickerStorage)
-                )}
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <LokasiCommon isAll={true} callback={(res) => this.handleChangeSelect("location", res)} dataEdit={location} />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon label="Status" options={STATUS_PURCHASE_ORDER} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={status} />
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input className="form-control" type="text" name="any" value={any} onChange={(e) => this.handleChange(e)} />
-                </div>
-              </div>
-              <div className="col-md-2">
-                <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-
-                <button className="btn btn-primary" type="button" style={{ marginTop: "28px" }} onClick={(e) => this.toggleModal(e, last_page * per_page)}>
-                  {isProgress(this.props.isLoading)}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <HeaderReportCommon
+          pathName="ReportPurchaseOrder"
+          isAll={true}
+          statusData={STATUS_PURCHASE_ORDER}
+          columnData={column_data}
+          callbackWhere={(res) => this.handleService(res)}
+          callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
+          excelData={this.props.isLoading}
+        />
         <TableCommon
           head={head}
           meta={{
@@ -222,7 +117,7 @@ class PoReport extends Component {
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
-                          <ButtonActionCommon action={[{ label: "Detail" }]} callback={(e) => this.toggle(i)} />
+                          <ButtonActionCommon action={[{ label: "Detail" }]} callback={(e) => this.handleModal("detail", v)} />
                         </td>
                         <td className="middle nowrap">{v.no_po}</td>
                         <td className="middle nowrap">{toDate(v.tgl_po)} </td>
@@ -231,7 +126,7 @@ class PoReport extends Component {
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis}</td>
                         <td className="middle nowrap">{v.kd_kasir}</td>
-                        <td className="middle nowrap">{statusPurchaseOrder(v.status)}</td>
+                        <td className="middle nowrap">{statusPurchaseOrder(v.status, true)}</td>
                       </tr>
                     );
                   })

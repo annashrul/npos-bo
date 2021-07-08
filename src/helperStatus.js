@@ -92,7 +92,7 @@ export const statusPacking = (res, isButton = false) => {
   return handleLoop(res, STATUS_PACKING_DAN_EXPEDISI, isButton);
 };
 export const statusPurchaseOrder = (res, isButton = false) => {
-  return handleLoop(res, STATUS_PACKING_DAN_EXPEDISI, isButton);
+  return handleLoop(res, STATUS_PURCHASE_ORDER, isButton);
 };
 export const statusProduksi = (res, isButton = false) => {
   return handleLoop(res, STATUS_PRODUKSI, isButton);

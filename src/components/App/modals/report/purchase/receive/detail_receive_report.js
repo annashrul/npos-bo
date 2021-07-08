@@ -1,143 +1,136 @@
-import React,{Component} from 'react';
-import {ModalBody, ModalHeader} from "reactstrap";
+import React, { Component } from "react";
+import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle} from "redux/actions/modal.action";
-import {toRp,getMargin} from "helper";
-import Paginationq from "helper";
-import {FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
-class DetailReceiveReport extends Component{
-    constructor(props){
-        super(props);
-        this.toggle = this.toggle.bind(this);
+import { ModalToggle } from "redux/actions/modal.action";
+import { FetchReportDetail } from "redux/actions/purchase/receive/receive.action";
+import HeaderDetailCommon from "../.../../../../../common/HeaderDetailCommon";
+import { getMargin, float, generateNo, noData, parseToRp, toDate, rmPage } from "../../../../../../helper";
+import TableCommon from "../../../../common/TableCommon";
+class DetailReceiveReport extends Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+  }
+  handlePageChange(pageNumber) {
+    let master = this.props.master;
+    let where = `page=${pageNumber}`;
+    where += rmPage(master.where);
+    this.props.dispatch(FetchReportDetail(master.no_faktur_beli, where));
+  }
+  toggle(e) {
+    e.preventDefault();
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+  }
+  render() {
+    const { total, per_page, current_page, data } = this.props.receiveReportDetail;
+    const master = this.props.master;
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { colSpan: 2, label: "Barang" },
+      { colSpan: 2, label: "Harga" },
+      { rowSpan: 2, label: "Margin" },
+      { colSpan: 2, label: "Diskon (%)" },
+      { colSpan: 2, label: "Qty" },
+      { rowSpan: 2, label: "Ppn" },
+      { rowSpan: 2, label: "Subtotal" },
+    ];
+    const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Beli" }, { label: "Jual" }, { label: "1" }, { label: "2" }, { label: "Beli" }, { label: "Bonus" }];
+    let totalMarginPerHalaman = 0;
+    let totalDiskon1PerHalaman = 0;
+    let totalDisko2PerHalaman = 0;
+    let totalQtyBeliPerHalaman = 0;
+    let totalQtyBonusPerHalaman = 0;
+    let totalPpnPerHalaman = 0;
+    let totalAmountPerHalaman = 0;
 
-    }
-    componentWillReceiveProps(nextprops){
-        
-    }
-    handlePageChange(pageNumber){
-        this.props.dispatch(FetchReportDetail(pageNumber,localStorage.getItem("kd_trx_detail_receive_report")));
+    return (
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "receiveReportDetail"} size="lg">
+        <ModalHeader toggle={this.toggle}>Detail laporan receive pembelian</ModalHeader>
+        <ModalBody>
+          <HeaderDetailCommon
+            data={[
+              { title: "No faktur beli", desc: master.no_faktur_beli },
+              { title: "Penerima", desc: master.nama_penerima },
+              { title: "Lokasi", desc: master.lokasi },
+              { title: "Operator", desc: master.operator },
+              { title: "Pelunasan", desc: master.pelunasan },
+              { title: "Tanggal", desc: toDate(master.tgl_beli) },
+            ]}
+          />
+          <TableCommon
+            head={head}
+            rowSpan={rowSpan}
+            meta={{ total: total, current_page: current_page, per_page: per_page }}
+            current_page={current_page}
+            callbackPage={this.handlePageChange.bind(this)}
+            renderRow={
+              typeof data === "object"
+                ? data.length > 0
+                  ? data.map((v, i) => {
+                      let hrgJual = float(v.harga_jual);
+                      let hrgBeli = float(v.harga_beli);
+                      let diskon1 = float(v.disc1);
+                      let diskon2 = float(v.disc2);
+                      let jmlBeli = float(v.jumlah_beli);
+                      let jmlBonus = float(v.jumlah_bonus);
+                      let ppn = float(v.ppn_item);
+                      let subtotal = float(hrgBeli * jmlBeli - diskon1 - diskon2 + ppn);
 
-    }
-    toggle(e){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        let que=`detail_receive_report`;
-        localStorage.removeItem(`tgl_${que}`);
-        localStorage.removeItem(`kd_trx_${que}`);
-        localStorage.removeItem(`lokasi_${que}`);
-        localStorage.removeItem(`operator_${que}`);
-        localStorage.removeItem(`penerima_${que}`);
-        localStorage.removeItem(`pelunasan_${que}`);
-    };
-    render(){
-        const {
-            // total,
-            last_page,
-            per_page,
-            current_page,
-            // from,
-            // to,
-            data
-        } = this.props.receiveReportDetail;
-        let que=`detail_receive_report`;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center"};
+                      totalMarginPerHalaman += float(getMargin(hrgJual, hrgBeli));
+                      totalDiskon1PerHalaman += float(diskon1);
+                      totalDisko2PerHalaman += float(diskon2);
+                      totalQtyBeliPerHalaman += float(jmlBeli);
+                      totalQtyBonusPerHalaman += float(jmlBonus);
+                      totalPpnPerHalaman += float(ppn);
+                      totalAmountPerHalaman += float(subtotal);
 
-        return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "receiveReportDetail"} size="lg" className="custom-map-modal">
-                <ModalHeader toggle={this.toggle}>{"Detail Arsip Pembelian"}</ModalHeader>
-                <ModalBody>
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th className="text-black">Tanggal</th>
-                            <td>: {localStorage.getItem(`tgl_${que}`)}</td>
-                            <td className="text-black">Operator</td>
-                            <td>: {localStorage.getItem(`operator_${que}`)}</td>
+                      return (
+                        <tr key={i}>
+                          <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                          <td className="middle nowrap">{v.kode_barang}</td>
+                          <td className="middle nowrap">{v.nm_brg}</td>
+                          <td className="middle nowrap text-right">{parseToRp(hrgBeli)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(hrgJual)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(getMargin(hrgJual, hrgBeli))}</td>
+                          <td className="middle nowrap text-right">{parseToRp(diskon1)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(diskon2)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(jmlBeli)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(jmlBonus)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(ppn)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(subtotal)}</td>
                         </tr>
-                        <tr>
-                            <td className="text-black">No Transaksi</td>
-                            <td>: {localStorage.getItem(`kd_trx_${que}`)}</td>
-                            <td className="text-black">Penerima</td>
-                            <td>: {localStorage.getItem(`penerima_${que}`)}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Lokasi</td>
-                            <td>: {localStorage.getItem(`lokasi_${que}`)}</td>
-                            <td className="text-black">Pelunasan</td>
-                            <td>: {localStorage.getItem(`pelunasan_${que}`)}</td>
-                        </tr>
-
-                        </thead>
-                    </table>
-                    <div className="table-responsive">
-                        <table className="table table-bordered table-hover">
-                            <thead>
-                           <tr>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Kode Barang</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Nama Barang</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Harga Beli</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Harga Jual</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Margin</th>
-                               <th className="text-black" style={columnStyle} colSpan={2}>Diskon (%)</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Qty Beli</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Qty Bonus</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>PPN</th>
-                               <th className="text-black" style={columnStyle} rowSpan={2}>Subtotal</th>
-                           </tr>
-                            <tr>
-                                <th className="text-black" style={columnStyle}>1</th>
-                                <th className="text-black" style={columnStyle}>2</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                typeof data==='object'?data.length>0?(
-                                    data.map((v,i)=>{
-                                        let subtotal=parseInt(v.harga_beli,10)*parseInt(v.jumlah_beli,10)-parseInt(v.disc1,10)-parseInt(v.disc2,10)+parseInt(v.ppn_item,10);
-                                        return (
-                                            <tr>
-                                                <td style={columnStyle}>{v.kode_barang}</td>
-                                                <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={{textAlign:"Right"}}>{toRp(v.harga_beli)}</td>
-                                                <td style={{textAlign:"Right"}}>{toRp(v.harga_jual)}</td>
-                                                <td style={{textAlign:"Right"}}>{getMargin(v.harga_jual,v.harga_beli)}</td>
-                                                <td style={{textAlign:"Right"}}>{v.disc1}</td>
-                                                <td style={{textAlign:"Right"}}>{v.disc2}</td>
-                                                <td style={{textAlign:"Right"}}>{v.jumlah_beli}</td>
-                                                <td style={{textAlign:"Right"}}>{v.jumlah_bonus}</td>
-                                                <td style={{textAlign:"Right"}}>{v.ppn_item}</td>
-                                                <td style={{textAlign:"Right"}}>{toRp(subtotal)}</td>
-                                            </tr>
-                                        );
-                                    })
-                                ):"No data.":"No data."
-                            }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style={{"marginTop":"20px","float":"right"}}>
-                        <Paginationq
-                            current_page={parseInt(current_page,10)}
-                            per_page={parseInt(per_page,10)}
-                            total={parseInt(last_page*per_page,10)}
-                            callback={this.handlePageChange.bind(this)}
-                        />
-                    </div>
-
-                </ModalBody>
-            </WrapperModal>
-        );
-    }
+                      );
+                    })
+                  : noData(head.length)
+                : noData(head.length)
+            }
+            footer={[
+              {
+                data: [
+                  { colSpan: 5, label: "Total perhalaman", className: "text-left" },
+                  { colSpan: 1, label: parseToRp(totalMarginPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalDiskon1PerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalDisko2PerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalQtyBeliPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalQtyBonusPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalPpnPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalAmountPerHalaman) },
+                ],
+              },
+            ]}
+          />
+        </ModalBody>
+      </WrapperModal>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-    }
-}
-// const mapDispatch
+  return {
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+  };
+};
 export default connect(mapStateToProps)(DetailReceiveReport);

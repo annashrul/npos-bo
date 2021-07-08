@@ -1,10 +1,5 @@
 import { swal } from "../../../../helper";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { ModalToggle } from "../../modal.action";
 import { CASH } from "../../_constants";
 
@@ -151,7 +146,7 @@ export const FetchCashReport = (where = "") => {
   return (dispatch) => {
     let url = "pos/report?param=kas&isbo=true";
     if (where !== "") url += `&${where}`;
-    handlePost(url,[], (res,msg,status) => {
+    handlePost(url, [], (res, msg, status) => {
       const data = res;
       dispatch(setCashReport(data));
       dispatch(successCashTrx(true));
@@ -162,9 +157,15 @@ export const FetchCashReportExcel = (where = "", perpage = "") => {
   return (dispatch) => {
     let url = `pos/report?page=1&param=kas&isbo=true&perpage=${perpage}`;
     if (where !== "") url += `&${where}`;
-    handleGet(url, (res) => {
-      const data = res.data;
+    handlePost(url, [], (res, msg, status) => {
+      const data = res;
       dispatch(setCashReportExcel(data));
+      dispatch(ModalToggle(true));
     });
+
+    // handleGet(url, (res) => {
+    //   const data = res.data;
+    //   dispatch(setCashReportExcel(data));
+    // });
   };
 };

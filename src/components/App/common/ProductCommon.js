@@ -31,6 +31,7 @@ class ProductCommon extends Component {
       dataBahan: {},
       value: "",
       perpage: 5,
+      isProductActive: 0,
     };
   }
 
@@ -72,6 +73,7 @@ class ProductCommon extends Component {
       }
       this.getData();
     });
+    this.setState({ isProductActive: item.barcode });
   }
   getData() {
     getDataCommon(this.props.table, (res, brg) => {
@@ -148,11 +150,8 @@ class ProductCommon extends Component {
     return (
       <div>
         <div className="form-group">
-          <label>Pilih barang</label>
+          <label>Cari berdasarkan {this.state.data.value === 1 ? "Kode Barang" : this.state.data.value === 2 ? "Barcode" : "Deskripsi"}</label>
           <Select options={this.state.data_array} placeholder="Pilih barang" onChange={this.HandleChangeSelect} value={this.state.data} />
-          <small id="passwordHelpBlock" className="form-text text-muted">
-            Cari berdasarkan {this.state.data.value === 1 ? "Kode Barang" : this.state.data.value === 2 ? "Barcode" : "Deskripsi"}
-          </small>
         </div>
         <div className="form-group">
           <div className="input-group input-group-sm">
@@ -201,7 +200,7 @@ class ProductCommon extends Component {
                     return (
                       <li
                         style={{
-                          backgroundColor: this.state.scrollPage === inx ? "#eeeeee" : "",
+                          backgroundColor: this.state.isProductActive === i.barcode ? "#eeeeee" : "",
                         }}
                         id={`item${inx}`}
                         className="clearfix"
@@ -227,17 +226,7 @@ class ProductCommon extends Component {
                           >
                             {i.nm_brg}
                           </div>
-                          <div
-                            className="status"
-                            style={{
-                              color: "#a1887f",
-                              fontWeight: "bold",
-                              wordBreak: "break-all",
-                              fontSize: "12px",
-                            }}
-                          >
-                            {i.barcode}
-                          </div>
+                          <div className="subtitle">{i.barcode}</div>
                         </div>
                       </li>
                     );
@@ -262,7 +251,7 @@ class ProductCommon extends Component {
         <hr />
         <div className="form-group">
           <button className={"btn btn-primary"} style={{ width: "100%" }} onClick={this.handleLoadMore}>
-            {this.props.isLoading ? "Tunggu Sebentar" : <i className="fa fa-refresh"></i>}
+            {this.props.isLoading ? "Tunggu Sebentar" : "Tampilkan lebih banyak"}
           </button>
         </div>
       </div>

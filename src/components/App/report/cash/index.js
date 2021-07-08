@@ -134,9 +134,9 @@ class ReportCash extends Component {
   toggleModal(e, total, perpage) {
     e.preventDefault();
     this.setState({ isModalExport: true });
-    const bool = !this.props.isOpen;
+    // const bool = !this.props.isOpen;
     // let range = total*perpage;
-    this.props.dispatch(ModalToggle(bool));
+    // this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formCashExcel"));
     this.props.dispatch(FetchCashReportExcel(this.state.where_data, total));
   }

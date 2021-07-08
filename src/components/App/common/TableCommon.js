@@ -85,7 +85,7 @@ class TableCommon extends Component {
                     <tr key={key} style={{ backgroundColor: "#EEEEEE" }}>
                       {val.data.map((res, index) => {
                         return (
-                          <th key={index} colSpan={res.colSpan ? res.colSpan : ""} className={`text-black ${res.className ? res.className : "text-right"}`}>
+                          <th key={index} colSpan={res.colSpan ? res.colSpan : ""} className={`middle nowrap text-black ${res.className ? res.className : "text-right"}`}>
                             {res.label}
                           </th>
                         );

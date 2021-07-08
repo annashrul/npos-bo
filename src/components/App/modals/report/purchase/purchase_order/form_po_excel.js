@@ -3,6 +3,7 @@ import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import { to_pdf, headerPdf, toExcel } from "helper";
+import { statusPurchaseOrder } from "helperStatus";
 import "jspdf-autotable";
 import ExportCommon from "../../../../common/ExportCommon";
 
@@ -22,7 +23,7 @@ class PoReportExcel extends Component {
     if (this.props.poReportExcel.data !== undefined) {
       if (this.props.poReportExcel.data.length > 0) {
         this.props.poReportExcel.data.map((v, i) =>
-          props.push([i + 1, v.no_po, moment(v.tgl_po).format("YYYY-MM-DD"), moment(v.tglkirim).format("YYYY-MM-DD"), v.nama_supplier, v.lokasi, v.jenis, v.status === "0" ? "Processing" : "Ordered"])
+          props.push([i + 1, v.no_po, moment(v.tgl_po).format("YYYY-MM-DD"), moment(v.tglkirim).format("YYYY-MM-DD"), v.nama_supplier, v.lokasi, v.jenis, statusPurchaseOrder(v.status)])
         );
       }
     }

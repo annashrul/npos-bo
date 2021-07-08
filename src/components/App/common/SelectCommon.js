@@ -35,8 +35,7 @@ class SelectCommon extends Component {
       }
     }
 
-    if (props.label === "kassa")
-      Object.assign(state, { value: { label: "Z", value: "Z" } });
+    if (props.label === "kassa") Object.assign(state, { value: { label: "Z", value: "Z" } });
 
     this.setState(state);
   }
@@ -60,14 +59,10 @@ class SelectCommon extends Component {
       <div className="form-group">
         <label
           style={{
-            display:
-              !this.props.isLabel && this.props.isLabel !== undefined
-                ? "none"
-                : "block",
+            display: !this.props.isLabel && this.props.isLabel !== undefined ? "none" : "block",
           }}
         >
-          {this.state.label}{" "}
-          <span className="text-danger">{this.props.isRequired && "*"}</span>
+          {this.state.label} <span className="text-danger">{this.props.isRequired && "*"}</span>
         </label>
         <Select
           // autoFocus={true}
@@ -75,9 +70,7 @@ class SelectCommon extends Component {
           placeholder={`Pilih ${this.state.label}`}
           onChange={(value, actionMeta) => this.onChange(value)}
           value={this.state.value}
-          isDisabled={
-            this.props.isDisabled === undefined ? false : this.props.isDisabled
-          }
+          isDisabled={this.props.isDisabled === undefined ? false : this.props.isDisabled}
         />
       </div>
     );

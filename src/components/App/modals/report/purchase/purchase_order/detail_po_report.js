@@ -4,13 +4,12 @@ import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import { ModalToggle } from "redux/actions/modal.action";
 import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
-import { toDate } from "../../../../../../helper";
+import { rmPage, toDate } from "../../../../../../helper";
 import TableCommon from "../../../../common/TableCommon";
 import { poReportDetail } from "../../../../../../redux/actions/purchase/purchase_order/po.action";
 class DetailPoReport extends Component {
   constructor(props) {
     super(props);
-
     this.toggle = this.toggle.bind(this);
   }
 
@@ -20,8 +19,10 @@ class DetailPoReport extends Component {
     this.props.dispatch(ModalToggle(bool));
   }
   handlePage(res) {
-    console.log(this.props.master);
-    this.props.dispatch(poReportDetail(res, this.props.master.no_po));
+    let master = this.props.master;
+    let where = `page=${res}`;
+    where += rmPage(master.where);
+    this.props.dispatch(poReportDetail(this.props.master.no_po, where));
   }
   render() {
     let master = this.props.master;
@@ -38,46 +39,19 @@ class DetailPoReport extends Component {
     ];
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "poReportDetail"} size="lg">
-        <ModalHeader toggle={this.toggle}>Detail Laporan Purchase Order</ModalHeader>
+        <ModalHeader toggle={this.toggle}>Detail laporan purchase order</ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
             data={[
-              {
-                title: "No PO",
-                desc: master.no_po,
-              },
-              {
-                title: "Supplier",
-                desc: master.nama_supplier,
-              },
-              {
-                title: "Tanggal PO",
-                desc: toDate(master.tgl_po),
-              },
-              {
-                title: "Alamat",
-                desc: master.alamat_supplier,
-              },
-              {
-                title: "Tanggal Expired",
-                desc: toDate(master.tgl_kirim),
-              },
-              {
-                title: "Telepon",
-                desc: master.telp_supplier,
-              },
-              {
-                title: "Lokasi",
-                desc: master.lokasi,
-              },
-              {
-                title: "Keterangan",
-                desc: master.catatan,
-              },
-              {
-                title: "Operator",
-                desc: master.kd_kasir,
-              },
+              { title: "No PO", desc: master.no_po },
+              { title: "Supplier", desc: master.nama_supplier },
+              { title: "Tanggal PO", desc: toDate(master.tgl_po) },
+              { title: "Alamat", desc: master.alamat_supplier },
+              { title: "Tanggal Expired", desc: toDate(master.tgl_kirim) },
+              { title: "Telepon", desc: master.telp_supplier },
+              { title: "Lokasi", desc: master.lokasi },
+              { title: "Keterangan", desc: master.catatan },
+              { title: "Operator", desc: master.kd_kasir },
             ]}
           />
 
@@ -108,57 +82,6 @@ class DetailPoReport extends Component {
             }}
             callbackPage={this.handlePage.bind(this)}
           />
-
-          {/* <div className="row">
-            <div className="col-md-12">
-              <table className="table table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th className="text-black" style={columnStyle}>
-                      Kode Barang
-                    </th>
-                    <th className="text-black" style={columnStyle}>
-                      Barcode
-                    </th>
-                    <th className="text-black" style={columnStyle}>
-                      Nama Barang
-                    </th>
-                    <th className="text-black" style={columnStyle}>
-                      Artikel
-                    </th>
-                    <th className="text-black" style={columnStyle}>
-                      Satuan
-                    </th>
-                    <th className="text-black" style={columnStyle}>
-                      Qty
-                    </th>
-                    <th className="text-black" style={columnStyle}>
-                      Harga Beli
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {typeof this.props.poReportDetail.data === "object"
-                    ? this.props.poReportDetail.data.length > 0
-                      ? this.props.poReportDetail.data.map((v, i) => {
-                          return (
-                            <tr key={i}>
-                              <td style={columnStyle}>{v.kode_barang}</td>
-                              <td style={columnStyle}>{v.barcode}</td>
-                              <td style={columnStyle}>{v.nm_brg}</td>
-                              <td style={columnStyle}>{v.deskripsi}</td>
-                              <td style={columnStyle}>{v.satuan}</td>
-                              <td style={columnStyle}>{v.jumlah_beli}</td>
-                              <td style={columnStyle}>{toRp(v.harga_beli)}</td>
-                            </tr>
-                          );
-                        })
-                      : "No data."
-                    : "No data"}
-                </tbody>
-              </table>
-            </div>
-          </div> */}
         </ModalBody>
       </WrapperModal>
     );
@@ -169,9 +92,6 @@ const mapStateToProps = (state) => {
   return {
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
-    // poReportDetail:state.poReducer.poReportDetail,
-    // isLoading: state.poReducer.isLoading,
   };
 };
-// const mapDispatch
 export default connect(mapStateToProps)(DetailPoReport);
