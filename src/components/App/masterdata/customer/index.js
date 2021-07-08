@@ -13,6 +13,7 @@ class Customer extends Component {
     super(props);
     this.state = {
       isShow: true,
+      isActive: 0,
     };
   }
   componentWillReceiveProps = (nextProps) => {
@@ -34,42 +35,18 @@ class Customer extends Component {
     this.props.dispatch(FetchCustomer("page=1"));
     this.props.dispatch(FetchCustomerType("page=1"));
   }
-  // handleSelect = (index) => {
-  //   this.setState({ selectedIndex: index }, () => {});
-  // };
-
   render() {
     return (
       <TabCommon
-        path="barang"
+        path={this.state.isActive === 0 ? "customer" : "customerType"}
         tabHead={["Daftar Customer", "Tipe customer"]}
         tabBody={[<ListCustomer data={this.props.customer} />, <ListCustomerType data={this.props.customerType} />]}
         callbackActive={(res) => {
-          this.setState({ isShow: res === 0 });
+          console.log(res);
+          this.setState({ isShow: res === 0, isActive: res });
         }}
+        // isActive={this.state.isA}
       />
-      // <Layout page="Customer">
-      //   <div className="col-12 box-margin">
-      //     <Tabs>
-      //       <TabList>
-      //         <Tab onClick={() => this.handleSelect(0)}>Customer</Tab>
-      //         <Tab onClick={() => this.handleSelect(1)}>Tipe Customer</Tab>
-      //       </TabList>
-      //       <TabPanel>
-      //         <ListCustomer
-      //           token={this.state.token}
-      //           data={this.props.customer}
-      //         />
-      //       </TabPanel>
-      //       <TabPanel>
-      //         <ListCustomerType
-      //           token={this.state.token}
-      //           data={this.props.customerType}
-      //         />
-      //       </TabPanel>
-      //     </Tabs>
-      //   </div>
-      // </Layout>
     );
   }
 }

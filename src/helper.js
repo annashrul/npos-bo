@@ -635,8 +635,8 @@ export const rmStorage = (key) => {
 export const noData = (colSpan) => {
   return (
     <tr>
-      <td colSpan={colSpan}>
-        <img src="https://tirtaloka.gapensi.or.id/v2/assets/images/illustration/no-data.png" alt="nodata" />
+      <td colSpan={colSpan} className="middle text-center">
+        Data tidak tersedia
       </td>
     </tr>
   );

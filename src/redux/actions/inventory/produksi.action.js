@@ -5,7 +5,7 @@ import { destroy } from "components/model/app.model";
 import { setLoadingbrg } from "../masterdata/product/product.action";
 import { handleGet, handleGetExport, handlePost } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
-import { swal } from "../../../helper";
+import { parseToRp, swal } from "../../../helper";
 
 export function setDownload(load) {
   return { type: PRODUKSI.DOWNLOAD, load };
@@ -156,14 +156,13 @@ export const storeProduksi = (data, callback) => {
       .then(function (response) {
         Swal.close();
         const data = response.data;
-
+        destroy("production");
         Swal.fire({
           allowOutsideClick: false,
           title: "Transaksi berhasil.",
-          html: `<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(
-            data.result.total_hpp,
-            10
-          )}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem, 10)}</td></tr></tbody></table>`,
+          html: `<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseToRp(
+            parseInt(data.result.total_hpp, 10)
+          )}</td><td>${parseToRp(data.result.qty_estimasi)}</td><td>${parseToRp(parseInt(data.result.hpp_peritem, 10))}</td></tr></tbody></table>`,
           icon: "success",
           showCancelButton: false,
           cancelButtonColor: "#2196F3",

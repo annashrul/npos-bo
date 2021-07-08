@@ -72,7 +72,7 @@ export const FetchAdjustmentAll = () => {
   };
 };
 
-export const storeAdjusment = (data, param) => {
+export const storeAdjusment = (data, callback) => {
   return (dispatch) => {
     Swal.fire({
       allowOutsideClick: false,
@@ -102,16 +102,9 @@ export const storeAdjusment = (data, param) => {
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
-          // if (result.value) {
-          //     const win = window.open(data.result.nota,'_blank');
-          //     if (win != null) {
-          //         win.focus();
-          //     }
-          // }
           destroy("adjusment");
-          localStorage.removeItem("lk");
           if (result.dismiss === "cancel") {
-            window.location.reload(false);
+            callback();
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {

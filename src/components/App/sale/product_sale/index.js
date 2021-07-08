@@ -107,37 +107,6 @@ class Sale extends Component {
     this.handleClosing = this.handleClosing.bind(this);
     this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this);
     this.handleHoldBill = this.handleHoldBill.bind(this);
-
-    // set focus search
-    // onHandleKeyboardChar("f", (e) => {
-    //   e.preventDefault();
-    //   setFocus(this, "search");
-    // });
-    // closing
-    // onHandleKeyboardChar("c", (e) => {
-    //   e.preventDefault();
-    //   this.handleClosing(e);
-    // });
-    // form hold bill
-    // onHandleKeyboardChar("h", (e) => {
-    //   e.preventDefault();
-    //   this.handleHoldBill(e, "formHoldBill");
-    // });
-    // list hold bill
-    // onHandleKeyboardChar("l", (e) => {
-    //   e.preventDefault();
-    //   this.handleHoldBill(e, "listHoldBill");
-    // });
-    //simpan transaksi
-    // onHandleKeyboardChar("s", (e) => {
-    //   e.preventDefault();
-    //   this.HandleSubmit(e);
-    // });
-    //reset transaksi
-    // onHandleKeyboardChar("x", (e) => {
-    //   e.preventDefault();
-    //   this.HandleReset(e);
-    // });
   }
 
   handleClickToggle(e) {

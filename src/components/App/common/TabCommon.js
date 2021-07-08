@@ -13,8 +13,20 @@ class TabCommon extends Component {
       selectedIndex: 0,
     };
   }
+  getProps(props) {
+    // if (props.isActive) {
+    //   this.setState({ selectedIndex: props.isActive });
+    // }
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
 
   componentDidMount() {
+    this.getProps(this.props);
     let active = getStorage(`${this.props.path}-active`);
     if (isEmptyOrUndefined(active)) {
       this.handleSelect(parseInt(active, 10));
@@ -32,10 +44,7 @@ class TabCommon extends Component {
   render() {
     return (
       <Layout page={this.props.path}>
-        <Tabs
-          selectedIndex={this.state.selectedIndex}
-          onSelect={(selectedIndex) => this.handleSelect(selectedIndex)}
-        >
+        <Tabs selectedIndex={this.state.selectedIndex} onSelect={(selectedIndex) => this.handleSelect(selectedIndex)}>
           <div className="card-header d-flex align-items-center justify-content-between">
             <TabList>
               {this.props.tabHead.map((val, key) => {

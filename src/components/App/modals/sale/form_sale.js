@@ -301,7 +301,7 @@ class FormSale extends Component {
     }
   }
   componentWillMount() {
-    this.props.dispatch(FetchBank(1, "", 100));
+    this.props.dispatch(FetchBank("page=1&perpage=100"));
     this.getProps(this.props);
   }
   componentDidMount() {
