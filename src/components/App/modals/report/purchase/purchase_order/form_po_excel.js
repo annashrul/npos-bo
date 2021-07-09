@@ -6,6 +6,8 @@ import { to_pdf, headerPdf, toExcel } from "helper";
 import { statusPurchaseOrder } from "helperStatus";
 import "jspdf-autotable";
 import ExportCommon from "../../../../common/ExportCommon";
+import { EXTENSION } from "../../../../../../redux/actions/_constants";
+import { headerExcel, toDate } from "../../../../../../helper";
 
 class PoReportExcel extends Component {
   constructor(props) {
@@ -15,16 +17,19 @@ class PoReportExcel extends Component {
   }
 
   handleHeader() {
-    return ["NO", "NO PO", "TGL", "TGL KIRIM", "SUPPLIER", "LOKASI", "JENIS", "STATUS"];
+    return ["NO", "NO PO", "TGL PO", "TGL KIRIM", "SUPPLIER", "LOKASI", "JENIS", "STATUS"];
   }
 
-  handleContent() {
+  handleContent(cek = "excel") {
+    let data = this.props.poReportExcel.data;
     let props = [];
-    if (this.props.poReportExcel.data !== undefined) {
-      if (this.props.poReportExcel.data.length > 0) {
-        this.props.poReportExcel.data.map((v, i) =>
-          props.push([i + 1, v.no_po, moment(v.tgl_po).format("YYYY-MM-DD"), moment(v.tglkirim).format("YYYY-MM-DD"), v.nama_supplier, v.lokasi, v.jenis, statusPurchaseOrder(v.status)])
-        );
+    if (data !== undefined) {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          let v = data[i];
+          props.push([i + 1, v.no_po, toDate(v.tgl_po), toDate(v.tglkirim), v.nama_supplier, v.lokasi, v.jenis, statusPurchaseOrder(`${v.status}`)]);
+          cek === "excel" && props[i].shift();
+        }
       }
     }
     return props;
@@ -40,16 +45,20 @@ class PoReportExcel extends Component {
         dateTo: this.props.endDate,
       }),
       headers,
-      this.handleContent()
+      this.handleContent("pdf")
     );
     this.props.dispatch(ModalToggle(false));
   }
   printExcel() {
-    toExcel("LAPORAN PURCHASE ORDER", `${this.props.startDate} - ${this.props.endDate}`, this.handleHeader(), this.handleContent(), []);
+    let header = this.handleHeader();
+    header.shift();
+    toExcel("LAPORAN PURCHASE ORDER", headerExcel(this.props.startDate, this.props.endDate), header, this.handleContent("excel"), [], EXTENSION.XLXS);
     this.props.dispatch(ModalToggle(false));
   }
 
   render() {
+    return <ExportCommon modalType="formPoExcel" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />;
+
     return <ExportCommon modalType="formPoExcel" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />;
   }
 }

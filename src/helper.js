@@ -149,20 +149,21 @@ export const toExcel = (title = "", periode = "", head = [], content = [], foot 
 };
 
 export const headerPdf = (master) => {
-  let stringHtml = "";
-  stringHtml +=
-    '<div style="text-align:center>' +
-    '<h3 style="text-align:center"><center>LAPORAN ' +
-    master.title +
-    "</center></h3>" +
-    '<h3 align="center"><center>PERIODE : ' +
-    `${master.dateFrom}`.replaceAll("-", "/") +
-    " - " +
-    `${master.dateTo}`.replaceAll("-", "/") +
-    "</center></h3>" +
-    '<h3 align="center"><center>&nbsp;</center></h3>' +
-    "</div>";
-  return stringHtml;
+  return `laporan ${master.title} periode ${master.dateFrom.replaceAll("-", "/")} - ${master.dateTo.replaceAll("-", "/")}`;
+  // let stringHtml = "";
+  // stringHtml +=
+  //   '<div style="text-align:center>' +
+  //   '<h3 style="text-align:center"><center>LAPORAN ' +
+  //   master.title +
+  //   "</center></h3>" +
+  //   '<h3 align="center"><center>PERIODE : ' +
+  //   `${master.dateFrom}`.replaceAll("-", "/") +
+  //   " - " +
+  //   `${master.dateTo}`.replaceAll("-", "/") +
+  //   "</center></h3>" +
+  //   '<h3 align="center"><center>&nbsp;</center></h3>' +
+  //   "</div>";
+  // return stringHtml;
 };
 
 export const myPdf = (filename, title = "", header = [], body = [], footer = [], orientation = "portrait", unit = "in", format = [], fontSize = 10, ml = 10, mt = 10, mr = 10, mb = 10) => {
@@ -185,34 +186,51 @@ export const myPdf = (filename, title = "", header = [], body = [], footer = [],
   addFooters(doc);
   return doc.save(filename + "report.pdf");
 };
+
+const addFooters = (doc) => {
+  const pageCount = doc.internal.getNumberOfPages();
+
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  for (var i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.text("Page " + String(i) + " of " + String(pageCount), doc.internal.pageSize.width / 2, 287, {
+      align: "right",
+    });
+  }
+};
+
 export const to_pdf = (filename, title = "", header = [], body = [], footer = []) => {
   const doc = jsPDF("portrait", "pt", "A4");
-  const marginLeft = 10;
-  doc.setFontSize(10);
+  doc.setTextColor(40);
+  doc.setFontSize(7);
   let content = {
     pageBreak: "auto",
     rowPageBreak: "avoid",
     headStyles: {
       backgroundColor: [0, 0, 0, 0.2],
-      lineWidth: 0.5,
-      marginBottom: 0,
+      marginBottom: 10,
       fontSize: 7,
-      alignment: "center",
-      align: "center",
     },
-    bodyStyles: { lineWidth: 1, marginBottom: 20, fontSize: 7 },
-    theme: "grid",
-    startY: 50,
+    bodyStyles: { valign: "top", lineWidth: 1, marginBottom: 10, marginTop: 10, fontSize: 7 },
+    showHead: "everyPage",
+    theme: "striped",
+    startY: doc.autoTableEndPosY() + 20,
     head: header,
+    fontStyle: "normal",
     body: body,
     foot: footer,
-    margin: { bottom: 10, top: 10, left: 10, right: 10 },
+    margin: { top: 10, bottom: 20, left: 10, right: 10 },
     autoSize: true,
+    didDrawPage: function (data) {
+      var str = `halaman ${doc.internal.getNumberOfPages()} ${title.toLowerCase()}`;
+      doc.setFontSize(7);
+      var pageSize = doc.internal.pageSize;
+      var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+      doc.text(str, data.settings.margin.left, pageHeight - 10);
+    },
   };
-  doc.fromHTML(title, marginLeft, 10, { align: "center" });
   doc.autoTable(content);
-  // addFooters(doc);
-  // return doc.save("LAPORAN_" + filename + `_${moment(new Date()).format("YYYYMMDDHHMMss")}` + ".pdf");
   return doc.save(`LAPORAN ${filename}_${moment(new Date()).format("YYYYMMDDHHMMss")}.pdf`);
 };
 
@@ -238,18 +256,18 @@ export const to_pdf_l = (filename, title = "", header = [], body = [], footer = 
   return doc.save(filename + "report.pdf");
 };
 
-export const addFooters = (doc) => {
-  var width = doc.internal.pageSize.getWidth();
-  var height = doc.internal.pageSize.getHeight();
-  doc.page = 1;
-  // const pageCount = doc.internal.getNumberOfPages();
-  doc.setFontSize(7);
-  doc.text(width - 40, height - 30, "Page - " + doc.page);
-  doc.page++;
-  doc.setFont("helvetica", "italic");
-  doc.setFontSize(8);
-  return doc;
-};
+// export const addFooters = (doc) => {
+//   var width = doc.internal.pageSize.getWidth();
+//   var height = doc.internal.pageSize.getHeight();
+//   doc.page = 1;
+//   // const pageCount = doc.internal.getNumberOfPages();
+//   doc.setFontSize(7);
+//   doc.text(width - 40, height - 30, "Page - " + doc.page);
+//   doc.page++;
+//   doc.setFont("helvetica", "italic");
+//   doc.setFontSize(8);
+//   return doc;
+// };
 var date = new Date();
 date.setDate(date.getDate());
 export const rangeDate = {
@@ -382,8 +400,8 @@ export const statusQ = (lbl, txt) => {
 };
 
 export const getMargin = (field1, field2, name = "") => {
-  field1 = parseInt(rmComma(field1));
-  field2 = parseInt(rmComma(field2));
+  field1 = parseInt(rmComma(rmToZero(field1)));
+  field2 = parseInt(rmComma(rmToZero(field2)));
   if (name === "margin") {
     //jika yang diinput margin
     return field1 * (field2 / 100) + field1;
@@ -396,7 +414,7 @@ export const getMargin = (field1, field2, name = "") => {
 export const kassa = (param = "") => {
   let data = [];
   if (param === "semua") {
-    data.push({ value: "", label: "Semua Kassa" });
+    data.push({ value: "", label: "Semua" });
   }
   data.push(
     { value: "A", label: "A" },

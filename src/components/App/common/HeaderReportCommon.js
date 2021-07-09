@@ -163,6 +163,7 @@ class HeaderReportCommon extends Component {
             <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
           </div>
         ) : null}
+        {this.props.renderRow && this.props.renderRow}
         {this.props.isOther && (
           <div className={`col-6 col-xs-6 ${col}`}>
             <SelectCommon label={this.props.otherName} options={other_data} callback={(res) => this.handleSelect(this.props.otherState, res)} dataEdit={other} />

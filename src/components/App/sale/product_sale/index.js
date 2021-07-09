@@ -342,7 +342,7 @@ class Sale extends Component {
     const value = e.target.value;
     if (column === "qty") {
       let val = parseInt(value, 10);
-      if (isNaN(val) || val < 1) {
+      if (value === "") {
         Object.assign(this.state.brgval[i], { qty: 1 });
         this.handleCheckData(this.state.databrg[i].barcode);
         return;
@@ -363,9 +363,10 @@ class Sale extends Component {
         else if (parseFloat(val) > 100) {
           values = 100;
         }
-      } else if (column === "qty") {
-        values = isNaN(val) ? 1 : val;
       }
+      // else if (column === "qty") {
+      //   values = isNaN(val) ? 1 : val;
+      // }
       brgval[i] = { ...brgval[i], [column]: values };
       this.setState({ brgval });
     }

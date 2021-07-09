@@ -121,12 +121,12 @@ export const StoreCashTrx = (data) => {
   };
 };
 
-export const UpdateCashTrx = (kd_trx, data) => {
+export const UpdateCashTrx = (kd_trx, data, where = "") => {
   return (dispatch) => {
     handlePut(`pos/kas/${btoa(kd_trx)}`, data, (res, msg, status) => {
       if (status) {
         dispatch(successCashTrx(true));
-        dispatch(FetchCashReport("page=1"));
+        dispatch(FetchCashReport(where));
       }
     });
   };
