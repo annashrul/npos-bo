@@ -43,7 +43,7 @@ class TransaksiWrapper extends Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== undefined) {
-      this.setState({ isLoading: true, scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
+      this.setState({ scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
       setTimeout(() => {
         this.setState({ isScroll: true, isLoading: false });
       }, 300);
@@ -176,11 +176,10 @@ class TransaksiWrapper extends Component {
                   <hr />
                   <div className="form-group">
                     <button
-                      className={"btn btn-primary"}
+                      className={`btn btn-primary ${this.state.isLoading ? "disabled" : ""}`}
                       style={{ width: "100%" }}
                       onClick={(e) => {
-                        // e.preventDefault();
-                        // this.setState({ isScroll: true });
+                        this.setState({ isLoading: true });
                         this.HandleSearch("loadmore", "");
                       }}
                     >
