@@ -1,97 +1,11 @@
 import React, { Component } from "react";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import WrapperModal from "../../_wrapper.modal";
-import { ModalBody } from "reactstrap";
-import moment from "moment";
-import { headerExcel, headerPdf, parseToRp, toDate, toExcel, toRp } from "../../../../../helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-// import jsPDF from 'jspdf';
-import imgExcel from "assets/xls.png";
-import imgPdf from "assets/pdf.png";
-import "jspdf-autotable";
-import { to_pdf } from "helper";
+import { to_pdf, headerPdf, parseToRp, toDate, toExcel, toRp } from "../../../../../helper";
 import ExportCommon from "../../../common/ExportCommon";
 import { EXTENSION } from "../../../../../redux/actions/_constants";
 
 class CashReportExcel extends Component {
-  //   constructor(props) {
-  //     super(props);
-  //     this.toggle = this.toggle.bind(this);
-  //     this.handleView = this.handleView.bind(this);
-  //     this.printDocument = this.printDocument.bind(this);
-  //     // this.handleSubmit = this.handleSubmit.bind(this);
-  //     // this.handleChange = this.handleChange.bind(this);
-  //     this.state = {
-  //       title: "",
-  //       jenis: "",
-  //       type: "",
-  //       view: false,
-  //       error: {
-  //         title: "",
-  //         jenis: "",
-  //         type: "",
-  //       },
-  //     };
-  //   }
-  //   handleView = (e) => {
-  //     e.preventDefault();
-  //     this.setState({
-  //       view: !this.state.view,
-  //     });
-  //   };
-  //   toggle = (e) => {
-  //     e.preventDefault();
-  //     const bool = !this.props.isOpen;
-  //     this.props.dispatch(ModalToggle(bool));
-  //   };
-  //   printDocument = (e) => {
-  //     e.preventDefault();
-  //     let stringHtml = "";
-  //     stringHtml +=
-  //       '<h3 align="center"><center>TIPE : ' +
-  //       (this.props.tipe === "" ? "SEMUA" : this.props.tipe.toUpperCase()) +
-  //       "</center></h3>" +
-  //       '<h3 align="center"><center>PERIODE : ' +
-  //       this.props.startDate +
-  //       " - " +
-  //       this.props.endDate +
-  //       "</center></h3>" +
-  //       '<h3 align="center"><center>LOKASI : ' +
-  //       (this.props.location === "" ? "SEMUA LOKASI" : this.props.location) +
-  //       "</center></h3>" +
-  //       '<h3 align="center"><center>KASSA : ' +
-  //       (this.props.kassa === "" ? "SEMUA KASSA" : this.props.kassa) +
-  //       "</center></h3>";
-  //     // stringHtml+=
-  //     // '<table style="border:0px;width:100%">'+
-  //     // '<tbody>'+
-  //     //     '<tr><td><h3>TIPE : ' + (this.props.tipe===''?'SEMUA':this.props.tipe.toUpperCase()) + '</h3></td></tr>'+
-  //     //     '<tr><td><h3>PERIODER : ' + this.props.startDate + ' - ' + this.props.endDate + '</h3></td></tr>'+
-  //     //     '<tr><td><h3>LOKASI : ' + (this.props.location===''?'SEMUA LOKASI':this.props.location) + '</h3></td></tr>'+
-  //     //     '<tr><td><h3>KASSA : ' + (this.props.kassa===''?'SEMUA KASSA':this.props.kassa) + '</h3></td></tr>'+
-  //     // '</tbody>'+
-  //     // '</table>';
-  //     // stringHtml+= '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>';
-  //     // stringHtml+= '<h3 align="center"><center>LOKASI : '+this.props.location===''?'SEMUA LOKASI':this.props.location+'</center></h3>';
-  //     // stringHtml+= '<h3 align="center"><center>KASSA : '+this.props.kassa===''?'SEMUA KASSA':this.props.kassa+'</center></h3>';
-
-  //     const headers = [["No", "Tgl", "Kd Trx", "Keterangan", "Lokasi", "Kassa", "Kasir", "Tipe", "Jenis", "Jumlah"]];
-  //     let data =
-  //       typeof this.props.cashReportExcel.data === "object"
-  //         ? this.props.cashReportExcel.data.map((v) => [1, moment(v.tgl).format("yyyy-MM-DD"), v.kd_trx, v.keterangan, v.lokasi, v.kassa, v.kasir, v.type, v.jenis, toRp(parseInt(v.jumlah, 10))])
-  //         : "";
-  //     // data +=["TOTAL","","","","","","","","",tprice];
-  //     to_pdf(
-  //       "kas_",
-  //       stringHtml,
-  //       headers,
-  //       data
-  //       // footer
-  //     );
-  //     this.toggle(e);
-  //   };
-
   constructor(props) {
     super(props);
     this.printExcel = this.printExcel.bind(this);

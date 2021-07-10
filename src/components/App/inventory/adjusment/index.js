@@ -258,9 +258,8 @@ class TrxAdjustment extends Component {
         callbackInput={(res) => this.setState({ [res.name]: res.value })}
         callbackToggle={(res) => this.setState({ toggleSide: !toggleSide })}
         callbackFetch={(res) => {
-          console.log(res);
           if (res.label === "loadmore") {
-            this.handleFetch(float(res.value));
+            this.handleFetch((this.props.dataTrx.data.length += 5));
           } else {
             if (res.label === "search") {
               this.handleFetch(10, { searchby: searchby, search: res.value });

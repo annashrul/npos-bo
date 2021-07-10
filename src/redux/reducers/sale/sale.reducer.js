@@ -1,6 +1,7 @@
 import { SALE } from "../../actions/_constants";
 
 const initialState = {
+  download: 0,
   isLoading: false,
   isLoadingDetail: false,
   isLoadingReport: false,
@@ -102,10 +103,10 @@ export const saleReducer = (state = initialState, action) => {
         msg: action.data.msg,
         data: action.data.result,
       });
-    // case SALE.LOADING:
-    //   return Object.assign({}, state, {
-    //     isLoading: action.load,
-    //   });
+    case SALE.DOWNLOAD:
+      return Object.assign({}, state, {
+        download: action.load,
+      });
     case SALE.LOADING_DETAIL:
       return Object.assign({}, state, {
         isLoadingDetail: action.load,

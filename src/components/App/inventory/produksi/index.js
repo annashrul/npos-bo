@@ -48,6 +48,7 @@ class Production extends Component {
       toggleSide: false,
       searchby: "kd_brg",
       search: "",
+      perpage: 5,
     };
     this.HandleRemove = this.HandleRemove.bind(this);
     this.HandleOnChange = this.HandleOnChange.bind(this);
@@ -76,6 +77,10 @@ class Production extends Component {
     }
   }
   componentWillReceiveProps = (nextProps) => {
+    let perpage = this.state.perpage;
+    if (this.props.dataTrx.length === perpage) {
+      this.setState({ perpage: perpage + 5 });
+    }
     this.getProps(nextProps);
   };
   componentDidMount() {
@@ -103,7 +108,7 @@ class Production extends Component {
     if (isEmptyOrUndefined(getQtyEstimasi)) this.setState({ qty_estimasi: getQtyEstimasi });
     if (isEmptyOrUndefined(getLocation)) {
       this.setState({ location: getLocation });
-      let where = `perpage=${perpage}&page=1&kategori=4&lokasi=${getLocation}`;
+      let where = `perpage=${this.state.perpage}&page=1&kategori=4&lokasi=${getLocation}`;
       if (res !== null) where += `&searchby=${res.searchby}&q=${res.search}`;
       this.props.dispatch(
         readProductTrx(where, (res) => {
@@ -272,7 +277,6 @@ class Production extends Component {
         setFocus(this, `qty-${btoa(res.barcode)}`);
       } else {
         setFocus(this, `qty-${btoa(item.barcode)}`);
-        // setTimeout(() => this && this[`qty-${btoa(item.barcode)}`].focus(), 500);
       }
       this.getData();
     });

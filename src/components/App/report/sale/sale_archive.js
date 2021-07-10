@@ -11,7 +11,7 @@ import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import { STATUS_ARSIP_PENJUALAN } from "../../../../helperStatus";
-
+import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
 class SaleArchive extends Component {
   constructor(props) {
     super(props);
@@ -63,6 +63,11 @@ class SaleArchive extends Component {
 
   handlePageChange(pageNumber) {
     this.handleService(this.state.where_data, pageNumber);
+  }
+  handleFetchModal(page) {
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+    this.props.dispatch(ModalType(page));
   }
 
   handleModal(page, param) {
@@ -155,7 +160,7 @@ class SaleArchive extends Component {
           statusData={STATUS_ARSIP_PENJUALAN}
           callbackWhere={(res) => this.handleService(res)}
           callbackExcel={() => this.handleModal("formSaleExcel", { total: last_page * per_page })}
-          excelData={this.props.percent}
+          excelData={this.props.download}
         />
 
         <TableCommon
@@ -313,7 +318,7 @@ const mapStateToProps = (state) => {
     saleReportExcel: state.saleReducer.report_excel,
     totalPenjualanExcel: state.saleReducer.total_penjualan_excel,
     detailSale: state.saleReducer.dataDetail,
-    percent: state.saleReducer.percent,
+    download: state.saleReducer.download,
     auth: state.auth,
     isOpen: state.modalReducer,
   };

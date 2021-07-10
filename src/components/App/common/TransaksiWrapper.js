@@ -15,7 +15,10 @@ class TransaksiWrapper extends Component {
       nota: "",
       search: "",
       searchby: { value: "kd_brg", label: "Kode barang" },
-      perpage: 0,
+      perpage: 5,
+      isScroll: false,
+      isLoading: false,
+      scrollPage: 0,
       searchby_data: [
         { value: "kd_brg", label: "Kode barang" },
         { value: "barcode", label: "Barcode" },
@@ -39,6 +42,12 @@ class TransaksiWrapper extends Component {
     this.getProps(this.props);
   }
   componentWillReceiveProps(nextProps) {
+    if (nextProps.data !== undefined) {
+      this.setState({ isLoading: true, scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
+      setTimeout(() => {
+        this.setState({ isScroll: true, isLoading: false });
+      }, 300);
+    }
     this.getProps(nextProps);
   }
 
@@ -58,14 +67,29 @@ class TransaksiWrapper extends Component {
     } else if (state === "loadmore") {
       let per = this.state.perpage;
       this.props.callbackFetch({ label: state, value: (this.state.perpage += 5) });
-      this.setState({ perpage: (per += 5) });
+      // this.setState({ perpage: (this.state.perpage += 5) });
     } else {
       res.preventDefault();
       this.props.callbackFetch({ label: state, value: this.state.search });
     }
   }
+  handleScroll() {
+    let id = `item${this.state.scrollPage - 1}`;
+    let divToScrollTo = document.getElementById(id);
+    console.log(id);
+    console.log(divToScrollTo);
+    if (divToScrollTo) {
+      divToScrollTo.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "end",
+      });
+    }
+  }
 
   render() {
+    if (this.state.isScroll) this.handleScroll();
+
     const { tgl_order, catatan, toggleSide, searchby, searchby_data, search, nota } = this.state;
     const { pathName, data, renderRow, callbackAdd } = this.props;
     return (
@@ -108,9 +132,7 @@ class TransaksiWrapper extends Component {
                         value={search}
                         onChange={(e) => this.HandleCommonInputChange(e)}
                         onKeyPress={(event) => {
-                          if (event.key === "Enter") {
-                            this.HandleSearch("search", event);
-                          }
+                          if (event.key === "Enter") this.HandleSearch("search", event);
                         }}
                       />
                       <span className="input-group-append">
@@ -120,7 +142,7 @@ class TransaksiWrapper extends Component {
                       </span>
                     </div>
                   </div>
-                  <div className="people-list" style={{ height: "300px", maxHeight: "100%", overflowY: "auto" }}>
+                  <div className="people-list" style={{ scrollBehavior: "smooth", height: "300px", maxHeight: "100%", overflowY: "scroll" }}>
                     <div id="chat_user_2">
                       <ul className="chat-list list-unstyled">
                         {data.length !== 0 ? (
@@ -132,6 +154,9 @@ class TransaksiWrapper extends Component {
                                 key={inx}
                                 onClick={(e) => {
                                   e.preventDefault();
+                                  this.setState({
+                                    isScroll: false,
+                                  });
                                   callbackAdd(i);
                                 }}
                               >
@@ -154,11 +179,12 @@ class TransaksiWrapper extends Component {
                       className={"btn btn-primary"}
                       style={{ width: "100%" }}
                       onClick={(e) => {
-                        e.preventDefault();
+                        // e.preventDefault();
+                        // this.setState({ isScroll: true });
                         this.HandleSearch("loadmore", "");
                       }}
                     >
-                      Tampilkan lebih banyak
+                      {this.state.isLoading ? "loading" : "Tampilkan lebih banyak"}
                     </button>
                   </div>
                 </div>

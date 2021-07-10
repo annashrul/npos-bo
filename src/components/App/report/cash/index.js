@@ -3,16 +3,12 @@ import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
 import { FetchCashReportExcel, FetchCashReport, setUpdate, deleteCashTransaksi } from "redux/actions/masterdata/cash/cash.action";
 import moment from "moment";
-import Select from "react-select";
-import Paginationq from "helper";
-import { dateRange, float, generateNo, getFetchWhere, getPeriode, getStorage, isEmptyOrUndefined, kassa, noData, parseToRp, setStorage, toDate, toRp } from "../../../../helper";
+import { float, generateNo, getFetchWhere, getPeriode, getStorage, isEmptyOrUndefined, kassa, noData, parseToRp, setStorage, swallOption, toDate, toRp } from "../../../../helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import CashReportExcel from "components/App/modals/report/cash/form_cash_excel";
 import Updates from "components/App/modals/report/cash/update";
-import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import Otorisasi from "../../modals/otorisasi.modal";
 import Swal from "sweetalert2";
-import LokasiCommon from "../../common/LokasiCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
@@ -78,25 +74,12 @@ class ReportCash extends Component {
     this.props.dispatch(ModalType("formUpdateKasTrx"));
   }
   handleDelete(id) {
-    this.setState({
-      id_trx: id,
-    });
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Apakah anda yakin?",
-      text: "Data yang telah dihapus tidak bisa dikembalikan.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.setState({ isModalOtorisasi: true });
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("modalOtorisasi"));
-      }
+    this.setState({ id_trx: id });
+    swallOption("Data yang dihapus tidak akan bisa dikembalikan", () => {
+      this.setState({ isModalOtorisasi: true });
+      const bool = !this.props.isOpen;
+      this.props.dispatch(ModalToggle(bool));
+      this.props.dispatch(ModalType("modalOtorisasi"));
     });
   }
   handlePageChange(pageNumber) {
