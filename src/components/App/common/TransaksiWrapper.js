@@ -18,6 +18,7 @@ class TransaksiWrapper extends Component {
       perpage: 5,
       isScroll: false,
       isLoading: false,
+      isAdd: false,
       scrollPage: 0,
       searchby_data: [
         { value: "kd_brg", label: "Kode barang" },
@@ -43,10 +44,13 @@ class TransaksiWrapper extends Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== undefined) {
-      this.setState({ scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
-      setTimeout(() => {
-        this.setState({ isScroll: true, isLoading: false });
-      }, 300);
+      console.log("bus");
+      if (!this.state.isAdd) {
+        this.setState({ scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
+        setTimeout(() => {
+          this.setState({ isScroll: true, isLoading: false });
+        }, 300);
+      }
     }
     this.getProps(nextProps);
   }
@@ -155,6 +159,7 @@ class TransaksiWrapper extends Component {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   this.setState({
+                                    isAdd: true,
                                     isScroll: false,
                                   });
                                   callbackAdd(i);
@@ -179,7 +184,7 @@ class TransaksiWrapper extends Component {
                       className={`btn btn-primary ${this.state.isLoading ? "disabled" : ""}`}
                       style={{ width: "100%" }}
                       onClick={(e) => {
-                        this.setState({ isLoading: true });
+                        this.setState({ isLoading: true, isAdd: false });
                         this.HandleSearch("loadmore", "");
                       }}
                     >
