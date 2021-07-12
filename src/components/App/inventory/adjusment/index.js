@@ -23,7 +23,7 @@ class TrxAdjustment extends Component {
       location: { value: "", label: "" },
       catatan: "-",
       tgl_order: moment(new Date()).format("yyyy-MM-DD"),
-      searchby: "",
+      searchby: "kd_brg",
       search: "",
       toggleSide: false,
     };
@@ -198,7 +198,7 @@ class TrxAdjustment extends Component {
           const { nota, auth } = this.props;
           data["kd_kasir"] = auth.user.id;
           data["tgl"] = moment(tgl_order).format("yyyy-MM-DD");
-          data["lokasi"] = location.label;
+          data["lokasi"] = location.value;
           data["keterangan"] = isEmptyOrUndefined(catatan) ? catatan : "-";
           for (let i = 0; i < databrg.length; i++) {
             let item = res[i];
