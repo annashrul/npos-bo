@@ -23,7 +23,7 @@ class TrxAdjustment extends Component {
       location: { value: "", label: "" },
       catatan: "-",
       tgl_order: moment(new Date()).format("yyyy-MM-DD"),
-      searchby: "",
+      searchby: "kd_brg",
       search: "",
       toggleSide: false,
     };
