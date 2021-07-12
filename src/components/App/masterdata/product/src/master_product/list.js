@@ -284,13 +284,13 @@ class ListProduct extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProductExcel"));
   }
-  loc_detail(e, kode) {
+  loc_detail(e, res) {
     e.preventDefault();
-    this.setState({ isModalDetail: true });
+    this.setState({ isModalDetail: true, detail: res });
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("detailProduct"));
-    this.props.dispatch(FetchProductDetail(kode));
+    this.props.dispatch(FetchProductDetail(res.kd_brg));
   }
   handlePriceCustomer(e, kode, nm_brg) {
     e.preventDefault();
@@ -558,7 +558,7 @@ class ListProduct extends Component {
                               <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem onClick={(e) => this.handlePriceCustomer(e, v.kd_brg, v.nm_brg)}>Set Harga Customer</DropdownItem>
-                                <DropdownItem onClick={(e) => this.loc_detail(e, v.kd_brg)}>Detail</DropdownItem>
+                                <DropdownItem onClick={(e) => this.loc_detail(e, v)}>Detail</DropdownItem>
                                 <DropdownItem onClick={(e) => loc_edit(e, v.kd_brg)}>Edit</DropdownItem>
                                 <DropdownItem onClick={(e) => loc_edit_per(e, v.kd_brg, true)}>Edit Harga per Lokasi</DropdownItem>
                                 <DropdownItem onClick={(e) => loc_delete(e, v.kd_brg)}>Delete</DropdownItem>
@@ -617,7 +617,7 @@ class ListProduct extends Component {
           />
         ) : null}
 
-        {this.state.isModalDetail ? <DetailProduct dataDetail={this.props.productDetail} /> : null}
+        {this.state.isModalDetail ? <DetailProduct detail={this.state.detail} dataDetail={this.props.productDetail} /> : null}
         {this.state.isModalCustomer ? <CustomerPrice dataCustomerPrice={this.props.customerPrice} /> : null}
         <FormProductExport />
       </div>

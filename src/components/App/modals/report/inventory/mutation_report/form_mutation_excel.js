@@ -3,7 +3,7 @@ import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import "jspdf-autotable";
 import ExportCommon from "../../../../common/ExportCommon";
-import { to_pdf, headerPdf, toExcel, rmSpaceToStrip, toDate, headerExcel } from "../../../../../../helper";
+import { to_pdf, headerPdf, toExcel, rmSpaceToStrip, toDate, headerExcel, parseToRp } from "../../../../../../helper";
 import { statusMutasi } from "../../../../../../helperStatus";
 import { EXTENSION } from "../../../../../../redux/actions/_constants";
 
@@ -15,7 +15,7 @@ class MutationReportExcel extends Component {
   }
 
   handleHeader() {
-    return ["NO", "NO.MUTASI", "LOK.ASAL", "LOK.TUJUAN", "NO.BELI", "STATUS", "KET", "TGL"];
+    return ["NO", "NO.MUTASI", "NO.BELI", "LOKASI ASAL", "LOKASI TUJUAN", "QTY", "TOTAL", "STATUS", "KET", "TANGGAL"];
   }
 
   handleContent(cek = "excel") {
@@ -27,9 +27,11 @@ class MutationReportExcel extends Component {
           props.push([
             i + 1,
             data[i].no_faktur_mutasi,
+            rmSpaceToStrip(data[i].no_faktur_beli),
             data[i].lokasi_asal,
             data[i].lokasi_tujuan,
-            rmSpaceToStrip(data[i].no_faktur_beli),
+            parseToRp(data[i].total_qty),
+            parseToRp(data[i].total),
             statusMutasi(data[i].status),
             data[i].keterangan,
             toDate(data[i].tgl_mutasi),

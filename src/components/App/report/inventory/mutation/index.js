@@ -102,57 +102,6 @@ class MutationReport extends Component {
           callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
           excelData={this.props.download}
         />
-        {/* <div className="row">
-          <div className="col-6 col-xs-6 col-md-3">
-            {dateRange((first, last) => {
-              setStorage(dateFromStorage, first);
-              setStorage(dateToStorage, last);
-              this.handleService();
-            }, `${toDate(startDate)} - ${toDate(endDate)}`)}
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <LokasiCommon callback={(res) => this.handleSelect("location", res)} isAll={true} dataEdit={location} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Status" options={STATUS_MUTASI} callback={(res) => this.handleSelect("status", res)} dataEdit={status} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleSelect("column", res)} dataEdit={column} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
-          </div>
-          <div className="col-6 col-xs-6 col-md-3">
-            <div className="form-group">
-              <label>Cari</label>
-              <div className="input-group">
-                <input
-                  type="search"
-                  name="any"
-                  className="form-control"
-                  placeholder="tulis sesuatu disini"
-                  value={any}
-                  onChange={(e) => this.setState({ any: e.target.value })}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") this.handleSearch(e);
-                  }}
-                />
-                <span className="input-group-append">
-                  <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                    <i className="fa fa-search" />
-                  </button>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="col-6 col-xs-6 col-md-1">
-            <div className="form-group">
-              <button style={{ marginTop: "28px" }} className="btn btn-primary" onClick={(e) => this.handleModal("excel", { total: last_page * per_page })}>
-                {isProgress(this.props.download)}
-              </button>
-            </div>
-          </div>
-        </div> */}
         <TableCommon
           head={head}
           rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}

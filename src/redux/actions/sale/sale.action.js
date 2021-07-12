@@ -11,6 +11,12 @@ import { ModalType } from "../modal.action";
 import moment from "moment";
 import Cookies from "js-cookie";
 
+export function setDownload(load) {
+  return {
+    type: SALE.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: SALE.LOADING,
@@ -270,7 +276,7 @@ export const FetchReportSaleExcel = (where = "", perpage = "") => {
         dispatch(ModalType("formSaleExcel"));
       },
       (percent) => {
-        dispatch(setLoading(percent));
+        dispatch(setDownload(percent));
       }
     );
   };
@@ -296,6 +302,8 @@ export const FetchReportDetailSale = (kd_trx, where = "", isModal = false) => {
 };
 
 export const deleteReportSale = (datum) => {
+  // console.log(datum);
+  // return;
   const kd_trx = btoa(datum.id + "|" + datum.id_trx);
   return (dispatch) => {
     dispatch(setLoading(true));
@@ -321,21 +329,7 @@ export const deleteReportSale = (datum) => {
           Swal.fire({ allowOutsideClick: false, title: "failed", type: "error", text: data.msg });
         }
         dispatch(setLoadingReport(false));
-        let dateFrom = localStorage.getItem("date_from_sale_report");
-        let dateTo = localStorage.getItem("date_to_sale_report");
-        let where = "";
-        if (dateFrom !== undefined && dateFrom !== null) {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `datefrom=${dateFrom}&dateto=${dateTo}`;
-        } else {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `datefrom=${moment(new Date()).format("yyyy-MM-DD")}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`;
-        }
-        dispatch(FetchReportSale(1, where));
+        dispatch(FetchReportSale(datum.where));
       })
       .catch(function (error) {
         Swal.close();
