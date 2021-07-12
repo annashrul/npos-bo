@@ -541,23 +541,29 @@ class FormProduct extends Component {
       }),
     };
 
-    return fetch(HEADERS.URL + `site/cekdata`, requestOptions)
-      .then((res) => res.json())
-      .then(
-        (data) => {
-          this.setState({ isLoadingGenerateBarcode: false });
-          if (data.result === 0) {
-            return val;
-          } else {
-            Swal.fire("Informasi", "Barcode " + val + " sudah digunakan!");
-            return 0;
+    if (!tenantBool) {
+      return fetch(HEADERS.URL + `site/cekdata`, requestOptions)
+        .then((res) => res.json())
+        .then(
+          (data) => {
+            this.setState({ isLoadingGenerateBarcode: false });
+            if (data.result === 0) {
+              return val;
+            } else {
+              Swal.fire("Informasi", "Barcode " + val + " sudah digunakan!");
+              return 0;
+            }
+          },
+          (error) => {
+            this.setState({ isLoadingGenerateBarcode: false });
+            Swal.fire("Peringatan", "Terjadi kesalahan, coba kembali.");
           }
-        },
-        (error) => {
-          this.setState({ isLoadingGenerateBarcode: false });
-          Swal.fire("Peringatan", "Terjadi kesalahan, coba kembali.");
-        }
-      );
+        );
+    }else{
+      this.setState({ isLoadingGenerateBarcode: false });
+      return val;
+    }
+
   }
   generateCode(e, action = "add") {
     // this.setState({ generateCode: e.target.checked });
@@ -1088,64 +1094,65 @@ class FormProduct extends Component {
         }
       }
     }
+      if (event.target.id === "barcode1") {
+        const data = this.fetchData({
+          table: "barang_sku",
+          kolom: "barcode",
+          value: val,
+        });
+        data.then((res) => {
+          if (res.result === 1) {
+            this.setState({
+              error_barcode1: true,
+              pesan_barcode1: "barcode sudah digunakan",
+            });
+          } else {
+            this.setState({
+              error_barcode1: false,
+              pesan_barcode1: "",
+            });
+          }
+        });
+      }
+      if (event.target.id === "barcode2") {
+        const data = this.fetchData({
+          table: "barang_sku",
+          kolom: "barcode",
+          value: val,
+        });
+        data.then((res) => {
+          if (res.result === 1) {
+            this.setState({
+              error_barcode2: true,
+              pesan_barcode2: "barcode sudah digunakan",
+            });
+          } else {
+            this.setState({
+              error_barcode2: false,
+              pesan_barcode2: "",
+            });
+          }
+        });
+      }
+      if (event.target.id === "barcode3") {
+        const data = this.fetchData({
+          table: "barang_sku",
+          kolom: "barcode",
+          value: val,
+        });
+        data.then((res) => {
+          if (res.result === 1) {
+            this.setState({
+              error_barcode3: true,
+              pesan_barcode3: "barcode sudah digunakan",
+            });
+          } else {
+            this.setState({ error_barcode3: false, pesan_barcode3: "" });
+          }
+        });
+      }
+  
 
-    if (event.target.id === "barcode1") {
-      const data = this.fetchData({
-        table: "barang_sku",
-        kolom: "barcode",
-        value: val,
-      });
-      data.then((res) => {
-        if (res.result === 1) {
-          this.setState({
-            error_barcode1: true,
-            pesan_barcode1: "barcode sudah digunakan",
-          });
-        } else {
-          this.setState({
-            error_barcode1: false,
-            pesan_barcode1: "",
-          });
-        }
-      });
-    }
-    if (event.target.id === "barcode2") {
-      const data = this.fetchData({
-        table: "barang_sku",
-        kolom: "barcode",
-        value: val,
-      });
-      data.then((res) => {
-        if (res.result === 1) {
-          this.setState({
-            error_barcode2: true,
-            pesan_barcode2: "barcode sudah digunakan",
-          });
-        } else {
-          this.setState({
-            error_barcode2: false,
-            pesan_barcode2: "",
-          });
-        }
-      });
-    }
-    if (event.target.id === "barcode3") {
-      const data = this.fetchData({
-        table: "barang_sku",
-        kolom: "barcode",
-        value: val,
-      });
-      data.then((res) => {
-        if (res.result === 1) {
-          this.setState({
-            error_barcode3: true,
-            pesan_barcode3: "barcode sudah digunakan",
-          });
-        } else {
-          this.setState({ error_barcode3: false, pesan_barcode3: "" });
-        }
-      });
-    }
   }
   handleKelompokBarang(val, action) {
     let err = Object.assign({}, this.state.error, { kel_brg: "" });
