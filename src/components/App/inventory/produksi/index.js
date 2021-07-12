@@ -77,10 +77,6 @@ class Production extends Component {
     }
   }
   componentWillReceiveProps = (nextProps) => {
-    let perpage = this.state.perpage;
-    if (this.props.dataTrx.length === perpage) {
-      this.setState({ perpage: perpage + 5 });
-    }
     this.getProps(nextProps);
   };
   componentDidMount() {
@@ -353,7 +349,7 @@ class Production extends Component {
                                 <input disabled={true} type="text" name="harga_beli" value={toCurrency(parseInt(item.harga_beli, 10))} className="form-control in-table text-right" />
                               </td>
                               <td className="middle nowrap">
-                                <input disabled={true} type="text" name="stock" value={toCurrency(parseInt(item.stock, 10))} className="form-control in-table text-right" />
+                                <input disabled={true} type="text" name="stock" value={toCurrency(float(item.stock))} className="form-control in-table text-right" />
                               </td>
                               <td className="middle nowrap">
                                 <input

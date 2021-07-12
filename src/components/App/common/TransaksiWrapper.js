@@ -17,8 +17,7 @@ class TransaksiWrapper extends Component {
       searchby: { value: "kd_brg", label: "Kode barang" },
       perpage: 5,
       isScroll: false,
-      isLoading: false,
-      isAdd: false,
+      isAdd: true,
       scrollPage: 0,
       searchby_data: [
         { value: "kd_brg", label: "Kode barang" },
@@ -44,12 +43,8 @@ class TransaksiWrapper extends Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== undefined) {
-      console.log("bus");
-      if (!this.state.isAdd) {
-        this.setState({ scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
-        setTimeout(() => {
-          this.setState({ isScroll: true, isLoading: false });
-        }, 300);
+      if (nextProps.isLoading) {
+        this.setState({ isScroll: nextProps.isLoading, scrollPage: nextProps.data.length, perpage: (this.state.perpage += 5) });
       }
     }
     this.getProps(nextProps);
@@ -66,12 +61,11 @@ class TransaksiWrapper extends Component {
   }
   HandleSearch(state, res) {
     if (state === "searchby") {
-      this.setState({ searchby: res });
+      this.setState({ searchby: res, isScroll: false });
       this.props.callbackFetch({ label: state, value: res.value });
     } else if (state === "loadmore") {
-      let per = this.state.perpage;
+      this.setState({ isScroll: true });
       this.props.callbackFetch({ label: state, value: (this.state.perpage += 5) });
-      // this.setState({ perpage: (this.state.perpage += 5) });
     } else {
       res.preventDefault();
       this.props.callbackFetch({ label: state, value: this.state.search });
@@ -80,8 +74,6 @@ class TransaksiWrapper extends Component {
   handleScroll() {
     let id = `item${this.state.scrollPage - 1}`;
     let divToScrollTo = document.getElementById(id);
-    console.log(id);
-    console.log(divToScrollTo);
     if (divToScrollTo) {
       divToScrollTo.scrollIntoView({
         behavior: "smooth",
@@ -92,8 +84,7 @@ class TransaksiWrapper extends Component {
   }
 
   render() {
-    if (this.state.isScroll) this.handleScroll();
-
+    if (this.state.isScroll || this.props.isLoading) this.handleScroll();
     const { tgl_order, catatan, toggleSide, searchby, searchby_data, search, nota } = this.state;
     const { pathName, data, renderRow, callbackAdd } = this.props;
     return (
@@ -119,7 +110,7 @@ class TransaksiWrapper extends Component {
               />
             </h4>
           </div>
-          <div style={{ display: "flex", alignitems: "flex-start" }}>
+          <div style={{ display: "flex", alignItems: "flex-start" }}>
             <StickyBox offsetTop={100} offsetBottom={20} style={toggleSide ? { display: "none", width: "30%", marginRight: "10px" } : { display: "block", width: "30%", marginRight: "10px" }}>
               <div className="card">
                 <div className="card-body">
@@ -159,7 +150,6 @@ class TransaksiWrapper extends Component {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   this.setState({
-                                    isAdd: true,
                                     isScroll: false,
                                   });
                                   callbackAdd(i);
@@ -181,14 +171,14 @@ class TransaksiWrapper extends Component {
                   <hr />
                   <div className="form-group">
                     <button
-                      className={`btn btn-primary ${this.state.isLoading ? "disabled" : ""}`}
+                      className={`btn btn-primary ${this.props.isLoading ? "disabled" : ""}`}
                       style={{ width: "100%" }}
                       onClick={(e) => {
-                        this.setState({ isLoading: true, isAdd: false });
-                        this.HandleSearch("loadmore", "");
+                        this.setState({ isAdd: false });
+                        !this.props.isLoading && this.HandleSearch("loadmore", "");
                       }}
                     >
-                      {this.state.isLoading ? "loading" : "Tampilkan lebih banyak"}
+                      {this.props.isLoading ? "loading" : "Tampilkan lebih banyak"}
                     </button>
                   </div>
                 </div>
@@ -205,6 +195,7 @@ class TransaksiWrapper extends Component {
 const mapStateToPropsCreateItem = (state) => ({
   isOpen: state.modalReducer,
   auth: state.auth,
+  isLoading: state.productReducer.isLoadingTrx,
 });
 
 export default connect(mapStateToPropsCreateItem)(TransaksiWrapper);
