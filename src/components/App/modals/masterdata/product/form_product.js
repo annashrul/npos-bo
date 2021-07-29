@@ -2617,11 +2617,11 @@ class FormProduct extends Component {
                                     {this.props.dataEdit === undefined ? (
                                       this.state.barangSku[x].barcode === "" ? (
                                         <button className="btn btn-primary" name="generate" type="button" onClick={(e) => this.generateBrcd(e, x)}>
-                                          <i className="fa fa-refresh" />
+                                          <i onClick={(e) => this.generateBrcd(e, x)} className="fa fa-refresh" />
                                         </button>
                                       ) : (
                                         <button className="btn btn-danger" type="button" onClick={(e) => this.generateBrcd(e, x)}>
-                                          <i className="fa fa-close" />
+                                          <i onClick={(e) => this.generateBrcd(e, x)} className="fa fa-close" />
                                         </button>
                                       )
                                     ) : (
