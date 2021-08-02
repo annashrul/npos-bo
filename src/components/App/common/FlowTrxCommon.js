@@ -51,7 +51,7 @@ export const actionDataCommon = (table, item, callback) => {
 
 export const handleInputOnBlurCommon = (e, data, callback) => {
   const column = e.target.name;
-  const val = rmComma(e.target.value);
+  const val = e.target.value;
   const cek = cekData(data.where, data.id, data.table);
   cek.then((res) => {
     if (res === undefined) {

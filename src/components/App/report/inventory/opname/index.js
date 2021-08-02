@@ -17,7 +17,7 @@ class OpnameReport extends Component {
       periode: "",
       where_data: DEFAULT_WHERE,
       column_data: [
-        { value: "kd_trx", label: "Kode Trx" },
+        { value: "kd_trx", label: "Kode transaksi" },
         { value: "tgl", label: "Tanggal" },
         { value: "status", label: "Status" },
       ],

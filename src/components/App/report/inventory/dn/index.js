@@ -21,7 +21,7 @@ class DnReport extends Component {
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
       column_data: [
-        { value: "no_delivery_note", label: "No DN" },
+        { value: "no_delivery_note", label: "No faktur delivery note" },
         { value: "tanggal", label: "Tanggal" },
         { value: "status", label: "Status" },
       ],

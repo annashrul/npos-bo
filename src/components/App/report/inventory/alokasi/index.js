@@ -22,7 +22,7 @@ class AlokasiReport extends Component {
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
       column_data: [
-        { value: "no_faktur_mutasi", label: "Faktur Mutasi" },
+        { value: "no_faktur_mutasi", label: "Faktur mutasi" },
         { value: "tgl_mutasi", label: "Tanggal Mutasi" },
         { value: "status", label: "Status" },
       ],
@@ -77,7 +77,7 @@ class AlokasiReport extends Component {
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
-      { colSpan: 2, label: "No faktur", width: "1%" },
+      { colSpan: 2, label: "Faktur", width: "1%" },
       { colSpan: 2, label: "Lokasi", width: "1%" },
       { rowSpan: 2, label: "Keterangan" },
       { rowSpan: 2, label: "Status", width: "1%" },

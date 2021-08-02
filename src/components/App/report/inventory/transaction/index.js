@@ -23,7 +23,7 @@ class TransactionReport extends Component {
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
       column_data: [
-        { value: "no_faktur_mutasi", label: "Kode Mutasi" },
+        { value: "no_faktur_mutasi", label: "Faktur mutasi" },
         { value: "tgl_mutasi", label: "Tanggal" },
         { value: "status", label: "Status" },
       ],

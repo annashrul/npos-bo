@@ -3,8 +3,14 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { handleGet, handleGetExport } from "../../handleHttp";
-import { ModalToggle } from "../../modal.action";
+import { ModalToggle, ModalType } from "../../modal.action";
 
+export function setDownloadPoSupplier(load) {
+  return {
+    type: PO.DOWNLOAD_PO_SUPPLIER,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: PO.LOADING,
@@ -237,25 +243,34 @@ export const poReportDetail = (code, where = "", isModal = false) => {
 
 export const FetchPurchaseBySupplierReport = (where = "") => {
   return (dispatch) => {
-    let url = "report/pembelian/by_supplier";
-    if (where !== "") url += `?${where}`;
+    let url = `report/pembelian/by_supplier?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(url, (res) => dispatch(setPBSupplierReport(res.data)), true);
   };
 };
 
-export const FetchPurchaseBySupplierReportExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchPurchaseBySupplierReportExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    let que = `report/pembelian/by_supplier?page=${page}&perpage=${perpage}`;
-    if (where !== "") {
-      que += `${where}`;
-    }
-    handleGet(
-      que,
+    let url = `report/pembelian/by_supplier?perpage=${perpage}`;
+    if (where !== "") url += `&${where}`;
+    handleGetExport(
+      url,
       (res) => {
-        let data = res.data;
-        dispatch(setPBSupplierReportExcel(data));
+        dispatch(setPBSupplierReportExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formPurchaseBySupplierExcel"));
       },
-      true
+      (res) => dispatch(setDownloadPoSupplier(res))
+      // (percent) => callback(percent)
     );
+    // handleGet(
+    //   url,
+    //   (res) => {
+    // dispatch(setPBSupplierReportExcel(res.data));
+    // dispatch(ModalToggle(true));
+    // dispatch(ModalType("formPurchaseBySupplierExcel"));
+    //   },
+    //   true
+    // );
   };
 };

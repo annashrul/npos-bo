@@ -341,7 +341,6 @@ class Sale extends Component {
     const column = e.target.name;
     const value = e.target.value;
     if (column === "qty") {
-      let val = parseInt(value, 10);
       if (value === "") {
         Object.assign(this.state.brgval[i], { qty: 1 });
         this.handleCheckData(this.state.databrg[i].barcode);

@@ -22,7 +22,7 @@ class AdjustmentReport extends Component {
       startDate: CURRENT_DATE,
       endDate: CURRENT_DATE,
       column_data: [
-        { value: "kd_trx", label: "Kode Trx" },
+        { value: "kd_trx", label: "Kode adjusment" },
         { value: "tgl", label: "Tanggal" },
         { value: "username", label: "Username" },
       ],
