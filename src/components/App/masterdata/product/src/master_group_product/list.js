@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  deleteGroupProduct,
-  FetchGroupProduct,
-} from "redux/actions/masterdata/group_product/group_product.action";
+import { deleteGroupProduct, FetchGroupProduct } from "redux/actions/masterdata/group_product/group_product.action";
 import { ModalType } from "redux/actions/modal.action";
 import { FetchSubDepartmentAll } from "redux/actions/masterdata/department/sub_department.action";
 import FormGroupProduct from "components/App/modals/masterdata/group_product/form_group_product";
@@ -41,9 +38,8 @@ class ListGroupProduct extends Component {
     this.props.dispatch(FetchSubDepartmentAll());
   }
 
-  handleDelete(e, i) {
-    e.preventDefault();
-    this.props.dispatch(deleteGroupProduct(i, this.state.where));
+  handleDelete(i) {
+    this.props.dispatch(deleteGroupProduct(this.props.data.data[i].kel_brg, this.state.where));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
@@ -72,26 +68,16 @@ class ListGroupProduct extends Component {
           }}
           head={head}
           body={typeof data === "object" && data}
-          label={[
-            { label: "nm_kel_brg" },
-            { label: "subdept" },
-            { label: "status", isStatus: true },
-            { label: "gambar", isImage: true },
-          ]}
+          label={[{ label: "nm_kel_brg" }, { label: "subdept" }, { label: "status", isStatus: true }, { label: "gambar", isImage: true }]}
           current_page={current_page}
-          action={[{ label: "Edit" }]}
+          action={[{ label: "Edit" }, { label: "Hapus" }]}
           callback={(e, index) => {
             if (e === 0) this.toggleModal(index);
+            if (e === 1) this.handleDelete(index);
           }}
           callbackPage={this.handlePageChange.bind(this)}
         />
-        {this.props.isOpen && (
-          <FormGroupProduct
-            group2={this.props.group2}
-            detail={this.state.detail}
-            token={this.props.token}
-          />
-        )}
+        {this.props.isOpen && <FormGroupProduct group2={this.props.group2} detail={this.state.detail} token={this.props.token} />}
       </div>
     );
   }
