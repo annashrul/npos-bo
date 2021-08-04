@@ -173,8 +173,8 @@ class InventoryReport extends Component {
                       </td>
                       <td className="middle nowrap">{v.kd_brg}</td>
                       <td className="middle nowrap">{v.barcode}</td>
-                      <td className="middle nowrap">{v.satuan}</td>
                       <td className="middle nowrap">{v.nm_brg}</td>
+                      <td className="middle nowrap">{v.satuan}</td>
                       <td className="middle nowrap">{v.nama_kel}</td>
 
                       <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgBeliPerLokasi)}</td>

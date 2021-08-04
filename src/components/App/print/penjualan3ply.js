@@ -145,7 +145,7 @@ class Print3ply extends Component {
                     return (
                       <tr key={key}>
                         <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
-                          {parseInt(item.qty, 10)} {item.satuan}
+                          {item.qty} {item.satuan}
                         </td>
                         <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                           {item.sku}

@@ -447,7 +447,7 @@ class Sale extends Component {
           let ppnInt = parseInt(rmComma(item.ppn), 10);
           let disc_rp = parseInt(rmComma(item.diskon_nominal), 10);
           let disc_per = parseInt(rmComma(item.diskon_persen), 10);
-          let qty = parseInt(rmComma(item.qty), 10);
+          let qty = parseFloat(item.qty);
           if (disc_per !== 0) {
             disc1 = hrg - hrg * (disc_per / 100);
             disc2 = disc1;
