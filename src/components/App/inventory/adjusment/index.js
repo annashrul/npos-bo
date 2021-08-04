@@ -45,7 +45,6 @@ class TrxAdjustment extends Component {
   handleClear() {
     destroy(table);
   }
-
   handleFetch(perpage = 5, res = null) {
     let storageLocation = getStorage(locationStorage);
     if (isEmptyOrUndefined(storageLocation)) {

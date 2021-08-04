@@ -14,7 +14,7 @@ class SelectCommon extends Component {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.state = {
-      value: { label: "Z", value: "Z" },
+      value: "",
       value_data: [],
       label: "",
     };
@@ -26,7 +26,7 @@ class SelectCommon extends Component {
 
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
       if (props.dataEdit === "-") {
-        Object.assign(state, { value: { label: "Z", value: "Z" } });
+        Object.assign(state, { value: "" });
       } else {
         const check = propsGroup.filter((val) => val.value === props.dataEdit);
         if (check[0] !== undefined) {

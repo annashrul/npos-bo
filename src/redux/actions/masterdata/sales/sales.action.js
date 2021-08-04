@@ -1,11 +1,6 @@
 import { SALES, HEADERS } from "../../_constants";
 import axios from "axios";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
 import { ModalToggle } from "redux/actions/modal.action";
 
@@ -27,14 +22,7 @@ export const FetchSales = (where = "") => {
   return (dispatch) => {
     let url = "sales";
     if (where !== "") url += `?${where}`;
-    handleGet(
-      url,
-      (res) => {
-        const data = res.data;
-        dispatch(setSales(data));
-      },
-      true
-    );
+    handleGet(url, (res) => dispatch(setSales(res.data)), true);
   };
 };
 export const FetchSalesAll = (lok) => {

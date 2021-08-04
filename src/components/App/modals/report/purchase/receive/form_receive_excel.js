@@ -71,7 +71,6 @@ class ReceiveReportExcel extends Component {
     this.props.dispatch(ModalToggle(false));
   }
   render() {
-    console.log(this.props);
     return <ExportCommon modalType="formReceiveExcel" isCsv={true} isExcel={true} callbackCsv={() => this.printExcel(EXTENSION.CSV)} callbackExcel={() => this.printExcel(EXTENSION.XLXS)} />;
   }
 }

@@ -143,10 +143,15 @@ class ListSales extends Component {
         <div style={{ marginTop: "20px", float: "right" }}>
           <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
         </div>
-        <FormSales token={this.props.token} detail={this.state.detail} />
+        {this.props.isOpen && <FormSales token={this.props.token} detail={this.state.detail} />}
       </div>
     );
   }
 }
 
-export default connect()(ListSales);
+const mapStateToProps = (state) => {
+  return {
+    isOpen: state.modalReducer,
+  };
+};
+export default connect(mapStateToProps)(ListSales);

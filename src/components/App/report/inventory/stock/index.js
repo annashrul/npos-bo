@@ -23,7 +23,6 @@ class InventoryReport extends Component {
       bukaHarga: false,
       location: "",
       search_by_data: [
-        { value: "", label: "Semua" },
         { value: "br.kd_brg", label: "Kode Barang" },
         { value: "br.nm_brg", label: "Nama Barang" },
         { value: "br.group1", label: "Supplier" },

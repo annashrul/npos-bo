@@ -15,12 +15,17 @@ class SelectSortCommon extends Component {
       ],
       dataObject: "desc",
     };
+    this.onChange = this.onChange.bind(this);
   }
 
   getProps(props) {
-    if (props.dataEdit !== undefined || props.dataEdit !== "") {
-      const state = this.state.dataArray.filter((res) => res.value === props.dataEdit);
-      this.setState({ dataObject: state[0] });
+    if (props.dataEdit !== undefined) {
+      if (props.dataEdit !== "") {
+        const state = this.state.dataArray.filter((res) => res.value === props.dataEdit);
+        this.setState({ dataObject: state[0] });
+      } else {
+        this.onChange(this.state.dataArray[0]);
+      }
     }
   }
   componentDidMount() {

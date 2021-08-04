@@ -437,7 +437,9 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
 export const readProductTrx = (where = "", callback) => {
   let url = `barang/get`;
   if (where !== "") url += `?${where}`;
+
   return (dispatch) => {
+    dispatch(setLoadingDataTrx(true));
     handleGet(
       url,
       (res) => {
@@ -449,6 +451,7 @@ export const readProductTrx = (where = "", callback) => {
         } else {
           dispatch(setDataTrx(data));
         }
+        dispatch(setLoadingDataTrx(false));
       },
       true
     );

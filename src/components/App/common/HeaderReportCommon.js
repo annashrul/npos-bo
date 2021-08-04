@@ -30,15 +30,19 @@ class HeaderReportCommon extends Component {
     let state = {};
     if (props.columnData !== undefined && props.columnData.length > 0) {
       Object.assign(state, { column_data: props.columnData });
+      this.handleSelect("column", props.columnData[0]);
     }
     if (props.statusData !== undefined && props.statusData.length > 0) {
       Object.assign(state, { status_data: props.statusData });
+      this.handleSelect("status", props.statusData[0]);
     }
     if (props.sortData !== undefined && props.sortData.length > 0) {
       Object.assign(state, { sort_data: props.sortData });
+      this.handleSelect("sort", props.sortData[0]);
     }
     if (props.otherData !== undefined && props.otherData.length > 0) {
       Object.assign(state, { other_data: props.otherData });
+      this.handleSelect("other_data", props.otherData[0]);
     }
     this.setState(state);
   }
@@ -111,6 +115,7 @@ class HeaderReportCommon extends Component {
   }
 
   handleSelect(state, res) {
+    console.log(state, res);
     this.setState({ [state]: res.value });
     if (this.props.isOther) {
       if (state === this.props.otherState) setStorage(`${state}Storage${this.props.pathName}`, res.value);
