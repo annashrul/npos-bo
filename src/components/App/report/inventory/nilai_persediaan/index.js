@@ -27,6 +27,7 @@ class NilaiPersediaanReport extends Component {
       bukaHarga: false,
       location: "",
       location_data: [],
+      set_harga: 1,
       // search_by_data: [
       //   { value: "br.kd_brg", label: "Kode Barang" },
       //   { value: "br.nm_brg", label: "Nama Barang" },
@@ -68,9 +69,10 @@ class NilaiPersediaanReport extends Component {
         });
         this.setState({
           location_data: lk,
-          location:localStorage.lk_nilai_persediaan_report
+          location:this.state.location===""?'LK/0001':localStorage.lk_nilai_persediaan_report
         });
       }
+      this.setState({set_harga:nextProps.auth.user.set_harga})
     }
   };
   HandleChangeLokasi(lk) {
@@ -173,19 +175,24 @@ class NilaiPersediaanReport extends Component {
     ];
 
     bukaHarga && head.push({ rowSpan: "2", colSpan: "1", label: "Harga Beli" });
-    bukaHarga && head.push({ colSpan: "4", label: "Harga" });
-    bukaHarga && head.push({ colSpan: "4", label: "Total Harga" });
+    bukaHarga && head.push({ colSpan: this.state.set_harga, label: "Harga" });
+    bukaHarga && head.push({ colSpan: this.state.set_harga, label: "Total Harga" });
     bukaHarga && head.push({ rowSpan: "2", colSpan: "1", label: "Total Harga Beli" });
 
     let rowSpan = [];
-    bukaHarga && rowSpan.push({ label: "1" });
-    bukaHarga && rowSpan.push({ label: "2" });
-    bukaHarga && rowSpan.push({ label: "3" });
-    bukaHarga && rowSpan.push({ label: "4" });
-    bukaHarga && rowSpan.push({ label: "1" });
-    bukaHarga && rowSpan.push({ label: "2" });
-    bukaHarga && rowSpan.push({ label: "3" });
-    bukaHarga && rowSpan.push({ label: "4" });
+    for (let i = 0; i < this.state.set_harga; i++) {
+      // const element = array[i];
+      bukaHarga && rowSpan.push({ label: i+1 });
+    }
+    for (let i = 0; i < this.state.set_harga; i++) {
+      // const element = array[i];
+      bukaHarga && rowSpan.push({ label: i+1 });
+    }
+
+    let bukaSetHarga = [];
+    for (let i = 0; i < this.state.set_harga; i++) {
+      bukaSetHarga.push(i)      
+    }
 
 
     return (
@@ -308,15 +315,36 @@ class NilaiPersediaanReport extends Component {
                       <td className="text-center middle nowrap">{v.stock}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.hrg_beli)}</td>
 
-                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga)}</td>
+                      {(() => {
+                        let tds = [];
+                        for (let i = 0; i < this.state.set_harga; i++) {
+                          tds.push(
+                            <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v['harga'+(i===0?'':i+1)])}</td>
+                          );
+                        }
+                        return tds;
+                      })()}
+                      {/* <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga2)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga3)}</td>
-                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga4)}</td>
+                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga4)}</td> */}
 
-                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_1)}</td>
+                      
+                      {(() => {
+                        let tds = [];
+                        for (let i = 0; i < this.state.set_harga; i++) {
+                          tds.push(
+                            <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v['total_harga_'+i+1])}</td>
+                          );
+                        }
+                        return tds;
+                      })()}
+
+                      {/* <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_1)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_2)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_3)}</td>
-                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_4)}</td>
+                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_4)}</td> */}
+                      
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_beli)}</td>
 
                     </tr>
@@ -330,14 +358,17 @@ class NilaiPersediaanReport extends Component {
                 { colSpan: 6, label: "Total perhalaman", className: "text-left" },
                 { colSpan: 1, label: parseInt(total_nilai_persediaan_stock), className: `text-center` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_hrg_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga2), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga3), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga4), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_1), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_2), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_3), className: `text-right ${bukaHarga ? "" : "dNone"}` },
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_4), className: `text-right ${bukaHarga ? "" : "dNone"}` },
+
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga), className: `text-right ${bukaHarga && (bukaSetHarga[0]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga2), className: `text-right ${bukaHarga && (bukaSetHarga[1]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga3), className: `text-right ${bukaHarga && (bukaSetHarga[2]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga4), className: `text-right ${bukaHarga && (bukaSetHarga[3]!==undefined && bukaHarga) ? "" : "dNone"}` },
+
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_1), className: `text-right ${bukaHarga && (bukaSetHarga[0]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_2), className: `text-right ${bukaHarga && (bukaSetHarga[1]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_3), className: `text-right ${bukaHarga && (bukaSetHarga[2]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_4), className: `text-right ${bukaHarga && (bukaSetHarga[3]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
               ],
             },
