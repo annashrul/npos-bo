@@ -138,6 +138,7 @@ class FormUserLevel extends Component {
         { id: 79, value: "0", isChecked: false, label: "Piutang" },
         { id: 80, value: "0", isChecked: false, label: "Omset Penjualan" },
         { id: 81, value: "0", isChecked: false, label: "Omset Penj. Periode" },
+        { id: 82, value: "0", isChecked: false, label: "Nilai Persediaan" },
       ],
       produksi: [
         { id: 100, value: "0", isChecked: false, label: "Produksi" },
@@ -303,6 +304,7 @@ class FormUserLevel extends Component {
         { id: 79, value: "0", isChecked: false, label: "Piutang" },
         { id: 80, value: "0", isChecked: false, label: "Omset Penjualan" },
         { id: 81, value: "0", isChecked: false, label: "Omset Penj. Periode" },
+        { id: 82, value: "0", isChecked: false, label: "Nilai Persediaan" },
       ],
       produksi: [
         { id: 100, value: "0", isChecked: false, label: "Produksi" },

@@ -94,6 +94,7 @@ class SideMenu extends Component {
       r_sale_omset: "",
       r_sale_omset_periode: "",
       r_stock: "",
+      r_nilai_persediaan: "",
       r_adjusment: "",
       r_alokasi: "",
       r_delivery_note: "",
@@ -486,8 +487,9 @@ class SideMenu extends Component {
         let r_act = akses[89]["value"] !== null ? akses[89]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_sale_omset = akses[90]["value"] !== null ? akses[90]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_sale_omset_periode = akses[91]["value"] !== null ? akses[91]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let r_nilai_persediaan = akses[92]["value"] !== null ? akses[92]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //CETAK BARCODE
-        let cetak_barcode = akses[92]["value"] !== null ? akses[92]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let cetak_barcode = akses[93]["value"] !== null ? akses[93]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         // start pengecekan apabila fitur bernilai 0
         //setting
         if (pengaturan_umum !== "0" || pengguna !== "0" || lokasi !== "0") {
@@ -552,6 +554,7 @@ class SideMenu extends Component {
           r_arsip_retur_penjualan !== "0" ||
           r_penjualan_by_customer !== "0" ||
           r_stock !== "0" ||
+          r_nilai_persediaan !== "0" ||
           r_adjusment !== "0" ||
           r_alokasi !== "0" ||
           r_delivery_note !== "0" ||
@@ -572,7 +575,7 @@ class SideMenu extends Component {
         if (r_arsip_penjualan !== "0" || r_arsip_retur_penjualan !== "0" || r_sale_omset !== "0" || r_sale_omset_periode !== "0" || r_penjualan_by_customer !== "0") {
           this.setState({ modul_report: true, modul_report_penjualan: true });
         }
-        if (r_stock !== "0" || r_adjusment !== "0" || r_alokasi !== "0" || r_delivery_note !== "0" || r_opname !== "0" || r_mutasi !== "0" || r_alokasi_trx !== "0" || r_expedisi !== "0") {
+        if (r_stock !== "0" || r_nilai_persediaan!== "0" || r_adjusment !== "0" || r_alokasi !== "0" || r_delivery_note !== "0" || r_opname !== "0" || r_mutasi !== "0" || r_alokasi_trx !== "0" || r_expedisi !== "0") {
           this.setState({ modul_report: true, modul_report_inventory: true });
         }
         if (r_purchase_order !== "0" || r_receive !== "0" || r_arsip_pembelian_by_supplier !== "0") {
@@ -636,6 +639,7 @@ class SideMenu extends Component {
           r_arsip_retur_penjualan: r_arsip_retur_penjualan,
           r_penjualan_by_customer: r_penjualan_by_customer,
           r_stock: r_stock,
+          r_nilai_persediaan: r_nilai_persediaan,
           r_adjusment: r_adjusment,
           r_alokasi: r_alokasi,
           r_delivery_note: r_delivery_note,
@@ -742,6 +746,7 @@ class SideMenu extends Component {
       path === "/report/sale_by_product_archive" ||
       path === "/report/closing" ||
       path === "/report/inventory" ||
+      path === "/report/inventory/nilai_persediaan" ||
       path === "/report/adjustment" ||
       path === "/report/alokasi" ||
       path === "/report/dn" ||
@@ -766,6 +771,7 @@ class SideMenu extends Component {
       });
       if (
         path === "/report/inventory" ||
+        path === "/report/inventory/nilai_persediaan" ||
         path === "/report/adjustment" ||
         path === "/report/alokasi" ||
         path === "/report/opname" ||
@@ -1401,6 +1407,7 @@ class SideMenu extends Component {
                   "treeview" +
                   (this.state.isReportInventory === true ||
                   path === "/report/inventory" ||
+                  path === "/report/inventory/nilai_persediaani" ||
                   path === "/report/adjustment" ||
                   path === "/report/alokasi" ||
                   path === "/report/opname" ||
@@ -1429,6 +1436,13 @@ class SideMenu extends Component {
                       {" "}
                       <i className="zmdi zmdi-chart" />
                       Stock
+                    </Link>
+                  </li>
+                  <li className={path === "/report/inventory/nilai_persediaan" ? "active" : ""} style={this.state.r_nilai_persediaan === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to="/report/inventory/nilai_persediaan" style={{ width: "fit-content" }}>
+                      {" "}
+                      <i className="zmdi zmdi-flare" />
+                      Nilai Persediaan
                     </Link>
                   </li>
                   <li className={path === "/report/adjustment" ? "active" : ""} style={this.state.r_adjusment === "0" ? { display: "none" } : { display: "block" }}>
