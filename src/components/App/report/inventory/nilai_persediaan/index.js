@@ -25,7 +25,7 @@ class NilaiPersediaanReport extends Component {
       where_data: `page=1`,
       periode: "",
       bukaHarga: false,
-      location: "",
+      location: "LK/0001",
       location_data: [],
       set_harga: 1,
       // search_by_data: [
@@ -41,7 +41,25 @@ class NilaiPersediaanReport extends Component {
   componentWillUnmount() {
     this.setState({ isModalDetail: false, isModalExcel: false });
   }
+  
+  componentDidMount() {
+    if (localStorage.lk_nilai_persediaan_report !== undefined && localStorage.lk_nilai_persediaan_report !== "") {
+      this.setState({
+        location: localStorage.lk_nilai_persediaan_report,
+      });
+    }
+  }
 
+  componentWillMount() {
+    let where = `&page=1`
+    if (this.state.location !== undefined) {
+      if (where !== "") {
+        where += "&";
+      }
+      where += `lokasi=${this.state.location}`;
+    }
+    this.props.dispatch(FetchNilaiPersediaanReport(where));
+  }
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -69,7 +87,7 @@ class NilaiPersediaanReport extends Component {
         });
         this.setState({
           location_data: lk,
-          location:this.state.location===""?'LK/0001':localStorage.lk_nilai_persediaan_report
+          // location:localStorage.lk_nilai_persediaan_report === undefined && localStorage.lk_nilai_persediaan_report === ""?'LK/0001':localStorage.lk_nilai_persediaan_report
         });
       }
       this.setState({set_harga:nextProps.auth.user.set_harga})
@@ -221,6 +239,7 @@ class NilaiPersediaanReport extends Component {
                 <div className="form-group">
                   <input
                     className="form-control"
+                    placeholder="Nama/Barcode/Kode Barang"
                     type="text"
                     style={{ padding: "9px", fontWeight: "bolder" }}
                     name="any"
