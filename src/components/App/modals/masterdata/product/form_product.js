@@ -2225,13 +2225,13 @@ class FormProduct extends Component {
     parseData["group1"] = this.state.group1;
     parseData["group2"] = this.state.group2;
     parseData["deskripsi"] = this.state.deskripsi;
-    parseData["gambar"] = this.state.gambar;
+    // parseData["gambar"] = this.state.gambar;
     parseData["kategori"] = this.state.jenis;
     parseData["kcp"] = this.state.kcp;
     parseData["poin"] = this.state.poin;
     parseData["online"] = this.state.online;
     parseData["berat"] = this.state.berat;
-    parseData["gambar"] = parseData["gambar"] === "" ? "-" : this.state.gambar.base64;
+    parseData["gambar"] = this.state.gambar === "" && this.state.gambar === undefined ? "-" : this.state.gambar;
     console.log(this.state.kcp);
     let err = this.state.error;
     if (this.props.checkKodeBarang !== false) {
@@ -2372,6 +2372,8 @@ class FormProduct extends Component {
         }
       }
     }
+
+    // console.log("dada",this.state.gambar);
     return (
       <div>
         <WrapperModal

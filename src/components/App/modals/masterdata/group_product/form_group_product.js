@@ -138,10 +138,10 @@ class FormGroupProduct extends Component {
     });
   }
   render() {
-    console.log("state", this.state.group2);
+    console.log("this.props.detail", this.props.detail);
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formGroupProduct"} size="md">
-        <ModalHeader toggle={this.toggle}>{this.props.detail ? (this.props.detail.kel_brg === "" ? "Tambah kelompok barang" : "Ubah kelompok barang") : "Tambah kelompok barang"}</ModalHeader>
+        <ModalHeader toggle={this.toggle}>{this.props.detail ? (this.props.detail.kel_brg === undefined ? "Tambah kelompok barang" : "Ubah kelompok barang") : "Tambah kelompok barang"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">

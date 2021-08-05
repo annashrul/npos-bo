@@ -35,6 +35,7 @@ import ReceiveReport from "../report/inventory/receive";
 import AlokasiReport from "../report/inventory/alokasi";
 import DnReport from "../report/inventory/dn";
 import OpnameReport from "../report/inventory/opname";
+import NilaiPersediaanReport from "../report/inventory/nilai_persediaan";
 import ExpedisiReport from "../report/inventory/expedisi";
 import PackingReport from "../report/inventory/packing";
 import MutationReport from "../report/inventory/mutation";
@@ -218,6 +219,12 @@ const Routes = (
         exact
         strict
         component={InventoryReport}
+      />
+      <PrivateRoute
+        path="/report/inventory/nilai_persediaan"
+        exact
+        strict
+        component={NilaiPersediaanReport}
       />
       <PrivateRoute
         path="/report/adjustment"

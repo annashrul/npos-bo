@@ -22,6 +22,7 @@ import { salesReducer } from "./masterdata/sales/sales.action";
 import { departmentReducer } from "./masterdata/department/department.reducer";
 import { subDepartmentReducer } from "./masterdata/department/sub_department.reducer";
 import { stockReportReducer } from "./report/inventory/stock_report.reducer";
+import { nilai_persediaanReportReducer } from "./report/inventory/nilai_persediaan_report.reducer";
 import { laba_rugiReducer } from "./report/laba_rugi/laba_rugi_report.reducer";
 import { adjustmentReducer } from "./adjustment/adjustment.reducer";
 import { poReducer } from "./purchase/purchase_order/po.reducer";
@@ -100,6 +101,7 @@ export default combineReducers({
   saleOmsetReducer,
   saleOmsetPeriodeReducer,
   printerReducer,
+  nilai_persediaanReportReducer,
 
   auth: authReducer,
   errors: errorsReducer,
