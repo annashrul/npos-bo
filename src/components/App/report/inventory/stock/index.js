@@ -67,7 +67,7 @@ class InventoryReport extends Component {
       if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
       Object.assign(obj, { where_data: where });
       Object.assign(state, { isModalDetail: true, detail: obj });
-      this.props.dispatch(FetchStockReportDetailSatuan(obj.kd_brg, where));
+      this.props.dispatch(FetchStockReportDetailSatuan(btoa(obj.kd_brg), where));
     }
     this.setState(state);
   }
