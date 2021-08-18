@@ -23,7 +23,7 @@ class DetailStockReportTransaction extends Component {
     let where = this.props.detail.where.split("&");
     where.shift();
     let whereToString = `${where}`.replaceAll(",", "&");
-    this.props.dispatch(FetchStockReportDetailTransaction(this.props.detail.kd_brg, `page=${page}&${whereToString}`, false));
+    this.props.dispatch(FetchStockReportDetailTransaction(btoa(this.props.detail.kd_brg), `page=${page}&${whereToString}`, false));
   }
 
   render() {
