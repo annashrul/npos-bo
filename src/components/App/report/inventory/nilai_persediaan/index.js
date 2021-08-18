@@ -24,7 +24,7 @@ class NilaiPersediaanReport extends Component {
     this.state = {
       where_data: `page=1`,
       periode: "",
-      bukaHarga: false,
+      bukaHarga: true,
       location: "LK/0001",
       location_data: [],
       set_harga: 1,
@@ -57,6 +57,7 @@ class NilaiPersediaanReport extends Component {
         where += "&";
       }
       where += `lokasi=${this.state.location}`;
+      localStorage.setItem("lk_nilai_persediaan_report", this.state.location)
     }
     this.props.dispatch(FetchNilaiPersediaanReport(where));
   }
@@ -159,9 +160,7 @@ class NilaiPersediaanReport extends Component {
   }
 
   render() {
-    const { per_page, last_page, current_page, data, total } = this.props.nilai_persediaanReport;
-
-    console.log("================",data);
+    const { per_page, last_page, current_page, data, total, total_persediaan } = this.props.nilai_persediaanReport;
 
     let total_nilai_persediaan_stock = 0;
     let total_nilai_persediaan_hrg_beli = 0;
@@ -185,7 +184,6 @@ class NilaiPersediaanReport extends Component {
       { rowSpan: "2", colSpan: "1", label: "Nama Barang" },
       { rowSpan: "2", colSpan: "1", label: "Lokasi" },
       { rowSpan: "2", colSpan: "1", label: "Satuan" },
-      { rowSpan: "2", colSpan: "1", label: "Stok" },
       // { rowSpan: "2", colSpan: "1", label: "Harga Beli" },
       // { colSpan: "4", label: "Harga" },
       // { colSpan: "4", label: "Total Harga" },
@@ -193,9 +191,10 @@ class NilaiPersediaanReport extends Component {
     ];
 
     bukaHarga && head.push({ rowSpan: "2", colSpan: "1", label: "Harga Beli" });
-    bukaHarga && head.push({ colSpan: this.state.set_harga, label: "Harga" });
-    bukaHarga && head.push({ colSpan: this.state.set_harga, label: "Total Harga" });
+    bukaHarga && head.push({ colSpan: this.state.set_harga, label: "Harga Jual" });
+    head.push({ rowSpan: "2", colSpan: "1", label: "Stok" });
     bukaHarga && head.push({ rowSpan: "2", colSpan: "1", label: "Total Harga Beli" });
+    bukaHarga && head.push({ colSpan: this.state.set_harga, label: "Total Harga Jual" });
 
     let rowSpan = [];
     for (let i = 0; i < this.state.set_harga; i++) {
@@ -331,7 +330,6 @@ class NilaiPersediaanReport extends Component {
                       <td className="middle nowrap">{v.nm_brg}</td>
                       <td className="middle nowrap">{v.lokasi}</td>
                       <td className="middle nowrap">{v.satuan}</td>
-                      <td className="text-center middle nowrap">{v.stock}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.hrg_beli)}</td>
 
                       {(() => {
@@ -347,7 +345,9 @@ class NilaiPersediaanReport extends Component {
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga2)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga3)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.harga4)}</td> */}
-
+                      <td className="text-center middle nowrap">{v.stock}</td>
+                      
+                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_beli)}</td>
                       
                       {(() => {
                         let tds = [];
@@ -363,8 +363,7 @@ class NilaiPersediaanReport extends Component {
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_2)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_3)}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_4)}</td> */}
-                      
-                      <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_beli)}</td>
+
 
                     </tr>
                   );
@@ -375,20 +374,41 @@ class NilaiPersediaanReport extends Component {
             {
               data: [
                 { colSpan: 6, label: "Total perhalaman", className: "text-left" },
-                { colSpan: 1, label: parseInt(total_nilai_persediaan_stock), className: `text-center` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_hrg_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
 
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga), className: `text-right ${bukaHarga && (bukaSetHarga[0]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga2), className: `text-right ${bukaHarga && (bukaSetHarga[1]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga3), className: `text-right ${bukaHarga && (bukaSetHarga[2]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_harga4), className: `text-right ${bukaHarga && (bukaSetHarga[3]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseInt(total_nilai_persediaan_stock), className: `text-center` },
+                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
+
 
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_1), className: `text-right ${bukaHarga && (bukaSetHarga[0]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_2), className: `text-right ${bukaHarga && (bukaSetHarga[1]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_3), className: `text-right ${bukaHarga && (bukaSetHarga[2]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_4), className: `text-right ${bukaHarga && (bukaSetHarga[3]!==undefined && bukaHarga) ? "" : "dNone"}` },
                 
-                { colSpan: 1, label: parseToRp(total_nilai_persediaan_total_harga_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
+              ],
+            },
+            {
+              data: [
+                { colSpan: 6, label: "Total", className: "text-left" },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.hrg_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
+
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.harga), className: `text-right ${bukaHarga && (bukaSetHarga[0]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.harga2), className: `text-right ${bukaHarga && (bukaSetHarga[1]!==undefined && bukaHarga) ? "" : "dNone"}` },
+               { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.harga3), className: `text-right ${bukaHarga && (bukaSetHarga[2]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.harga4), className: `text-right ${bukaHarga && (bukaSetHarga[3]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseInt(total_persediaan===undefined?0:total_persediaan.stock), className: `text-center` },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.total_harga_beli), className: `text-right ${bukaHarga ? "" : "dNone"}` },
+
+
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.total_harga_1), className: `text-right ${bukaHarga && (bukaSetHarga[0]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.total_harga_2), className: `text-right ${bukaHarga && (bukaSetHarga[1]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.total_harga_3), className: `text-right ${bukaHarga && (bukaSetHarga[2]!==undefined && bukaHarga) ? "" : "dNone"}` },
+                { colSpan: 1, label: parseToRp(total_persediaan===undefined?0:total_persediaan.total_harga_4), className: `text-right ${bukaHarga && (bukaSetHarga[3]!==undefined && bukaHarga) ? "" : "dNone"}` }
+                
               ],
             },
           ]}

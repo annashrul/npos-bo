@@ -69,7 +69,7 @@ class FormProduct extends Component {
       group2_data: [],
       group2: "-",
       deskripsi: "-",
-      gambar: "",
+      gambar: "-",
       jenis: "1",
       kcp: "",
       kcp_data: [],
@@ -320,7 +320,7 @@ class FormProduct extends Component {
       group2_data: [],
       group2: "",
       deskripsi: "-",
-      gambar: "",
+      gambar: "-",
       jenis: "1",
       kcp: "",
       poin: "0",
@@ -886,7 +886,7 @@ class FormProduct extends Component {
         group1: param.dataEdit.group1,
         group2: param.dataEdit.group2,
         deskripsi: param.dataEdit.deskripsi,
-        gambar: "",
+        gambar: "-",
         kategori: param.dataEdit.jenis,
         kcp: param.dataEdit.kcp,
         poin: param.dataEdit.poin,
@@ -2426,7 +2426,7 @@ class FormProduct extends Component {
                     onMouseEnter={this.mouseEnter}
                     onMouseLeave={this.mouseLeave}
                     style={{
-                      backgroundImage: `url('${this.state.gambar}'),url('${this.state.gambar === "" ? Default : this.state.gambar}')`,
+                      backgroundImage: `url('${this.state.gambar}'),url('${this.state.gambar === "-" ? Default : this.state.gambar}')`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
