@@ -14,9 +14,9 @@ export const TOKEN = {
 
 export const HEADERS = {
   // URL: atob(document.getElementById("hellyeah").value),
-  // URL: "http://ptnetindo.com:6692/",
+  URL: "http://ptnetindo.com:6692/",
   // URL: "http://192.168.100.71:6692/",
-   URL: "http://localhost:6692/",
+  //  URL: "http://localhost:6692/",
   TOKEN: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO",
@@ -142,6 +142,16 @@ export const BANK = {
   SUCCESS: "SUCCESS_BANK",
   FAILED: "FAILED_BANK",
   DETAIL: "DETAIL_BANK",
+};
+
+/****************
+ RAK
+ *****************/
+export const RAK = {
+  LOADING: "SET_RAK_LOADING",
+  SUCCESS: "SUCCESS_RAK",
+  FAILED: "FAILED_RAK",
+  DETAIL: "DETAIL_RAK",
 };
 
 /****************

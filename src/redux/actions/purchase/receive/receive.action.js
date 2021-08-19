@@ -132,7 +132,7 @@ export const storeReceive = (data, param) => {
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
           param({
-            pathname: "/pembelian3ply",
+            pathname: "/pembelian3plyId/"+data.result.insertId,
             state: {
               data: rawdata,
               nota: data.result.kode,
@@ -259,6 +259,18 @@ export const FetchReportDetail = (code, where = "", isModal = false) => {
     );
   };
 };
+export const receiveAmbilData = (code) => {
+  return (dispatch) => {
+    let url = `receive/ambil_data/${code}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setReportDetail(res.data));
+      },
+      true
+    );
+  };
+};
 export const FetchReportExcel = (where = "", perpage = 9999) => {
   return (dispatch) => {
     dispatch(setLoading(true));
@@ -284,5 +296,79 @@ export const deleteReceiveReport = (data) => {
     handleDelete(`receive/${data.id}`, () => {
       dispatch(FetchReport(data.where));
     });
+  };
+};
+
+export const rePrintFaktur = (id) => {
+  return (dispatch) => {
+    Swal.fire({
+      title: "Silahkan tunggu.",
+      html: "Sedang memproses faktur..",
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      onClose: () => {},
+    });
+    let url = `receive/reprint/${btoa(id)}`;
+
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        Swal.close();
+
+        const data = response.data;
+        if (data.status === "success") {
+          window.open(data.result.nota, "_blank");
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Transaksi berhasil.",
+            type: "info",
+            html:
+              `Disimpan dengan nota: ${id}` +
+              "<br><br>" +
+              '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+              '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
+            showCancelButton: true,
+            showConfirmButton: false,
+          }).then((result) => {
+            if (result.dismiss === "cancel") {
+              window.location.reload();
+              // window.open(`/approval_mutasi`, '_top');
+            }
+          });
+          document.getElementById("btnNotaPdf").addEventListener("click", () => {
+            // const win = window.open(data['kd_trx'], '_blank');
+            // if (win != null) {
+            //     win.focus();
+            // }
+
+            dispatch(rePrintFaktur(id));
+          });
+          document.getElementById("btnNota3ply").addEventListener("click", () => {
+            // param({
+            //     pathname: `/approvalAlokasi3ply`,
+            //     state: {
+            //         data: rawdata,
+            //     }
+            // })
+            // Swal.closeModal();
+            // return false;
+            const win = window.open(`/pembelian3ply/${id}`, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+          });
+        } else {
+          Swal.fire({
+            title: "failed",
+            type: "error",
+            text: "Gagal mengambil faktur.",
+          });
+        }
+        dispatch(setLoading(false));
+      })
+      .catch(function (error) {
+        Swal.close();
+      });
   };
 };

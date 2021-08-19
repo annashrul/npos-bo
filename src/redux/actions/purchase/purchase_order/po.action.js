@@ -241,6 +241,19 @@ export const poReportDetail = (code, where = "", isModal = false) => {
   };
 };
 
+export const poAmbilData = (code) => {
+  return (dispatch) => {
+    let url = `purchaseorder/ambil_data/${code}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setPoReportDetail(res.data));
+      },
+      true
+    );
+  };
+};
+
 export const FetchPurchaseBySupplierReport = (where = "") => {
   return (dispatch) => {
     let url = `report/pembelian/by_supplier?perpage=${HEADERS.PERPAGE}`;
