@@ -119,7 +119,7 @@ class FormGroupProduct extends Component {
       return;
     }
 
-    if (this.props.detail !== undefined && this.props.detail[nm_kel_brg] !== "") {
+    if (Object.keys(this.props.detail).length > 0 && this.props.detail[nm_kel_brg] !== "") {
       this.props.dispatch(updateGroupProduct(this.props.detail.kel_brg, parseData, this.props.detail.where));
     } else {
       this.props.dispatch(createGroupProduct(parseData, this.props.fastAdd !== undefined));
