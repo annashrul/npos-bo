@@ -10,6 +10,7 @@ import { storeOpname } from "../../../../redux/actions/inventory/opname.action";
 import StickyBox from "react-sticky-box";
 import Spinner from "Spinner";
 import { HEADERS } from "../../../../redux/actions/_constants";
+import { storeAdjusment } from "redux/actions/adjustment/adjustment.action";
 import TransaksiWrapper from "../../common/TransaksiWrapper";
 import LokasiCommon from "../../common/LokasiCommon";
 import TableCommon from "../../common/TableCommon";
@@ -146,6 +147,18 @@ class TrxOpname extends Component {
       this.getData();
     });
   }
+  
+  getSaldoStock(val, i) {
+    let data = this.state.brgval[i];
+    let saldo_stock = data.stock;
+    if (data.status === "kurang") {
+      saldo_stock = parseInt(data.stock, 10) - parseInt(val, 10);
+    }
+    if (data.status === "tambah" || data.status === "" || data.status === undefined) {
+      saldo_stock = parseInt(data.stock, 10) + parseInt(val, 10);
+    }
+    return saldo_stock;
+  }
   HandleSubmit(e) {
     e.preventDefault();
 
@@ -189,12 +202,12 @@ class TrxOpname extends Component {
           data["lokasi_val"] = location.value;
           data["alamat"] = auth.user.alamat;
           data["site_title"] = auth.user.site_title === undefined ? auth.user.title : auth.user.site_title;
-          //   this.props.dispatch(
-          //     storeAdjusment(data, () => {
-          //       this.handleClear();
-          //       this.getData();
-          //     })
-          //   );
+            this.props.dispatch(
+              storeAdjusment(data, () => {
+                this.handleClear();
+                this.getData();
+              })
+            );
         });
       }
     });

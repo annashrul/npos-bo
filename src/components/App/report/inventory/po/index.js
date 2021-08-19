@@ -11,6 +11,7 @@ import { STATUS_PURCHASE_ORDER, statusPurchaseOrder } from "../../../../../helpe
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import { Link } from "react-router-dom";
 
 class PoReport extends Component {
   constructor(props) {
@@ -117,7 +118,10 @@ class PoReport extends Component {
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
-                          <ButtonActionCommon action={[{ label: "Detail" }]} callback={(e) => this.handleModal("detail", v)} />
+                          <ButtonActionCommon action={[{ label: "Detail" }, { label: "3ply" }]} callback={(e) => {
+                              if (e === 0) this.handleModal("detail", v);
+                              if (e === 1) this.props.history.push(`../po3plyId/${v.no_po}`);
+                            }} />
                         </td>
                         <td className="middle nowrap">{v.no_po}</td>
                         <td className="middle nowrap">{toDate(v.tgl_po)} </td>

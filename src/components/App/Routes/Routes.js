@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import Login from "../Auth/Login/Login";
 import Dashboard from "../Dashboard/Dashboard";
 import Bank from "../masterdata/bank";
+import Rak from "../masterdata/rak";
 import Promo from "../masterdata/promo";
 import Cash from "../masterdata/cash";
 import User from "../masterdata/user";
@@ -71,6 +72,7 @@ import Upload from "../setting/upload/upload";
 import Print3ply from "../print/penjualan3ply";
 import Adjust3ply from "../print/adjust3ply";
 import Dn3ply from "../print/dn3ply";
+import Po3plyId from "../print/po3plyId";
 import Alokasi3ply from "../print/alokasi3ply";
 import Packing3ply from "../print/packing3ply";
 import Expedisi3ply from "../print/expedisi3ply";
@@ -78,6 +80,7 @@ import BayarHutang3ply from "../print/bayar_hutang3ply";
 import BayarPiutang3ply from "../print/bayar_piutang3ply";
 import BayarMutasi3ply from "../print/bayar_mutasi3ply";
 import Pembelian3ply from "../print/pembelian3ply";
+import Pembelian3plyId from "../print/pembelian3plyId";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
 import priceTagPrint from "../print/priceTag";
@@ -92,6 +95,8 @@ const Routes = (
       <Route path="/print3ply/:id" exact strict component={Print3ply} />
       <Route path="/adjust3ply/:id" exact strict component={Adjust3ply} />
       <Route path="/dn3ply/:id" exact strict component={Dn3ply} />
+      <Route path="/po3plyId/:id" exact strict component={Po3plyId} />
+      <Route path="/pembelian3plyId/:id" exact strict component={Pembelian3plyId} />
       <Route path="/alokasi3ply/:id" exact strict component={Alokasi3ply} />
       <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
       <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
@@ -124,6 +129,7 @@ const Routes = (
 
       {/* MASTERDATA SECTION START */}
       <PrivateRoute path="/bank" exact strict component={Bank} />
+      <PrivateRoute path="/rak" exact strict component={Rak} />
       <PrivateRoute path="/promo" exact strict component={Promo} />
       <PrivateRoute path="/cash" exact strict component={Cash} />
       <PrivateRoute path="/customer" exact strict component={Customer} />

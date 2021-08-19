@@ -11,6 +11,7 @@ import { STATUS_ARSIP_PENJUALAN } from "../../../../../helperStatus";
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import { rePrintFaktur } from "../../../../../redux/actions/purchase/receive/receive.action";
 
 class ReceiveReport extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class ReceiveReport extends Component {
     this.handleModal = this.handleModal.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
       where_data: DEFAULT_WHERE,
       detail: {},
@@ -66,6 +68,9 @@ class ReceiveReport extends Component {
     this.handleService(this.state.where_data, pageNumber);
   }
 
+  handleRePrint(id) {
+    this.props.dispatch(rePrintFaktur(id));
+  }
   handleDelete(kode) {
     this.props.dispatch(deleteReceiveReport({ id: kode, where: this.state.where_data }));
   }
@@ -164,12 +169,13 @@ class ReceiveReport extends Component {
                         <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                         <td className="text-center middle nowrap">
                           <ButtonActionCommon
-                            action={[{ label: "Detail" }, { label: "Retur" }, { label: "Hapus" }, { label: "Edit" }]}
+                            action={[{ label: "Detail" }, { label: "Retur" }, { label: "Hapus" }, { label: "Edit" }, { label: "Print Faktur" }]}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleModal("retur", v);
                               if (e === 2) this.handleDelete(v.no_faktur_beli);
                               if (e === 3) this.handleEdit(v);
+                              if (e === 4) this.handleRePrint(v.no_faktur_beli);
                             }}
                           />
                         </td>

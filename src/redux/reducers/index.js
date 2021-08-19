@@ -7,6 +7,7 @@ import { locationCategoryReducer } from "./masterdata/location_category/location
 import { locationReducer } from "./masterdata/location/location.reducer";
 import { cashReducer } from "./masterdata/cash/cash.reducer";
 import { bankReducer } from "./masterdata/bank/bank.reducer";
+import { rakReducer } from "./masterdata/rak/rak.reducer";
 import { promoReducer } from "./masterdata/promo/promo.reducer";
 import { productReducer } from "./masterdata/product/product.reducer";
 import { groupProductReducer } from "./masterdata/group_product/group_product.reducer";
@@ -102,6 +103,7 @@ export default combineReducers({
   saleOmsetPeriodeReducer,
   printerReducer,
   nilai_persediaanReportReducer,
+  rakReducer,
 
   auth: authReducer,
   errors: errorsReducer,

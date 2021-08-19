@@ -145,6 +145,16 @@ export const BANK = {
 };
 
 /****************
+ RAK
+ *****************/
+export const RAK = {
+  LOADING: "SET_RAK_LOADING",
+  SUCCESS: "SUCCESS_RAK",
+  FAILED: "FAILED_RAK",
+  DETAIL: "DETAIL_RAK",
+};
+
+/****************
  PROMO
  *****************/
 export const PROMO = {

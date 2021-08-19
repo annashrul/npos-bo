@@ -30,6 +30,7 @@ import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
 import { dateRange, generateNo, getStorage, setStorage } from "../../../../../../helper";
+import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -315,6 +316,7 @@ class ListProduct extends Component {
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
     this.props.dispatch(FetchSubDepartmentAll());
+    this.props.dispatch(FetchRak("page=1&perpage=99999"));
     this.props.dispatch(setProductEdit([]));
     // this.props.dispatch(FetchProductCode());
   }
@@ -330,6 +332,7 @@ class ListProduct extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType(pricing ? "formProductPricing" : "formProduct"));
     this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
+    this.props.dispatch(FetchRak("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
     this.props.dispatch(FetchSubDepartmentAll());

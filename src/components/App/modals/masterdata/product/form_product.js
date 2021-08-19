@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import FormPrinter from "../printer/form_printer";
 import Preloader from "Preloader";
+import FormRak from "../rak/form_rak";
 
 const tenantBool = Cookies.get("tnt=") !== undefined ? atob(atob(Cookies.get("tnt="))) === "giandy-pusat" || atob(atob(Cookies.get("tnt="))) === "giandy-cabang01" : false;
 class FormProduct extends Component {
@@ -43,6 +44,8 @@ class FormProduct extends Component {
       error: {
         kd_brg: "",
         nm_brg: "",
+        nama_singkat: "",
+        tag: "",
         kel_brg: "",
         stock: "",
         kategori: "",
@@ -59,8 +62,12 @@ class FormProduct extends Component {
       },
       kd_brg: "",
       nm_brg: "",
+      nama_singkat: "",
+      tag: "",
       kel_brg_data: [],
       kel_brg: "",
+      rak_data: [],
+      rak: "",
       stock: "0",
       kategori: "1",
       stock_min: "0",
@@ -259,6 +266,7 @@ class FormProduct extends Component {
     this.handleKcp = this.handleKcp.bind(this);
     this.handleGroup1 = this.handleGroup1.bind(this);
     this.handleGroup2 = this.handleGroup2.bind(this);
+    this.handleRak = this.handleRak.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onHandleChangeChild = this.onHandleChangeChild.bind(this);
     this.onHandleChangeChildSku = this.onHandleChangeChildSku.bind(this);
@@ -310,8 +318,12 @@ class FormProduct extends Component {
       },
       kd_brg: "",
       nm_brg: "",
+      nama_singkat: "",
+      tag: "",
       kel_brg_data: [],
       kel_brg: "",
+      rak_data: [],
+      rak: "",
       stock: "0",
       kategori: "1",
       stock_min: "0",
@@ -702,6 +714,7 @@ class FormProduct extends Component {
     let kel_brg = [],
       group1 = [],
       group2 = [],
+      rak = [],
       kcp = [];
 
     if (param.checkKodeBarang) {
@@ -881,6 +894,9 @@ class FormProduct extends Component {
         kd_brg: param.dataEdit.kd_brg,
         nm_brg: param.dataEdit.nm_brg,
         kel_brg: param.dataEdit.kel_brg,
+        nama_singkat: param.dataEdit.nama_singkat,
+        tag: param.dataEdit.tag,
+        rak: param.dataEdit.rak,
         jenis: param.dataEdit.kategori,
         stock_min: param.dataEdit.stock_min,
         group1: param.dataEdit.group1,
@@ -1032,6 +1048,20 @@ class FormProduct extends Component {
         group2_data: group2,
       });
     }
+    if (param.rak.data !== undefined) {
+      if (typeof param.rak.data === "object") {
+        param.rak.data.map((v) => {
+          rak.push({
+            value: v.id,
+            label: v.title,
+          });
+          return null;
+        });
+      }
+      this.setState({
+        rak_data: rak,
+      });
+    }
   }
   componentWillReceiveProps(nextProps) {
     this.getProps(nextProps);
@@ -1177,6 +1207,13 @@ class FormProduct extends Component {
     let err = Object.assign({}, this.state.error, { group2: "" });
     this.setState({
       group2: val.value,
+      error: err,
+    });
+  }
+  handleRak(val) {
+    let err = Object.assign({}, this.state.error, { rak: "" });
+    this.setState({
+      rak: val.value,
       error: err,
     });
   }
@@ -2219,6 +2256,9 @@ class FormProduct extends Component {
 
     parseData["kd_brg"] = this.state.kd_brg;
     parseData["nm_brg"] = this.state.nm_brg;
+    parseData["nama_singkat"] = this.state.nama_singkat;
+    parseData["tag"] = this.state.tag;
+    parseData["rak"] = this.state.rak;
     parseData["kel_brg"] = this.state.kel_brg;
     parseData["jenis"] = this.state.kategori;
     parseData["stock_min"] = this.state.stock_min;
@@ -2242,6 +2282,9 @@ class FormProduct extends Component {
     }
     if (!this.handleEmptyOrUndefined("kd_brg", "kode barang")) return;
     if (!this.handleEmptyOrUndefined("nm_brg", "nama barang")) return;
+    if (!this.handleEmptyOrUndefined("nama_singkat", "nama singkat")) return;
+    if (!this.handleEmptyOrUndefined("tag", "tag", false)) return;
+    if (!this.handleEmptyOrUndefined("rak", "rak", false)) return;
     if (!this.handleEmptyOrUndefined("kel_brg", "kelompok barang", false)) return;
     if (!this.handleEmptyOrUndefined("group1", "supplier", false)) return;
     if (this.props.auth.user.is_resto === 1 && this.state.jenis === "5") {
@@ -2494,6 +2537,49 @@ class FormProduct extends Component {
                         value={this.state.nm_brg}
                         onChange={(e) => this.handleChange(e, null)}
                       />
+                    </div>
+
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        ref={(input) => (this[`nama_singkat`] = input)}
+                        className="form-control"
+                        placeholder="Nama Singkat"
+                        name="nama_singkat"
+                        maxLength={20}
+                        value={this.state.nama_singkat}
+                        onChange={(e) => this.handleChange(e, null)}
+                      />
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-7">
+                        <div className="form-group">
+                          {select2Group(
+                            this.state.rak_data.find((op) => {
+                              return op.value === this.state.rak;
+                            }),
+                            (any, action) => this.handleRak(any, action),
+                            this.state.rak_data,
+                            (e) => this.toggleModal(e, "formRak"),
+                            "rak"
+                          )}
+                        </div>
+                      </div>
+                      <div className="col-md-5">
+                        <div className="form-group">
+                          <input
+                            type="text"
+                            ref={(input) => (this[`tag`] = input)}
+                            className="form-control"
+                            placeholder="Tag"
+                            name="tag"
+                            maxLength={3}
+                            value={this.state.tag}
+                            onChange={(e) => this.handleChange(e, null)}
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <div className="form-group">
@@ -3069,6 +3155,7 @@ class FormProduct extends Component {
             </ModalBody>
           </form>
         </WrapperModal>
+        <FormRak fastAdd={true} detail={this.state.detail} />
         <FormSupplier fastAdd={true} detail={this.state.detail} />
         {this.state.isModalFormGroupProduct && this.props.isOpen ? <FormGroupProduct detail={this.state.detail} group2={this.props.group2} fastAdd={true} /> : null}
         <FormProductPricing
@@ -3099,6 +3186,7 @@ const mapStateToProps = (state) => {
     auth: state.auth,
     group2: state.subDepartmentReducer.all,
     dataPrinter: state.printerReducer.data,
+    rak: state.rakReducer.data,
 
     // group:state.groupProductReducer.data
   };

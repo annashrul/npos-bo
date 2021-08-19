@@ -20,6 +20,8 @@ class FormSupplier extends Component {
       ],
       kode: "",
       nama: "",
+      bank: "",
+      no_rek: "",
       alamat: "",
       kota: "",
       telp: "",
@@ -46,6 +48,8 @@ class FormSupplier extends Component {
         this.setState({
           kode: param.detail.kode,
           nama: param.detail.nama,
+          bank: param.detail.bank,
+          no_rek: param.detail.no_rek,
           alamat: param.detail.alamat,
           kota: param.detail.kota,
           telp: param.detail.telp,
@@ -59,6 +63,8 @@ class FormSupplier extends Component {
           kode: "",
           nama: "",
           alamat: "",
+          bank: "",
+          no_rek: "",
           kota: "",
           telp: "",
           penanggung_jawab: "",
@@ -101,6 +107,8 @@ class FormSupplier extends Component {
     let parseData = stringifyFormData(data);
     parseData["nama"] = this.state.nama;
     parseData["alamat"] = this.state.alamat;
+    parseData["bank"] = this.state.bank;
+    parseData["no_rek"] = this.state.no_rek;
     parseData["kota"] = this.state.kota;
     parseData["telp"] = this.state.telp;
     parseData["penanggung_jawab"] = this.state.penanggung_jawab;
@@ -177,8 +185,6 @@ class FormSupplier extends Component {
                   <label>Telepon</label>
                   <input type="number" placeholder="ex. 6281324654665" className="form-control" name="telp" value={this.state.telp} onChange={this.handleChange} />
                 </div>
-              </div>
-              <div className="col-6 col-md-6">
                 <div className="form-group">
                   <label>
                     Penanggung Jawab <span className="text-danger">*</span>
@@ -193,6 +199,8 @@ class FormSupplier extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
+              </div>
+              <div className="col-6 col-md-6">
                 <div className="form-group">
                   <label>
                     No Penanggung Jawab <span className="text-danger">*</span>
@@ -206,6 +214,14 @@ class FormSupplier extends Component {
                     value={this.state.no_penanggung_jawab}
                     onChange={this.handleChange}
                   />
+                </div>
+                <div className="form-group">
+                  <label>Bank</label>
+                  <input type="bank" placeholder="ex. BANK MANDIRI" className="form-control" name="bank" value={this.state.bank} onChange={this.handleChange} />
+                </div>
+                <div className="form-group">
+                  <label>No Rek</label>
+                  <input type="no_rek" placeholder="ex. 21850180181812" className="form-control" name="no_rek" value={this.state.no_rek} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Email</label>

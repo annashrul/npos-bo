@@ -52,6 +52,7 @@ class Receive extends Component {
       diskon: 0,
       ppn: 0,
       qty: 0,
+      qty_po: 0,
       location_data: [],
       location: "",
       location_val: "",
@@ -175,6 +176,7 @@ class Receive extends Component {
             ppn: v.ppn === null ? 0 : v.ppn,
             harga_beli: v.harga_beli,
             qty: v.jumlah_beli,
+            qty_po: v.jumlah_beli,
             qty_bonus: v.jumlah_bonus,
             stock: v.stock,
             nm_brg: v.nm_brg,
@@ -376,6 +378,7 @@ class Receive extends Component {
               ppn: item.ppn,
               harga_beli: item.harga_beli,
               qty: item.jumlah_beli,
+              qty_po: item.jumlah_beli,
               qty_bonus: 0,
               stock: item.stock,
               nm_brg: item.nm_brg,
@@ -618,6 +621,14 @@ class Receive extends Component {
               final["qty"] = val === "" ? 1 : val;
             }
           });
+        } else if (column === "qty_po") {
+          Object.keys(res).forEach((k, i) => {
+            if (k !== "qty_po") {
+              final[k] = res[k];
+            } else {
+              final["qty_po"] = val === "" ? 1 : val;
+            }
+          });
         } else if (column === "harga_beli") {
           Object.keys(res).forEach((k, i) => {
             if (k !== "harga_beli") {
@@ -657,6 +668,9 @@ class Receive extends Component {
     } else if (column === "qty") {
       if (val === "") values = 0;
       else values = val;
+    } else if (column === "qty_po") {
+      if (val === "") values = 0;
+      else values = val;
     }
     brgval[i] = { ...brgval[i], [column]: values };
     this.setState({ brgval });
@@ -681,6 +695,7 @@ class Receive extends Component {
           let final = {
             id: res.id,
             qty: 0,
+            qty_po: 0,
             kd_brg: res.kd_brg,
             barcode: newbrg.barcode,
             satuan: newbrg.satuan,
@@ -717,6 +732,17 @@ class Receive extends Component {
     const val = e.target.value;
     let brgval = [...this.state.brgval];
     if (column === "qty") {
+      if (parseInt(val, 10) < 2) {
+        brgval[i] = {
+          ...brgval[i],
+          [column]: "",
+        };
+        this.setState({
+          brgval,
+        });
+      }
+    }
+    if (column === "qty_po") {
       if (parseInt(val, 10) < 2) {
         brgval[i] = {
           ...brgval[i],
@@ -774,6 +800,7 @@ class Receive extends Component {
       ppn: item.ppn,
       harga_beli: item.harga_beli,
       qty: item.qty,
+      qty_po: 0,
       qty_bonus: item.qty_bonus,
       stock: item.stock,
       nm_brg: item.nm_brg,
@@ -787,6 +814,7 @@ class Receive extends Component {
         update(table, {
           id: res.id,
           qty: parseFloat(res.qty) + 1,
+          qty_po: parseFloat(res.qty) + 1,
           kd_brg: res.kd_brg,
           barcode: res.barcode,
           satuan: res.satuan,
@@ -960,6 +988,7 @@ class Receive extends Component {
                   ppn: item.ppn,
                   harga_beli: item.harga_beli,
                   qty: item.qty,
+                  qty_po: item.qty_po,
                   qty_bonus: item.qty_bonus,
                 });
                 return null;
@@ -1032,6 +1061,7 @@ class Receive extends Component {
           ppn: 0,
           harga_beli: data[0].harga_beli,
           qty: 1,
+          qty_po: 0,
           qty_bonus: 0,
           stock: data[0].stock,
           nm_brg: data[0].nm_brg,
@@ -1041,6 +1071,7 @@ class Receive extends Component {
         update(table, {
           id: res.id,
           qty: parseFloat(res.qty) + 1,
+          qty_po: parseFloat(res.qty_po) + 1,
           kd_brg: res.kd_brg,
           barcode: res.barcode,
           satuan: res.satuan,
@@ -1124,6 +1155,7 @@ class Receive extends Component {
           ppn_nominal:
             parseFloat(i.harga_beli, 10) * (parseFloat(i.ppn, 10) / 100),
           qty: i.qty,
+          qty_po: i.qty_po,
           qty_bonus: i.qty_bonus,
           satuan: i.satuan,
           tambahan: i.tambahan,
@@ -1846,6 +1878,7 @@ class Receive extends Component {
                           <th style={columnStyle}>ppn</th>
                           <th style={columnStyle}>stock</th>
                           <th style={columnStyle}>qty</th>
+                          <th style={columnStyle}>qty po</th>
                           <th style={columnStyle}>bonus</th>
                           {this.props.auth.user.lvl !==
                           CONFIG_HIDE.HIDE_HRG_BELI ? (
@@ -2127,6 +2160,27 @@ class Receive extends Component {
                                     this.HandleChangeInputValue(e, index)
                                   }
                                   value={this.state.brgval[index].qty}
+                                />
+                              </td>
+                              <td style={columnStyle}>
+                                <input
+                                  style={{ width: "80px", textAlign: "right" }}
+                                  className="form-control"
+                                  type="text"
+                                  name="qty_po"
+                                  ref={(input) =>
+                                    (this[`qty_po-${btoa(item.barcode)}`] = input)
+                                  }
+                                  onFocus={(e) =>
+                                    this.HandleFocusInputReset(e, index)
+                                  }
+                                  onBlur={(e) =>
+                                    this.HandleChangeInput(e, item.barcode)
+                                  }
+                                  onChange={(e) =>
+                                    this.HandleChangeInputValue(e, index)
+                                  }
+                                  value={this.state.brgval[index].qty_po}
                                 />
                               </td>
                               <td style={columnStyle}>
