@@ -35,7 +35,7 @@ class Rak extends Component {
 
   componentWillMount() {
     let any = this.state.any;
-    this.props.dispatch(FetchRak(1, any === undefined ? "" : any));
+    this.props.dispatch(FetchRak('page=1', any === undefined ? "" : any));
     this.getProps(this.props);
   }
   handlePagin(param) {

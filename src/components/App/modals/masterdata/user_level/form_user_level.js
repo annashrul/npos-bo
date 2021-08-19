@@ -40,7 +40,7 @@ class FormUserLevel extends Component {
         { id: 16, value: "0", isChecked: false, label: "Bank" },
         { id: 17, value: "0", isChecked: false, label: "Promo" },
         { id: 18, value: "0", isChecked: false, label: "Printer" },
-        { id: 19, value: "0", isChecked: false, label: "" },
+        { id: 19, value: "0", isChecked: false, label: "Paket" },
       ],
       inventory: [
         { id: 20, value: "0", isChecked: false, label: "Delivery Note" },
@@ -206,7 +206,7 @@ class FormUserLevel extends Component {
         { id: 16, value: "0", isChecked: false, label: "Bank" },
         { id: 17, value: "0", isChecked: false, label: "Promo" },
         { id: 18, value: "0", isChecked: false, label: "Printer" },
-        { id: 19, value: "0", isChecked: false, label: "" },
+        { id: 19, value: "0", isChecked: false, label: "Paket" },
       ],
       inventory: [
         { id: 20, value: "0", isChecked: false, label: "Delivery Note" },

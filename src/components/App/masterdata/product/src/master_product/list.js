@@ -31,6 +31,7 @@ import FormProductPricing from "../../../../modals/masterdata/product/form_produ
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
 import { dateRange, generateNo, getStorage, setStorage } from "../../../../../../helper";
 import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
+import SelectCommon from "../../../../common/SelectCommon";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class ListProduct extends Component {
     this.state = {
       isExcel: false,
       array1: [],
+      rak_data: [],
       byValue: "",
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
@@ -57,6 +59,8 @@ class ListProduct extends Component {
       any_supplier_barang: "",
       any_dept_barang: "",
       any_subdept_barang: "",
+      any_tag_barang: "",
+      any_rak_barang: "",
       any_kategori_barang: "",
       isModalForm: false,
       isModalFormPer: false,
@@ -64,6 +68,35 @@ class ListProduct extends Component {
       isModalCustomer: false,
     };
   }
+  getProps(param) {
+    let stateRak = [];
+    let propsRak = param.rak;
+
+    if (propsRak.data !== undefined) {
+      if (typeof propsRak.data === "object") {
+        propsRak.data.map((v, i) =>
+          stateRak.push({
+            value: v.id,
+            label: v.title,
+          })
+        );
+      }
+    }
+
+    this.setState({
+      rak_data: stateRak,
+    });
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  
   componentWillUnmount() {
     this.setState({
       isModalForm: false,
@@ -74,6 +107,7 @@ class ListProduct extends Component {
   }
 
   componentDidMount() {
+    this.getProps(this.props);
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
     if (getIsPeriodeBarang === null || getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
       this.setState({ semua_periode: true });
@@ -112,8 +146,10 @@ class ListProduct extends Component {
     let supplier = this.state.any_supplier_barang;
     let dept = this.state.any_dept_barang;
     let subdept = this.state.any_subdept_barang;
+    let tag = this.state.any_tag_barang;
+    let rak = this.state.any_rak_barang;
     let kategori = this.state.any_kategori_barang;
-    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || subdept !== "" || kategori !== "") {
+    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || subdept !== "" || tag !== "" || rak !== "" || kategori !== "") {
       if (column === "any_kode_barang") {
         if (where !== "") {
           where += "&";
@@ -156,6 +192,20 @@ class ListProduct extends Component {
         where += `searchby=subdept&q=${btoa(subdept)}`;
         localStorage.setItem(`${que}_subdept_barang`, subdept);
       }
+      if (column === "any_tag_barang") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=tag&q=${btoa(tag)}`;
+        localStorage.setItem(`${que}_tag_barang`, tag);
+      }
+      if (column === "any_rak_barang") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=rak&q=${btoa(rak)}`;
+        localStorage.setItem(`${que}_rak_barang`, rak);
+      }
       if (column === "any_kategori_barang") {
         if (where !== "") {
           where += "&";
@@ -171,6 +221,8 @@ class ListProduct extends Component {
       localStorage.removeItem(`${que}_supplier_barang`);
       localStorage.removeItem(`${que}_dept_barang`);
       localStorage.removeItem(`${que}_subdept_barang`);
+      localStorage.removeItem(`${que}_rak_barang`);
+      localStorage.removeItem(`${que}_tag_barang`);
       localStorage.removeItem(`${que}_kategori_barang`);
       this.props.dispatch(FetchProduct(pageNumber, ""));
     }
@@ -206,6 +258,7 @@ class ListProduct extends Component {
     this.props.dispatch(FetchProduct(1, where));
   }
   handleEnter(column) {
+    console.log("=-=-=-=-",column);
     localStorage.setItem("column_search", `${column}`);
     let where = "";
     let que = "any_master";
@@ -215,8 +268,10 @@ class ListProduct extends Component {
     let supplier = this.state.any_supplier_barang;
     let dept = this.state.any_dept_barang;
     let subdept = this.state.any_subdept_barang;
+    let tag = this.state.any_tag_barang;
+    let rak = this.state.any_rak_barang;
     let kategori = this.state.any_kategori_barang;
-    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || dept !== "" || subdept !== "" || kategori !== "") {
+    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || dept !== "" || subdept !== "" || tag !== "" || rak !== "" || kategori !== "") {
       if (column === "any_kode_barang") {
         if (where !== "") {
           where += "&";
@@ -259,6 +314,20 @@ class ListProduct extends Component {
         where += `searchby=subdept&q=${btoa(subdept)}`;
         localStorage.setItem(`${que}_subdept_barang`, subdept);
       }
+      if (column === "any_tag_barang") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=tag&q=${btoa(tag)}`;
+        localStorage.setItem(`${que}_tag_barang`, tag);
+      }
+      if (column === "any_rak_barang") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=rak&q=${btoa(rak)}`;
+        localStorage.setItem(`${que}_rak_barang`, rak);
+      }
       if (column === "any_kategori_barang") {
         if (where !== "") {
           where += "&";
@@ -275,6 +344,8 @@ class ListProduct extends Component {
       localStorage.removeItem(`${que}_supplier_barang`);
       localStorage.removeItem(`${que}_dept_barang`);
       localStorage.removeItem(`${que}_subdept_barang`);
+      localStorage.removeItem(`${que}_tag_barang`);
+      localStorage.removeItem(`${que}_rak_barang`);
       localStorage.removeItem(`${que}_kategori_barang`);
       this.props.dispatch(FetchProduct(1, ""));
     }
@@ -535,6 +606,41 @@ class ListProduct extends Component {
                   <br />
                   {this.handleInput("any_subdept_barang")}
                 </th>
+                <th className="text-black middle" width="10%">
+                  
+                  <div className="form-group m-0 p-0">
+                  <label>Rak</label>
+                      <select name='searchby'
+                        className="form-control form-control"
+                        style={{width:'10em', height:'2.2em !important'}}
+                        name="any_rak_barang"
+                        onPointerUp={(e) => {this.handleChange(e); this.handleEnter(`any_rak_barang`)}}
+                        onChange={(e) => {this.handleChange(e); this.handleEnter(`any_rak_barang`)}}>
+                          <option value="">~Pilih Rak~</option>
+                          {typeof this.state.rak_data === "object" ? (
+                            this.state.rak_data !== undefined && this.state.rak_data.length > 0 ? (
+                              this.state.rak_data.map((v, i) => {
+                                return (
+                                  <option value={v.value}>{v.label}</option>
+                                  ) 
+                                })
+                            ):""):""}
+                      </select>
+                  </div>
+                  {/* <Select
+                    options={this.state.rak_data}
+                    placeholder="==== Pilih ===="
+                    onChange={(e)=>{e.preventDefault();this.handleEnter(`any_rak_barang`)}}
+                    value={this.state.rak_data.find(op => {
+                      return op.value === this.state.any_rak_barang})
+                      }
+                    /> */}
+                </th>
+                <th className="text-black" width="10%">
+                  Tag
+                  <br />
+                  {this.handleInput("any_tag_barang")}
+                </th>
                 <th className="text-black" width="10%">
                   Kategori
                   <br />
@@ -575,6 +681,8 @@ class ListProduct extends Component {
                         <td style={leftStyle}>{v.supplier}</td>
                         <td style={leftStyle}>{v.dept}</td>
                         <td style={leftStyle}>{v.subdept}</td>
+                        <td style={leftStyle}>{v.rak}</td>
+                        <td style={leftStyle}>{v.tag}</td>
                         <td style={leftStyle}>{v.kategori}</td>
                         <td style={centerStyle}>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td style={centerStyle}>{v.stock_min}</td>
@@ -639,6 +747,7 @@ const mapStateToProps = (state) => {
     customerPrice: state.customerReducer.dataPrice,
     productCode: state.productReducer.productCode,
     groupProduct: state.groupProductReducer.data,
+    rak: state.rakReducer.data,
   };
 };
 

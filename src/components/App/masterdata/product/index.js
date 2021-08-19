@@ -9,6 +9,7 @@ import ListProduct from "./src/master_product/list";
 import { Link } from "react-router-dom";
 import { getStorage } from "../../../../helper";
 import TabCommon from "../../common/TabCommon";
+import { FetchRak } from "../../../../redux/actions/masterdata/rak/rak.action";
 
 class Product extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class Product extends Component {
     this.handleService();
     this.props.dispatch(FetchPriceProduct("page=1"));
     this.props.dispatch(FetchGroupProduct("page=1"));
+    this.props.dispatch(FetchRak("page=1&perpage=99999"));
   }
 
   componentDidMount() {

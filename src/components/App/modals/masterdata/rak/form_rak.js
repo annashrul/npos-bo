@@ -63,11 +63,8 @@ class FormRak extends Component {
     parseData["title"] = this.state.title;
     
     if (!isEmptyOrUndefined(parseData["title"], "title")) return;
-    if (Object.keys(this.props.detail).length > 0) {
-      this.props.dispatch(updateRak(this.state.id, parseData));
-      
-      this.props.dispatch(ModalToggle(false));
-    } else {
+
+    if(this.props.detail.id === undefined || this.props.fastAdd){
       this.props.dispatch(createRak(parseData));
       if (this.props.fastAdd === undefined) {
         this.props.dispatch(ModalToggle(false));
@@ -76,7 +73,13 @@ class FormRak extends Component {
       if (this.props.fastAdd === true) {
         this.props.dispatch(ModalType("formProduct"));
       }
+    } else {
+      this.props.dispatch(updateRak(this.state.id, parseData));
+      
+      this.props.dispatch(ModalToggle(false));
+
     }
+
   }
   getFiles(files) {
     this.setState({
@@ -91,9 +94,8 @@ class FormRak extends Component {
         size="sm"
       >
         <ModalHeader toggle={this.toggle}>
-          {Object.keys(this.props.detail).length > 0
-            ? "Ubah Rak"
-            : "Tambah Rak"}
+          {this.props.detail.id === undefined || this.props.fastAdd ? "Tambah Rak"
+            : "Ubah Rak"}
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
