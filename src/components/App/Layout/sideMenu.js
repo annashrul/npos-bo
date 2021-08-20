@@ -46,6 +46,7 @@ class SideMenu extends Component {
       meja: "",
       printer: "",
       paket: "",
+      rak: "",
       //PRODUKSI
       modul_produksi: false,
       produksi: "",
@@ -683,6 +684,7 @@ class SideMenu extends Component {
       path === "/area" ||
       path === "/meja" ||
       path === "/printer" ||
+      path === "/rak" ||
       path === "/paket"
     ) {
       this.setState({
@@ -988,6 +990,13 @@ class SideMenu extends Component {
                   {" "}
                   <i className="fa fa-object-group" />
                   Paket{" "}
+                </Link>
+              </li>
+              <li className={path === "/rak" ? "active" : ""} style={this.state.rak === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to="/rak" style={{ width: "fit-content" }}>
+                  {" "}
+                  <i className="fa fa-building-o" />
+                  Rak{" "}
                 </Link>
               </li>
 

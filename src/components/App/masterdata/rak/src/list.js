@@ -14,6 +14,7 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import Default from "assets/default.png";
+import { generateNo } from "../../../../../helper";
 
 class ListRak extends Component {
   constructor(props) {
@@ -108,73 +109,58 @@ class ListRak extends Component {
             </div>
           </div>
         </form>
-        <div className="row">
-          {total !== "0" ? (
-            typeof data === "object" ? (
-              data.map((v, i) => {
-                return (
-                  <div className="col-xl-3 col-md-6 mb-4" key={i}>
-                    <div className="card">
-                      <div className="social-widget">
-                        <div className="row">
-                          <div className="col-8 text-left">
-                            <div className="p-2">
-                              <p style={{ fontSize: "24px" }}>{v.title}</p>
-                            </div>
-                          </div>
-                          <div className="col-4 text-right">
-                            <div className="p-2">
-                              <div className="dashboard-dropdown">
-                                <div className="dropdown">
-                                  <UncontrolledButtonDropdown>
-                                    <DropdownToggle
-                                      caret
-                                      style={{
-                                        background: "transparent",
-                                        border: "none",
-                                      }}
-                                    >
-                                      <i className="zmdi zmdi-more-vert"></i>
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                      <DropdownItem
-                                        onClick={(e) =>
+        
+        <div style={{ overflowX: "auto" }}>
+          <table className="table table-hover table-noborder">
+            <thead className="bg-light">
+              <tr>
+                <th className="text-black text-center middle nowrap" width="1%">
+                  No
+                </th>
+                <th className="text-black text-center middle nowrap" width="1%">
+                  #
+                </th>
+                <th className="text-black middle nowrap">Nama</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                typeof data === "object" ? (
+                  data.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
+                      <td className="text-center middle nowrap">
+                        {/* Example split danger button */}
+                        <div className="btn-group">
+                          <UncontrolledButtonDropdown>
+                            <DropdownToggle caret></DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem onClick={(e) =>
                                           this.handleEdit(
                                             e,
                                             v.id,
                                             v.title
                                           )
-                                        }
-                                      >
-                                        <i className="ti-pencil-alt"></i> Edit
-                                      </DropdownItem>
-                                      <DropdownItem
-                                        onClick={(e) =>
+                                        }>Edit</DropdownItem>
+                              <DropdownItem onClick={(e) =>
                                           this.handleDelete(e, v.id)
-                                        }
-                                      >
-                                        <i className="ti-trash"></i> Delete
-                                      </DropdownItem>
-                                    </DropdownMenu>
-                                  </UncontrolledButtonDropdown>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                                        }>Delete</DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledButtonDropdown>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              "No data."
-            )
-          ) : (
-            <div className="col-md-12">
-              <h1 className="text-center">No Data</h1>
-            </div>
-          )}
+                      </td>
+                      <td className="middle nowrap">{v.title}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={2}>No Data</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
           <Paginationq
