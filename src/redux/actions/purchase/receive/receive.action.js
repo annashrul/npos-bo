@@ -265,6 +265,7 @@ export const receiveAmbilData = (code) => {
     handleGet(
       url,
       (res) => {
+        console.log("response ambnil data", res);
         dispatch(setReportDetail(res.data));
       },
       true
