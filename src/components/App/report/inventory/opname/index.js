@@ -58,13 +58,24 @@ class OpnameReport extends Component {
     const { per_page, last_page, current_page, data, total } = this.props.opnameReport;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
-      { rowSpan: 2, label: "Kode transaksi" },
-      { colSpan: 5, label: "Barang" },
-      { rowSpan: 2, label: "Qty fisik", width: "1%" },
-      { rowSpan: 2, label: "Stok terakhir", width: "1%" },
+      { rowSpan: 2, label: "Kode transaksi", width: "1%" },
+      { colSpan: 5, label: "Barang", width: "1%" },
       { rowSpan: 2, label: "Lokasi", width: "1%" },
+      { colSpan: 2, label: "Stok", width: "1%" },
+      { rowSpan: 2, label: "Selisih stok", width: "1%" },
+      { rowSpan: 2, label: "HPP", width: "1%" },
+      { rowSpan: 2, label: "Selisih Hpp", width: "1%" },
       { rowSpan: 2, label: "Status", width: "1%" },
       { rowSpan: 2, label: "Tanggal", width: "1%" },
+    ];
+    const rowSpan = [
+      { label: "Kode", width: "1%" },
+      { label: "Nama" },
+      { label: "Barcode", width: "1%" },
+      { label: "Kelompok" },
+      { label: "Harga beli", width: "1%" },
+      { label: "Akhir" },
+      { label: "Fisik" },
     ];
     return (
       <Layout page="Laporan Opname">
@@ -79,7 +90,7 @@ class OpnameReport extends Component {
         />
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Kode", width: "1%" }, { label: "Nama" }, { label: "Barcode", width: "1%" }, { label: "Kelompok" }, { label: "Harga beli", width: "1%" }]}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={(page) => this.handleService(where_data, page)}
@@ -87,6 +98,7 @@ class OpnameReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
+                    console.log(v);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
@@ -96,9 +108,12 @@ class OpnameReport extends Component {
                         <td className="middle nowrap">{v.barcode}</td>
                         <td className="middle nowrap">{v.nm_kel_brg}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
-                        <td className="middle nowrap text-right">{v.qty_fisik}</td>
-                        <td className="middle nowrap text-right">{v.stock_terakhir}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.stock_terakhir)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.qty_fisik)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir))}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(Math.abs(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * v.hrg_beli)}</td>
                         <td className="middle nowrap">{statusOpname(v.status, true)}</td>
                         <td className="middle nowrap">{toDate(v.tanggal)}</td>
                       </tr>

@@ -115,7 +115,6 @@ class TransaksiWrapper extends Component {
               <div className="card">
                 <div className="card-body">
                   <SelectCommon label={`Cari berdasarkan ${searchby.label.toLowerCase()}`} options={searchby_data} callback={(res) => this.HandleSearch("searchby", res)} dataEdit={searchby.value} />
-
                   <div className="form-group">
                     <div className="input-group input-group-sm">
                       <input

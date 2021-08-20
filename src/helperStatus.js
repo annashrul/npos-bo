@@ -42,6 +42,7 @@ export const STATUS_OPNAME = [
   { value: "", label: "Semua" },
   { value: "0", label: "Belum opname", color: "info" },
   { value: "1", label: "Sudah opname", color: "primary" },
+  { value: "2", label: "Batal", color: "danger" },
 ];
 export const STATUS_APPROVAL_OPNAME = [
   { value: "", label: "Semua" },
