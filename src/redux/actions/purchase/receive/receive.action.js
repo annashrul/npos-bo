@@ -132,7 +132,7 @@ export const storeReceive = (data, param) => {
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
           param({
-            pathname: "/pembelian3plyId/"+data.result.insertId,
+            pathname: "/pembelian3plyId/" + data.result.insertId,
             state: {
               data: rawdata,
               nota: data.result.kode,
@@ -315,7 +315,6 @@ export const rePrintFaktur = (id) => {
       .get(HEADERS.URL + url)
       .then(function (response) {
         Swal.close();
-
         const data = response.data;
         if (data.status === "success") {
           window.open(data.result.nota, "_blank");
@@ -332,27 +331,13 @@ export const rePrintFaktur = (id) => {
             showConfirmButton: false,
           }).then((result) => {
             if (result.dismiss === "cancel") {
-              window.location.reload();
-              // window.open(`/approval_mutasi`, '_top');
+              Swal.close();
             }
           });
           document.getElementById("btnNotaPdf").addEventListener("click", () => {
-            // const win = window.open(data['kd_trx'], '_blank');
-            // if (win != null) {
-            //     win.focus();
-            // }
-
             dispatch(rePrintFaktur(id));
           });
           document.getElementById("btnNota3ply").addEventListener("click", () => {
-            // param({
-            //     pathname: `/approvalAlokasi3ply`,
-            //     state: {
-            //         data: rawdata,
-            //     }
-            // })
-            // Swal.closeModal();
-            // return false;
             const win = window.open(`/pembelian3ply/${id}`, "_blank");
             if (win != null) {
               win.focus();
