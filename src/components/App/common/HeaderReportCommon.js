@@ -195,28 +195,32 @@ class HeaderReportCommon extends Component {
           </div>
         ) : null}
 
-        <div className={`col-6 col-xs-6 col-md-3`}>
-          <label>Cari</label>
-          <div className="input-group">
-            <input
-              type="search"
-              name="any"
-              className="form-control"
-              placeholder="tulis sesuatu disini"
-              value={any}
-              onChange={this.handleChange}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") this.handleSearch(e);
-              }}
-            />
-            <span className="input-group-append">
-              <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                <i className="fa fa-search" />
-              </button>
-              {isProgress(this.props.excelData, () => this.props.callbackExcel())}
-            </span>
+        {this.props.searchAndExcel && (
+          <div className={`col-6 col-xs-6 col-md-3`}>
+            <label>Cari</label>
+            <div className="input-group">
+              <input
+                type="search"
+                name="any"
+                className="form-control"
+                placeholder="tulis sesuatu disini"
+                value={any}
+                onChange={this.handleChange}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
+                }}
+              />
+              <span className="input-group-append">
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                  <i className="fa fa-search" />
+                </button>
+                {isProgress(this.props.excelData, () => this.props.callbackExcel())}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
+
+        {this.props.renderHeader && this.props.renderHeader}
       </div>
     );
   }

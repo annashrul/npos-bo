@@ -2,10 +2,10 @@ import { OPNAME, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
-import { handleGet, handleGetExport } from "../handleHttp";
+import { handleGet, handleGetExport, handlePost } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
+import { swal } from "../../../helper";
+
 export function setDownload(load) {
   return { type: OPNAME.DOWNLOAD, load };
 }
@@ -25,26 +25,14 @@ export function setOpnameFailed(data = []) {
   return { type: OPNAME.FAILED, data };
 }
 
-export const FetchPostingOpname = (page = 1, where = "") => {
+export const FetchPostingOpname = (where = "") => {
   return (dispatch) => {
-    Nprogress.start();
-    dispatch(setLoading(true));
-    let url = `opname/report?page=${page}&status=0`;
-    if (where !== "") {
-      url += where;
-    }
+    let url = `opname/report?status=0`;
+    if (where !== "") url += `&${where}`;
 
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setPostingOpname(data));
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+    handleGet(url, (res) => {
+      dispatch(setPostingOpname(res.data));
+    });
   };
 };
 export const FetchOpname = (where = "") => {
@@ -108,40 +96,10 @@ export const storeOpname = (data) => {
 
 export const storeOpnamePosting = (data, param) => {
   return (dispatch) => {
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Please Wait.",
-      html: "Sending request..",
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      onClose: () => {},
+    handlePost(`opname/posting/${param}`, data, (res, msg, status) => {
+      swal(msg);
+      dispatch(FetchPostingOpname(""));
     });
-
-    dispatch(setLoading(true));
-    let url = "";
-    if (param === "all") {
-      url = `opname/posting/all`;
-    } else {
-      url = `opname/posting/item`;
-    }
-    axios
-      .post(HEADERS.URL + url, data)
-      .then(function (response) {
-        Swal.close();
-        Swal.fire({ allowOutsideClick: false, title: "Success", type: "success", text: "Transaksi Berhasil" }).then((result) => {
-          dispatch(FetchPostingOpname(1));
-        });
-
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        Swal.close();
-        Swal.fire({ allowOutsideClick: false, title: "Failed", type: "error", text: "Gagal posting opname." });
-
-        if (error.response) {
-        }
-      });
   };
 };
 
