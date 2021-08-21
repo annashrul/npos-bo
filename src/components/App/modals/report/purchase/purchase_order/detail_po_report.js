@@ -42,12 +42,13 @@ class DetailPoReport extends Component {
         <ModalHeader toggle={this.toggle}>Detail laporan purchase order</ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
+            md={"col-md-6"}
             data={[
               { title: "No PO", desc: master.no_po },
               { title: "Supplier", desc: master.nama_supplier },
-              { title: "Tanggal PO", desc: toDate(master.tgl_po) },
+              { title: "Tgl PO", desc: toDate(master.tgl_po) },
               { title: "Alamat", desc: master.alamat_supplier },
-              { title: "Tanggal Expired", desc: toDate(master.tgl_kirim) },
+              { title: "Tgl Expired", desc: toDate(master.tgl_kirim) },
               { title: "Telepon", desc: master.telp_supplier },
               { title: "Lokasi", desc: master.lokasi },
               { title: "Keterangan", desc: master.catatan },

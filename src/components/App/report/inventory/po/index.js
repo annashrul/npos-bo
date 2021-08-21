@@ -140,7 +140,7 @@ class PoReport extends Component {
                         <td className="middle nowrap">{v.nama_supplier}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis}</td>
-                        <td className="middle nowrap">{v.nama_kasir}</td>
+                        <td className="middle nowrap">{v.operator}</td>
                         <td className="middle nowrap">{statusPurchaseOrder(v.status, true)}</td>
                       </tr>
                     );
