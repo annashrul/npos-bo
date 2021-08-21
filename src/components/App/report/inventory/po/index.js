@@ -41,6 +41,7 @@ class PoReport extends Component {
   }
 
   handleService(res, page = 1) {
+    console.log("handle service");
     if (res !== undefined) {
       let where = getFetchWhere(res, page);
       let state = { where_data: where };
@@ -139,7 +140,7 @@ class PoReport extends Component {
                         <td className="middle nowrap">{v.nama_supplier}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis}</td>
-                        <td className="middle nowrap">{v.kd_kasir}</td>
+                        <td className="middle nowrap">{v.nama_kasir}</td>
                         <td className="middle nowrap">{statusPurchaseOrder(v.status, true)}</td>
                       </tr>
                     );
