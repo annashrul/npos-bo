@@ -61,25 +61,23 @@ class FormRak extends Component {
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
     parseData["title"] = this.state.title;
-    
+
     if (!isEmptyOrUndefined(parseData["title"], "title")) return;
 
-    if(this.props.detail.id === undefined || this.props.fastAdd){
+    if (this.props.detail.id === undefined || this.props.fastAdd) {
       this.props.dispatch(createRak(parseData));
       if (this.props.fastAdd === undefined) {
         this.props.dispatch(ModalToggle(false));
       }
-
       if (this.props.fastAdd === true) {
         this.props.dispatch(ModalType("formProduct"));
+        // this.props.dispatch(ModalToggle(true));
+        // this.props.dispatch(ModalType("formProduct"));
       }
     } else {
       this.props.dispatch(updateRak(this.state.id, parseData));
-      
       this.props.dispatch(ModalToggle(false));
-
     }
-
   }
   getFiles(files) {
     this.setState({
@@ -89,38 +87,22 @@ class FormRak extends Component {
 
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formRak"}
-        size="sm"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id === undefined || this.props.fastAdd ? "Tambah Rak"
-            : "Ubah Rak"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formRak"} size="sm">
+        <ModalHeader toggle={this.toggle}>{this.props.detail.id === undefined || this.props.fastAdd ? "Tambah Rak" : "Ubah Rak"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="row">
               <div className="col-md-12">
                 <div className="form-group">
                   <label>Nama Rak</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="title"
-                    value={this.state.title}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleChange} />
                 </div>
               </div>
             </div>
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary">

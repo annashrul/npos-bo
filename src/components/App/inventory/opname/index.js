@@ -176,7 +176,6 @@ class TrxOpname extends Component {
           data["kd_kasir"] = auth.user.id;
           data["tgl"] = moment(tgl_order).format("yyyy-MM-DD");
           data["lokasi"] = location.value;
-          console.log(location);
 
           for (let i = 0; i < databrg.length; i++) {
             let item = res[i];
@@ -195,7 +194,6 @@ class TrxOpname extends Component {
             });
           }
           data["detail"] = detail;
-          console.log(data);
           this.props.dispatch(
             storeOpname(data, () => {
               this.handleClear();
