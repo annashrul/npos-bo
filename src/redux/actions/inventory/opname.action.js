@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { handleGet, handleGetExport, handlePost } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
-import { swal } from "../../../helper";
+import { swal, swallOption } from "../../../helper";
 
 export function setDownload(load) {
   return { type: OPNAME.DOWNLOAD, load };
@@ -59,38 +59,47 @@ export const FetchOpnameExcel = (where = "", perpage = 99999) => {
   };
 };
 
-export const storeOpname = (data) => {
+export const storeOpname = (data, callback) => {
   return (dispatch) => {
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Please Wait.",
-      html: "Sending request..",
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      onClose: () => {},
-    });
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `opname`;
-    axios
-      .post(url, data)
-      .then(function (response) {
-        Swal.close();
-        Swal.fire({ allowOutsideClick: false, title: "Success", type: "success", text: "Transaksi Berhasil" }).then((result) => {
-          destroy("opname");
-          localStorage.removeItem("location_opname");
-          window.location.reload(false);
+    handlePost("opname", data, (res, msg, status) => {
+      if (status) {
+        swallOption("transaksi berhasil", () => {
+          callback();
         });
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        Swal.close();
+      } else {
+        swal(msg);
+      }
+    });
+    // Swal.fire({
+    //   allowOutsideClick: false,
+    //   title: "Please Wait.",
+    //   html: "Sending request..",
+    //   onBeforeOpen: () => {
+    //     Swal.showLoading();
+    //   },
+    //   onClose: () => {},
+    // });
+    // dispatch(setLoading(true));
+    // const url = HEADERS.URL + `opname`;
+    // axios
+    //   .post(url, data)
+    //   .then(function (response) {
+    //     Swal.close();
+    //     Swal.fire({ allowOutsideClick: false, title: "Success", type: "success", text: "Transaksi Berhasil" }).then((result) => {
+    //       destroy("opname");
+    //       localStorage.removeItem("location_opname");
+    //       window.location.reload(false);
+    //     });
+    //     dispatch(setLoading(false));
+    //   })
+    //   .catch(function (error) {
+    //     Swal.close();
 
-        Swal.fire({ allowOutsideClick: false, title: "Failed", type: "error", text: error.response === undefined ? "error!" : error.response.data.msg });
+    //     Swal.fire({ allowOutsideClick: false, title: "Failed", type: "error", text: error.response === undefined ? "error!" : error.response.data.msg });
 
-        if (error.response) {
-        }
-      });
+    //     if (error.response) {
+    //     }
+    //   });
   };
 };
 

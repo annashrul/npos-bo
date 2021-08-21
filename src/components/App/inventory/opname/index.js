@@ -147,7 +147,7 @@ class TrxOpname extends Component {
       this.getData();
     });
   }
-  
+
   getSaldoStock(val, i) {
     let data = this.state.brgval[i];
     let saldo_stock = data.stock;
@@ -171,12 +171,13 @@ class TrxOpname extends Component {
         swallOption("Pastikan data yang anda masukan sudah benar!", () => {
           let detail = [];
           let data = {};
-          const { tgl_order, catatan, location, databrg } = this.state;
-          const { nota, auth } = this.props;
+          const { tgl_order, location, databrg } = this.state;
+          const { auth } = this.props;
           data["kd_kasir"] = auth.user.id;
           data["tgl"] = moment(tgl_order).format("yyyy-MM-DD");
-          data["lokasi"] = location.label;
-          data["keterangan"] = isEmptyOrUndefined(catatan) ? catatan : "-";
+          data["lokasi"] = location.value;
+          console.log(location);
+
           for (let i = 0; i < databrg.length; i++) {
             let item = res[i];
             let qty = rmComma(item.qty);
@@ -185,29 +186,22 @@ class TrxOpname extends Component {
               handleError("", "Qty tidak boleh kosong");
               return;
             }
-            let saldo_stock = this.getSaldoStock(qty, i);
             detail.push({
-              brcd_brg: item.barcode,
-              status: item.status,
-              qty_adjust: qty,
-              stock_terakhir: saldo_stock,
+              kd_brg: item.kd_brg,
+              qty_fisik: item.qty,
+              stock_terakhir: item.stock,
               hrg_beli: item.harga_beli,
+              barcode: item.barcode,
             });
           }
           data["detail"] = detail;
-          data["master"] = databrg;
-          data["nota"] = nota;
-          data["logo"] = auth.user.logo;
-          data["user"] = auth.user.username;
-          data["lokasi_val"] = location.value;
-          data["alamat"] = auth.user.alamat;
-          data["site_title"] = auth.user.site_title === undefined ? auth.user.title : auth.user.site_title;
-            this.props.dispatch(
-              storeAdjusment(data, () => {
-                this.handleClear();
-                this.getData();
-              })
-            );
+          console.log(data);
+          this.props.dispatch(
+            storeOpname(data, () => {
+              this.handleClear();
+              this.getData();
+            })
+          );
         });
       }
     });
