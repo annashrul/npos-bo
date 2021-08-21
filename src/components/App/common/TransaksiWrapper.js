@@ -136,7 +136,7 @@ class TransaksiWrapper extends Component {
                       </span>
                     </div>
                   </div>
-                  <div className="people-list" style={{ scrollBehavior: "smooth", height: "300px", maxHeight: "100%", overflowY: "scroll" }}>
+                  <div className="people-list" style={{ scrollBehavior: "smooth", overflowY: "scroll", height: "300px", maxHeight: "100%" }}>
                     <div id="chat_user_2">
                       <ul className="chat-list list-unstyled">
                         {data.length !== 0 ? (

@@ -83,6 +83,7 @@ class AlokasiReport extends Component {
       { rowSpan: 2, label: "Status", width: "1%" },
       { rowSpan: 2, label: "Tanggal", width: "1%" },
     ];
+    const rowSpan = [{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }];
     return (
       <Layout page="Laporan Alokasi">
         <HeaderReportCommon
@@ -99,7 +100,7 @@ class AlokasiReport extends Component {
         />
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -137,8 +138,8 @@ class AlokasiReport extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
         />
 

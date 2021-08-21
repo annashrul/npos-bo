@@ -144,10 +144,11 @@ class HeaderReportCommon extends Component {
 
   render() {
     const { dateFrom, dateTo, location, status, column, sort, any, status_data, column_data, sort_data, other, other_data } = this.state;
-    let col = "col-md-3";
+    let col = "col-md-2";
     if (this.props.col) {
       col = this.props.col;
     }
+    console.log(this.props.isAll);
     return (
       <div className="row">
         <div className={`col-6 col-xs-6 ${col}`}>
@@ -195,8 +196,8 @@ class HeaderReportCommon extends Component {
           </div>
         ) : null}
 
-        {this.props.searchAndExcel && (
-          <div className={`col-6 col-xs-6 col-md-3`}>
+        {this.props.isNotSearch == undefined && (
+          <div className={`col-6 col-xs-6 col-md-2`}>
             <label>Cari</label>
             <div className="input-group">
               <input

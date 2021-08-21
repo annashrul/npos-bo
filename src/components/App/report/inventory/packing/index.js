@@ -115,8 +115,8 @@ class PackingReport extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
         />
         {this.props.isOpen && isModalExport ? <PackingReportExcel startDate={startDate} endDate={endDate} /> : null}

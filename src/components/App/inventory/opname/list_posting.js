@@ -82,6 +82,7 @@ class ListPosting extends Component {
         <div className="row">
           <div className="col-md-12">
             <HeaderReportCommon
+              isNotSearch={true}
               pathName="ApprovalOpnameTransaction"
               isLocation={true}
               callbackWhere={(res) => this.handleService(res)}
@@ -140,7 +141,7 @@ class ListPosting extends Component {
                         </tr>
                       );
                     })
-                  : noData(head.length)
+                  : noData(head.length + rowSpan.length)
               }
               footer={[
                 {

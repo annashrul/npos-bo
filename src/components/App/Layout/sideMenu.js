@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
-
 class SideMenu extends Component {
   constructor(props) {
     super(props);
@@ -576,7 +575,17 @@ class SideMenu extends Component {
         if (r_arsip_penjualan !== "0" || r_arsip_retur_penjualan !== "0" || r_sale_omset !== "0" || r_sale_omset_periode !== "0" || r_penjualan_by_customer !== "0") {
           this.setState({ modul_report: true, modul_report_penjualan: true });
         }
-        if (r_stock !== "0" || r_nilai_persediaan!== "0" || r_adjusment !== "0" || r_alokasi !== "0" || r_delivery_note !== "0" || r_opname !== "0" || r_mutasi !== "0" || r_alokasi_trx !== "0" || r_expedisi !== "0") {
+        if (
+          r_stock !== "0" ||
+          r_nilai_persediaan !== "0" ||
+          r_adjusment !== "0" ||
+          r_alokasi !== "0" ||
+          r_delivery_note !== "0" ||
+          r_opname !== "0" ||
+          r_mutasi !== "0" ||
+          r_alokasi_trx !== "0" ||
+          r_expedisi !== "0"
+        ) {
           this.setState({ modul_report: true, modul_report_inventory: true });
         }
         if (r_purchase_order !== "0" || r_receive !== "0" || r_arsip_pembelian_by_supplier !== "0") {
@@ -852,6 +861,7 @@ class SideMenu extends Component {
       }
     });
   };
+
   render() {
     // const clickAble = {
     //     color: '#a6b6d0',
@@ -1366,43 +1376,31 @@ class SideMenu extends Component {
                 >
                   <li className={path === "/report/sale_archive" ? "active" : ""} style={this.state.r_arsip_penjualan === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/sale_archive" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-archive" />
                       Arsip Penjualan
                     </Link>
                   </li>
                   <li className={path === "/report/sale_retur_archive" ? "active" : ""} style={this.state.r_arsip_retur_penjualan === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/sale_retur_archive" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-archive" />
                       Arsip Retur Penjualan
                     </Link>
                   </li>
                   <li className={path === "/report/sale_by_cust_archive" ? "active" : ""} style={this.state.r_penjualan_by_customer === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/sale_by_cust_archive" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-assignment-check" />
                       Penjualan by Cust.
                     </Link>
                   </li>
                   <li className={path === "/report/sale_by_product_archive" ? "active" : ""} style={this.state.r_penjualan_by_customer === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/sale_by_product_archive" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-assignment-check" />
                       Penjualan by Barang
                     </Link>
                   </li>
                   <li className={path === "/report/sale_omset" ? "active" : ""} style={this.state.r_sale_omset === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/sale_omset" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-assignment-check" />
                       Omset Penjualan
                     </Link>
                   </li>
-                  <li className={path === "/report/sale_omset_periode" ? "active" : ""} style={this.state.r_sale_omset_periode === "0" ? { display: "none" } : { display: "block" }}>
+                  <li className={`${path === "/report/sale_omset_periode" ? "active" : ""}`} style={{ display: this.state.r_sale_omset_periode === "0" ? "none" : "block" }}>
                     <Link to="/report/sale_omset_periode" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-assignment-check" />
                       Omset Penj. Periode
                     </Link>
                   </li>

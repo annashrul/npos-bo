@@ -77,6 +77,8 @@ class DnReport extends Component {
       { rowSpan: 2, label: "Status", width: "1%" },
       { rowSpan: 2, label: "Tanggal", width: "1%" },
     ];
+
+    const rowSpan = [{ label: "Delivery note" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }];
     return (
       <Layout page="Laporan delivery note">
         <HeaderReportCommon
@@ -93,7 +95,7 @@ class DnReport extends Component {
         />
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Delivery note" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -123,8 +125,8 @@ class DnReport extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
         />
 
