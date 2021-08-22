@@ -42,6 +42,12 @@ export const STATUS_OPNAME = [
   { value: "", label: "Semua" },
   { value: "0", label: "Belum opname", color: "info" },
   { value: "1", label: "Sudah opname", color: "primary" },
+  { value: "2", label: "Batal", color: "danger" },
+];
+export const STATUS_APPROVAL_OPNAME = [
+  { value: "", label: "Semua" },
+  { value: "0", label: "Belum posting", color: "info" },
+  { value: "1", label: "Sudah posting", color: "primary" },
 ];
 export const STATUS_PACKING_DAN_EXPEDISI = [
   { value: "", label: "Semua" },
@@ -87,6 +93,9 @@ export const statusMutasi = (res, isButton = false) => {
 };
 export const statusOpname = (res, isButton = false) => {
   return handleLoop(res, STATUS_OPNAME, isButton);
+};
+export const statusApprovalOpname = (res, isButton = false) => {
+  return handleLoop(res, STATUS_APPROVAL_OPNAME, isButton);
 };
 export const statusPacking = (res, isButton = false) => {
   return handleLoop(res, STATUS_PACKING_DAN_EXPEDISI, isButton);

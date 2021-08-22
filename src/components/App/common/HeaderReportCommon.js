@@ -30,30 +30,30 @@ class HeaderReportCommon extends Component {
     let state = {};
     if (props.columnData !== undefined && props.columnData.length > 0) {
       Object.assign(state, { column_data: props.columnData });
-      this.handleSelect("column", props.columnData[0]);
+      // this.handleSelect("column", props.columnData[0]);
     }
     if (props.statusData !== undefined && props.statusData.length > 0) {
       Object.assign(state, { status_data: props.statusData });
-      this.handleSelect("status", props.statusData[0]);
+      // this.handleSelect("status", props.statusData[0]);
     }
     if (props.sortData !== undefined && props.sortData.length > 0) {
       Object.assign(state, { sort_data: props.sortData });
-      this.handleSelect("sort", props.sortData[0]);
+      // this.handleSelect("sort", props.sortData[0]);
     }
     if (props.otherData !== undefined && props.otherData.length > 0) {
       Object.assign(state, { other_data: props.otherData });
-      this.handleSelect("other_data", props.otherData[0]);
+      // this.handleSelect("other_data", props.otherData[0]);
     }
+    this.handleService();
     this.setState(state);
   }
 
   componentWillMount() {
     this.getProps(this.props);
-    this.handleService();
   }
   componentDidMount() {
-    this.getProps(this.props);
-    this.handleService();
+    // this.getProps(this.props);
+    // this.handleService();
   }
 
   handleService() {
@@ -69,7 +69,6 @@ class HeaderReportCommon extends Component {
     let getOther = props.isOther ? getStorage(`${props.otherState}Storage${path}`) : "";
     let where = `page=1`;
     let state = {};
-
     if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
       where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
       Object.assign(state, { dateFrom: getDateFrom, dateTo: getDateTo });
@@ -116,6 +115,7 @@ class HeaderReportCommon extends Component {
 
   handleSelect(state, res) {
     console.log(state, res);
+
     this.setState({ [state]: res.value });
     if (this.props.isOther) {
       if (state === this.props.otherState) setStorage(`${state}Storage${this.props.pathName}`, res.value);
@@ -144,10 +144,11 @@ class HeaderReportCommon extends Component {
 
   render() {
     const { dateFrom, dateTo, location, status, column, sort, any, status_data, column_data, sort_data, other, other_data } = this.state;
-    let col = "col-md-3";
+    let col = "col-md-2";
     if (this.props.col) {
       col = this.props.col;
     }
+    console.log(this.props.isAll);
     return (
       <div className="row">
         <div className={`col-6 col-xs-6 ${col}`}>
@@ -195,28 +196,32 @@ class HeaderReportCommon extends Component {
           </div>
         ) : null}
 
-        <div className={`col-6 col-xs-6 col-md-3`}>
-          <label>Cari</label>
-          <div className="input-group">
-            <input
-              type="search"
-              name="any"
-              className="form-control"
-              placeholder="tulis sesuatu disini"
-              value={any}
-              onChange={this.handleChange}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") this.handleSearch(e);
-              }}
-            />
-            <span className="input-group-append">
-              <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
-                <i className="fa fa-search" />
-              </button>
-              {isProgress(this.props.excelData, () => this.props.callbackExcel())}
-            </span>
+        {this.props.isNotSearch == undefined && (
+          <div className={`col-6 col-xs-6 col-md-2`}>
+            <label>Cari</label>
+            <div className="input-group">
+              <input
+                type="search"
+                name="any"
+                className="form-control"
+                placeholder="tulis sesuatu disini"
+                value={any}
+                onChange={this.handleChange}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
+                }}
+              />
+              <span className="input-group-append">
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                  <i className="fa fa-search" />
+                </button>
+                {isProgress(this.props.excelData, () => this.props.callbackExcel())}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
+
+        {this.props.renderHeader && this.props.renderHeader}
       </div>
     );
   }

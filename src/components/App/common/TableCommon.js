@@ -18,13 +18,14 @@ class TableCommon extends Component {
   }
 
   render() {
+    let props = this.props;
     return (
       <div>
         <div style={{ overflowX: "auto" }}>
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                {this.props.head.map((res, index) => {
+                {props.head.map((res, index) => {
                   return (
                     <th
                       style={{ backgroundColor: res.colSpan > 1 ? "#EEEEEE" : "transparent" }}
@@ -39,9 +40,9 @@ class TableCommon extends Component {
                   );
                 })}
               </tr>
-              {this.props.rowSpan && (
+              {props.rowSpan && (
                 <tr>
-                  {this.props.rowSpan.map((res, index) => {
+                  {props.rowSpan.map((res, index) => {
                     return (
                       <th className={`text-black middle nowrap ${res.className ? res.className : ""}`} key={index}>
                         {res.label}
@@ -52,19 +53,19 @@ class TableCommon extends Component {
               )}
             </thead>
             <tbody>
-              {this.props.renderRow === undefined
-                ? typeof this.props.body
-                  ? this.props.body.length > 0
-                    ? this.props.body.map((res, index) => {
+              {props.renderRow === undefined
+                ? typeof props.body
+                  ? props.body.length > 0
+                    ? props.body.map((res, index) => {
                         return (
                           <tr key={index}>
-                            {this.props.meta !== undefined && <td className={`text-center middle nowrap`}>{generateNo(index, this.props.meta.current_page)}</td>}
-                            {this.props.action && (
+                            {props.meta !== undefined && <td className={`text-center middle nowrap`}>{generateNo(index, props.meta.current_page)}</td>}
+                            {props.action && (
                               <td className={`text-center middle nowrap`}>
-                                <ButtonActionCommon action={this.props.action} callback={(e) => this.props.callback(e, index)} />
+                                <ButtonActionCommon action={props.action} callback={(e) => props.callback(e, index)} />
                               </td>
                             )}
-                            {this.props.label.map((val, key) => {
+                            {props.label.map((val, key) => {
                               return (
                                 <td key={key} className={`${val.isCurrency !== undefined && "text-right"} middle nowrap ${val.className && val.className}`}>
                                   {this.checkTypeLabel(res[val.label], val)}
@@ -74,13 +75,13 @@ class TableCommon extends Component {
                           </tr>
                         );
                       })
-                    : noData(this.props.head.length)
-                  : noData(this.props.head.length)
-                : this.props.renderRow}
+                    : noData(props.head.length)
+                  : noData(props.head.length)
+                : props.renderRow}
             </tbody>
-            {this.props.footer && (
+            {props.footer && (
               <tfoot style={{ border: "1px solid black" }}>
-                {this.props.footer.map((val, key) => {
+                {props.footer.map((val, key) => {
                   return (
                     <tr key={key} style={{ backgroundColor: "#EEEEEE" }}>
                       {val.data.map((res, index) => {
@@ -98,9 +99,9 @@ class TableCommon extends Component {
           </table>
         </div>
 
-        {this.props.meta !== undefined && (
+        {props.meta !== undefined && (
           <div style={{ marginTop: "20px", float: "right" }}>
-            <Paginationq current_page={this.props.meta.current_page} per_page={this.props.meta.per_page} total={this.props.meta.total} callback={(page) => this.props.callbackPage(page)} />
+            <Paginationq current_page={props.meta.current_page} per_page={props.meta.per_page} total={props.meta.total} callback={(page) => props.callbackPage(page)} />
           </div>
         )}
       </div>

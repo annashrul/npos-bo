@@ -67,6 +67,7 @@ class SaleByCustArchive extends Component {
       { rowSpan: 2, label: "Service", width: "1%" },
       { rowSpan: 2, label: "Qty", width: "1%" },
     ];
+    const rowSpan = [{ label: "Item" }, { label: "Transaksi" }];
 
     let totalGrossSalePerHalaman = 0;
     let totalDiskonItemPerHalaman = 0;
@@ -87,7 +88,7 @@ class SaleByCustArchive extends Component {
 
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Item" }, { label: "Transaksi" }]}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -113,8 +114,8 @@ class SaleByCustArchive extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {

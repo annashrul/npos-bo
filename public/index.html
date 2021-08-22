@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#000000">
-  <!--
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
+    <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-  <link id='favicon' rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
-  <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
-  <!-- <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet"> -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link id="favicon" rel="shortcut icon" href="%PUBLIC_URL%/favicon.png" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/style.css" />
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400&display=swap" rel="stylesheet"> -->
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@100&display=swap" rel="stylesheet"> -->
-  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-  <!--
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@100&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet" />
+    <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -27,665 +26,640 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-  <title>N-pos</title>
-
-
-  <style>
-    html,
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p,
-    li,
-    td,
-    th,
-    a,
-    .apexcharts-legend-text,
-    .apexcharts-yaxis-label,
-    .apexcharts-text,
-    .apexcharts-active,
-    .apexcharts-xaxistooltip,
-    .apexcharts-yaxistooltip,
-    .apexcharts-yaxistooltip-text,
-    button.cancelBtn,
-    button.applyBtn,
-    .calendar-table>table,
-    .off,
-    .ends,
-    .available,
-    .month,
-    .drp-selected,
-    .swal2-html-container,
-    .swal2-title {
-      font-family: 'Varela Round', sans-serif !important;
-      font-weight: 300;
-      color: rgb(56, 62, 67)
-    }
-
-
-    .disabled {
-      cursor: not-allowed !important;
-    }
-
-    .bold {
-      font-weight: bold;
-    }
-
-    .dNone {
-      display: none;
-    }
-
-    .dBlock {
-      display: block;
-    }
-
-    ul.pagination>li.disabled {
-      cursor: not-allowed !important;
-    }
-
-    .page-item.active .page-link {
-      z-index: 1;
-      color: #fff !important;
-      background-color: #283593 !important;
-
-    }
-
-    .page-link {
-      position: relative;
-      display: block;
-      padding: .5rem .75rem;
-      margin-left: -1px;
-      line-height: 1.25;
-      color: #283593 !important;
-      background-color: transparent !important;
-      border: 1px solid #283593 !important;
-      cursor: pointer;
-    }
-
-    .page-item:first-child .page-link {
-      margin-left: 0;
-    }
-
-    .page-link:hover {
-      background-color: #283593 !important;
-
-      z-index: 1;
-      color: #fff !important;
-    }
-
-    .page-link:focus {
-      z-index: 2;
-      outline: 0;
-      box-shadow: none !important;
-    }
-
-
-    .new-checkbox input:checked+.slider {
-      background-color: #283593 !important;
-    }
-
-    .css-9gakcf-option {
-      background-color: #283593 !important;
-      color: hsl(0, 0%, 100%);
-      cursor: default;
-      display: block;
-      font-size: inherit;
-      width: 100%;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      box-sizing: border-box;
-    }
-
-    .css-1n7v3ny-option:active {
-      color: hsl(0, 0%, 100%);
-      background-color: #283593 !important;
-    }
-
-    .css-yt9ioa-option:active {
-      background-color: red !important;
-      color: hsl(0, 0%, 100%);
-    }
-
-    .css-tlfecz-indicatorContainer:hover {
-      color: hsl(0, 0%, 100%);
-    }
-
-
-    .css-1pahdxg-control:hover {
-      border: 1px solid #283593 !important;
-    }
-
-    .css-1pahdxg-control {
-      border: 1px solid #283593 !important;
-      -webkit-align-items: center;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      background-color: hsl(0, 0%, 100%);
-      border-radius: 4px;
-      box-shadow: 0 0 0 0px #283593 !important;
-      cursor: default;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-flex-wrap: wrap;
-      -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      min-height: 38px;
-      outline: 0 !important;
-      position: relative;
-      -webkit-transition: all 100ms;
-      transition: all 100ms;
-      box-sizing: border-box;
-    }
-
-    span.circle {
-      background: #5d78ff;
-      border-radius: 50%;
-      -moz-border-radius: 50%;
-      -webkit-border-radius: 50%;
-      color: white;
-      display: inline-block;
-      font-weight: bold;
-      line-height: 40px;
-      margin-right: 5px;
-      text-align: center;
-      width: 40px;
-    }
-
-    .custom-map-modal {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
-    .custom-map-modal>.modal-content {
-      height: auto;
-      min-height: 100%;
-      width: 100%;
-      /*min-width: 1520px;*/
-      border-radius: 0;
-    }
-
-
-    .customDatePickerWidth,
-    .customDatePickerWidth>div.react-datepicker-wrapper,
-    .customDatePickerWidth>div>div.react-datepicker__input-container .customDatePickerWidth>div>div.react-datepicker__input-container input {
-      width: 100%;
-      height: 100%;
-    }
-
-    .daterangepicker td.active,
-    .daterangepicker td.active:hover {
-      background-color: #283593 !important;
-      border-color: transparent;
-      color: #fff;
-    }
-
-    .ranges>ul>li.active {
-      background-color: #283593 !important;
-    }
-
-    .react-datepicker__input-container {
-      width: inherit;
-      height: inherit;
-    }
-
-    .react-datepicker__input-container input {
-      width: inherit;
-      height: 100%;
-    }
-
-    #date {
-      width: 183px !important;
-
-    }
-
-    .react-datepicker-wrapper {
-      width: 100%;
-    }
-
-    .react-datepicker-wrapper,
-    .react-datepicker__input-container,
-    .react-datepicker__input-container input {
-      display: block;
-      width: 100%;
-    }
-
-    .react-tabs__tab-list {
-      border-bottom: none !important;
-    }
-
-    .react-tabs__tab--selected {
-      /*background: #fff;*/
-      border-color: #283593 !important;
-      /*color: black;*/
-      color: #fff !important;
-      background-color: #283593 !important;
-      border-radius: 4px !important;
-    }
-
-    .react-tabs__tab {
-      display: inline-block !important;
-      border: 1px solid #283593 !important;
-      /*border-bottom: none!important;*/
-      bottom: -1px !important;
-      position: relative !important;
-      list-style: none !important;
-      padding: 6px 12px !important;
-      cursor: pointer !important;
-      border-radius: 5px 5px 5px 5px !important;
-      margin-right: 3px !important;
-    }
-
-    .fade {
-      transition: opacity .15s linear;
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    .modal-header {
-      background-color: #283593 !important;
-    }
-
-    .modal-title,
-    .close {
-      color: white !important;
-    }
-
-    .modal-content {
-      border-color: #283593 !important;
-    }
-
-    .nowrap {
-      white-space: nowrap !important;
-    }
-
-    .middle {
-      vertical-align: middle !important;
-    }
-
-    input[type="file"] {
-      border-radius: 4px !important;
-      border: 1px solid hsl(0, 0%, 80%) !important;
-      padding-top: 5px;
-      padding-left: 5px;
-      width: 100% !important;
-      height: 38px !important;
-    }
-
-    input.form-control {
-      color: #333333 !important;
-      font-size: 14px;
-      border-radius: 4px !important;
-      border: 1px solid hsl(0, 0%, 80%);
-      /* margin-top: 1px!important; */
-      width: 100%;
-      height: 38px !important;
-    }
-
-    .subtitle {
-      color: #a1887f;
-      font-weight: bold;
-      word-break: break-all;
-      font-size: 11px
-    }
-
-    .titles {
-      color: black;
-      font-weight: bold;
-      word-break: break-all;
-      font-size: 12px;
-    }
-
-    .title-intable {
-      font-size: 11px !important;
-    }
-
-    .subtitle-intable {
-      font-size: 10px !important;
-    }
-
-    span.input-group-append {
-      z-index: 0;
-    }
-
-    .nbb {
-      border-bottom: none !important;
-    }
-
-    .nbt {
-      border-top: none !important;
-    }
-
-    .nbl {
-      border-left: none !important;
-    }
-
-    .nbr {
-      border-right: none !important;
-    }
-
-    .bt {
-      background-color: transparent !important;
-    }
-
-
-
-    select.form-control {
-      color: #333333 !important;
-      font-size: 14px !important;
-      border-radius: 4px !important;
-      border: 1px solid hsl(0, 0%, 80%) !important;
-      width: 100%;
-      height: 38px !important;
-    }
-
-    select option:hover,
-    select option:focus,
-    select option:checked,
-    select option:active {
-      background: linear-gradient(#000000, #000000);
-      background-color: #283593 !important;
-      color: #fff !important;
-    }
-
-    input.form-control:focus {
-      border: 1px solid #283593 !important;
-    }
-
-    select.form-control:focus {
-      border: 1px solid #283593 !important;
-    }
-
-    input[type=checkbox]:focus {
-      outline: 1px solid transparent !important;
-    }
-
-    input[readonly] {
-
-      background-color: transparent !important;
-    }
-
-    input.in-table {
-      height: 31px !important;
-    }
-
-    select.in-table {
-      height: 31px !important;
-    }
-
-    .in-table {
-      height: 31px !important;
-    }
-
-    input[type=checkbox] {
-      background-color: #DDD;
-      border-radius: 4px;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      width: 17px;
-      height: 17px;
-      cursor: pointer;
-      position: relative;
-      top: 5px;
-    }
-
-    .table-bordered {
-      border: 1px solid hsl(0, 0%, 80%) !important;
-    }
-
-    .bg-light {
-      border: 1px solid hsl(0, 0%, 80%) !important;
-      background-color: transparent !important;
-    }
-
-    table.table-noborder>tbody,
-    table.table-noborder>tfoot {
-      border: 1px solid hsl(0, 0%, 80%) !important;
-    }
-
-    table.table-noborder>thead>tr>th,
-    table.table-noborder>tbody>tr>td,
-    table.table-noborder>tfoot>tr>th {
-      padding-top: 5px !important;
-      padding-bottom: 5px !important;
-      padding-left: 10px !important;
-      padding-right: 10px !important;
-      border: 1px solid hsl(0, 0%, 80%) !important;
-    }
-
-    table.table-noborder>tbody>tr>td {
-      font-size: 12px;
-    }
-
-    /* tr:nth-child(even) {
+    <title>N-pos</title>
+
+    <style>
+      * {
+        font-weight: 500 !important;
+      }
+      html,
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      li,
+      td,
+      th,
+      a,
+      .apexcharts-legend-text,
+      .apexcharts-yaxis-label,
+      .apexcharts-text,
+      .apexcharts-active,
+      .apexcharts-xaxistooltip,
+      .apexcharts-yaxistooltip,
+      .apexcharts-yaxistooltip-text,
+      button.cancelBtn,
+      button.applyBtn,
+      .calendar-table > table,
+      .off,
+      .ends,
+      .available,
+      .month,
+      .drp-selected,
+      .swal2-html-container,
+      .swal2-title {
+        font-family: "Varela Round", sans-serif !important;
+        color: rgb(56, 62, 67);
+      }
+
+      .disabled {
+        cursor: not-allowed !important;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .dNone {
+        display: none;
+      }
+
+      .dBlock {
+        display: block;
+      }
+
+      ul.pagination > li.disabled {
+        cursor: not-allowed !important;
+      }
+
+      .page-item.active .page-link {
+        z-index: 1;
+        color: #fff !important;
+        background-color: #283593 !important;
+      }
+
+      .page-link {
+        position: relative;
+        display: block;
+        padding: 0.5rem 0.75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #283593 !important;
+        background-color: transparent !important;
+        border: 1px solid #283593 !important;
+        cursor: pointer;
+      }
+
+      .page-item:first-child .page-link {
+        margin-left: 0;
+      }
+
+      .page-link:hover {
+        background-color: #283593 !important;
+
+        z-index: 1;
+        color: #fff !important;
+      }
+
+      .page-link:focus {
+        z-index: 2;
+        outline: 0;
+        box-shadow: none !important;
+      }
+
+      .new-checkbox input:checked + .slider {
+        background-color: #283593 !important;
+      }
+
+      .css-9gakcf-option {
+        background-color: #283593 !important;
+        color: hsl(0, 0%, 100%);
+        cursor: default;
+        display: block;
+        font-size: inherit;
+        width: 100%;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        box-sizing: border-box;
+      }
+
+      .css-1n7v3ny-option:active {
+        color: hsl(0, 0%, 100%);
+        background-color: #283593 !important;
+      }
+
+      .css-yt9ioa-option:active {
+        background-color: red !important;
+        color: hsl(0, 0%, 100%);
+      }
+
+      .css-tlfecz-indicatorContainer:hover {
+        color: hsl(0, 0%, 100%);
+      }
+
+      .css-1pahdxg-control:hover {
+        border: 1px solid #283593 !important;
+      }
+
+      .css-1pahdxg-control {
+        border: 1px solid #283593 !important;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        background-color: hsl(0, 0%, 100%);
+        border-radius: 4px;
+        box-shadow: 0 0 0 0px #283593 !important;
+        cursor: default;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        min-height: 38px;
+        outline: 0 !important;
+        position: relative;
+        -webkit-transition: all 100ms;
+        transition: all 100ms;
+        box-sizing: border-box;
+      }
+
+      span.circle {
+        background: #5d78ff;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        color: white;
+        display: inline-block;
+        line-height: 40px;
+        margin-right: 5px;
+        text-align: center;
+        width: 40px;
+      }
+
+      .custom-map-modal {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .custom-map-modal > .modal-content {
+        height: auto;
+        min-height: 100%;
+        width: 100%;
+        /*min-width: 1520px;*/
+        border-radius: 0;
+      }
+
+      .customDatePickerWidth,
+      .customDatePickerWidth > div.react-datepicker-wrapper,
+      .customDatePickerWidth > div > div.react-datepicker__input-container .customDatePickerWidth > div > div.react-datepicker__input-container input {
+        width: 100%;
+        height: 100%;
+      }
+
+      .daterangepicker td.active,
+      .daterangepicker td.active:hover {
+        background-color: #283593 !important;
+        border-color: transparent;
+        color: #fff;
+      }
+
+      .ranges > ul > li.active {
+        background-color: #283593 !important;
+      }
+
+      .react-datepicker__input-container {
+        width: inherit;
+        height: inherit;
+      }
+
+      .react-datepicker__input-container input {
+        width: inherit;
+        height: 100%;
+      }
+
+      #date {
+        width: 183px !important;
+      }
+
+      .react-datepicker-wrapper {
+        width: 100%;
+      }
+
+      .react-datepicker-wrapper,
+      .react-datepicker__input-container,
+      .react-datepicker__input-container input {
+        display: block;
+        width: 100%;
+      }
+
+      .react-tabs__tab-list {
+        border-bottom: none !important;
+      }
+
+      .react-tabs__tab--selected {
+        /*background: #fff;*/
+        border-color: #283593 !important;
+        /*color: black;*/
+        color: #fff !important;
+        background-color: #283593 !important;
+        border-radius: 4px !important;
+      }
+
+      .react-tabs__tab {
+        display: inline-block !important;
+        border: 1px solid #283593 !important;
+        /*border-bottom: none!important;*/
+        bottom: -1px !important;
+        position: relative !important;
+        list-style: none !important;
+        padding: 6px 12px !important;
+        cursor: pointer !important;
+        border-radius: 5px 5px 5px 5px !important;
+        margin-right: 3px !important;
+      }
+
+      .fade {
+        transition: opacity 0.15s linear;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .modal-header {
+        background-color: #283593 !important;
+      }
+
+      .modal-title,
+      .close {
+        color: white !important;
+      }
+
+      .modal-content {
+        border-color: #283593 !important;
+      }
+
+      .nowrap {
+        white-space: nowrap !important;
+      }
+
+      .middle {
+        vertical-align: middle !important;
+      }
+
+      input[type="file"] {
+        border-radius: 4px !important;
+        border: 1px solid hsl(0, 0%, 80%) !important;
+        padding-top: 5px;
+        padding-left: 5px;
+        width: 100% !important;
+        height: 38px !important;
+      }
+
+      input.form-control {
+        color: #333333 !important;
+        font-size: 14px;
+        border-radius: 4px !important;
+        border: 1px solid hsl(0, 0%, 80%);
+        /* margin-top: 1px!important; */
+        width: 100%;
+        height: 38px !important;
+      }
+
+      .subtitle {
+        color: #a1887f;
+        font-weight: bold;
+        word-break: break-all;
+        font-size: 11px;
+      }
+
+      .titles {
+        color: black;
+        font-weight: bold;
+        word-break: break-all;
+        font-size: 12px;
+      }
+
+      .title-intable {
+        font-size: 11px !important;
+      }
+
+      .subtitle-intable {
+        font-size: 10px !important;
+      }
+
+      span.input-group-append {
+        z-index: 0;
+      }
+
+      .nbb {
+        border-bottom: none !important;
+      }
+
+      .nbt {
+        border-top: none !important;
+      }
+
+      .nbl {
+        border-left: none !important;
+      }
+
+      .nbr {
+        border-right: none !important;
+      }
+
+      .bt {
+        background-color: transparent !important;
+      }
+
+      select.form-control {
+        color: #333333 !important;
+        font-size: 14px !important;
+        border-radius: 4px !important;
+        border: 1px solid hsl(0, 0%, 80%) !important;
+        width: 100%;
+        height: 38px !important;
+      }
+
+      select option:hover,
+      select option:focus,
+      select option:checked,
+      select option:active {
+        background: linear-gradient(#000000, #000000);
+        background-color: #283593 !important;
+        color: #fff !important;
+      }
+
+      input.form-control:focus {
+        border: 1px solid #283593 !important;
+      }
+
+      select.form-control:focus {
+        border: 1px solid #283593 !important;
+      }
+
+      input[type="checkbox"]:focus {
+        outline: 1px solid transparent !important;
+      }
+
+      input[readonly] {
+        background-color: transparent !important;
+      }
+
+      input.in-table {
+        height: 31px !important;
+      }
+
+      select.in-table {
+        height: 31px !important;
+      }
+
+      .in-table {
+        height: 31px !important;
+      }
+
+      input[type="checkbox"] {
+        background-color: #ddd;
+        border-radius: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+        position: relative;
+        top: 5px;
+      }
+
+      .table-bordered {
+        border: 1px solid hsl(0, 0%, 80%) !important;
+      }
+
+      .bg-light {
+        border: 1px solid hsl(0, 0%, 80%) !important;
+        background-color: transparent !important;
+      }
+
+      table.table-noborder > tbody,
+      table.table-noborder > tfoot {
+        border: 1px solid hsl(0, 0%, 80%) !important;
+      }
+
+      table.table-noborder > thead > tr > th,
+      table.table-noborder > tbody > tr > td,
+      table.table-noborder > tfoot > tr > th {
+        font-size: 14px;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        border: 1px solid hsl(0, 0%, 80%) !important;
+      }
+      td.text-right,
+      th.text-right {
+        color: green !important;
+      }
+
+      /* tr:nth-child(even) {
       background-color: rgba(0, 0, 0, .075);
     } */
 
+      input[type="checkbox"]:checked {
+        background-color: #283593 !important;
+        background: #283593 url("data:image/gif;base64,R0lGODlhCwAKAIABAP////3cnSH5BAEKAAEALAAAAAALAAoAAAIUjH+AC73WHIsw0UCjglraO20PNhYAOw==") 3px 3px no-repeat;
+      }
 
-    input[type=checkbox]:checked {
-      background-color: #283593 !important;
-      background: #283593 url("data:image/gif;base64,R0lGODlhCwAKAIABAP////3cnSH5BAEKAAEALAAAAAALAAoAAAIUjH+AC73WHIsw0UCjglraO20PNhYAOw==") 3px 3px no-repeat;
-    }
+      .img-in-table {
+        width: 30px;
+        height: 30px;
+        border-radius: 50% !important;
+      }
 
-    .img-in-table {
-      width: 30px;
-      height: 30px;
-      border-radius: 50% !important;
-    }
+      img {
+        border-radius: 10% !important;
+      }
 
-    img {
-      border-radius: 10% !important;
-    }
+      button.cancelBtn {
+        /*color*/
+        background-color: #d4af37 !important;
+        color: white !important;
+      }
 
-    button.cancelBtn {
-      /*color*/
-      background-color: #D4AF37 !important;
-      color: white !important;
-    }
+      .btnBrg {
+        margin-top: 27px;
+      }
 
+      .table-responsive {
+        overflow: inherit !important;
+      }
 
+      .react-bootstrap-daterangepicker-container {
+        display: unset !important;
+      }
 
+      .none {
+        display: none !important;
+      }
 
+      .block {
+        display: block !important;
+      }
 
+      .location-search-input,
+      .location-search-input:focus,
+      .location-search-input:active {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+        border: honeydew;
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 12px;
+        border-radius: 2px;
+        outline: none;
+      }
 
+      .btn {
+        border-radius: 4px;
+      }
 
-    .btnBrg {
-      margin-top: 27px
-    }
+      .autocomplete-dropdown-container {
+        border-bottom: honeydew;
+        border-left: honeydew;
+        border-right: honeydew;
+        border-top: 1px solid #e6e6e6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        z-index: 1000;
+        border-radius: 0 0 2px 2px;
+      }
 
-    .table-responsive {
-      overflow: inherit !important;
-    }
+      .input-group > input.form-control {
+        border-right: none !important;
+        border-radius: 4px 0px 0px 4px !important;
+      }
 
+      input:disabled {
+        cursor: not-allowed !important;
+      }
 
-    .react-bootstrap-daterangepicker-container {
-      display: unset !important;
-    }
+      button:disabled {
+        cursor: not-allowed !important;
+      }
 
-    .none {
-      display: none !important;
-    }
+      .btn-save {
+        background-color: #283593 !important;
+        color: #fff;
+      }
 
-    .block {
-      display: block !important;
-    }
+      .btn-cancel {
+        color: #fff !important;
+        background-color: #d4af37 !important;
+        border-color: #d4af37 !important;
+      }
 
+      button.btn-secondary {
+        background-color: #283593;
+        border-color: #283593;
+        color: #fff;
+        padding-left: 2px;
+        padding-right: 6px;
+        padding-top: 2px;
+        padding-bottom: 0px;
+        line-height: 1.5;
+      }
 
-    .location-search-input,
-    .location-search-input:focus,
-    .location-search-input:active {
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
-      border: honeydew;
-      display: block;
-      width: 100%;
-      padding: .375rem .75rem;
-      font-size: 12px;
-      border-radius: 2px;
-      outline: none;
-    }
+      button.btn-default:hover,
+      button.btn-default:focus {
+        color: #333;
+      }
 
-    .btn {
-      border-radius: 4px;
-    }
+      button.btn-primary {
+        background-color: #283593;
+        border-color: #283593;
+        color: #fff;
+      }
 
-    .autocomplete-dropdown-container {
-      border-bottom: honeydew;
-      border-left: honeydew;
-      border-right: honeydew;
-      border-top: 1px solid #e6e6e6;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      position: absolute;
-      z-index: 1000;
-      border-radius: 0 0 2px 2px;
-    }
+      button.btn-warning {
+        background-color: #d4af37 !important;
+        border-color: #d4af37 !important;
+        color: #fff !important;
+        /* height:38px; */
+      }
 
-    .input-group>input.form-control {
-      border-right: none !important;
-      border-radius: 4px 0px 0px 4px !important;
-    }
+      .btn-outline-info {
+        border-radius: 4px !important;
+        color: #283593 !important;
+        border-color: #283593 !important;
+      }
 
-    input:disabled {
-      cursor: not-allowed !important;
-    }
+      .btn-outline-info:hover {
+        background-color: #283593 !important;
+        color: #fff !important;
+        border-color: #283593 !important;
+      }
 
-    button:disabled {
-      cursor: not-allowed !important;
-    }
+      button.btn-outline-info,
+      button.btn-default,
+      button.btn-primary,
+      button.btn-warning,
+      button.btn-danger {
+        height: 38px;
+      }
 
+      button.btn-sm {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 5px;
+        padding-right: 5px;
+        height: 25px !important;
+      }
 
-    .btn-save {
-      background-color: #283593 !important;
-      color: #fff;
-    }
+      input.input-custom {
+        color: #283593 !important;
+        border-color: #283593 !important;
+        cursor: pointer;
+      }
 
-    .btn-cancel {
-      color: #fff !important;
-      background-color: #D4AF37 !important;
-      border-color: #D4AF37 !important;
-    }
+      input[readonly].input-custom,
+      input:disabled {
+        background-color: transparent !important;
+      }
 
+      input.input-custom:focus {
+        border-color: #283593 !important;
+        background-color: #283593 !important;
+        color: #fff !important;
+      }
 
+      span.input-group-text {
+        border: 1px solid hsl(0, 0%, 80%) !important;
+      }
 
-    button.btn-secondary {
-      background-color: #283593;
-      border-color: #283593;
-      color: #fff;
-      padding-left: 2px;
-      padding-right: 6px;
-      padding-top: 2px;
-      padding-bottom: 0px;
-      line-height: 1.5;
-    }
+      .pointer {
+        cursor: pointer;
+      }
+      .sidebar-menu li .treeview-menu {
+        margin-left: 10px !important;
+        margin-top: 0px !important;
+        margin-bottom: 10px !important;
+      }
 
-    button.btn-default:hover,
-    button.btn-default:focus {
-      color: #333;
-    }
-
-    button.btn-primary {
-      background-color: #283593;
-      border-color: #283593;
-      color: #fff;
-    }
-
-    button.btn-warning {
-      background-color: #D4AF37 !important;
-      border-color: #D4AF37 !important;
-      color: #fff !important;
-      /* height:38px; */
-    }
-
-    .btn-outline-info {
-      border-radius: 4px !important;
-      color: #283593 !important;
-      border-color: #283593 !important;
-    }
-
-    .btn-outline-info:hover {
-      background-color: #283593 !important;
-      color: #fff !important;
-      border-color: #283593 !important;
-    }
-
-    button.btn-outline-info,
-    button.btn-default,
-    button.btn-primary,
-    button.btn-warning,
-    button.btn-danger {
-      height: 38px;
-    }
-
-    button.btn-sm {
-      padding-top: 0px;
-      padding-bottom: 0px;
-      padding-left: 5px;
-      padding-right: 5px;
-      height: 25px !important;
-    }
-
-
-    input.input-custom {
-      color: #283593 !important;
-      border-color: #283593 !important;
-      cursor: pointer;
-    }
-
-    input[readonly].input-custom,
-    input:disabled {
-      background-color: transparent !important;
-    }
-
-
-    input.input-custom:focus {
-      border-color: #283593 !important;
-      background-color: #283593 !important;
-      color: #fff !important;
-    }
-
-    span.input-group-text {
-      border: 1px solid hsl(0, 0%, 80%) !important;
-    }
-
-    .pointer {
-      cursor: pointer;
-    }
-
-
-
-    /* .ranges>ul>li[data-range-key="Hari Ini"] {
+      /* .ranges>ul>li[data-range-key="Hari Ini"] {
       background-color: turquoise;
     } */
-  </style>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
-    async defer></script>
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places" async defer></script>
+  </head>
 
+  <body class="load" style="zoom: 90%">
+    <noscript> You need to enable JavaScript to run this app. </noscript>
 
-</head>
-
-<body class="load" style="zoom:90%">
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
-
-
-  <div id="root"></div>
-  <!--
+    <div id="root"></div>
+    <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -696,12 +670,10 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
-  <!-- Must needed plugins to the run this Template -->
-  <input type='hidden' id="hellyeah" />
-  <input type='hidden' id="coolyeah" />
-  <input type='hidden' id="supplier" />
-  <script src="%PUBLIC_URL%/js/config.js"></script>
-
-</body>
-
+    <!-- Must needed plugins to the run this Template -->
+    <input type="hidden" id="hellyeah" />
+    <input type="hidden" id="coolyeah" />
+    <input type="hidden" id="supplier" />
+    <script src="%PUBLIC_URL%/js/config.js"></script>
+  </body>
 </html>

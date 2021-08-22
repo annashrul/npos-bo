@@ -78,6 +78,7 @@ class SaleByProductArchive extends Component {
       { rowSpan: 2, label: "Toko  " },
       { rowSpan: 2, label: "Tanggal" },
     ];
+    const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Barcode" }, { label: "Deskripsi" }, { label: "Satuan" }];
 
     let totalQtyPerHalaman = 0;
     let totalGrossSalePerHalaman = 0;
@@ -99,7 +100,7 @@ class SaleByProductArchive extends Component {
         />
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Kode" }, { label: "Nama" }, { label: "Barcode" }, { label: "Deskripsi" }, { label: "Satuan" }]}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -134,8 +135,8 @@ class SaleByProductArchive extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {

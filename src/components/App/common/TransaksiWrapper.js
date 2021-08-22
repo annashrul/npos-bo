@@ -115,7 +115,6 @@ class TransaksiWrapper extends Component {
               <div className="card">
                 <div className="card-body">
                   <SelectCommon label={`Cari berdasarkan ${searchby.label.toLowerCase()}`} options={searchby_data} callback={(res) => this.HandleSearch("searchby", res)} dataEdit={searchby.value} />
-
                   <div className="form-group">
                     <div className="input-group input-group-sm">
                       <input
@@ -137,7 +136,7 @@ class TransaksiWrapper extends Component {
                       </span>
                     </div>
                   </div>
-                  <div className="people-list" style={{ scrollBehavior: "smooth", height: "300px", maxHeight: "100%", overflowY: "scroll" }}>
+                  <div className="people-list" style={{ scrollBehavior: "smooth", overflowY: "scroll", height: "300px", maxHeight: "100%" }}>
                     <div id="chat_user_2">
                       <ul className="chat-list list-unstyled">
                         {data.length !== 0 ? (

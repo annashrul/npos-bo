@@ -94,6 +94,7 @@ class TransactionReport extends Component {
       { rowSpan: 2, label: "Keterangan" },
       { rowSpan: 2, label: "Tanggal", width: "1%" },
     ];
+    const rowSpan = [{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }, { label: "Penerimaan" }, { label: "Pembayaran" }];
     return (
       <Layout page="Laporan Alokasi Transaksi">
         <HeaderReportCommon
@@ -107,7 +108,7 @@ class TransactionReport extends Component {
         />
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }, { label: "Penerimaan" }, { label: "Pembayaran" }]}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -154,8 +155,8 @@ class TransactionReport extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {

@@ -287,3 +287,51 @@ export const FetchPurchaseBySupplierReportExcel = (where = "", perpage = 99999) 
     // );
   };
 };
+
+export const rePrintFakturPo = (id) => {
+  return (dispatch) => {
+    Swal.fire({
+      title: "Silahkan tunggu.",
+      html: "Sedang memproses faktur..",
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      onClose: () => {},
+    });
+    let url = `purchaseorder/reprint/${btoa(id)}`;
+
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        Swal.close();
+        const data = response.data;
+        if (data.status === "success") {
+          window.open(data.result.nota, "_blank");
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Transaksi berhasil.",
+            type: "info",
+            html: `Disimpan dengan nota: ${id}` + "<br><br>" + '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ',
+            showCancelButton: true,
+            showConfirmButton: false,
+          }).then((result) => {
+            if (result.dismiss === "cancel") {
+              Swal.close();
+            }
+          });
+          document.getElementById("btnNotaPdf").addEventListener("click", () => {
+            dispatch(rePrintFakturPo(id));
+          });
+        } else {
+          Swal.fire({
+            title: "failed",
+            type: "error",
+            text: "Gagal mengambil faktur.",
+          });
+        }
+      })
+      .catch(function (error) {
+        Swal.close();
+      });
+  };
+};

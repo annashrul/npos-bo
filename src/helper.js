@@ -654,7 +654,9 @@ export const noData = (colSpan) => {
   return (
     <tr>
       <td colSpan={colSpan} className="middle text-center">
-        Data tidak tersedia
+        <span className="badge badge-warning" style={{ fontSize: "18px", padding: "10px" }}>
+          Data tidak tersedia
+        </span>
       </td>
     </tr>
   );

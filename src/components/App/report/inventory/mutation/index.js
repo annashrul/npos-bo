@@ -84,6 +84,7 @@ class MutationReport extends Component {
       { rowSpan: "2", label: "Status", width: "1%" },
       { rowSpan: "2", label: "Tanggal mutasi", width: "1%" },
     ];
+    const rowSpan = [{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }];
     let totalQtyPerHalaman = 0;
     let totalAmounPerHalaman = 0;
 
@@ -103,7 +104,7 @@ class MutationReport extends Component {
         />
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}
+          rowSpan={rowSpan}
           meta={{
             total: total,
             current_page: current_page,
@@ -150,8 +151,8 @@ class MutationReport extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {
