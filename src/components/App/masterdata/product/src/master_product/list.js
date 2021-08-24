@@ -493,7 +493,6 @@ class ListProduct extends Component {
         ]);
       }
     }
-
     body.unshift(headers);
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
@@ -607,7 +606,7 @@ class ListProduct extends Component {
                   {this.handleInput("any_subdept_barang")}
                 </th>
                 {
-                  (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) > 0 ? (
+                  (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
                       <th className="text-black middle" width="10%">
                         <div className="form-group m-0 p-0">
                         <label>Rak</label>
@@ -631,7 +630,7 @@ class ListProduct extends Component {
                       </th>):''
                 }
                 {
-                    (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) > 0 ? (
+                    (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
                       <th className="text-black" width="10%">
                         Tag
                         <br />
@@ -680,10 +679,10 @@ class ListProduct extends Component {
                         <td style={leftStyle}>{v.dept}</td>
                         <td style={leftStyle}>{v.subdept}</td>
                         {
-                          (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) > 0 ? (<td style={leftStyle}>{v.rak}</td>):''
+                          (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (<td style={leftStyle}>{v.rak}</td>):''
                         }
                         {
-                          (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) > 0 ? (<td style={leftStyle}>{v.tag}</td>):''
+                          (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (<td style={leftStyle}>{v.tag}</td>):''
                         }
                         
                         <td style={leftStyle}>{v.kategori}</td>
