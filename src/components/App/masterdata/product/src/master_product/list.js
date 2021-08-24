@@ -580,7 +580,7 @@ class ListProduct extends Component {
                 <th className="middle" width="10%">
                   {this.handleInput("any_subdept_barang")}
                 </th>
-                <th className={`middle ${!cekTambahan && "none"}`} width="10%">
+                <th className={`middle ${cekTambahan && "none"}`} width="10%">
                   <div className="form-group m-0 p-0">
                     <select
                       name="searchby"
@@ -607,7 +607,7 @@ class ListProduct extends Component {
                     </select>
                   </div>
                 </th>
-                <th className={`middle ${!cekTambahan && "none"}`} width="10%">
+                <th className={`middle ${cekTambahan && "none"}`} width="10%">
                   {this.handleInput("any_tag_barang")}
                 </th>
                 <th className="middle" width="1%">
@@ -648,8 +648,8 @@ class ListProduct extends Component {
                         <td className={`middle nowrap`}>{v.supplier}</td>
                         <td className={`middle nowrap`}>{v.dept}</td>
                         <td className={`middle nowrap`}>{v.subdept}</td>
-                        <td className={`middle nowrap ${!cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
-                        <td className={`middle nowrap ${!cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
+                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
+                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
                         <td className={`middle nowrap`}>{v.kategori}</td>
                         <td>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td>{v.stock_min}</td>
