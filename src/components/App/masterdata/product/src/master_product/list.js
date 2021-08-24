@@ -32,6 +32,7 @@ import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/
 import { dateRange, generateNo, getStorage, rmSpaceToStrip, setStorage } from "../../../../../../helper";
 import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
 import SelectCommon from "../../../../common/SelectCommon";
+import Cookies from "js-cookie";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -494,7 +495,7 @@ class ListProduct extends Component {
     }
 
     body.unshift(headers);
-
+    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt="))));
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -606,7 +607,7 @@ class ListProduct extends Component {
                   <br />
                   {this.handleInput("any_subdept_barang")}
                 </th>
-                <th className="text-black middle" width="10%">
+                <th className={`text-black middle ${cekTambahan < 1 && "none"}`} width="10%">
                   <div className="form-group m-0 p-0">
                     <label>Rak</label>
                     <select
@@ -614,13 +615,8 @@ class ListProduct extends Component {
                       className="form-control in-table"
                       style={{ width: "-webkit-fill-available" }}
                       name="any_rak_barang"
-                      // onPointerUp={(e) => {
-                      //   this.handleChange(e);
-                      //   this.handleEnter(`any_rak_barang`);
-                      // }}
                       onChange={(e) => {
                         this.handleChange(e);
-                        console.log("handle change");
                         this.handleEnter(`any_rak_barang`);
                       }}
                     >
@@ -638,16 +634,8 @@ class ListProduct extends Component {
                         : ""}
                     </select>
                   </div>
-                  {/* <Select
-                    options={this.state.rak_data}
-                    placeholder="==== Pilih ===="
-                    onChange={(e)=>{e.preventDefault();this.handleEnter(`any_rak_barang`)}}
-                    value={this.state.rak_data.find(op => {
-                      return op.value === this.state.any_rak_barang})
-                      }
-                    /> */}
                 </th>
-                <th className="text-black" width="10%">
+                <th className={`text-black ${cekTambahan < 1 && "none"}`} width="10%">
                   Tag
                   <br />
                   {this.handleInput("any_tag_barang")}
@@ -692,8 +680,9 @@ class ListProduct extends Component {
                         <td style={leftStyle}>{v.supplier}</td>
                         <td style={leftStyle}>{v.dept}</td>
                         <td style={leftStyle}>{v.subdept}</td>
-                        <td style={leftStyle}>{rmSpaceToStrip(v.rak)}</td>
-                        <td style={leftStyle}>{rmSpaceToStrip(v.tag)}</td>
+                        {cekTambahan > 0 && <td style={leftStyle}>{rmSpaceToStrip(v.rak)}</td>}
+                        {cekTambahan > 0 && <td style={leftStyle}>{rmSpaceToStrip(v.tag)}</td>}
+
                         <td style={leftStyle}>{v.kategori}</td>
                         <td style={centerStyle}>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td style={centerStyle}>{v.stock_min}</td>

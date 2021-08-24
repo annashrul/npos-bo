@@ -2248,9 +2248,9 @@ class FormProduct extends Component {
 
     parseData["kd_brg"] = this.state.kd_brg;
     parseData["nm_brg"] = this.state.nm_brg;
-    parseData["nama_singkat"] = this.state.nama_singkat;
-    parseData["tag"] = this.state.tag;
-    parseData["rak"] = this.state.rak;
+    parseData["nama_singkat"] = this.state.nama_singkat === '' ? '-' : this.state.nama_singkat;
+    parseData["tag"] = this.state.tag===''?'-':this.state.tag;
+    parseData["rak"] = this.state.rak === '' ? '00000000-0000-0000-0000-000000000000' : this.state.rak;
     parseData["kel_brg"] = this.state.kel_brg;
     parseData["jenis"] = this.state.kategori;
     parseData["stock_min"] = this.state.stock_min;
@@ -2274,9 +2274,9 @@ class FormProduct extends Component {
     }
     if (!this.handleEmptyOrUndefined("kd_brg", "kode barang")) return;
     if (!this.handleEmptyOrUndefined("nm_brg", "nama barang")) return;
-    if (!this.handleEmptyOrUndefined("nama_singkat", "nama singkat")) return;
-    if (!this.handleEmptyOrUndefined("tag", "tag", false)) return;
-    if (!this.handleEmptyOrUndefined("rak", "rak", false)) return;
+    // if (!this.handleEmptyOrUndefined("nama_singkat", "nama singkat")) return;
+    // if (!this.handleEmptyOrUndefined("tag", "tag", false)) return;
+    // if (!this.handleEmptyOrUndefined("rak", "rak", false)) return;
     if (!this.handleEmptyOrUndefined("kel_brg", "kelompok barang", false)) return;
     if (!this.handleEmptyOrUndefined("group1", "supplier", false)) return;
     if (this.props.auth.user.is_resto === 1 && this.state.jenis === "5") {
@@ -2530,49 +2530,57 @@ class FormProduct extends Component {
                         onChange={(e) => this.handleChange(e, null)}
                       />
                     </div>
-
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        ref={(input) => (this[`nama_singkat`] = input)}
-                        className="form-control"
-                        placeholder="Nama Singkat"
-                        name="nama_singkat"
-                        maxLength={20}
-                        value={this.state.nama_singkat}
-                        onChange={(e) => this.handleChange(e, null)}
-                      />
-                    </div>
-
-                    <div className="row">
-                      <div className="col-md-7">
-                        <div className="form-group">
-                          {select2Group(
-                            this.state.rak_data.find((op) => {
-                              return op.value === this.state.rak;
-                            }),
-                            (any, action) => this.handleRak(any, action),
-                            this.state.rak_data,
-                            (e) => this.toggleModal(e, "formRak"),
-                            "rak"
-                          )}
+                    {
+                      (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) > 0?(
+                          <div className="form-group">
+                            <input
+                              type="text"
+                              ref={(input) => (this[`nama_singkat`] = input)}
+                              className="form-control"
+                              placeholder="Nama Singkat"
+                              name="nama_singkat"
+                              maxLength={20}
+                              value={this.state.nama_singkat}
+                              onChange={(e) => this.handleChange(e, null)}
+                            />
+                          </div>
+                      ):''
+                    }
+                    {
+                      (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) > 0 ? (
+                        <div className="row">
+                          <div className="col-md-7">
+                            <div className="form-group">
+                              {select2Group(
+                                this.state.rak_data.find((op) => {
+                                  return op.value === this.state.rak;
+                                }),
+                                (any, action) => this.handleRak(any, action),
+                                this.state.rak_data,
+                                (e) => this.toggleModal(e, "formRak"),
+                                "rak"
+                              )}
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="form-group">
+                              <input
+                                type="text"
+                                ref={(input) => (this[`tag`] = input)}
+                                className="form-control"
+                                placeholder="Tag"
+                                name="tag"
+                                maxLength={3}
+                                value={this.state.tag}
+                                onChange={(e) => this.handleChange(e, null)}
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="col-md-5">
-                        <div className="form-group">
-                          <input
-                            type="text"
-                            ref={(input) => (this[`tag`] = input)}
-                            className="form-control"
-                            placeholder="Tag"
-                            name="tag"
-                            maxLength={3}
-                            value={this.state.tag}
-                            onChange={(e) => this.handleChange(e, null)}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                      ):''
+
+                    }
+
 
                     <div className="form-group">
                       {select2Group(
