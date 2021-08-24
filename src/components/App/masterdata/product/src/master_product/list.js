@@ -29,7 +29,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
-import { dateRange, generateNo, getStorage, setStorage } from "../../../../../../helper";
+import { dateRange, generateNo, getStorage, rmSpaceToStrip, setStorage } from "../../../../../../helper";
 import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
 import SelectCommon from "../../../../common/SelectCommon";
 import Cookies from "js-cookie";
@@ -72,7 +72,6 @@ class ListProduct extends Component {
   getProps(param) {
     let stateRak = [];
     let propsRak = param.rak;
-
     if (propsRak.data !== undefined) {
       if (typeof propsRak.data === "object") {
         propsRak.data.map((v, i) =>
@@ -97,7 +96,7 @@ class ListProduct extends Component {
   componentWillReceiveProps(nextProps) {
     this.getProps(nextProps);
   }
-  
+
   componentWillUnmount() {
     this.setState({
       isModalForm: false,
@@ -259,7 +258,6 @@ class ListProduct extends Component {
     this.props.dispatch(FetchProduct(1, where));
   }
   handleEnter(column) {
-    console.log("=-=-=-=-",column);
     localStorage.setItem("column_search", `${column}`);
     let where = "";
     let que = "any_master";
@@ -272,6 +270,7 @@ class ListProduct extends Component {
     let tag = this.state.any_tag_barang;
     let rak = this.state.any_rak_barang;
     let kategori = this.state.any_kategori_barang;
+
     if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || dept !== "" || subdept !== "" || tag !== "" || rak !== "" || kategori !== "") {
       if (column === "any_kode_barang") {
         if (where !== "") {
@@ -319,14 +318,14 @@ class ListProduct extends Component {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=tag&q=${btoa(tag)}`;
+        where += `tag=${tag}`;
         localStorage.setItem(`${que}_tag_barang`, tag);
       }
       if (column === "any_rak_barang") {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=rak&q=${btoa(rak)}`;
+        where += `rak=${rak}`;
         localStorage.setItem(`${que}_rak_barang`, rak);
       }
       if (column === "any_kategori_barang") {
@@ -403,8 +402,8 @@ class ListProduct extends Component {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType(pricing ? "formProductPricing" : "formProduct"));
-    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
-    this.props.dispatch(FetchRak("page=1&perpage=99999"));
+    // this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
+    // this.props.dispatch(FetchRak("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
     this.props.dispatch(FetchSubDepartmentAll());
@@ -430,16 +429,17 @@ class ListProduct extends Component {
       <input
         name={name}
         value={this.state[name]}
-        onChange={this.handleChange}
-        onKeyPress={(event) => {
-          if (event.key === "Enter") {
-            this.handleEnter(`${name}`);
-          }
+        onChange={(e) => {
+          this.handleChange(e);
+          if (e.target.value === "") setTimeout(() => this.handleEnter(name), 300);
         }}
-        style={{ width: "-webkit-fill-available", marginTop: "2px" }}
-        type="text"
-        className="form-control in-table"
-        placeholder={`${name}`.replaceAll("_", " ").replaceAll("any ", "")}
+        onKeyPress={(event) => {
+          if (event.key === "Enter") this.handleEnter(`${name}`);
+        }}
+        style={{ width: "-webkit-fill-available" }}
+        type="search"
+        className="nradius np form-control in-table nbt nbl nbr"
+        placeholder={`semua ${name}`.replaceAll("_", " ").replaceAll("any ", "").replaceAll(" barang", "")}
       />
     );
   }
@@ -454,17 +454,6 @@ class ListProduct extends Component {
     const loc_edit = this.handleEdit;
     const loc_edit_per = this.handleEdit;
     const { total, per_page, current_page, data } = this.props.data;
-    const centerStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "center",
-    };
-    const leftStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "left",
-    };
-
     const headers = [
       "No",
       "Code",
@@ -494,6 +483,7 @@ class ListProduct extends Component {
       }
     }
     body.unshift(headers);
+    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >=0;
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -574,77 +564,58 @@ class ListProduct extends Component {
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={centerStyle}>
-                  No
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  #
-                </th>
-                <th className="text-black middle">
-                  Kode barang <br />
-                  {this.handleInput("any_kode_barang")}
-                </th>
-                <th className="text-black">
-                  Nama barang <br />
-                  {this.handleInput("any_nama_barang")}
-                </th>
-                <th className="text-black" width="10%">
-                  Kelompok <br />
+                <th className="middle text-center">No</th>
+                <th className="middle text-center">#</th>
+                <th className="middle">{this.handleInput("any_kode_barang")}</th>
+                <th className="middle">{this.handleInput("any_nama_barang")}</th>
+                <th className="middle" width="10%">
                   {this.handleInput("any_kelompok_barang")}
                 </th>
-                <th className="text-black" width="10%">
-                  Supplier
-                  <br />
+                <th className="middle" width="10%">
                   {this.handleInput("any_supplier_barang")}
                 </th>
-                <th className="text-black middle" width="10%">
+                <th className="middle" width="10%">
                   Departemen
                 </th>
-                <th className="text-black" width="10%">
-                  Sub departemen
-                  <br />
+                <th className="middle" width="10%">
                   {this.handleInput("any_subdept_barang")}
                 </th>
-                {
-                  (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
-                      <th className="text-black middle" width="10%">
-                        <div className="form-group m-0 p-0">
-                        <label>Rak</label>
-                            <select name='searchby'
-                              className="form-control form-control"
-                              style={{width:'10em', height:'2.2em !important'}}
-                              name="any_rak_barang"
-                              onPointerUp={(e) => {this.handleChange(e); this.handleEnter(`any_rak_barang`)}}
-                              onChange={(e) => {this.handleChange(e); this.handleEnter(`any_rak_barang`)}}>
-                                <option value="">~Pilih Rak~</option>
-                                {typeof this.state.rak_data === "object" ? (
-                                  this.state.rak_data !== undefined && this.state.rak_data.length > 0 ? (
-                                    this.state.rak_data.map((v, i) => {
-                                      return (
-                                        <option value={v.value}>{v.label}</option>
-                                        ) 
-                                      })
-                                  ):""):""}
-                            </select>
-                        </div>
-                      </th>):''
-                }
-                {
-                    (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
-                      <th className="text-black" width="10%">
-                        Tag
-                        <br />
-                        {this.handleInput("any_tag_barang")}
-                      </th>
-                  ):''
-                }
-                <th className="text-black" width="10%">
-                  Kategori
-                  <br />
+                <th className={`middle ${cekTambahan && "none"}`} width="10%">
+                  <div className="form-group m-0 p-0">
+                    <select
+                      name="searchby"
+                      className="nradius np form-control in-table nbt nbl nbr"
+                      style={{ width: "-webkit-fill-available" }}
+                      name="any_rak_barang"
+                      onChange={(e) => {
+                        this.handleChange(e);
+                        setTimeout(() => this.handleEnter("any_rak_barang"), 300);
+                        // this.handleEnter(`any_rak_barang`);
+                      }}
+                    >
+                      <option value="">semua rak</option>
+                      {typeof this.state.rak_data === "object"
+                        ? this.state.rak_data !== undefined && this.state.rak_data.length > 0
+                          ? this.state.rak_data.map((v, i) => {
+                              return (
+                                <option value={`${v.value}`} key={i}>
+                                  {v.label}
+                                </option>
+                              );
+                            })
+                          : ""
+                        : ""}
+                    </select>
+                  </div>
+                </th>
+                <th className={`middle ${cekTambahan && "none"}`} width="10%">
+                  {this.handleInput("any_tag_barang")}
+                </th>
+                <th className="middle" width="1%">
                   {this.handleInput("any_kategori_barang")}
                 </th>
-                <th className="text-black middle">Jenis</th>
-                <th className="text-black middle">
+                <th className="middle">Jenis</th>
+                <th className="middle">
                   Stock
                   <br />
                   Min
@@ -657,8 +628,8 @@ class ListProduct extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td style={centerStyle}>{generateNo(i, current_page)}</td>
-                        <td style={centerStyle}>
+                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
                           <div className="btn-group">
                             <UncontrolledButtonDropdown>
                               <DropdownToggle caret></DropdownToggle>
@@ -672,22 +643,17 @@ class ListProduct extends Component {
                             </UncontrolledButtonDropdown>
                           </div>
                         </td>
-                        <td style={leftStyle}>{v.kd_brg}</td>
-                        <td style={leftStyle}>{v.nm_brg}</td>
-                        <td style={leftStyle}>{v.kel_brg}</td>
-                        <td style={leftStyle}>{v.supplier}</td>
-                        <td style={leftStyle}>{v.dept}</td>
-                        <td style={leftStyle}>{v.subdept}</td>
-                        {
-                          (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (<td style={leftStyle}>{v.rak}</td>):''
-                        }
-                        {
-                          (document.getElementById("tambahan_barang").value).search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (<td style={leftStyle}>{v.tag}</td>):''
-                        }
-                        
-                        <td style={leftStyle}>{v.kategori}</td>
-                        <td style={centerStyle}>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
-                        <td style={centerStyle}>{v.stock_min}</td>
+                        <td className={`middle nowrap`}>{v.kd_brg}</td>
+                        <td className={`middle nowrap`}>{v.nm_brg}</td>
+                        <td className={`middle nowrap`}>{v.kel_brg}</td>
+                        <td className={`middle nowrap`}>{v.supplier}</td>
+                        <td className={`middle nowrap`}>{v.dept}</td>
+                        <td className={`middle nowrap`}>{v.subdept}</td>
+                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
+                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
+                        <td className={`middle nowrap`}>{v.kategori}</td>
+                        <td>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
+                        <td>{v.stock_min}</td>
                       </tr>
                     );
                   })

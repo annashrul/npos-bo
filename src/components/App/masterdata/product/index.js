@@ -21,18 +21,14 @@ class Product extends Component {
 
   handleService() {
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
-    if (
-      getIsPeriodeBarang === null ||
-      getIsPeriodeBarang === "null" ||
-      getIsPeriodeBarang === "true"
-    ) {
+    if (getIsPeriodeBarang === null || getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
       this.props.dispatch(FetchProduct());
     }
   }
   componentWillMount() {
     this.handleService();
     this.props.dispatch(FetchPriceProduct("page=1"));
-    this.props.dispatch(FetchGroupProduct("page=1"));
+    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
     this.props.dispatch(FetchRak("page=1&perpage=99999"));
   }
 
@@ -45,14 +41,7 @@ class Product extends Component {
       <TabCommon
         path="barang"
         tabHead={["Barang", "Harga barang", "Kelompok barang"]}
-        tabBody={[
-          <ListProduct
-            data={this.props.product}
-            group={this.props.groupProduct}
-          />,
-          <ListPriceProduct data={this.props.priceProduct} />,
-          <ListGroupProduct data={this.props.groupProduct} />,
-        ]}
+        tabBody={[<ListProduct data={this.props.product} group={this.props.groupProduct} />, <ListPriceProduct data={this.props.priceProduct} />, <ListGroupProduct data={this.props.groupProduct} />]}
         otherWidget={
           <div className={`${!this.state.isShow && "none"}`}>
             <Link to="upload" className="btn btn-outline-info">
