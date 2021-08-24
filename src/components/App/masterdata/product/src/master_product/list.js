@@ -402,7 +402,7 @@ class ListProduct extends Component {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType(pricing ? "formProductPricing" : "formProduct"));
-    // this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
+    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
     // this.props.dispatch(FetchRak("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
@@ -484,7 +484,7 @@ class ListProduct extends Component {
     }
 
     body.unshift(headers);
-    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) < 1;
+    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) > 0;
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -581,7 +581,7 @@ class ListProduct extends Component {
                 <th className="middle" width="10%">
                   {this.handleInput("any_subdept_barang")}
                 </th>
-                <th className={`middle ${cekTambahan && "none"}`} width="10%">
+                <th className={`middle ${!cekTambahan && "none"}`} width="10%">
                   <div className="form-group m-0 p-0">
                     <select
                       name="searchby"
@@ -591,7 +591,6 @@ class ListProduct extends Component {
                       onChange={(e) => {
                         this.handleChange(e);
                         setTimeout(() => this.handleEnter("any_rak_barang"), 300);
-                        // this.handleEnter(`any_rak_barang`);
                       }}
                     >
                       <option value="">semua rak</option>
@@ -609,7 +608,7 @@ class ListProduct extends Component {
                     </select>
                   </div>
                 </th>
-                <th className={`middle ${cekTambahan && "none"}`} width="10%">
+                <th className={`middle ${!cekTambahan && "none"}`} width="10%">
                   {this.handleInput("any_tag_barang")}
                 </th>
                 <th className="middle" width="1%">
@@ -650,8 +649,8 @@ class ListProduct extends Component {
                         <td className={`middle nowrap`}>{v.supplier}</td>
                         <td className={`middle nowrap`}>{v.dept}</td>
                         <td className={`middle nowrap`}>{v.subdept}</td>
-                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
-                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
+                        <td className={`middle nowrap ${!cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
+                        <td className={`middle nowrap ${!cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
                         <td className={`middle nowrap`}>{v.kategori}</td>
                         <td>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td>{v.stock_min}</td>
