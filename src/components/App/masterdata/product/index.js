@@ -28,7 +28,7 @@ class Product extends Component {
   componentWillMount() {
     this.handleService();
     this.props.dispatch(FetchPriceProduct("page=1"));
-    this.props.dispatch(FetchGroupProduct("page=1"));
+    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
     this.props.dispatch(FetchRak("page=1&perpage=99999"));
   }
 

@@ -72,7 +72,6 @@ class ListProduct extends Component {
   getProps(param) {
     let stateRak = [];
     let propsRak = param.rak;
-
     if (propsRak.data !== undefined) {
       if (typeof propsRak.data === "object") {
         propsRak.data.map((v, i) =>
@@ -259,7 +258,6 @@ class ListProduct extends Component {
     this.props.dispatch(FetchProduct(1, where));
   }
   handleEnter(column) {
-    console.log("=-=-=-=-", column);
     localStorage.setItem("column_search", `${column}`);
     let where = "";
     let que = "any_master";
@@ -272,6 +270,7 @@ class ListProduct extends Component {
     let tag = this.state.any_tag_barang;
     let rak = this.state.any_rak_barang;
     let kategori = this.state.any_kategori_barang;
+
     if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || dept !== "" || subdept !== "" || tag !== "" || rak !== "" || kategori !== "") {
       if (column === "any_kode_barang") {
         if (where !== "") {
@@ -319,14 +318,14 @@ class ListProduct extends Component {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=tag&q=${btoa(tag)}`;
+        where += `tag=${tag}`;
         localStorage.setItem(`${que}_tag_barang`, tag);
       }
       if (column === "any_rak_barang") {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=rak&q=${btoa(rak)}`;
+        where += `rak=${rak}`;
         localStorage.setItem(`${que}_rak_barang`, rak);
       }
       if (column === "any_kategori_barang") {
@@ -403,8 +402,8 @@ class ListProduct extends Component {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType(pricing ? "formProductPricing" : "formProduct"));
-    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
-    this.props.dispatch(FetchRak("page=1&perpage=99999"));
+    // this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
+    // this.props.dispatch(FetchRak("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
     this.props.dispatch(FetchSubDepartmentAll());
@@ -440,7 +439,7 @@ class ListProduct extends Component {
         style={{ width: "-webkit-fill-available" }}
         type="search"
         className="nradius np form-control in-table nbt nbl nbr"
-        placeholder={`${name}`.replaceAll("_", " ").replaceAll("any ", "")}
+        placeholder={`semua ${name}`.replaceAll("_", " ").replaceAll("any ", "").replaceAll(" barang", "")}
       />
     );
   }
@@ -485,7 +484,7 @@ class ListProduct extends Component {
     }
 
     body.unshift(headers);
-    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt="))));
+    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) < 1;
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -582,7 +581,7 @@ class ListProduct extends Component {
                 <th className="middle" width="10%">
                   {this.handleInput("any_subdept_barang")}
                 </th>
-                <th className={`middle ${cekTambahan < 1 && "none"}`} width="10%">
+                <th className={`middle ${cekTambahan && "none"}`} width="10%">
                   <div className="form-group m-0 p-0">
                     <select
                       name="searchby"
@@ -591,7 +590,8 @@ class ListProduct extends Component {
                       name="any_rak_barang"
                       onChange={(e) => {
                         this.handleChange(e);
-                        this.handleEnter(`any_rak_barang`);
+                        setTimeout(() => this.handleEnter("any_rak_barang"), 300);
+                        // this.handleEnter(`any_rak_barang`);
                       }}
                     >
                       <option value="">semua rak</option>
@@ -599,7 +599,7 @@ class ListProduct extends Component {
                         ? this.state.rak_data !== undefined && this.state.rak_data.length > 0
                           ? this.state.rak_data.map((v, i) => {
                               return (
-                                <option value={v.value} key={i}>
+                                <option value={`${v.value}`} key={i}>
                                   {v.label}
                                 </option>
                               );
@@ -609,10 +609,10 @@ class ListProduct extends Component {
                     </select>
                   </div>
                 </th>
-                <th className={`middle ${cekTambahan < 1 && "none"}`} width="10%">
+                <th className={`middle ${cekTambahan && "none"}`} width="10%">
                   {this.handleInput("any_tag_barang")}
                 </th>
-                <th className="middle" width="10%">
+                <th className="middle" width="1%">
                   {this.handleInput("any_kategori_barang")}
                 </th>
                 <th className="middle">Jenis</th>
@@ -650,8 +650,8 @@ class ListProduct extends Component {
                         <td className={`middle nowrap`}>{v.supplier}</td>
                         <td className={`middle nowrap`}>{v.dept}</td>
                         <td className={`middle nowrap`}>{v.subdept}</td>
-                        <td className={`middle nowrap ${cekTambahan < 1 && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
-                        <td className={`middle nowrap ${cekTambahan < 1 && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
+                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
+                        <td className={`middle nowrap ${cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
                         <td className={`middle nowrap`}>{v.kategori}</td>
                         <td>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td>{v.stock_min}</td>
