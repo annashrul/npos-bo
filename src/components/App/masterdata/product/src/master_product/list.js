@@ -482,9 +482,8 @@ class ListProduct extends Component {
         ]);
       }
     }
-
     body.unshift(headers);
-    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) > 0;
+    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >= 0;
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
