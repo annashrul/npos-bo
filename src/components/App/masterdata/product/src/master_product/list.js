@@ -430,15 +430,16 @@ class ListProduct extends Component {
       <input
         name={name}
         value={this.state[name]}
-        onChange={this.handleChange}
-        onKeyPress={(event) => {
-          if (event.key === "Enter") {
-            this.handleEnter(`${name}`);
-          }
+        onChange={(e) => {
+          this.handleChange(e);
+          if (e.target.value === "") setTimeout(() => this.handleEnter(name), 300);
         }}
-        style={{ width: "-webkit-fill-available", marginTop: "2px" }}
-        type="text"
-        className="form-control in-table"
+        onKeyPress={(event) => {
+          if (event.key === "Enter") this.handleEnter(`${name}`);
+        }}
+        style={{ width: "-webkit-fill-available" }}
+        type="search"
+        className="nradius np form-control in-table nbt nbl nbr"
         placeholder={`${name}`.replaceAll("_", " ").replaceAll("any ", "")}
       />
     );
@@ -454,17 +455,6 @@ class ListProduct extends Component {
     const loc_edit = this.handleEdit;
     const loc_edit_per = this.handleEdit;
     const { total, per_page, current_page, data } = this.props.data;
-    const centerStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "center",
-    };
-    const leftStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "left",
-    };
-
     const headers = [
       "No",
       "Code",
@@ -576,43 +566,27 @@ class ListProduct extends Component {
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={centerStyle}>
-                  No
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  #
-                </th>
-                <th className="text-black middle">
-                  Kode barang <br />
-                  {this.handleInput("any_kode_barang")}
-                </th>
-                <th className="text-black">
-                  Nama barang <br />
-                  {this.handleInput("any_nama_barang")}
-                </th>
-                <th className="text-black" width="10%">
-                  Kelompok <br />
+                <th className="middle text-center">No</th>
+                <th className="middle text-center">#</th>
+                <th className="middle">{this.handleInput("any_kode_barang")}</th>
+                <th className="middle">{this.handleInput("any_nama_barang")}</th>
+                <th className="middle" width="10%">
                   {this.handleInput("any_kelompok_barang")}
                 </th>
-                <th className="text-black" width="10%">
-                  Supplier
-                  <br />
+                <th className="middle" width="10%">
                   {this.handleInput("any_supplier_barang")}
                 </th>
-                <th className="text-black middle" width="10%">
+                <th className="middle" width="10%">
                   Departemen
                 </th>
-                <th className="text-black" width="10%">
-                  Sub departemen
-                  <br />
+                <th className="middle" width="10%">
                   {this.handleInput("any_subdept_barang")}
                 </th>
-                <th className={`text-black middle ${cekTambahan < 1 && "none"}`} width="10%">
+                <th className={`middle ${cekTambahan < 1 && "none"}`} width="10%">
                   <div className="form-group m-0 p-0">
-                    <label>Rak</label>
                     <select
                       name="searchby"
-                      className="form-control in-table"
+                      className="nradius np form-control in-table nbt nbl nbr"
                       style={{ width: "-webkit-fill-available" }}
                       name="any_rak_barang"
                       onChange={(e) => {
@@ -620,7 +594,7 @@ class ListProduct extends Component {
                         this.handleEnter(`any_rak_barang`);
                       }}
                     >
-                      <option value="">~Pilih Rak~</option>
+                      <option value="">semua rak</option>
                       {typeof this.state.rak_data === "object"
                         ? this.state.rak_data !== undefined && this.state.rak_data.length > 0
                           ? this.state.rak_data.map((v, i) => {
@@ -635,18 +609,14 @@ class ListProduct extends Component {
                     </select>
                   </div>
                 </th>
-                <th className={`text-black ${cekTambahan < 1 && "none"}`} width="10%">
-                  Tag
-                  <br />
+                <th className={`middle ${cekTambahan < 1 && "none"}`} width="10%">
                   {this.handleInput("any_tag_barang")}
                 </th>
-                <th className="text-black" width="10%">
-                  Kategori
-                  <br />
+                <th className="middle" width="10%">
                   {this.handleInput("any_kategori_barang")}
                 </th>
-                <th className="text-black middle">Jenis</th>
-                <th className="text-black middle">
+                <th className="middle">Jenis</th>
+                <th className="middle">
                   Stock
                   <br />
                   Min
@@ -659,8 +629,8 @@ class ListProduct extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td style={centerStyle}>{generateNo(i, current_page)}</td>
-                        <td style={centerStyle}>
+                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
                           <div className="btn-group">
                             <UncontrolledButtonDropdown>
                               <DropdownToggle caret></DropdownToggle>
@@ -674,18 +644,17 @@ class ListProduct extends Component {
                             </UncontrolledButtonDropdown>
                           </div>
                         </td>
-                        <td style={leftStyle}>{v.kd_brg}</td>
-                        <td style={leftStyle}>{v.nm_brg}</td>
-                        <td style={leftStyle}>{v.kel_brg}</td>
-                        <td style={leftStyle}>{v.supplier}</td>
-                        <td style={leftStyle}>{v.dept}</td>
-                        <td style={leftStyle}>{v.subdept}</td>
-                        {cekTambahan > 0 && <td style={leftStyle}>{rmSpaceToStrip(v.rak)}</td>}
-                        {cekTambahan > 0 && <td style={leftStyle}>{rmSpaceToStrip(v.tag)}</td>}
-
-                        <td style={leftStyle}>{v.kategori}</td>
-                        <td style={centerStyle}>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
-                        <td style={centerStyle}>{v.stock_min}</td>
+                        <td className={`middle nowrap`}>{v.kd_brg}</td>
+                        <td className={`middle nowrap`}>{v.nm_brg}</td>
+                        <td className={`middle nowrap`}>{v.kel_brg}</td>
+                        <td className={`middle nowrap`}>{v.supplier}</td>
+                        <td className={`middle nowrap`}>{v.dept}</td>
+                        <td className={`middle nowrap`}>{v.subdept}</td>
+                        <td className={`middle nowrap ${cekTambahan < 1 && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
+                        <td className={`middle nowrap ${cekTambahan < 1 && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
+                        <td className={`middle nowrap`}>{v.kategori}</td>
+                        <td>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
+                        <td>{v.stock_min}</td>
                       </tr>
                     );
                   })
