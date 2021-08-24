@@ -29,7 +29,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
-import { dateRange, generateNo, getStorage, setStorage } from "../../../../../../helper";
+import { dateRange, generateNo, getStorage, rmSpaceToStrip, setStorage } from "../../../../../../helper";
 import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
 import SelectCommon from "../../../../common/SelectCommon";
 
@@ -96,7 +96,7 @@ class ListProduct extends Component {
   componentWillReceiveProps(nextProps) {
     this.getProps(nextProps);
   }
-  
+
   componentWillUnmount() {
     this.setState({
       isModalForm: false,
@@ -258,7 +258,7 @@ class ListProduct extends Component {
     this.props.dispatch(FetchProduct(1, where));
   }
   handleEnter(column) {
-    console.log("=-=-=-=-",column);
+    console.log("=-=-=-=-", column);
     localStorage.setItem("column_search", `${column}`);
     let where = "";
     let que = "any_master";
@@ -607,25 +607,36 @@ class ListProduct extends Component {
                   {this.handleInput("any_subdept_barang")}
                 </th>
                 <th className="text-black middle" width="10%">
-                  
                   <div className="form-group m-0 p-0">
-                  <label>Rak</label>
-                      <select name='searchby'
-                        className="form-control form-control"
-                        style={{width:'10em', height:'2.2em !important'}}
-                        name="any_rak_barang"
-                        onPointerUp={(e) => {this.handleChange(e); this.handleEnter(`any_rak_barang`)}}
-                        onChange={(e) => {this.handleChange(e); this.handleEnter(`any_rak_barang`)}}>
-                          <option value="">~Pilih Rak~</option>
-                          {typeof this.state.rak_data === "object" ? (
-                            this.state.rak_data !== undefined && this.state.rak_data.length > 0 ? (
-                              this.state.rak_data.map((v, i) => {
-                                return (
-                                  <option value={v.value}>{v.label}</option>
-                                  ) 
-                                })
-                            ):""):""}
-                      </select>
+                    <label>Rak</label>
+                    <select
+                      name="searchby"
+                      className="form-control in-table"
+                      style={{ width: "-webkit-fill-available" }}
+                      name="any_rak_barang"
+                      // onPointerUp={(e) => {
+                      //   this.handleChange(e);
+                      //   this.handleEnter(`any_rak_barang`);
+                      // }}
+                      onChange={(e) => {
+                        this.handleChange(e);
+                        console.log("handle change");
+                        this.handleEnter(`any_rak_barang`);
+                      }}
+                    >
+                      <option value="">~Pilih Rak~</option>
+                      {typeof this.state.rak_data === "object"
+                        ? this.state.rak_data !== undefined && this.state.rak_data.length > 0
+                          ? this.state.rak_data.map((v, i) => {
+                              return (
+                                <option value={v.value} key={i}>
+                                  {v.label}
+                                </option>
+                              );
+                            })
+                          : ""
+                        : ""}
+                    </select>
                   </div>
                   {/* <Select
                     options={this.state.rak_data}
@@ -681,8 +692,8 @@ class ListProduct extends Component {
                         <td style={leftStyle}>{v.supplier}</td>
                         <td style={leftStyle}>{v.dept}</td>
                         <td style={leftStyle}>{v.subdept}</td>
-                        <td style={leftStyle}>{v.rak}</td>
-                        <td style={leftStyle}>{v.tag}</td>
+                        <td style={leftStyle}>{rmSpaceToStrip(v.rak)}</td>
+                        <td style={leftStyle}>{rmSpaceToStrip(v.tag)}</td>
                         <td style={leftStyle}>{v.kategori}</td>
                         <td style={centerStyle}>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td style={centerStyle}>{v.stock_min}</td>

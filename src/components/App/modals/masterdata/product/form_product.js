@@ -601,56 +601,48 @@ class FormProduct extends Component {
   }
   async generateBrcd(e, idx) {
     // console.log(e.target.bat)
-    if (e.target.name === "generate") {
-      this.setState({ generateCode: e.target.checked });
-
-      if (!this.state.generateCode) {
-        let genCode = "";
-        if (this.state.kd_brg !== "") {
-          genCode = await this.genBrcd(this.state.kd_brg);
+    if (e === "generate") {
+      let genCode = "";
+      if (this.state.kd_brg !== "") {
+        genCode = await this.genBrcd(this.state.kd_brg);
+      }
+      if (this.state.jenis === "0") {
+        let brgSku = [];
+        for (let i = 0; i < 3; i++) {
+          let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
+          let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
+          brgSku.push({
+            barcode: i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
+            qty: satuan,
+            konversi: "0",
+            satuan_jual: "1",
+          });
         }
-        if (this.state.jenis === "0") {
-          let brgSku = [];
-          for (let i = 0; i < 3; i++) {
-            let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
-            let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
-            brgSku.push({
-              barcode: i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
-              qty: satuan,
-              konversi: "0",
-              satuan_jual: "1",
-            });
-          }
-          this.setState({ barangSku: brgSku });
-        } else if (this.state.jenis === "2") {
-          let brgSku = [];
-          for (let i = 0; i < 2; i++) {
-            let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
-            brgSku.push({
-              barcode: i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
-              qty: "",
-              konversi: "0",
-              satuan_jual: "1",
-            });
-          }
-          this.setState({ barangSku: brgSku });
-        } else {
-          let brgSku = [];
-          for (let i = 0; i < 1; i++) {
-            let satuan = this.state.jenis === "1" ? "Pcs" : this.state.jenis === "1" ? "Pcs" : "Pack";
-            brgSku.push({
-              barcode: `${genCode}`,
-              qty: satuan,
-              konversi: "0",
-              satuan_jual: "1",
-            });
-          }
-          this.setState({ barangSku: brgSku });
+        this.setState({ barangSku: brgSku });
+      } else if (this.state.jenis === "2") {
+        let brgSku = [];
+        for (let i = 0; i < 2; i++) {
+          let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
+          brgSku.push({
+            barcode: i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
+            qty: "",
+            konversi: "0",
+            satuan_jual: "1",
+          });
         }
+        this.setState({ barangSku: brgSku });
       } else {
-        this.setState({
-          barangSku: [{ barcode: "adsdasdasd", qty: "", konversi: "", satuan_jual: "1" }],
-        });
+        let brgSku = [];
+        for (let i = 0; i < 1; i++) {
+          let satuan = this.state.jenis === "1" ? "Pcs" : this.state.jenis === "1" ? "Pcs" : "Pack";
+          brgSku.push({
+            barcode: `${genCode}`,
+            qty: satuan,
+            konversi: "0",
+            satuan_jual: "1",
+          });
+        }
+        this.setState({ barangSku: brgSku });
       }
     } else {
       // this.setState({
@@ -2699,15 +2691,22 @@ class FormProduct extends Component {
                                     onChange={(e) => this.handleChange(e, x)}
                                     onBlur={(e) => this.checkData(e, x)}
                                   />
-                                  <div className="input-group-append" style={{ zIndex: 0 }}>
+                                  <div
+                                    className="input-group-append pointer"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      this.generateBrcd(this.state.barangSku[x].barcode === "" ? "generate" : "", x);
+                                    }}
+                                    style={{ zIndex: 0 }}
+                                  >
                                     {this.props.dataEdit === undefined ? (
                                       this.state.barangSku[x].barcode === "" ? (
-                                        <button className="btn btn-primary" name="generate" type="button" onClick={(e) => this.generateBrcd(e, x)}>
-                                          <i onClick={(e) => this.generateBrcd(e, x)} className="fa fa-refresh" />
+                                        <button className="btn btn-primary">
+                                          <i className="fa fa-refresh" />
                                         </button>
                                       ) : (
-                                        <button className="btn btn-danger" type="button" onClick={(e) => this.generateBrcd(e, x)}>
-                                          <i onClick={(e) => this.generateBrcd(e, x)} className="fa fa-close" />
+                                        <button className="btn btn-danger">
+                                          <i className="fa fa-close" />
                                         </button>
                                       )
                                     ) : (
@@ -2738,14 +2737,7 @@ class FormProduct extends Component {
                                   display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",
                                 }}
                               >
-                                <select
-                                  name="satuan_jual"
-                                  id="satuan_jual"
-                                  className="form-control"
-                                  value={this.state.barangSku[x].satuan_jual}
-                                  defaultValue={this.state.barangSku[x].satuan_jual}
-                                  onChange={(e) => this.handleChange(e, x)}
-                                >
+                                <select name="satuan_jual" id="satuan_jual" className="form-control" value={this.state.barangSku[x].satuan_jual} onChange={(e) => this.handleChange(e, x)}>
                                   <option value="">Pilih Opsi</option>
                                   <option value="1">Tampilkan</option>
                                   <option value="0">Sembunyikan</option>

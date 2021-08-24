@@ -3,7 +3,7 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import { isEmptyOrUndefined } from "helper";
+import { isEmptyOrUndefined, toCurrency, rmComma } from "helper";
 import { createCustomerType, updateCustomerType } from "redux/actions/masterdata/customer_type/customer_type.action";
 class FormCustomerType extends Component {
   constructor(props) {
@@ -13,6 +13,7 @@ class FormCustomerType extends Component {
     this.state = {
       kode: "",
       nama: "",
+      diskon: "0",
     };
   }
 
@@ -21,6 +22,7 @@ class FormCustomerType extends Component {
       this.setState({
         kode: props.detail.kode,
         nama: props.detail.nama,
+        diskon: props.detail.diskon,
       });
     }
   }
@@ -48,6 +50,7 @@ class FormCustomerType extends Component {
     e.preventDefault();
     let parseData = {};
     parseData["nama"] = this.state.nama;
+    parseData["diskon"] = this.state.diskon === "" ? 0 : rmComma(this.state.diskon);
     if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
     if (this.props.detail.id !== "") {
       this.props.dispatch(updateCustomerType(this.state.kode, parseData, this.props.detail.where));
@@ -67,6 +70,15 @@ class FormCustomerType extends Component {
                 Nama <span className="text-danger">*</span>
               </label>
               <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Diskon</label>
+              <div className="input-group">
+                <input type="text" className="form-control" name="diskon" value={toCurrency(this.state.diskon)} onChange={this.handleChange} />
+                <div className="input-group-append">
+                  <span className="input-group-text">Rp</span>
+                </div>
+              </div>
             </div>
           </ModalBody>
           <ModalFooter>
