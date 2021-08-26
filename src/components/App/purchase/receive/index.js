@@ -41,7 +41,7 @@ class Receive extends Component {
       location: "",
       location_val: "",
       supplier: "",
-      catatan: "",
+      catatan: "-",
       notasupplier: "",
       penerima: "",
       jenis_trx: "Tunai",

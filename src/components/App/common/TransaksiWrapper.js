@@ -10,7 +10,7 @@ class TransaksiWrapper extends Component {
     super(props);
     this.state = {
       tgl_order: toDate(new Date(), "-"),
-      catatan: "",
+      catatan: "-",
       toggleSide: false,
       nota: "",
       search: "",

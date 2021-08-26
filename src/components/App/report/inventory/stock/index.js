@@ -63,8 +63,8 @@ class InventoryReport extends Component {
       Object.assign(state, { isModalExcel: true });
       this.props.dispatch(FetchStockReportExcel(1, where, obj.total));
     } else {
-      console.log(this.state.location);
-      if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
+      // console.log(this.state.location);
+      // if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
       Object.assign(obj, { where_data: where });
       Object.assign(state, { isModalDetail: true, detail: obj });
       this.props.dispatch(FetchStockReportDetailSatuan(btoa(obj.kd_brg), where));

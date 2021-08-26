@@ -358,7 +358,7 @@ class TrxAdjustment extends Component {
                             </tr>
                           );
                         })
-                      : noData(head.length)
+                      : noData(head.length + rowSpan.length)
                   }
                 />
               </div>
