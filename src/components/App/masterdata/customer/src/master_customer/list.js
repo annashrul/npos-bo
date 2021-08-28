@@ -44,13 +44,13 @@ class ListCustomer extends Component {
     this.props.dispatch(FetchCustomerTypeAll());
   }
 
-  handleDelete(id) {
+  handleDelete(i) {
     let detail = {};
     Object.assign(detail, {
       where: this.state.where,
       total: this.props.data.total,
     });
-    this.props.dispatch(deleteCustomer(id, detail));
+    this.props.dispatch(deleteCustomer(this.props.data.data[i].kd_cust, detail));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;

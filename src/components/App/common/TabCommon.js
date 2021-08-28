@@ -19,10 +19,20 @@ class TabCommon extends Component {
     // }
   }
   componentWillReceiveProps(nextProps) {
-    this.getProps(nextProps);
+    let active = getStorage(`${nextProps.path}-active`);
+    console.log("componentWillReceiveProps", active);
+    // this.getProps(nextProps);
+    // let active = getStorage(`${nextProps.path}-active`);
+    // if (isEmptyOrUndefined(active)) {
+    //   this.handleSelect(parseInt(active, 10));
+    // }
   }
   componentWillMount() {
     this.getProps(this.props);
+    let active = getStorage(`${this.props.path}-active`);
+    if (isEmptyOrUndefined(active)) {
+      this.handleSelect(parseInt(active, 10));
+    }
   }
 
   componentDidMount() {
@@ -34,11 +44,12 @@ class TabCommon extends Component {
   }
 
   handleSelect = (index) => {
+    console.log(`${this.props.path}-active ${index}`);
     setStorage(`${this.props.path}-active`, index);
-    this.setState({ selectedIndex: index });
     if (this.props.callbackActive !== undefined) {
       this.props.callbackActive(index);
     }
+    this.setState({ selectedIndex: index });
   };
 
   render() {
