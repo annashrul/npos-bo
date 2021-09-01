@@ -36,15 +36,16 @@ class Customer extends Component {
     this.props.dispatch(FetchCustomerType("page=1"));
   }
   render() {
+    console.log("isActive", this.state.isActive);
     return (
       <TabCommon
         path={this.state.isActive === 0 ? "customer" : "customerType"}
         tabHead={["Daftar Customer", "Tipe customer"]}
         tabBody={[<ListCustomer data={this.props.customer} />, <ListCustomerType data={this.props.customerType} />]}
-        callbackActive={(res) => {
-          console.log(res);
-          this.setState({ isShow: res === 0, isActive: res });
-        }}
+        // callbackActive={(res) => {
+        //   console.log(res);
+        //   this.setState({ isShow: res === 0, isActive: res });
+        // }}
         // isActive={this.state.isA}
       />
     );

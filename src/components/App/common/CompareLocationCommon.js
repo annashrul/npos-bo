@@ -5,7 +5,7 @@ class CompareLocationCommon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      txt: "acuy",
+      txt: "",
     };
   }
 

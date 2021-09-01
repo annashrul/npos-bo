@@ -30,6 +30,8 @@ class HeaderReportCommon extends Component {
     let state = {};
     if (props.columnData !== undefined && props.columnData.length > 0) {
       Object.assign(state, { column_data: props.columnData });
+      setStorage(`columnStorage${this.props.pathName}`, props.columnData[0].value);
+
       // this.handleSelect("column", props.columnData[0]);
     }
     if (props.statusData !== undefined && props.statusData.length > 0) {
@@ -38,6 +40,7 @@ class HeaderReportCommon extends Component {
     }
     if (props.sortData !== undefined && props.sortData.length > 0) {
       Object.assign(state, { sort_data: props.sortData });
+      // setStorage(`sortStorage${this.props.pathName}`, props.sortData[0].value);
       // this.handleSelect("sort", props.sortData[0]);
     }
     if (props.otherData !== undefined && props.otherData.length > 0) {
@@ -69,6 +72,8 @@ class HeaderReportCommon extends Component {
     let getOther = props.isOther ? getStorage(`${props.otherState}Storage${path}`) : "";
     let where = `page=1`;
     let state = {};
+    console.log("column", getColumn);
+    console.log("sort", getSort);
     if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
       where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
       Object.assign(state, { dateFrom: getDateFrom, dateTo: getDateTo });
@@ -114,8 +119,6 @@ class HeaderReportCommon extends Component {
   }
 
   handleSelect(state, res) {
-    console.log(state, res);
-
     this.setState({ [state]: res.value });
     if (this.props.isOther) {
       if (state === this.props.otherState) setStorage(`${state}Storage${this.props.pathName}`, res.value);

@@ -41,7 +41,7 @@ class Receive extends Component {
       location: "",
       location_val: "",
       supplier: "",
-      catatan: "",
+      catatan: "-",
       notasupplier: "",
       penerima: "",
       jenis_trx: "Tunai",
@@ -424,7 +424,7 @@ class Receive extends Component {
   HandleCommonInputChange(e, errs = true, st = 0) {
     const column = e.target.name;
     const val = e.target.value;
-
+    console.log(val, column);
     if (column === "discount_persen" || column === "pajak") {
       let val_final = 0;
       if (val < 0 || val === "") val_final = 0;
@@ -1084,7 +1084,7 @@ class Receive extends Component {
               Receive pembelian #{this.props.match.params.slug !== undefined && this.props.match.params.slug !== null ? this.state.no_faktur_beli : this.props.nota}
             </h4>
             <h4 className="text-right   d-flex justify-content-between" style={{ width: "50%" }}>
-              <input type="date" name="tgl_order" className={"form-control  nbt nbr nbl bt"} value={this.state.tanggal} onChange={(e) => this.HandleCommonInputChange(e, true)} />
+              <input type="date" name="tanggal" className={"form-control  nbt nbr nbl bt"} value={this.state.tanggal} onChange={(e) => this.HandleCommonInputChange(e)} />
               <input
                 placeholder="Tambahkan catatan disini ...."
                 type="text"

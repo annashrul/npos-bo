@@ -43,14 +43,13 @@ class ListCustomerType extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formCustomerType"));
   }
-  handleDelete(e, i) {
-    e.preventDefault();
+  handleDelete(i) {
     let detail = {};
     Object.assign(detail, {
       where: this.state.where,
       total: this.props.data.total,
     });
-    this.props.dispatch(deleteCustomerType(i, detail));
+    this.props.dispatch(deleteCustomerType(this.props.data.data[i].kode, detail));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
