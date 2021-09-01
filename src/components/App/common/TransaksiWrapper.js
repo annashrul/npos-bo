@@ -4,12 +4,13 @@ import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import StickyBox from "react-sticky-box";
 import SelectCommon from "./SelectCommon";
+import moment from "moment";
 
 class TransaksiWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tgl_order: toDate(new Date(), "-"),
+      tgl_order: moment(new Date()).format("yyyy-MM-DD"),
       catatan: "-",
       toggleSide: false,
       nota: "",
