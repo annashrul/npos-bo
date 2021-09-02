@@ -31,13 +31,17 @@ class DetailStockReportSatuan extends Component {
 
   handelDetailTrx(e, obj) {
     e.preventDefault();
-    Object.assign(obj, { where: this.props.detail.where_data });
+    let location = "";
+    if (!this.props.detail.isLocation) {
+      location = `&lokasi=${obj.lokasi}`;
+    }
+    Object.assign(obj, { where: this.props.detail.where_data + location });
     this.setState({ isModal: true, detail: obj });
-    this.props.dispatch(FetchStockReportDetailTransaction(btoa(obj.kd_brg), this.props.detail.where_data, true));
+    this.props.dispatch(FetchStockReportDetailTransaction(btoa(obj.kd_brg), this.props.detail.where_data + location, true));
   }
 
   handlePageChange(page) {
-    let where = this.props.detail.where.split("&");
+    let where = this.props.detail.where_data.split("&");
     where.shift();
     let whereToString = `${where}`.replaceAll(",", "&");
     this.props.dispatch(FetchStockReportDetailSatuan(btoa(this.props.detail.kd_brg), `page=${page}&${whereToString}`, false));
