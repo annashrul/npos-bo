@@ -3,7 +3,7 @@ import Layout from "components/App/Layout";
 import { FetchOpname, FetchOpnameExcel } from "redux/actions/inventory/opname.action";
 import connect from "react-redux/es/connect/connect";
 import OpnameReportExcel from "components/App/modals/report/inventory/opname_report/form_opname_excel";
-import { DEFAULT_WHERE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, toDate } from "../../../../../helper";
+import { DEFAULT_WHERE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, toDate, float } from "../../../../../helper";
 import { statusOpname, STATUS_OPNAME } from "../../../../../helperStatus";
 import TableCommon from "../../../common/TableCommon";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
@@ -17,6 +17,7 @@ class OpnameReport extends Component {
       periode: "",
       where_data: DEFAULT_WHERE,
       column_data: [
+        { value: "nm_brg", label: "Nama barang" },
         { value: "kd_trx", label: "Kode transaksi" },
         { value: "tgl", label: "Tanggal" },
         { value: "status", label: "Status" },
@@ -55,7 +56,7 @@ class OpnameReport extends Component {
 
   render() {
     const { column_data, periode, isModalExport, where_data } = this.state;
-    const { per_page, last_page, current_page, data, total } = this.props.opnameReport;
+    const { per_page, last_page, current_page, data, total, total_opname } = this.props.opnameReport;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "Kode transaksi", width: "1%" },
@@ -77,6 +78,10 @@ class OpnameReport extends Component {
       { label: "Akhir" },
       { label: "Fisik" },
     ];
+    let totalFisikPerPage = 0;
+    let totalAkhirPerPage = 0;
+    let totalHppPerPage = 0;
+    console.log(total_opname);
     return (
       <Layout page="Laporan Opname">
         <HeaderReportCommon
@@ -98,7 +103,9 @@ class OpnameReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    console.log(v);
+                    totalFisikPerPage += float(v.qty_fisik);
+                    totalAkhirPerPage += float(v.stock_terakhir);
+                    totalHppPerPage += float(v.hrg_beli);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
@@ -122,6 +129,28 @@ class OpnameReport extends Component {
                 : noData(head.length + rowSpan.length)
               : noData(head.length + rowSpan.length)
           }
+          footer={[
+            {
+              data: [
+                { colSpan: 8, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 1, label: parseToRp(totalAkhirPerPage), className: `text-right` },
+                { colSpan: 1, label: parseToRp(totalFisikPerPage), className: `text-right ` },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: parseToRp(totalHppPerPage), className: `text-right ` },
+                { colSpan: 3, label: "" },
+              ],
+            },
+            {
+              data: [
+                { colSpan: 8, label: "Total keseluruhan", className: "text-left" },
+                { colSpan: 1, label: parseToRp(total_opname ? total_opname.total_akhir : 0), className: `text-right` },
+                { colSpan: 1, label: parseToRp(total_opname ? total_opname.total_fisik : 0), className: `text-right ` },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: parseToRp(total_opname ? total_opname.total_hpp : 0), className: `text-right ` },
+                { colSpan: 3, label: "" },
+              ],
+            },
+          ]}
         />
         {this.props.isOpen && isModalExport ? <OpnameReportExcel periode={periode} /> : null}
       </Layout>
