@@ -719,7 +719,7 @@ export const isProgress = (props, callback) => {
     return (
       <button
         disabled={isDisabled}
-        className="btn btn-primary ml-1"
+        className="btn btn-primary ml-2"
         onClick={(e) => {
           e.preventDefault();
           callback();
