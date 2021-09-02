@@ -112,7 +112,7 @@ class ListPosting extends Component {
                   ? data.map((v, i) => {
                       total_fisik_per += parseFloat(v.qty_fisik);
                       total_akhir_per += parseFloat(v.stock_terakhir);
-                      total_hpp_per += Math.abs(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * parseInt(v.hrg_beli, 10);
+                      total_hpp_per += (parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * parseInt(v.hrg_beli, 10);
                       return (
                         <tr key={i}>
                           <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
@@ -136,7 +136,7 @@ class ListPosting extends Component {
                           <td className="middle nowrap text-right">{parseToRp(v.qty_fisik)}</td>
                           <td className="middle nowrap text-right">{parseToRp(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir))}</td>
                           <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
-                          <td className="middle nowrap text-right">{parseToRp(Math.abs(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * v.hrg_beli)}</td>
+                          <td className="middle nowrap text-right">{parseToRp((parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * v.hrg_beli)}</td>
                           <td className="middle nowrap">{statusApprovalOpname("0", true)}</td>
                         </tr>
                       );
@@ -146,7 +146,7 @@ class ListPosting extends Component {
               footer={[
                 {
                   data: [
-                    { colSpan: 9, label: "Total keseluruhan", className: "text-left" },
+                    { colSpan: 9, label: "Total perhalaman", className: "text-left" },
                     { colSpan: 1, label: parseToRp(total_akhir_per) },
                     { colSpan: 1, label: parseToRp(total_fisik_per) },
                     { colSpan: 2, label: "" },
