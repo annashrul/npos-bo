@@ -207,14 +207,19 @@ class HeaderReportCommon extends Component {
                 type="search"
                 name="any"
                 className="form-control"
-                placeholder="tulis & tekan enter"
+                placeholder="tulis & enter"
                 value={any}
                 onChange={this.handleChange}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") this.handleSearch(e);
                 }}
               />
-              {isProgress(this.props.excelData, () => this.props.callbackExcel())}
+              <span className="input-group-append">
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                  <i className="fa fa-search" />
+                </button>
+                {isProgress(this.props.excelData, () => this.props.callbackExcel())}
+              </span>
             </div>
           </div>
         )}

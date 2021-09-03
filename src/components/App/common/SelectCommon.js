@@ -23,30 +23,37 @@ class SelectCommon extends Component {
   getProps(props) {
     let propsGroup = props.options;
     let state = { value_data: propsGroup, label: props.label };
-
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
       if (props.dataEdit === "-") {
         Object.assign(state, { value: "" });
-      } else {
-        const check = propsGroup.filter((val) => val.value === props.dataEdit);
-        if (check[0] !== undefined) {
-          Object.assign(state, { value: check[0] });
-        }
       }
+      // else {
+      //   const check = propsGroup.filter((val) => val.value === props.dataEdit);
+      //   if (check[0] !== undefined) {
+      //     console.log("data edit", check);
+      //     Object.assign(state, { value: check[0] });
+      //     // this.props.callback(check[0]);
+      //   }
+      // }
     }
-
-    // if (props.label === "kassa") Object.assign(state, { value: { label: "Z", value: "Z" } });
-
     this.setState(state);
   }
+
   componentWillMount() {
     this.getProps(this.props);
   }
   componentDidMount() {
     this.getProps(this.props);
+    if (this.props.dataEdit !== undefined || this.props.dataEdit !== "") {
+      const check = this.props.options.filter((val) => val.value === this.props.dataEdit);
+      if (check[0] !== undefined) {
+        this.onChange(check[0]);
+      }
+    }
   }
   componentWillReceiveProps(nextProps) {
     this.getProps(nextProps);
+    console.log("componentWillReceiveProps", nextProps.dataEdit);
   }
 
   onChange(value) {

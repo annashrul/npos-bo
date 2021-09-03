@@ -115,7 +115,15 @@ class TransaksiWrapper extends Component {
             <StickyBox offsetTop={100} offsetBottom={20} style={toggleSide ? { display: "none", width: "30%", marginRight: "10px" } : { display: "block", width: "30%", marginRight: "10px" }}>
               <div className="card">
                 <div className="card-body">
-                  <SelectCommon label={`Cari berdasarkan ${searchby.label.toLowerCase()}`} options={searchby_data} callback={(res) => this.HandleSearch("searchby", res)} dataEdit={searchby.value} />
+                  <SelectCommon
+                    label={`Cari berdasarkan ${searchby.label.toLowerCase()}`}
+                    options={searchby_data}
+                    callback={(res) => {
+                      this.HandleSearch("searchby", res);
+                      console.log("search by", res);
+                    }}
+                    dataEdit={searchby.value}
+                  />
                   <div className="form-group">
                     <div className="input-group input-group-sm">
                       <input

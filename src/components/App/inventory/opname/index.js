@@ -14,7 +14,7 @@ import { storeAdjusment } from "redux/actions/adjustment/adjustment.action";
 import TransaksiWrapper from "../../common/TransaksiWrapper";
 import LokasiCommon from "../../common/LokasiCommon";
 import TableCommon from "../../common/TableCommon";
-import { float, getStorage, handleError, isEmptyOrUndefined, noData, rmComma, setFocus, setStorage, swallOption, toCurrency } from "../../../../helper";
+import { float, getStorage, handleError, isEmptyOrUndefined, noData, rmComma, rmStorage, setFocus, setStorage, swallOption, toCurrency } from "../../../../helper";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import { actionDataCommon, getDataCommon, handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
 
@@ -54,6 +54,11 @@ class TrxOpname extends Component {
   handleClear() {
     destroy(table);
   }
+
+  // componentWillUnmount() {
+  //   this.handleClear();
+  //   this.getData();
+  // }
   handleFetch(perpage = 5, res = null) {
     let storageLocation = getStorage(locationStorage);
     let storagePerpage = float(getStorage(perpageStorage));

@@ -105,7 +105,7 @@ class OpnameReport extends Component {
                 ? data.map((v, i) => {
                     totalFisikPerPage += float(v.qty_fisik);
                     totalAkhirPerPage += float(v.stock_terakhir);
-                    totalHppPerPage += float(v.hrg_beli);
+                    totalHppPerPage += (parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * parseInt(v.hrg_beli, 10);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
@@ -120,7 +120,7 @@ class OpnameReport extends Component {
                         <td className="middle nowrap text-right">{parseToRp(v.qty_fisik)}</td>
                         <td className="middle nowrap text-right">{parseToRp(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir))}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(Math.abs(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * v.hrg_beli)}</td>
+                        <td className="middle nowrap text-right">{parseToRp((parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir)) * v.hrg_beli)}</td>
                         <td className="middle nowrap">{statusOpname(v.status, true)}</td>
                         <td className="middle nowrap">{toDate(v.tanggal)}</td>
                       </tr>
