@@ -2679,7 +2679,7 @@ class FormProduct extends Component {
                               <td>
                                 <div className="input-group">
                                   <input
-                                    readOnly={this.props.dataEdit === undefined ? false : true}
+                                    // readOnly={this.props.dataEdit === undefined ? false : true}
                                     type="text"
                                     className="form-control"
                                     placeholder="Input barcode"

@@ -67,6 +67,7 @@ class ListProduct extends Component {
       isModalFormPer: false,
       isModalDetail: false,
       isModalCustomer: false,
+      isModalExportExcel: false,
     };
   }
   getProps(param) {
@@ -352,6 +353,7 @@ class ListProduct extends Component {
   }
   handleExport(e) {
     e.preventDefault();
+    this.setState({ isModalExportExcel: true });
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProductExcel"));
@@ -697,7 +699,7 @@ class ListProduct extends Component {
 
         {this.state.isModalDetail ? <DetailProduct detail={this.state.detail} dataDetail={this.props.productDetail} /> : null}
         {this.state.isModalCustomer ? <CustomerPrice dataCustomerPrice={this.props.customerPrice} /> : null}
-        <FormProductExport />
+        {this.props.isOpen || this.state.isModalExportExcel ? <FormProductExport /> : null}
       </div>
     );
   }
