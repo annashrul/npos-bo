@@ -11,7 +11,7 @@ class HeaderDetailCommon extends Component {
             <div className={`col-12 col-xs-12 ${this.props.md ? this.props.md : `col-md-6`}`} key={key}>
               <div className="row">
                 <div className={`col-4 col-xs-6 ${this.props.md ? `col-md-4` : `col-md-6`}`}>{val.title}</div>
-                <div className={`col-8 col-xs-6 ${this.props.md ? `col-md-8` : `col-md-6`}`}>: {CapitalizeEachWord(desc.toLowerCase())}</div>
+                <div className={`col-8 col-xs-6 ${this.props.md ? `col-md-8` : `col-md-6`}`}>: {val.desc ? CapitalizeEachWord(desc.toLowerCase()) : "-"}</div>
               </div>
             </div>
           );
