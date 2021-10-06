@@ -8,6 +8,8 @@ import Spinner from '../../../Spinner';
 import BayarHutangForm from './src/bayar_hutang_form'
 import moment from "moment";
 import Paginationq from "helper";
+import DetailTrxHutang from '../modals/hutang/detail_trx_hutang';
+import { FetchReportDetail } from '../../../redux/actions/purchase/receive/receive.action';
 
 class BayarHutang extends Component{
     constructor(props) {
@@ -16,7 +18,9 @@ class BayarHutang extends Component{
             isOpen:false,
             indexOpen:null,
             isPay:false,
-            data:{}
+            isModalDetail:false,
+            data:{},
+            detail: {},
         }
         this.toggle     = this.toggle.bind(this);
         this.handleBayar     = this.handleBayar.bind(this);
@@ -29,6 +33,15 @@ class BayarHutang extends Component{
         this.props.dispatch(FetchKartuHutang(1,''))
     }
 
+    handleDetail(e,v) {
+        e.preventDefault();
+        this.setState({
+          isModalDetail: true,
+          detail:v
+        });
+    
+        this.props.dispatch(FetchReportDetail(v.no_faktur_beli, "", true));
+      }
     toggle(e,index){
         e.preventDefault();
         this.setState({
@@ -119,15 +132,23 @@ class BayarHutang extends Component{
                                                     <div className="accordion" key={j}>
                                                         <div className="card rounded bg-dark mb-1">
                                                             <div className="card-header d-flex align-items-center justify-content-between">
-                                                                <div>
-                                                                    <h6 className="text-light">
-                                                                        {w.no_faktur_beli} | Sisa : Rp. {toRp(parseInt(w.sisa_hutang,10))}
-                                                                    </h6>
-                                                                    <small className="text-light">Dibuat : {moment(w.tgl_beli).format('YYYY-MM-DD')} | </small>
-                                                                    <small className="text-light">Tempo : {moment(w.tempo).format('YYYY-MM-DD')} | </small>
-                                                                    <small className="text-light">Nota Supplier : {w.nota_supplier} | </small>
-                                                                    <small className="text-light">Hutang : {toRp(parseInt(w.hutang,10))} | </small>
-                                                                    <small className="text-light">Dibayar : {toRp(parseInt(w.dibayar,10))}</small>
+                                                                <div className="d-flex align-items-center justify-content-start">
+                                                                    <button
+                                                                        className="btn btn-info mr-2"
+                                                                        onClick={(e) => this.handleDetail(e, w)}
+                                                                    >
+                                                                        <i className="fa fa-eye" />
+                                                                    </button>
+                                                                    <div>
+                                                                        <h6 className="text-light">
+                                                                            {w.no_faktur_beli} | Sisa : Rp. {toRp(parseInt(w.sisa_hutang,10))}
+                                                                        </h6>
+                                                                        <small className="text-light">Dibuat : {moment(w.tgl_beli).format('YYYY-MM-DD')} | </small>
+                                                                        <small className="text-light">Tempo : {moment(w.tempo).format('YYYY-MM-DD')} | </small>
+                                                                        <small className="text-light">Nota Supplier : {w.nota_supplier} | </small>
+                                                                        <small className="text-light">Hutang : {toRp(parseInt(w.hutang,10))} | </small>
+                                                                        <small className="text-light">Dibayar : {toRp(parseInt(w.dibayar,10))}</small>
+                                                                    </div>
                                                                 </div>
                                                                 <button className="btn btn-primary" onClick={(e)=>this.handleBayar(e,w.no_faktur_beli)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                                                 <i class="fa fa-usd"></i>&nbsp;Bayar
@@ -162,6 +183,7 @@ class BayarHutang extends Component{
                         <BayarHutangForm data={this.state.data} action={this.update} />
                     </CardBody>
                 </Card>
+                {this.props.isOpen && this.state.isModalDetail ? <DetailTrxHutang master={this.state.detail} receiveReportDetail={this.props.receiveReportDetail} /> : null}
             </Layout>
         );
     }
@@ -171,6 +193,9 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     getKartuHutang:state.hutangReducer.data_kartu_hutang,
     isLoading:state.hutangReducer.isLoading,
+    receiveReportDetail: state.receiveReducer.dataReceiveReportDetail,
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
 });
 
 export default connect(mapStateToPropsCreateItem)(BayarHutang);

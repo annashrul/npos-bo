@@ -35,6 +35,7 @@ class ReceiveReport extends Component {
       column_data: [
         { value: "no_faktur_beli", label: "No. Faktur" },
         { value: "nama_penerima", label: "Penerima" },
+        { value: "supplier", label: "Supplier" },
       ],
       isModalDetail: false,
       isModalForm: false,
@@ -51,6 +52,7 @@ class ReceiveReport extends Component {
   }
 
   handleService(res, page = 1) {
+    console.log(res);
     if (res !== undefined) {
       let where = getFetchWhere(res, page);
       let state = { where_data: where };

@@ -94,6 +94,10 @@ class HeaderReportCommon extends Component {
       where += `&${props.otherStatus ? props.otherStatus : "status"}=${getStatus}`;
       Object.assign(state, { status: getStatus });
     }
+    if (isEmptyOrUndefined(getColumn)) {
+      where += `&${props.otherColumn ? props.otherColumn : "searchby"}=${getColumn}`;
+      Object.assign(state, { searchby: getColumn });
+    }
     if (props.sortNotColumn) {
       if (isEmptyOrUndefined(getSort)) {
         where += `&sort=${getSort}`;
