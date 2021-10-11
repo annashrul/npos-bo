@@ -203,7 +203,7 @@ class Receive extends Component {
 
     if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== "") {
       if (parseInt(localStorage.ambil_data, 10) === 2) {
-        this.props.dispatch(FetchPoReport("page=1"));
+        this.props.dispatch(FetchPoReport("page=1&perpage=9999"));
       }
       this.setState({
         ambil_data: localStorage.ambil_data,
@@ -475,7 +475,7 @@ class Receive extends Component {
 
     if (column === "ambil_data") {
       if (parseInt(val, 10) === 2) {
-        this.props.dispatch(FetchPoReport("page=1"));
+        this.props.dispatch(FetchPoReport("page=1&perpage=9999"));
       }
       localStorage.setItem("ambil_data", val);
       destroy(table);
