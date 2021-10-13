@@ -34,7 +34,7 @@ export const createRak = (data) => {
     handlePost(baseUrl, data, (res, msg, status) => {
       swal(msg);
       if (status) {
-        dispatch(ModalToggle(false));
+        // dispatch(ModalToggle(false));
         dispatch(FetchRak("page=1"));
       }
     });

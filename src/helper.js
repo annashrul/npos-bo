@@ -654,7 +654,9 @@ export const noData = (colSpan) => {
   return (
     <tr>
       <td colSpan={colSpan} className="middle text-center">
-        Data tidak tersedia
+        <span className="badge badge-warning" style={{ fontSize: "18px", padding: "10px" }}>
+          Data tidak tersedia
+        </span>
       </td>
     </tr>
   );
@@ -717,7 +719,7 @@ export const isProgress = (props, callback) => {
     return (
       <button
         disabled={isDisabled}
-        className="btn btn-primary ml-1"
+        className="btn btn-primary ml-2"
         onClick={(e) => {
           e.preventDefault();
           callback();

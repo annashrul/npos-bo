@@ -35,6 +35,7 @@ class ReceiveReport extends Component {
       column_data: [
         { value: "no_faktur_beli", label: "No. Faktur" },
         { value: "nama_penerima", label: "Penerima" },
+        { value: "supplier", label: "Supplier" },
       ],
       isModalDetail: false,
       isModalForm: false,
@@ -51,6 +52,7 @@ class ReceiveReport extends Component {
   }
 
   handleService(res, page = 1) {
+    console.log(res);
     if (res !== undefined) {
       let where = getFetchWhere(res, page);
       let state = { where_data: where };
@@ -169,13 +171,14 @@ class ReceiveReport extends Component {
                         <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                         <td className="text-center middle nowrap">
                           <ButtonActionCommon
-                            action={[{ label: "Detail" }, { label: "Retur" }, { label: "Hapus" }, { label: "Edit" }, { label: "Print Faktur" }]}
+                            action={[{ label: "Detail" }, { label: "Retur" }, { label: "Hapus" }, { label: "Edit" }, { label: "Nota" }, { label: "3ply" }]}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleModal("retur", v);
                               if (e === 2) this.handleDelete(v.no_faktur_beli);
                               if (e === 3) this.handleEdit(v);
                               if (e === 4) this.handleRePrint(v.no_faktur_beli);
+                              if (e === 5) this.props.history.push(`../receive3plyId/${v.no_faktur_beli}`);
                             }}
                           />
                         </td>

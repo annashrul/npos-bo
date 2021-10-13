@@ -83,6 +83,7 @@ import Pembelian3ply from "../print/pembelian3ply";
 import Pembelian3plyId from "../print/pembelian3plyId";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
+import Receive3plyId from "../print/receive3plyId";
 import priceTagPrint from "../print/priceTag";
 import paket from "../masterdata/paket";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
@@ -99,25 +100,12 @@ const Routes = (
       <Route path="/pembelian3plyId/:id" exact strict component={Pembelian3plyId} />
       <Route path="/alokasi3ply/:id" exact strict component={Alokasi3ply} />
       <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
+      <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
+      <Route path="/receive3plyId/:id" exact strict component={Receive3plyId} />
       <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
-      <Route
-        path="/bayar_hutang3ply/:id"
-        exact
-        strict
-        component={BayarHutang3ply}
-      />
-      <Route
-        path="/bayar_piutang3ply/:id"
-        exact
-        strict
-        component={BayarPiutang3ply}
-      />
-      <Route
-        path="/bayar_mutasi3ply"
-        exact
-        strict
-        component={BayarMutasi3ply}
-      />
+      <Route path="/bayar_hutang3ply/:id" exact strict component={BayarHutang3ply} />
+      <Route path="/bayar_piutang3ply/:id" exact strict component={BayarPiutang3ply} />
+      <Route path="/bayar_mutasi3ply" exact strict component={BayarMutasi3ply} />
       <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
       <Route path="/retur3ply" exact strict component={Retur3ply} />
       <Route path="/po3ply" exact strict component={Po3ply} />
@@ -151,57 +139,22 @@ const Routes = (
       {/* INVENTORY SECTION START */}
       <PrivateRoute path="/adjustment" exact strict component={Adjustment} />
       <PrivateRoute path="/opname" exact strict component={Opname} />
-      <PrivateRoute
-        path="/approval_opname"
-        exact
-        strict
-        component={ListPosting}
-      />
-      <PrivateRoute
-        path="/approval_mutasi"
-        exact
-        strict
-        component={ApprovalMutasi}
-      />
-      <PrivateRoute
-        path="/delivery_note"
-        exact
-        strict
-        component={DeliveyNote}
-      />
+      <PrivateRoute path="/approval_opname" exact strict component={ListPosting} />
+      <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
+      <PrivateRoute path="/delivery_note" exact strict component={DeliveyNote} />
       <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
       <PrivateRoute path="/packing" exact strict component={Packing} />
       <PrivateRoute path="/expedisi" exact strict component={Expedisi} />
       <PrivateRoute path="/edit/alokasi/:id" exact strict component={Alokasi} />
 
-      <PrivateRoute
-        path="/approval_mutasi_jual_beli"
-        exact
-        strict
-        component={ApprovalMutasiJualBeli}
-      />
-      <PrivateRoute
-        path="/bayar_mutasi_jual_beli"
-        exact
-        strict
-        component={BayarMutasiJualBeli}
-      />
+      <PrivateRoute path="/approval_mutasi_jual_beli" exact strict component={ApprovalMutasiJualBeli} />
+      <PrivateRoute path="/bayar_mutasi_jual_beli" exact strict component={BayarMutasiJualBeli} />
       {/* INVENTORY SECTION END */}
 
       {/* PEMBELIAN SECTION START */}
       <PrivateRoute path="/receive" exact strict component={Receive} />
-      <PrivateRoute
-        path="/purchase_order"
-        exact
-        strict
-        component={PurchaseOrder}
-      />
-      <PrivateRoute
-        path="/retur_tanpa_nota"
-        exact
-        strict
-        component={ReturTanpaNota}
-      />
+      <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
+      <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
       {/* PEMBELIAN SECTION END */}
 
       {/* TRANSAKSI SECTION START */}
@@ -211,151 +164,36 @@ const Routes = (
 
       {/* PEMBAYARAN SECTION START */}
       <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
-      <PrivateRoute
-        path="/bayar_piutang"
-        exact
-        strict
-        component={BayarPiutang}
-      />
+      <PrivateRoute path="/bayar_piutang" exact strict component={BayarPiutang} />
       {/* PEMBAYARAN SECTION END */}
 
       {/* REPORT SECTION START */}
-      <PrivateRoute
-        path="/report/inventory"
-        exact
-        strict
-        component={InventoryReport}
-      />
-      <PrivateRoute
-        path="/report/inventory/nilai_persediaan"
-        exact
-        strict
-        component={NilaiPersediaanReport}
-      />
-      <PrivateRoute
-        path="/report/adjustment"
-        exact
-        strict
-        component={AdjustmentReport}
-      />
+      <PrivateRoute path="/report/inventory" exact strict component={InventoryReport} />
+      <PrivateRoute path="/report/inventory/nilai_persediaan" exact strict component={NilaiPersediaanReport} />
+      <PrivateRoute path="/report/adjustment" exact strict component={AdjustmentReport} />
       <PrivateRoute path="/report/po" exact strict component={PoReport} />
-      <PrivateRoute
-        path="/report/receive"
-        exact
-        strict
-        component={ReceiveReport}
-      />
-      <PrivateRoute
-        path="/report/alokasi"
-        exact
-        strict
-        component={AlokasiReport}
-      />
+      <PrivateRoute path="/report/receive" exact strict component={ReceiveReport} />
+      <PrivateRoute path="/report/alokasi" exact strict component={AlokasiReport} />
       <PrivateRoute path="/report/dn" exact strict component={DnReport} />
-      <PrivateRoute
-        path="/report/opname"
-        exact
-        strict
-        component={OpnameReport}
-      />
-      <PrivateRoute
-        path="/report/packing"
-        exact
-        strict
-        component={PackingReport}
-      />
-      <PrivateRoute
-        path="/report/expedisi"
-        exact
-        strict
-        component={ExpedisiReport}
-      />
-      <PrivateRoute
-        path="/report/mutation"
-        exact
-        strict
-        component={MutationReport}
-      />
-      <PrivateRoute
-        path="/report/alokasi_trx"
-        exact
-        strict
-        component={TransactionReport}
-      />
-      <PrivateRoute
-        path="/report/production"
-        exact
-        strict
-        component={ProductionReport}
-      />
+      <PrivateRoute path="/report/opname" exact strict component={OpnameReport} />
+      <PrivateRoute path="/report/packing" exact strict component={PackingReport} />
+      <PrivateRoute path="/report/expedisi" exact strict component={ExpedisiReport} />
+      <PrivateRoute path="/report/mutation" exact strict component={MutationReport} />
+      <PrivateRoute path="/report/alokasi_trx" exact strict component={TransactionReport} />
+      <PrivateRoute path="/report/production" exact strict component={ProductionReport} />
       <PrivateRoute path="/report/closing" exact strict component={Closing} />
       <PrivateRoute path="/report/cash" exact strict component={ReportCash} />
-      <PrivateRoute
-        path="/report/laba_rugi"
-        exact
-        strict
-        component={ReportLabaRugi}
-      />
-      <PrivateRoute
-        path="/report/hutang"
-        exact
-        strict
-        component={HutangReport}
-      />
-      <PrivateRoute
-        path="/report/piutang"
-        exact
-        strict
-        component={PiutangReport}
-      />
-      <PrivateRoute
-        path="/report/sale_archive"
-        exact
-        strict
-        component={SaleArchive}
-      />
-      <PrivateRoute
-        path="/report/sale_by_cust_archive"
-        exact
-        strict
-        component={SaleByCustArchive}
-      />
-      <PrivateRoute
-        path="/report/sale_by_product_archive"
-        exact
-        strict
-        component={SaleByProductArchive}
-      />
-      <PrivateRoute
-        path="/report/sale_by_sales_archive"
-        exact
-        strict
-        component={SaleBySalesArchive}
-      />
-      <PrivateRoute
-        path="/report/sale_omset"
-        exact
-        strict
-        component={SaleOmsetArchive}
-      />
-      <PrivateRoute
-        path="/report/sale_omset_periode"
-        exact
-        strict
-        component={SaleOmsetPeriodeArchive}
-      />
-      <PrivateRoute
-        path="/report/purchase_by_supplier"
-        exact
-        strict
-        component={PurchaseBySupplierReport}
-      />
-      <PrivateRoute
-        path="/report/sale_retur_archive"
-        exact
-        strict
-        component={SaleReturReport}
-      />
+      <PrivateRoute path="/report/laba_rugi" exact strict component={ReportLabaRugi} />
+      <PrivateRoute path="/report/hutang" exact strict component={HutangReport} />
+      <PrivateRoute path="/report/piutang" exact strict component={PiutangReport} />
+      <PrivateRoute path="/report/sale_archive" exact strict component={SaleArchive} />
+      <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
+      <PrivateRoute path="/report/sale_by_product_archive" exact strict component={SaleByProductArchive} />
+      <PrivateRoute path="/report/sale_by_sales_archive" exact strict component={SaleBySalesArchive} />
+      <PrivateRoute path="/report/sale_omset" exact strict component={SaleOmsetArchive} />
+      <PrivateRoute path="/report/sale_omset_periode" exact strict component={SaleOmsetPeriodeArchive} />
+      <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
+      <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
       <PrivateRoute path="/log/trx" exact strict component={LogTrxReport} />
       <PrivateRoute path="/log/act" exact strict component={LogActReport} />
       {/* REPORT SECTION END */}
@@ -367,12 +205,7 @@ const Routes = (
       {/* SETTINGS SECTION END */}
 
       {/* OTHERS SECTION START */}
-      <PrivateRoute
-        path="/cetak_barcode"
-        exact
-        strict
-        component={CetakBarcode}
-      />
+      <PrivateRoute path="/cetak_barcode" exact strict component={CetakBarcode} />
       <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
       <PrivateRoute path="/upload" exact strict component={Upload} />
       {/* OTHERS SECTION END */}

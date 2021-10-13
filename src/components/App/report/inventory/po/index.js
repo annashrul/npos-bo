@@ -12,12 +12,16 @@ import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
 import { Link } from "react-router-dom";
+import { handleGet } from "../../../../../redux/actions/handleHttp";
+import { rePrintFaktur } from "../../../../../redux/actions/purchase/receive/receive.action";
+import { rePrintFakturPo } from "../../../../../redux/actions/purchase/purchase_order/po.action";
 
 class PoReport extends Component {
   constructor(props) {
     super(props);
     this.handleModal = this.handleModal.bind(this);
     this.handleService = this.handleService.bind(this);
+    this.handlePrintFaktur = this.handlePrintFaktur.bind(this);
     this.state = {
       master: {},
       where_data: "",
@@ -37,6 +41,7 @@ class PoReport extends Component {
   }
 
   handleService(res, page = 1) {
+    console.log("handle service");
     if (res !== undefined) {
       let where = getFetchWhere(res, page);
       let state = { where_data: where };
@@ -72,7 +77,9 @@ class PoReport extends Component {
     }
     this.setState(setState);
   }
-
+  handlePrintFaktur(nota) {
+    this.props.dispatch(rePrintFakturPo(nota));
+  }
   render() {
     const { total, last_page, per_page, current_page, data } = this.props.poReport;
     const { column_data, dateFrom, dateTo, isModalDetail, isModalExport, master } = this.state;
@@ -118,10 +125,14 @@ class PoReport extends Component {
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
-                          <ButtonActionCommon action={[{ label: "Detail" }, { label: "3ply" }]} callback={(e) => {
+                          <ButtonActionCommon
+                            action={[{ label: "Detail" }, { label: "3ply" }, { label: "Nota" }]}
+                            callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.props.history.push(`../po3plyId/${v.no_po}`);
-                            }} />
+                              if (e === 2) this.handlePrintFaktur(v.no_po);
+                            }}
+                          />
                         </td>
                         <td className="middle nowrap">{v.no_po}</td>
                         <td className="middle nowrap">{toDate(v.tgl_po)} </td>
@@ -129,7 +140,7 @@ class PoReport extends Component {
                         <td className="middle nowrap">{v.nama_supplier}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis}</td>
-                        <td className="middle nowrap">{v.kd_kasir}</td>
+                        <td className="middle nowrap">{v.operator}</td>
                         <td className="middle nowrap">{statusPurchaseOrder(v.status, true)}</td>
                       </tr>
                     );

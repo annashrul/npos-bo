@@ -4,13 +4,14 @@ import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import StickyBox from "react-sticky-box";
 import SelectCommon from "./SelectCommon";
+import moment from "moment";
 
 class TransaksiWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tgl_order: toDate(new Date(), "-"),
-      catatan: "",
+      tgl_order: moment(new Date()).format("yyyy-MM-DD"),
+      catatan: "-",
       toggleSide: false,
       nota: "",
       search: "",
@@ -114,8 +115,15 @@ class TransaksiWrapper extends Component {
             <StickyBox offsetTop={100} offsetBottom={20} style={toggleSide ? { display: "none", width: "30%", marginRight: "10px" } : { display: "block", width: "30%", marginRight: "10px" }}>
               <div className="card">
                 <div className="card-body">
-                  <SelectCommon label={`Cari berdasarkan ${searchby.label.toLowerCase()}`} options={searchby_data} callback={(res) => this.HandleSearch("searchby", res)} dataEdit={searchby.value} />
-
+                  <SelectCommon
+                    label={`Cari berdasarkan ${searchby.label.toLowerCase()}`}
+                    options={searchby_data}
+                    callback={(res) => {
+                      this.HandleSearch("searchby", res);
+                      console.log("search by", res);
+                    }}
+                    dataEdit={searchby.value}
+                  />
                   <div className="form-group">
                     <div className="input-group input-group-sm">
                       <input
@@ -137,7 +145,7 @@ class TransaksiWrapper extends Component {
                       </span>
                     </div>
                   </div>
-                  <div className="people-list" style={{ scrollBehavior: "smooth", height: "300px", maxHeight: "100%", overflowY: "scroll" }}>
+                  <div className="people-list" style={{ scrollBehavior: "smooth", overflowY: "scroll", height: "300px", maxHeight: "100%" }}>
                     <div id="chat_user_2">
                       <ul className="chat-list list-unstyled">
                         {data.length !== 0 ? (

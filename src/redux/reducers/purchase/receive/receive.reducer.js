@@ -44,6 +44,7 @@ export const receiveReducer = (state = initialState, action) => {
     //         data: action.data.result,
     //     });
     case RECEIVE.RECEIVE_REPORT_DETAIL:
+      console.log("reducer", action.data.result);
       return Object.assign({}, state, {
         status: action.data.status,
         msg: action.data.msg,

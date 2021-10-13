@@ -19,25 +19,33 @@ class Product extends Component {
     };
   }
 
+  handleActive(res) {
+    if (res === 0) {
+      this.handleService();
+      this.props.dispatch(FetchRak("page=1&perpage=99999"));
+    } else if (res === 1) {
+      this.props.dispatch(FetchPriceProduct("page=1"));
+    } else {
+      this.props.dispatch(FetchGroupProduct("page=1"));
+    }
+  }
+
   handleService() {
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
-    if (
-      getIsPeriodeBarang === null ||
-      getIsPeriodeBarang === "null" ||
-      getIsPeriodeBarang === "true"
-    ) {
+    if (getIsPeriodeBarang === null || getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
       this.props.dispatch(FetchProduct());
     }
   }
   componentWillMount() {
-    this.handleService();
-    this.props.dispatch(FetchPriceProduct("page=1"));
-    this.props.dispatch(FetchGroupProduct("page=1"));
-    this.props.dispatch(FetchRak("page=1&perpage=99999"));
+    this.handleActive(0);
+    // this.handleService();
+    // this.props.dispatch(FetchPriceProduct("page=1"));
+
+    // this.props.dispatch(FetchRak("page=1&perpage=99999"));
   }
 
   componentDidMount() {
-    this.handleService();
+    this.handleActive(0);
   }
 
   render() {
@@ -45,14 +53,7 @@ class Product extends Component {
       <TabCommon
         path="barang"
         tabHead={["Barang", "Harga barang", "Kelompok barang"]}
-        tabBody={[
-          <ListProduct
-            data={this.props.product}
-            group={this.props.groupProduct}
-          />,
-          <ListPriceProduct data={this.props.priceProduct} />,
-          <ListGroupProduct data={this.props.groupProduct} />,
-        ]}
+        tabBody={[<ListProduct data={this.props.product} group={this.props.groupProduct} />, <ListPriceProduct data={this.props.priceProduct} />, <ListGroupProduct data={this.props.groupProduct} />]}
         otherWidget={
           <div className={`${!this.state.isShow && "none"}`}>
             <Link to="upload" className="btn btn-outline-info">
@@ -61,6 +62,7 @@ class Product extends Component {
           </div>
         }
         callbackActive={(res) => {
+          this.handleActive(res);
           this.setState({ isShow: res === 0 });
         }}
       />

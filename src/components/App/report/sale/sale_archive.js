@@ -146,6 +146,7 @@ class SaleArchive extends Component {
       { rowSpan: "2", label: "Bank" },
       { rowSpan: "2", label: "Keterangan" },
     ];
+    const rowSpan = [{ label: "Item" }, { label: "Total (rp)" }, { label: "Total (%)" }];
     return (
       <Layout page="Laporan Arsip Penjualan">
         <HeaderReportCommon
@@ -165,7 +166,7 @@ class SaleArchive extends Component {
 
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Item" }, { label: "Total (rp)" }, { label: "Total (%)" }]}
+          rowSpan={rowSpan}
           meta={{
             total: total,
             current_page: current_page,
@@ -188,10 +189,9 @@ class SaleArchive extends Component {
                     totalBayarPerHalaman += float(v.bayar);
                     totalJumlahKartuPerHalaman += float(v.jml_kartu);
                     totalChargePerHalaman += float(v.charge);
-                    totalChangePerHalaman += float(v.change);
+                    totalChangePerHalaman += float(String(v.jenis_trx).toLowerCase()==="non tunai"?0:v.change);
                     totalRoundingPerHalaman += float(v.rounding);
                     totalTunaiPerHalaman += float(v.bayar) - float(v.change);
-
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -227,18 +227,18 @@ class SaleArchive extends Component {
                         <td className="middle nowrap text-right">{parseToRp(v.kas_lain)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.gt)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.bayar)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.change)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(float(v.bayar) - float(v.change))}</td>
+                        <td className="middle nowrap text-right">{String(v.jenis_trx).toLowerCase()==="non tunai"?0:parseToRp(v.change)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(float(v.bayar) - (String(v.jenis_trx).toLowerCase()==="non tunai"?0:float(v.change)))}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.rounding)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.jml_kartu)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.charge)}</td>
-                        <td className="middle nowrap text-right">{v.kartu}</td>
-                        <td className="middle nowrap text-right">{v.ket_kas_lain}</td>
+                        <td className="middle nowrap">{v.kartu}</td>
+                        <td className="middle nowrap">{v.ket_kas_lain}</td>
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {
