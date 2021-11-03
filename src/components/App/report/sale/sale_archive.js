@@ -189,9 +189,9 @@ class SaleArchive extends Component {
                     totalBayarPerHalaman += float(v.bayar);
                     totalJumlahKartuPerHalaman += float(v.jml_kartu);
                     totalChargePerHalaman += float(v.charge);
-                    totalChangePerHalaman += float(v.change);
+                    totalChangePerHalaman += float(v.jenis_trx === "Non Tunai" ? 0 : v.change);
                     totalRoundingPerHalaman += float(v.rounding);
-                    totalTunaiPerHalaman += float(v.bayar) - float(v.change);
+                    totalTunaiPerHalaman += v.jenis_trx === "Non Tunai" ? 0 : float(v.bayar) - float(v.change);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -206,7 +206,6 @@ class SaleArchive extends Component {
                             }}
                           />
                         </td>
-
                         <td className="middle nowrap">{v.kd_trx}</td>
                         <td className="middle nowrap">{toDate(v.tgl)}</td>
                         <td className="middle nowrap">{toDate(v.jam, "/", true)}</td>
@@ -227,8 +226,8 @@ class SaleArchive extends Component {
                         <td className="middle nowrap text-right">{parseToRp(v.kas_lain)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.gt)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.bayar)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.change)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(float(v.bayar) - float(v.change))}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.jenis_trx === "Non Tunai" ? 0 : v.change)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.jenis_trx === "Non Tunai" ? 0 : float(v.bayar) - float(v.change))}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.rounding)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.jml_kartu)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.charge)}</td>
