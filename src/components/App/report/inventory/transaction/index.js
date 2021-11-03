@@ -100,6 +100,7 @@ class TransactionReport extends Component {
         <HeaderReportCommon
           pathName="ReportAlokasiTransaksi"
           isColumn={true}
+          isLocation={true}
           isSort={true}
           columnData={column_data}
           callbackWhere={(res) => this.handleService(res)}
