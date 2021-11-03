@@ -26,6 +26,8 @@ class TransactionReport extends Component {
         { value: "no_faktur_mutasi", label: "Faktur mutasi" },
         { value: "tgl_mutasi", label: "Tanggal" },
         { value: "status", label: "Status" },
+        { value: "lokasi_asal", label: "Lokasi asal" },
+        { value: "lokasi_tujuan", label: "Lokasi tujuan" },
       ],
       isModalDetail: false,
       isModalExport: false,
@@ -102,6 +104,7 @@ class TransactionReport extends Component {
           isColumn={true}
           isLocation={true}
           isSort={true}
+          isLocation={true}
           columnData={column_data}
           callbackWhere={(res) => this.handleService(res)}
           callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}

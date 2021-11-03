@@ -127,7 +127,7 @@ class InventoryReport extends Component {
           statusData={STATUS_STOK}
           columnData={search_by_data}
           otherStatus="filter_stock"
-          otherColumn="search_by"
+          // otherColumn="search_by"
           callbackWhere={(res) => this.handleService(res)}
           callbackExcel={() => this.handleModal("formSaleExcel", { total: last_page * per_page })}
           excelData={this.props.download}

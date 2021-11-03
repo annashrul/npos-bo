@@ -301,6 +301,25 @@ export const FetchReportDetailSale = (kd_trx, where = "", isModal = false) => {
   };
 };
 
+export const FetchReportDetailPiutangTrx = (kd_trx, where = "", isModal = false) => {
+  return (dispatch) => {
+    let url = `report/arsip_penjualan/${kd_trx}`;
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
+        dispatch(setSaleReportData(data));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailPiutangTrx"));
+        }
+      },
+      true
+    );
+  };
+};
+
 export const deleteReportSale = (datum) => {
   // console.log(datum);
   // return;

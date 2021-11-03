@@ -34,7 +34,7 @@ class SaleByCustArchive extends Component {
   }
 
   handlePageChange(pageNumber) {
-    this.handleService(pageNumber);
+    this.handleService(this.state.where_data, pageNumber);
   }
 
   handleModal(total) {

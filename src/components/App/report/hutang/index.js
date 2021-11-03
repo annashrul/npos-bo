@@ -20,8 +20,10 @@ import Swal from "sweetalert2";
 
 // import { Link } from 'react-router-dom';
 import { toRp } from "../../../../helper";
-import DetailHutang from "../../modals/hutang/detail_hutang_report";
+// import DetailHutang from "../../modals/hutang/detail_hutang_report";
 import OtorisasiModal from "../../modals/otorisasi.modal";
+import { FetchReportDetail } from "../../../../redux/actions/purchase/receive/receive.action";
+import DetailTrxHutang from "../../modals/hutang/detail_trx_hutang";
 class HutangReport extends Component {
   constructor(props) {
     super(props);
@@ -148,33 +150,14 @@ class HutangReport extends Component {
     });
     localStorage.setItem("search_by_hutang_report", sb.value);
   }
-  handleDetail(
-    e,
-    id,
-    nama_toko = 0,
-    supplier = 0,
-    nilai_pembelian = 0,
-    status = 0,
-    tempo = 0
-  ) {
+  handleDetail(e,v) {
     e.preventDefault();
     this.setState({
       isModalDetail: true,
-      detail: {
-        id: id,
-        nama_toko: nama_toko,
-        supplier: supplier,
-        nilai_pembelian: nilai_pembelian,
-        status: status,
-        tempo: tempo,
-      },
+      detail:v
     });
 
-    //
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailHutangReportDetail"));
-    this.props.dispatch(FetchHutangReportDetail(1, "", id));
+    this.props.dispatch(FetchReportDetail(v.fak_beli, "", true));
   }
   handleDelete(e, kode) {
     e.preventDefault();
@@ -544,6 +527,12 @@ class HutangReport extends Component {
                           >
                             <i className="fa fa-trash" />
                           </button>
+                          <button
+                            className="btn btn-info ml-2"
+                            onClick={(e) => this.handleDetail(e, v)}
+                          >
+                            <i className="fa fa-list-alt" />
+                          </button>
                         </td>
                         <td style={leftStyle}>{v.fak_beli}</td>
                         <td style={leftStyle}>{v.no_nota}</td>
@@ -589,9 +578,10 @@ class HutangReport extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
-        {this.state.isModalDetail ? (
+        {/* {this.state.isModalDetail ? (
           <DetailHutang detail={this.state.detail} />
-        ) : null}
+        ) : null} */}
+        {this.props.isOpen && this.state.isModalDetail ? <DetailTrxHutang master={this.state.detail} receiveReportDetail={this.props.receiveReportDetail} /> : null}
         {this.state.isModalExport ? (
           <HutangReportExcel
             startDate={this.state.startDate}
@@ -622,6 +612,7 @@ const mapStateToProps = (state) => {
     // hutangDetail:state.hutangReducer.report_data,
     hutangReportExcel: state.hutangReducer.report_excel,
     // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
+    receiveReportDetail: state.receiveReducer.dataReceiveReportDetail,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

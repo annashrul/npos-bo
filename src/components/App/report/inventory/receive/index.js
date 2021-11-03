@@ -52,6 +52,7 @@ class ReceiveReport extends Component {
   }
 
   handleService(res, page = 1) {
+    console.log(res);
     if (res !== undefined) {
       let where = getFetchWhere(res, page);
       let state = { where_data: where };
