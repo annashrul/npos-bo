@@ -36,18 +36,19 @@ class PoReportExcel extends Component {
   }
 
   printPdf() {
-    const headers = [this.handleHeader()];
-    to_pdf(
-      "PURCHASE ORDER",
-      headerPdf({
-        title: "PURCHASE ORDER",
-        dateFrom: this.props.startDate,
-        dateTo: this.props.endDate,
-      }),
-      headers,
-      this.handleContent("pdf")
-    );
-    this.props.dispatch(ModalToggle(false));
+    console.log(this.props);
+    // const headers = [this.handleHeader()];
+    // to_pdf(
+    //   "PURCHASE ORDER",
+    //   headerPdf({
+    //     title: "PURCHASE ORDER",
+    //     dateFrom: this.props.startDate,
+    //     dateTo: this.props.endDate,
+    //   }),
+    //   headers,
+    //   this.handleContent("pdf")
+    // );
+    // this.props.dispatch(ModalToggle(false));
   }
   printExcel() {
     let header = this.handleHeader();
