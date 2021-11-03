@@ -6,7 +6,7 @@ import { ModalToggle } from "redux/actions/modal.action";
 import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
 import TableCommon from "../../../../common/TableCommon";
 import { statusMutasi, statusArsipPenjualan } from "../../.././../../../helperStatus";
-import { generateNo, getWhere, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../../../helper";
+import { generateNo, getFetchWhere, getWhere, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../../../helper";
 import { FetchTransactionData } from "../../../../../../redux/actions/inventory/transaction.action";
 
 class DetailTransaction extends Component {
@@ -25,7 +25,9 @@ class DetailTransaction extends Component {
 
   handlePageChange(page) {
     let where = this.props.where;
-    this.props.dispatch(FetchTransactionData(this.props.transactionDetail.no_faktur_mutasi, `page=${page}${where}`));
+    let cek = getFetchWhere(where);
+    console.log(cek.replaceAll("page=1", ""));
+    this.props.dispatch(FetchTransactionData(this.props.transactionDetail.no_faktur_mutasi, `page=${page}${where.replaceAll("page=1", "")}`));
   }
 
   render() {
