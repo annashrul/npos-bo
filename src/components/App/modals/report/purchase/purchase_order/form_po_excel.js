@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import moment from "moment";
-import { to_pdf, headerPdf, toExcel } from "helper";
 import { statusPurchaseOrder } from "helperStatus";
 import "jspdf-autotable";
 import ExportCommon from "../../../../common/ExportCommon";
 import { EXTENSION } from "../../../../../../redux/actions/_constants";
-import { headerExcel, toDate } from "../../../../../../helper";
+import { to_pdf, headerPdf, toExcel, headerExcel, toDate } from "../../../../../../helper";
 
 class PoReportExcel extends Component {
   constructor(props) {
@@ -37,18 +35,18 @@ class PoReportExcel extends Component {
 
   printPdf() {
     console.log(this.props);
-    // const headers = [this.handleHeader()];
-    // to_pdf(
-    //   "PURCHASE ORDER",
-    //   headerPdf({
-    //     title: "PURCHASE ORDER",
-    //     dateFrom: this.props.startDate,
-    //     dateTo: this.props.endDate,
-    //   }),
-    //   headers,
-    //   this.handleContent("pdf")
-    // );
-    // this.props.dispatch(ModalToggle(false));
+    const headers = [this.handleHeader()];
+    to_pdf(
+      "PURCHASE ORDER",
+      headerPdf({
+        title: "PURCHASE ORDER",
+        dateFrom: this.props.startDate,
+        dateTo: this.props.endDate,
+      }),
+      headers,
+      this.handleContent("pdf")
+    );
+    this.props.dispatch(ModalToggle(false));
   }
   printExcel() {
     let header = this.handleHeader();
@@ -58,8 +56,6 @@ class PoReportExcel extends Component {
   }
 
   render() {
-    return <ExportCommon modalType="formPoExcel" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />;
-
     return <ExportCommon modalType="formPoExcel" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />;
   }
 }

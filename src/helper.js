@@ -149,7 +149,7 @@ export const toExcel = (title = "", periode = "", head = [], content = [], foot 
 };
 
 export const headerPdf = (master) => {
-  return `laporan ${master.title} periode ${toDate(master.dateFrom)} - ${toDate(master.dateTo)}`;
+  return `laporan ${master.title} periode ${master.dateFrom.replaceAll(" ", "")} - ${master.dateTo.replaceAll(" ", "")}`;
   // let stringHtml = "";
   // stringHtml +=
   //   '<div style="text-align:center>' +
