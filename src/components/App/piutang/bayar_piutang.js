@@ -141,9 +141,6 @@ class BayarPiutang extends Component {
                                           <div className="card rounded bg-dark mb-1">
                                             <div className="card-header d-flex align-items-center justify-content-between">
                                               <div className="d-flex align-items-center justify-content-start">
-                                                <button className="btn btn-info mr-2" onClick={(e) => this.handleDetail(e, w)}>
-                                                  <i className="fa fa-eye" />
-                                                </button>
                                                 <div>
                                                   <h6 className="text-light">
                                                     {w.kd_trx} | Sisa : Rp. {toRp(parseInt(w.sisa_piutang, 10))}
@@ -154,17 +151,23 @@ class BayarPiutang extends Component {
                                                   <small className="text-light">Dibayar : {toRp(parseInt(w.dibayar, 10))}</small>
                                                 </div>
                                               </div>
-                                              <button
-                                                className="btn btn-primary"
-                                                onClick={(e) => this.handleBayar(e, w.kd_trx)}
-                                                type="button"
-                                                data-toggle="collapse"
-                                                data-target="#collapseOne"
-                                                aria-expanded="false"
-                                                aria-controls="collapseOne"
-                                              >
-                                                <i class="fa fa-usd"></i>&nbsp;Bayar
-                                              </button>
+                                              <div>
+                                                <button className="btn btn-info mr-2" onClick={(e) => this.handleDetail(e, w)}>
+                                                  <i className="fa fa-eye" />
+                                                  &nbsp;Detail
+                                                </button>
+                                                <button
+                                                  className="btn btn-primary"
+                                                  onClick={(e) => this.handleBayar(e, w.kd_trx)}
+                                                  type="button"
+                                                  data-toggle="collapse"
+                                                  data-target="#collapseOne"
+                                                  aria-expanded="false"
+                                                  aria-controls="collapseOne"
+                                                >
+                                                  <i className="fa fa-usd"></i>&nbsp;Bayar
+                                                </button>
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
