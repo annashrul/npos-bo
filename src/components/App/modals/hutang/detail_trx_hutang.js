@@ -14,9 +14,7 @@ class DetailTrxHutang extends Component {
   }
   handlePageChange(pageNumber) {
     let master = this.props.master;
-    let where = `page=${pageNumber}`;
-    where += rmPage(master.where);
-    this.props.dispatch(FetchReportDetail(master.no_faktur_beli, where));
+    this.props.dispatch(FetchReportDetail(master.no_faktur_beli, `page=${pageNumber}`, false));
   }
   toggle(e) {
     e.preventDefault();
@@ -53,9 +51,9 @@ class DetailTrxHutang extends Component {
             data={[
               { title: "No faktur beli", desc: master.no_faktur_beli },
               { title: "Nota Supplier", desc: master.nota_supplier },
-              { title: "Hutang", desc: parseToRp(master.hutang)},
-              { title: "Sisa Hutang", desc: parseToRp(master.sisa_hutang)},
-              { title: "Tgl. Tempo", desc: toDate(master.tempo)},
+              { title: "Hutang", desc: parseToRp(master.hutang) },
+              { title: "Sisa Hutang", desc: parseToRp(master.sisa_hutang) },
+              { title: "Tgl. Tempo", desc: toDate(master.tempo) },
               { title: "Tgl. Beli", desc: toDate(master.tgl_beli) },
             ]}
           />
