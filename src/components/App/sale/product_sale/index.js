@@ -253,14 +253,18 @@ class Sale extends Component {
     setStorage(state, res.value);
     if (state === "sales_tr") {
       this.setState({ sales: res.value });
+      destroy(table);
+      this.getData();
     }
     if (state === "location_tr") {
       this.setState({ location: res.value });
       destroy(table);
       this.getData();
     }
-    if (state === "customer") {
+    if (state === "customer_tr") {
       this.setState({ customer: res.value });
+      destroy(table);
+      this.getData();
     }
     this.fetchProduct(state);
   }
