@@ -135,7 +135,7 @@ class FormReturReceive extends Component {
         keterangan: "-",
         kondisi: v.kondisi,
       });
-      if (qty < 1 || isNaN(qty)) {
+      if (isNaN(qty)) {
         handleError("", `Qty retur ${v.nm_brg} tidak boleh kosong`);
         setFocus(this, `qty-${i + 1}`);
         return;
