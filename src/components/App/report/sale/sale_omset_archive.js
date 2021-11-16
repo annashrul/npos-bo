@@ -85,18 +85,16 @@ class SaleOmsetArchive extends Component {
     let tot_service = 0;
 
     const head = [
-      { rowSpan: 2, label: "No", width: "1%", className: "text-center" },
-      { rowSpan: 2, label: "Tanggal", width: "1%" },
-      { rowSpan: 2, label: "Qty" },
-      { rowSpan: 2, label: "Gross sale" },
-      { rowSpan: 2, label: "Net sale" },
-      { colSpan: 2, label: "Diskon" },
-      { rowSpan: 2, label: "Pajak" },
-      { rowSpan: 2, label: "Servis" },
-      { rowSpan: 2, label: "Grand total" },
+      { rowSpan: 1, label: "No", width: "1%", className: "text-center" },
+      { rowSpan: 1, label: "Tanggal", width: "1%" },
+      { rowSpan: 1, label: "Omset Kotor / GT" },
+      { rowSpan: 1, label: "Diskon" },
+      { rowSpan: 1, label: "Tunai" },
+      { rowSpan: 1, label: "Non Tunai" },
+      { rowSpan: 1, label: "Omset Bersih / Net Sales" },
+      { rowSpan: 1, label: "Setoran ( Closing )" },
+      { rowSpan: 1, label: "Selisih ( Net Sales - Setoran )" },
     ];
-
-    const rowSpan = [{ label: "Item" }, { label: "Transaksi" }];
 
     return (
       <Layout page="Laporan omset penjualan">
@@ -113,7 +111,6 @@ class SaleOmsetArchive extends Component {
 
         <TableCommon
           head={head}
-          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -144,8 +141,8 @@ class SaleOmsetArchive extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length + rowSpan.length)
-              : noData(head.length + rowSpan.length)
+                : noData(head.length)
+              : noData(head.length)
           }
           footer={[
             {

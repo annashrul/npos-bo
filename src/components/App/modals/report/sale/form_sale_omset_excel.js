@@ -76,7 +76,7 @@ class SaleOmsetReportExcel extends Component {
       ["LAPORAN OMSET PENJUALAN"],
       ["PERIODE : " + this.props.startDate + " - " + this.props.endDate + ""],
       [""],
-      ["Tanggal", "QTY", "Gross Sale", "Net Sale", "Grand Total", "Diskon Item", "Diskon Trx", "TAX", "Service"],
+      ["Tanggal", "Omset Kotor / GT", "Diskon", "Tunai", "Omset Bersih / Net Sales", "Setoran / Closing", "Selisih ( Net Sales - Setoran )"],
     ];
     let raw =
       typeof this.props.sale_omsetReportExcel.data === "object"
