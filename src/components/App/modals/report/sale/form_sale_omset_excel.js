@@ -39,20 +39,20 @@ class SaleOmsetReportExcel extends Component {
   };
   printDocument = (e) => {
     e.preventDefault();
-    const headers = [["No", "Tanggal", "QTY", "Gross Sale", "Net Sale", "Grand Total", "Diskon Item", "Diskon Trx", "TAX", "Service"]];
+    const headers = [["No", "Tanggal", "Omset Kotor / GT", "Diskon Trx", "Diskon Item", "Tunai", "Non Tunai", "Omset Bersih / Net Sales", "Setoran / Closing", "Selisih ( Net Sales - Setoran )"]];
     let data =
       typeof this.props.sale_omsetReportExcel.data === "object"
         ? this.props.sale_omsetReportExcel.data.map((v, i) => [
             i + 1,
             moment(v.tanggal).format("YYYY-MM-DD"),
-            v.qty,
-            toRp(parseInt(v.gross_sales, 10)),
-            toRp(parseInt(v.net_sales, 10)),
-            toRp(parseInt(v.grand_total, 10)),
-            toRp(parseInt(v.diskon_item, 10)),
-            toRp(parseInt(v.diskon_trx, 10)),
-            toRp(parseInt(v.tax, 10)),
-            toRp(parseInt(v.service, 10)),
+            parseFloat(v.grand_total),
+            parseFloat(v.diskon_trx),
+            parseFloat(v.diskon_item),
+            parseFloat(v.tunai),
+            parseFloat(v.non_tunai),
+            parseFloat(v.net_sales),
+            parseFloat(v.setoran),
+            parseFloat(v.net_sales) - parseFloat(v.setoran),
           ])
         : "";
     // data +=["TOTAL","","","","","","","","",tprice];
@@ -76,20 +76,20 @@ class SaleOmsetReportExcel extends Component {
       ["LAPORAN OMSET PENJUALAN"],
       ["PERIODE : " + this.props.startDate + " - " + this.props.endDate + ""],
       [""],
-      ["Tanggal", "Omset Kotor / GT", "Diskon", "Tunai", "Omset Bersih / Net Sales", "Setoran / Closing", "Selisih ( Net Sales - Setoran )"],
+      ["Tanggal", "Omset Kotor / GT", "Diskon Trx", "Diskon Item", "Tunai", "Non Tunai", "Omset Bersih / Net Sales", "Setoran / Closing", "Selisih ( Net Sales - Setoran )"],
     ];
     let raw =
       typeof this.props.sale_omsetReportExcel.data === "object"
         ? this.props.sale_omsetReportExcel.data.map((v, i) => [
             moment(v.tanggal).format("YYYY-MM-DD"),
-            v.qty,
-            toRp(parseInt(v.gross_sales, 10)),
-            toRp(parseInt(v.net_sales, 10)),
-            toRp(parseInt(v.grand_total, 10)),
-            toRp(parseInt(v.diskon_item, 10)),
-            toRp(parseInt(v.diskon_trx, 10)),
-            toRp(parseInt(v.tax, 10)),
-            toRp(parseInt(v.service, 10)),
+            parseFloat(v.grand_total),
+            parseFloat(v.diskon_trx),
+            parseFloat(v.diskon_item),
+            parseFloat(v.tunai),
+            parseFloat(v.non_tunai),
+            parseFloat(v.net_sales),
+            parseFloat(v.setoran),
+            parseFloat(v.net_sales) - parseFloat(v.setoran),
           ])
         : "";
 

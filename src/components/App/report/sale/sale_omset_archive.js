@@ -84,17 +84,27 @@ class SaleOmsetArchive extends Component {
     let tot_tax = 0;
     let tot_service = 0;
 
+    let totalGTPerHalaman = 0;
+    let totalDiskonTransaksiPerHalaman = 0;
+    let totalDiskonItemPerhalaman = 0;
+    let totalTunaiPerHalaman = 0;
+    let totalNonTunaiPerHalaman = 0;
+    let totalNetSalesPerHalaman = 0;
+    let totalSetoranPerHalaman = 0;
+    let totalSelisihPerHalaman = 0;
+
     const head = [
-      { rowSpan: 1, label: "No", width: "1%", className: "text-center" },
-      { rowSpan: 1, label: "Tanggal", width: "1%" },
-      { rowSpan: 1, label: "Omset Kotor / GT" },
-      { rowSpan: 1, label: "Diskon" },
-      { rowSpan: 1, label: "Tunai" },
-      { rowSpan: 1, label: "Non Tunai" },
-      { rowSpan: 1, label: "Omset Bersih / Net Sales" },
-      { rowSpan: 1, label: "Setoran ( Closing )" },
-      { rowSpan: 1, label: "Selisih ( Net Sales - Setoran )" },
+      { rowSpan: 2, label: "No", width: "1%", className: "text-center" },
+      { rowSpan: 2, label: "Tanggal", width: "1%" },
+      { rowSpan: 2, label: "Omset Kotor / GT" },
+      { colSpan: 2, label: "Diskon" },
+      { rowSpan: 2, label: "Tunai" },
+      { rowSpan: 2, label: "Non Tunai" },
+      { rowSpan: 2, label: "Omset Bersih / Net Sales" },
+      { rowSpan: 2, label: "Setoran ( Closing )" },
+      { rowSpan: 2, label: "Selisih ( Net Sales - Setoran )" },
     ];
+    const rowSpan = [{ label: "Transaksi" }, { label: "Item" }];
 
     return (
       <Layout page="Laporan omset penjualan">
@@ -111,6 +121,7 @@ class SaleOmsetArchive extends Component {
 
         <TableCommon
           head={head}
+          rowSpan={rowSpan}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -118,26 +129,26 @@ class SaleOmsetArchive extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    tot_qty += parseFloat(rmToZero(v.qty));
-                    tot_gross_sales += parseFloat(rmToZero(v.gross_sales));
-                    tot_net_sales += parseFloat(rmToZero(v.net_sales));
-                    tot_diskon_item += parseFloat(rmToZero(v.diskon_item));
-                    tot_diskon_trx += parseFloat(rmToZero(v.diskon_trx));
-                    tot_tax += parseFloat(rmToZero(v.tax));
-                    tot_service += parseFloat(rmToZero(v.service));
-                    tot_grand_total += parseFloat(rmToZero(v.grand_total));
+                    totalGTPerHalaman += parseFloat(rmToZero(v.grand_total));
+                    totalDiskonTransaksiPerHalaman += parseFloat(rmToZero(v.diskon_trx));
+                    totalDiskonItemPerhalaman += parseFloat(rmToZero(v.diskon_item));
+                    totalTunaiPerHalaman += parseFloat(rmToZero(v.tunai));
+                    totalNonTunaiPerHalaman += parseFloat(rmToZero(v.non_tunai));
+                    totalNetSalesPerHalaman += parseFloat(rmToZero(v.net_sales));
+                    totalSetoranPerHalaman += parseFloat(rmToZero(v.setoran));
+                    totalSelisihPerHalaman += parseFloat(rmToZero(v.net_sales - v.setoran));
                     return (
                       <tr key={i}>
                         <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap">{toDate(v.tanggal)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.qty)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.gross_sales)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.net_sales)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.diskon_item)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.diskon_trx)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.tax)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.service)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.grand_total)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.diskon_trx)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.diskon_item)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.tunai)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.non_tunai)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.net_sales)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.setoran)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(parseFloat(v.net_sales) - parseFloat(v.setoran))}</td>
                       </tr>
                     );
                   })
@@ -148,27 +159,27 @@ class SaleOmsetArchive extends Component {
             {
               data: [
                 { colSpan: 2, label: "Total perhalaman", className: "text-left" },
-                { colSpan: 1, label: parseToRp(tot_qty) },
-                { colSpan: 1, label: parseToRp(tot_gross_sales) },
-                { colSpan: 1, label: parseToRp(tot_net_sales) },
-                { colSpan: 1, label: parseToRp(tot_diskon_item) },
-                { colSpan: 1, label: parseToRp(tot_diskon_trx) },
-                { colSpan: 1, label: parseToRp(tot_tax) },
-                { colSpan: 1, label: parseToRp(tot_service) },
-                { colSpan: 1, label: parseToRp(tot_grand_total) },
+                { colSpan: 1, label: parseToRp(totalGTPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonTransaksiPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalDiskonItemPerhalaman) },
+                { colSpan: 1, label: parseToRp(totalTunaiPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalNonTunaiPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalNetSalesPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalSetoranPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalSelisihPerHalaman) },
               ],
             },
             {
               data: [
                 { colSpan: 2, label: "Total keseluruhan", className: "text-left" },
-                { colSpan: 1, label: parseToRp(total_data && total_data.qty) },
-                { colSpan: 1, label: parseToRp(total_data && total_data.gross_sales) },
-                { colSpan: 1, label: parseToRp(total_data && total_data.net_sales) },
-                { colSpan: 1, label: parseToRp(total_data && total_data.diskon_item) },
-                { colSpan: 1, label: parseToRp(total_data && total_data.diskon_trx) },
-                { colSpan: 1, label: parseToRp(total_data && total_data.tax) },
-                { colSpan: 1, label: parseToRp(total_data && total_data.service) },
                 { colSpan: 1, label: parseToRp(total_data && total_data.grand_total) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.diskon_trx) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.diskon_item) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.tunai) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.non_tunai) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.net_sales) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.setoran) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.net_sales - total_data.setoran) },
               ],
             },
           ]}

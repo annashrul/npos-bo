@@ -208,15 +208,17 @@ class TrxAdjustment extends Component {
               handleError("", "Qty tidak boleh kosong");
               return;
             }
+            console.log(item);
             let saldo_stock = this.getSaldoStock(qty, i);
             detail.push({
               brcd_brg: item.barcode,
               status: item.status,
               qty_adjust: qty,
-              stock_terakhir: saldo_stock,
+              stock_terakhir: item.stock,
               hrg_beli: item.harga_beli,
             });
           }
+          console.log(data);
           data["detail"] = detail;
           data["master"] = databrg;
           data["nota"] = nota;

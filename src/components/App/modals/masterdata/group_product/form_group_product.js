@@ -50,23 +50,26 @@ class FormGroupProduct extends Component {
             label: v.nama,
           })
         );
+        this.setState({
+          group2_data: stateGroup,
+        });
       }
     }
 
-    if (detail !== undefined && detail[nm_kel_brg] !== "") {
+    if (detail !== undefined && Object.keys(this.props.detail).length > 0 && detail[nm_kel_brg] !== "") {
       nama = detail.nm_kel_brg;
       status = detail.status;
       group2 = detail.group2;
       gambar = detail.gambar;
+      this.setState({
+        nm_kel_brg: nama,
+        status: status,
+        group2: group2,
+        gambar: gambar,
+      });
+    } else {
+      this.clearForm();
     }
-
-    this.setState({
-      group2_data: stateGroup,
-      nm_kel_brg: nama,
-      status: status,
-      group2: group2,
-      gambar: gambar,
-    });
   }
   componentDidMount() {
     this.getProps(this.props);
@@ -93,6 +96,17 @@ class FormGroupProduct extends Component {
     }
   }
 
+  clearForm() {
+    this.setState({
+      [kel_brg]: "",
+      [nm_kel_brg]: "",
+      [status]: "",
+      [group2]: "",
+      [gambar]: "",
+      group2_data: [],
+    });
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
@@ -102,6 +116,7 @@ class FormGroupProduct extends Component {
     parseData["status"] = this.state.status;
     parseData["group2"] = this.state.group2;
     parseData["gambar"] = this.state.gambar;
+
     if (parseData["gambar"] === undefined || parseData["gambar"] === "-") {
       parseData["gambar"] = "-";
     } else {
@@ -119,7 +134,7 @@ class FormGroupProduct extends Component {
       return;
     }
 
-    if (Object.keys(this.props.detail).length > 0 && this.props.detail[nm_kel_brg] !== "") {
+    if (this.props.detail !== undefined && Object.keys(this.props.detail).length > 0 && this.props.detail[nm_kel_brg] !== "") {
       this.props.dispatch(updateGroupProduct(this.props.detail.kel_brg, parseData, this.props.detail.where));
     } else {
       this.props.dispatch(createGroupProduct(parseData, this.props.fastAdd !== undefined));
@@ -131,6 +146,7 @@ class FormGroupProduct extends Component {
     if (this.props.fastAdd === true) {
       this.props.dispatch(ModalType("formProduct"));
     }
+    this.clearForm();
   }
   handleChangeImage(files) {
     this.setState({

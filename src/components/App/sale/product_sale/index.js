@@ -1079,7 +1079,7 @@ class Sale extends Component {
                                     <input
                                       type="text"
                                       name="qty"
-                                      style={{ width: "70px" }}
+                                      style={{ width: "100px" }}
                                       ref={(input) => {
                                         if (input !== null) {
                                           this[`qty-${btoa(item.barcode)}`] = input;
@@ -1092,16 +1092,8 @@ class Sale extends Component {
                                       value={this.state.brgval[index].qty}
                                     />
                                     <div
-                                      className="invalid-feedback text-center"
-                                      style={
-                                        parseFloat(this.state.brgval[index].autoSetQty) > parseFloat(item.stockautoSetQty)
-                                          ? {
-                                              display: "block",
-                                            }
-                                          : {
-                                              display: "none",
-                                            }
-                                      }
+                                      className="invalid-feedback text-left"
+                                      style={parseInt(this.state.brgval[index].qty, 10) > parseInt(item.stock, 10) ? { display: "block" } : { display: "none" }}
                                     >
                                       Qty Melebihi Stock.
                                     </div>

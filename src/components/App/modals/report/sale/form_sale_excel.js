@@ -5,7 +5,7 @@ import moment from "moment";
 import { toRp } from "helper";
 import ExportCommon from "../../../common/ExportCommon";
 import { EXTENSION } from "../../../../../redux/actions/_constants";
-import { toExcel } from "../../../../../helper";
+import { toDate, toExcel } from "../../../../../helper";
 
 class SaleReportExcel extends Component {
   constructor(props) {
@@ -18,6 +18,7 @@ class SaleReportExcel extends Component {
       "Kd Trx",
       "Tanggal",
       "Jam",
+      "Jatuh Tempo",
       "Customer",
       "Kasir",
       "Omset",
@@ -49,6 +50,7 @@ class SaleReportExcel extends Component {
       [""],
       [
         "TOTAL",
+        "",
         "",
         "",
         "",
@@ -85,8 +87,9 @@ class SaleReportExcel extends Component {
         data.map((v) =>
           props.push([
             v.kd_trx,
-            moment(v.tgl).format("yyyy/MM/DD"),
-            moment(v.jam).format("hh:mm:ss"),
+            toDate(v.tgl),
+            toDate(v.jam, "/", true),
+            v.jenis_trx === "Kredit" ? toDate(v.tempo) : "-",
             v.customer,
             v.nama,
             parseFloat(v.omset),

@@ -812,7 +812,7 @@ class PurchaseOrder extends Component {
                                 </label>
                               </div>
                             </div>
-                            <div className="form-group">
+                            {/* <div className="form-group">
                               <div className="custom-control custom-radio">
                                 <input
                                   type="radio"
@@ -827,7 +827,7 @@ class PurchaseOrder extends Component {
                                   Konsinyasi
                                 </label>
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>

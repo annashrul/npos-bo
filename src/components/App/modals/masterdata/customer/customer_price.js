@@ -5,7 +5,7 @@ import connect from "react-redux/es/connect/connect";
 import { ModalToggle } from "redux/actions/modal.action";
 import { saveCustomerPrice, FetchCustomerPrice } from "redux/actions/masterdata/customer/customer.action";
 import Paginationq from "helper";
-import { generateNo, rmComma, toCurrency } from "../../../../../helper";
+import { generateNo, rmComma, toCurrency, toRp } from "../../../../../helper";
 
 class CustomerPrice extends Component {
   constructor(props) {
@@ -28,6 +28,8 @@ class CustomerPrice extends Component {
           kd_cust: v.kd_cust,
           nama: v.nama,
           harga: v.harga,
+          harga_beli_asli: v.harga_beli_asli,
+          harga_jual_asli: v.harga_jual_asli,
           satuan: v.satuan,
           barcode: v.barcode,
           nama_toko: v.nama_toko,
@@ -115,15 +117,9 @@ class CustomerPrice extends Component {
                 <th className="text-left middle" width="1%">
                   Customer
                 </th>
-                <th className="text-left middle" width="1%">
-                  Harga jual
-                </th>
-                <th className="text-left middle" width="1%">
-                  Harga beli
-                </th>
-                <th className="text-left middle" width="40%">
-                  Harga
-                </th>
+                <th className="text-left middle">Harga jual</th>
+                <th className="text-left middle">Harga beli</th>
+                <th className="text-left middle">Harga</th>
                 {/* <th>Satuan</th> */}
               </tr>
             </thead>
@@ -135,8 +131,8 @@ class CustomerPrice extends Component {
                       <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                       <td className="middle nowrap">{v.nama_toko}</td>
                       <td className="middle nowrap">{v.nama}</td>
-                      <td className="middle nowrap">{v.nama}</td>
-                      <td className="middle nowrap">{v.nama}</td>
+                      <td className="middle nowrap text-right">{toRp(v.harga_jual_asli)}</td>
+                      <td className="middle nowrap text-right">{toRp(v.harga_beli_asli)}</td>
                       <td className="middle nowrap">
                         <div class="input-group">
                           <input

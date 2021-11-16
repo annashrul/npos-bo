@@ -134,7 +134,9 @@ class Print3ply extends Component {
             <tbody>
               {detail !== undefined
                 ? detail.data.map((item, index) => {
-                    amount_total += item.hrg_jual * (item.qty - item.qty_retur);
+                    const jenis = item.no_faktur_mutasi.substring(0, 2);
+                    console.log("##################", jenis);
+                    amount_total += jenis === "TR" ? item.hrg_jual : item.hrg_beli * (item.qty_retur > 0 ? item.qty - item.qty_retur : 0);
                     return (
                       <tr key={index}>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-center">
@@ -153,13 +155,13 @@ class Print3ply extends Component {
                           {item.qty}
                         </td>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-right">
-                          {item.qty - item.qty_retur}
+                          {item.qty_retur > 0 ? item.qty - item.qty_retur : 0}
                         </td>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-right">
-                          {toRp(item.hrg_jual)}
+                          {toRp(jenis === "TR" ? item.hrg_jual : item.hrg_beli)}
                         </td>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-right">
-                          {toRp(item.hrg_jual * (item.qty - item.qty_retur))}
+                          {toRp(jenis === "TR" ? item.hrg_jual : item.hrg_beli * (item.qty_retur > 0 ? item.qty - item.qty_retur : 0))}
                         </td>
                       </tr>
                     );
