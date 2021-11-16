@@ -168,12 +168,14 @@ export const storePo = (data, param) => {
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {
+          Swal.closeModal();
           const win = window.open(data.result.nota, "_blank");
           if (win != null) {
             win.focus();
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
+          Swal.closeModal();
           param({
             pathname: "/po3ply",
             state: {
