@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { ModalToggle } from "../../modal.action";
+import { FetchReport } from "redux/actions/purchase/receive/receive.action";
 
 export function setLoading(load) {
   return {
@@ -17,7 +18,7 @@ export function setCode(data = []) {
   };
 }
 
-export const storeReturTanpaNota = (data, param, isModal = false) => {
+export const storeReturTanpaNota = (data, otherData, param, isModal = false) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     Swal.fire({
@@ -29,7 +30,7 @@ export const storeReturTanpaNota = (data, param, isModal = false) => {
       },
       onClose: () => {},
     });
-    let rawdata = data;
+    let rawdata = otherData;
     const url = HEADERS.URL + `retur`;
     axios
       .post(url, data.detail)
@@ -61,6 +62,7 @@ export const storeReturTanpaNota = (data, param, isModal = false) => {
           localStorage.removeItem("lk");
           if (result.dismiss === "cancel") {
             if (isModal) {
+              dispatch(FetchReport("page=1"));
             } else {
               window.location.reload(false);
             }

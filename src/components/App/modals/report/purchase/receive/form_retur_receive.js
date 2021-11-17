@@ -52,14 +52,24 @@ class FormReturReceive extends Component {
       if (typeof props.dataRetur.detail === "object") {
         props.dataRetur.detail.map((v, i) => {
           dataRetur.push({
-            kode_barang: v.kode_barang,
+            barcode: v.barcode,
+            disc2: v.disc2,
+            disc3: v.disc3,
+            disc4: v.disc4,
+            diskon: v.diskon,
             harga: v.harga,
             harga_beli: v.harga_beli,
-            barcode: v.barcode,
+            jumlah_beli: v.jumlah_beli,
+            jumlah_bonus: v.jumlah_bonus,
+            jumlah_po: v.jumlah_po,
+            jumlah_retur: v.jumlah_retur,
+            kode_barang: v.kode_barang,
+            nm_brg: v.nm_brg,
+            no_faktur_beli: v.no_faktur_beli,
+            ppn: v.ppn,
+            qty: v.qty,
             satuan: v.satuan,
             stock: v.stock,
-            nm_brg: v.nm_brg,
-            qty: v.qty,
             qty_retur: 0,
             kondisi: "bad_stock",
           });
@@ -120,11 +130,36 @@ class FormReturReceive extends Component {
     let props = this.props.dataRetur.master;
     let data = {};
     let detail = [];
+    let detailOther = [];
+    let masterOther = props;
     let subtotal = 0;
+    console.log(this.state.data_retur);
     for (let i = 0; i < this.state.data_retur.length; i++) {
       let v = this.state.data_retur[i];
       let qty = float(v.qty_retur);
       subtotal += qty * parseInt(v.harga_beli, 10);
+      detailOther.push({
+        disc2: v.disc2,
+        disc3: v.disc3,
+        disc4: v.disc4,
+        diskon: v.diskon,
+        harga: v.harga,
+        jumlah_beli: v.jumlah_beli,
+        jumlah_bonus: v.jumlah_bonus,
+        jumlah_po: v.jumlah_po,
+        jumlah_retur: v.jumlah_retur,
+        nm_brg: v.nm_brg,
+        no_faktur_beli: v.no_faktur_beli,
+        ppn: v.ppn,
+        stock: v.stock,
+        kd_brg: v.kode_barang,
+        barcode: v.barcode,
+        satuan: v.satuan,
+        qty: v.qty_retur,
+        harga_beli: v.harga_beli,
+        keterangan: "-",
+        kondisi: v.kondisi,
+      });
       detail.push({
         kd_brg: v.kode_barang,
         barcode: v.barcode,
@@ -151,6 +186,14 @@ class FormReturReceive extends Component {
       }
       continue;
     }
+    // data["tanggal"] = toDate(new Date(), "-");
+    // data["supplier"] = props.supplier;
+    // data["keterangan"] = "-";
+    // data["subtotal"] = subtotal;
+    // data["lokasi"] = props.lokasi_nama;
+    // data["userid"] = props.operator_nama;
+    // data["nobeli"] = props.no_faktur_beli;
+    // data["detail"] = detail;
     data["tanggal"] = toDate(new Date(), "-");
     data["supplier"] = props.kode_supplier;
     data["keterangan"] = "-";
@@ -159,6 +202,7 @@ class FormReturReceive extends Component {
     data["userid"] = this.state.userid;
     data["nobeli"] = props.no_faktur_beli;
     data["detail"] = detail;
+
     let parsedata = {};
     parsedata["detail"] = data;
     parsedata["master"] = this.state.data_retur;
@@ -166,6 +210,7 @@ class FormReturReceive extends Component {
     this.props.dispatch(
       storeReturTanpaNota(
         parsedata,
+        { master: masterOther, detail: detailOther },
         (arr) => {
           this.props.history.push(arr);
         },
