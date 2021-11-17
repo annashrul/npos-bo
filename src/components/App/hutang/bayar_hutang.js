@@ -191,7 +191,7 @@ class BayarHutang extends Component {
             <BayarHutangForm data={this.state.data} action={this.update} />
           </CardBody>
         </Card>
-        {this.props.isOpen && this.state.isModalDetail ? <DetailTrxHutang master={this.state.detail} receiveReportDetail={this.props.receiveReportDetail} /> : null}
+        {this.props.isOpen && this.state.isModalDetail ? <DetailTrxHutang receiveReportDetail={this.props.receiveReportDetail} /> : null}
       </Layout>
     );
   }

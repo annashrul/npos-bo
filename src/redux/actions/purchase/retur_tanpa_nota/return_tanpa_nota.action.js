@@ -73,6 +73,7 @@ export const storeReturTanpaNota = (data, param, isModal = false) => {
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
+          console.log(data);
           param({
             pathname: "/retur3ply",
             state: {

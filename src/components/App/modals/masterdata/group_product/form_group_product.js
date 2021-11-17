@@ -50,9 +50,6 @@ class FormGroupProduct extends Component {
             label: v.nama,
           })
         );
-        this.setState({
-          group2_data: stateGroup,
-        });
       }
     }
 
@@ -61,15 +58,16 @@ class FormGroupProduct extends Component {
       status = detail.status;
       group2 = detail.group2;
       gambar = detail.gambar;
-      this.setState({
-        nm_kel_brg: nama,
-        status: status,
-        group2: group2,
-        gambar: gambar,
-      });
     } else {
       this.clearForm();
     }
+    this.setState({
+      group2_data: stateGroup,
+      nm_kel_brg: nama,
+      status: status,
+      group2: group2,
+      gambar: gambar,
+    });
   }
   componentDidMount() {
     this.getProps(this.props);

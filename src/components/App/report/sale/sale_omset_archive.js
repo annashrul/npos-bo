@@ -96,13 +96,13 @@ class SaleOmsetArchive extends Component {
     const head = [
       { rowSpan: 2, label: "No", width: "1%", className: "text-center" },
       { rowSpan: 2, label: "Tanggal", width: "1%" },
-      { rowSpan: 2, label: "Omset Kotor / GT" },
+      { rowSpan: 2, label: "Grand Total" },
       { colSpan: 2, label: "Diskon" },
       { rowSpan: 2, label: "Tunai" },
       { rowSpan: 2, label: "Non Tunai" },
-      { rowSpan: 2, label: "Omset Bersih / Net Sales" },
-      { rowSpan: 2, label: "Setoran ( Closing )" },
-      { rowSpan: 2, label: "Selisih ( Net Sales - Setoran )" },
+      { rowSpan: 2, label: "Net Sales" },
+      { rowSpan: 2, label: "Setoran" },
+      { rowSpan: 2, label: "Selisih" },
     ];
     const rowSpan = [{ label: "Transaksi" }, { label: "Item" }];
 
@@ -129,7 +129,7 @@ class SaleOmsetArchive extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    totalGTPerHalaman += parseFloat(rmToZero(v.grand_total));
+                    totalGTPerHalaman += parseFloat(rmToZero(v.gross_sales));
                     totalDiskonTransaksiPerHalaman += parseFloat(rmToZero(v.diskon_trx));
                     totalDiskonItemPerhalaman += parseFloat(rmToZero(v.diskon_item));
                     totalTunaiPerHalaman += parseFloat(rmToZero(v.tunai));
@@ -141,7 +141,7 @@ class SaleOmsetArchive extends Component {
                       <tr key={i}>
                         <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap">{toDate(v.tanggal)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.grand_total)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.gross_sales)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.diskon_trx)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.diskon_item)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.tunai)}</td>
@@ -172,7 +172,7 @@ class SaleOmsetArchive extends Component {
             {
               data: [
                 { colSpan: 2, label: "Total keseluruhan", className: "text-left" },
-                { colSpan: 1, label: parseToRp(total_data && total_data.grand_total) },
+                { colSpan: 1, label: parseToRp(total_data && total_data.gross_sales) },
                 { colSpan: 1, label: parseToRp(total_data && total_data.diskon_trx) },
                 { colSpan: 1, label: parseToRp(total_data && total_data.diskon_item) },
                 { colSpan: 1, label: parseToRp(total_data && total_data.tunai) },

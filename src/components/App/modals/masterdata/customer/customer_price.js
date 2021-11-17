@@ -143,7 +143,14 @@ class CustomerPrice extends Component {
                             onChange={(e) => this.handleChange(e, i)}
                             onKeyPress={(event) => {
                               if (event.key === "Enter") {
-                                this.handleOnEnter(i);
+                                console.log(parseInt(rmComma(event.target.value)));
+                                console.log(parseInt(v.harga_beli_asli));
+
+                                if (parseInt(rmComma(event.target.value)) < parseInt(v.harga_beli_asli)) {
+                                  alert("harga customer kurang dari harga beli");
+                                } else {
+                                  this.handleOnEnter(i);
+                                }
                               }
                             }}
                           />

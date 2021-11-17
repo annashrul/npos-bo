@@ -192,6 +192,22 @@ class PurchaseOrder extends Component {
       });
     }
   }
+  HandleFocusInputReset(e, i) {
+    const column = e.target.name;
+    const val = e.target.value;
+    let brgval = [...this.state.brgval];
+    if (column === "qty") {
+      if (parseInt(val, 10) < 2) {
+        brgval[i] = {
+          ...brgval[i],
+          [column]: "",
+        };
+        this.setState({
+          brgval,
+        });
+      }
+    }
+  }
   HandleChangeInput(e, id) {
     const column = e.target.name;
     const val = e.target.value;
@@ -211,6 +227,14 @@ class PurchaseOrder extends Component {
               final[k] = res[k];
             } else {
               final["ppn"] = (parseFloat(val, 10) / parseFloat(res.harga_beli, 10)) * 100;
+            }
+          });
+        } else if (column === "qty") {
+          Object.keys(res).forEach((k, i) => {
+            if (k !== "qty") {
+              final[k] = res[k];
+            } else {
+              final["qty"] = val === "" ? 1 : val;
             }
           });
         } else {
@@ -369,6 +393,7 @@ class PurchaseOrder extends Component {
       }
 
       this.getData();
+      setTimeout(() => this[`qty-${btoa(finaldt.barcode)}`].focus(), 500);
     });
   }
   HandleReset(e) {
@@ -988,6 +1013,8 @@ class PurchaseOrder extends Component {
                               className="form-control in-table"
                               onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                               onChange={(e) => this.HandleChangeInputValue(e, index)}
+                              ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)}
+                              onFocus={(e) => this.HandleFocusInputReset(e, index)}
                               value={this.state.brgval[index].qty}
                             />
                           </td>

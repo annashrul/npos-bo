@@ -44,7 +44,6 @@ class FormReturReceive extends Component {
       key = 1;
     }
     setFocus(this, `qty-${key}`);
-    console.log("key", key);
     this.setState({ qtyFocus: key });
   }
   getProps(props) {
@@ -164,11 +163,20 @@ class FormReturReceive extends Component {
     parsedata["detail"] = data;
     parsedata["master"] = this.state.data_retur;
     parsedata["nota"] = "";
-    this.props.dispatch(storeReturTanpaNota(parsedata, (arr) => this.props.history.push(arr), true));
+    this.props.dispatch(
+      storeReturTanpaNota(
+        parsedata,
+        (arr) => {
+          this.props.history.push(arr);
+        },
+        true
+      )
+    );
   }
   render() {
     let master = this.props.dataRetur.master;
     const head = [
+      { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
       { rowSpan: 2, label: "Stok", width: "1%" },
@@ -219,8 +227,10 @@ class FormReturReceive extends Component {
                     totalRetur += float(v.qty_retur) * float(v.harga_beli);
                     return (
                       <tr key={i}>
+                        <td className="middle nowrap text-center">{i + 1}</td>
+
                         <td className="middle nowrap">
-                          {lengthBrg(v.nm_brg)}
+                          {v.nm_brg}
                           <br /> <small style={{ fontWeight: "bold" }}>{v.kode_barang}</small>
                         </td>
                         <td className="middle nowrap text-right">{toRp(parseInt(v.harga_beli, 10))}</td>
@@ -260,7 +270,7 @@ class FormReturReceive extends Component {
             footer={[
               {
                 data: [
-                  { colSpan: 5, label: "Total", className: "text-left" },
+                  { colSpan: 6, label: "Total", className: "text-left" },
                   { colSpan: 1, label: <input disabled={true} className="form-control in-table text-right" value={toRp(totalQty)} /> },
                   { colSpan: 1, label: <input disabled={true} className="form-control in-table text-right" value={toRp(totalRetur)} /> },
                 ],
@@ -269,7 +279,7 @@ class FormReturReceive extends Component {
           />
         </ModalBody>
         <ModalFooter>
-          <button className="btn btn-primary" onClick={this.handleSubmit}>
+          <button className="btn btn-primary" onClick={(e) => this.handleSubmit(e)}>
             Simpan
           </button>
         </ModalFooter>

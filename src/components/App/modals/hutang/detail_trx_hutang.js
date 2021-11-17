@@ -22,20 +22,31 @@ class DetailTrxHutang extends Component {
     this.props.dispatch(ModalToggle(bool));
   }
   render() {
-    const { total, per_page, current_page, data } = this.props.receiveReportDetail;
-    const master = this.props.master;
+    const { master, total, per_page, current_page, data } = this.props.receiveReportDetail;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { colSpan: 2, label: "Barang" },
       { colSpan: 2, label: "Harga" },
       { rowSpan: 2, label: "Margin" },
       { colSpan: 2, label: "Diskon (%)" },
-      { colSpan: 2, label: "Qty" },
+      { colSpan: 4, label: "Qty" },
       { rowSpan: 2, label: "Ppn" },
       { rowSpan: 2, label: "Subtotal" },
     ];
-    const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Beli" }, { label: "Jual" }, { label: "1" }, { label: "2" }, { label: "Beli" }, { label: "Bonus" }];
-    let totalMarginPerHalaman = 0;
+    const rowSpan = [
+      { label: "Kode" },
+      { label: "Nama" },
+      { label: "Beli" },
+      { label: "Jual" },
+      { label: "1" },
+      { label: "2" },
+      { label: "Beli" },
+      { label: "Retur" },
+      { label: "Bonus" },
+      { label: "Sisa" },
+    ];
+    let totalReturPerHalaman = 0;
+    let totalSisaPerHalaman = 0;
     let totalDiskon1PerHalaman = 0;
     let totalDisko2PerHalaman = 0;
     let totalQtyBeliPerHalaman = 0;
@@ -50,11 +61,11 @@ class DetailTrxHutang extends Component {
           <HeaderDetailCommon
             data={[
               { title: "No faktur beli", desc: master.no_faktur_beli },
-              { title: "Nota Supplier", desc: master.nota_supplier },
-              { title: "Hutang", desc: parseToRp(master.hutang) },
-              { title: "Sisa Hutang", desc: parseToRp(master.sisa_hutang) },
-              { title: "Tgl. Tempo", desc: toDate(master.tempo) },
-              { title: "Tgl. Beli", desc: toDate(master.tgl_beli) },
+              { title: "Penerima", desc: master.nama_penerima },
+              { title: "Lokasi", desc: master.lokasi },
+              { title: "Operator", desc: master.operator },
+              { title: "Pelunasan", desc: master.pelunasan },
+              { title: "Tanggal", desc: toDate(master.tgl_beli) },
             ]}
           />
           <TableCommon
@@ -73,10 +84,14 @@ class DetailTrxHutang extends Component {
                       let diskon2 = float(v.disc2);
                       let jmlBeli = float(v.jumlah_beli);
                       let jmlBonus = float(v.jumlah_bonus);
+                      let retur = float(v.jumlah_retur);
+                      let sisa = float(v.qty);
                       let ppn = float(v.ppn_item);
-                      let subtotal = float(hrgBeli * jmlBeli - diskon1 - diskon2 + ppn);
 
-                      totalMarginPerHalaman += float(getMargin(hrgJual, hrgBeli));
+                      let subtotal = float(hrgBeli * v.qty - diskon1 - diskon2 + ppn);
+
+                      totalSisaPerHalaman += float(sisa);
+                      totalReturPerHalaman += float(retur);
                       totalDiskon1PerHalaman += float(diskon1);
                       totalDisko2PerHalaman += float(diskon2);
                       totalQtyBeliPerHalaman += float(jmlBeli);
@@ -95,7 +110,9 @@ class DetailTrxHutang extends Component {
                           <td className="middle nowrap text-right">{parseToRp(diskon1)}</td>
                           <td className="middle nowrap text-right">{parseToRp(diskon2)}</td>
                           <td className="middle nowrap text-right">{parseToRp(jmlBeli)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(retur)}</td>
                           <td className="middle nowrap text-right">{parseToRp(jmlBonus)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(sisa)}</td>
                           <td className="middle nowrap text-right">{parseToRp(ppn)}</td>
                           <td className="middle nowrap text-right">{parseToRp(subtotal)}</td>
                         </tr>
@@ -107,12 +124,13 @@ class DetailTrxHutang extends Component {
             footer={[
               {
                 data: [
-                  { colSpan: 5, label: "Total perhalaman", className: "text-left" },
-                  { colSpan: 1, label: parseToRp(totalMarginPerHalaman) },
+                  { colSpan: 6, label: "Total perhalaman", className: "text-left" },
                   { colSpan: 1, label: parseToRp(totalDiskon1PerHalaman) },
                   { colSpan: 1, label: parseToRp(totalDisko2PerHalaman) },
                   { colSpan: 1, label: parseToRp(totalQtyBeliPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalReturPerHalaman) },
                   { colSpan: 1, label: parseToRp(totalQtyBonusPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalSisaPerHalaman) },
                   { colSpan: 1, label: parseToRp(totalPpnPerHalaman) },
                   { colSpan: 1, label: parseToRp(totalAmountPerHalaman) },
                 ],

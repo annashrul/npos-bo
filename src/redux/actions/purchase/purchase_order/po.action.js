@@ -152,14 +152,8 @@ export const storePo = (data, param) => {
             '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
           showCancelButton: true,
           showConfirmButton: false,
+          cancelButtonText: "Selesai",
         }).then((result) => {
-          // if (result.value) {
-          //     const win = window.open(data.result.nota,'_blank');
-
-          //     if (win != null) {
-          //         win.focus();
-          //     }
-          // }
           destroy("purchase_order");
           localStorage.removeItem("sp");
           localStorage.removeItem("lk");
@@ -168,14 +162,12 @@ export const storePo = (data, param) => {
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {
-          Swal.closeModal();
           const win = window.open(data.result.nota, "_blank");
           if (win != null) {
             win.focus();
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          Swal.closeModal();
           param({
             pathname: "/po3ply",
             state: {
@@ -202,6 +194,7 @@ export const storePo = (data, param) => {
       });
   };
 };
+
 export const fetchPoReport = (where = "") => {
   return (dispatch) => {
     let url = `purchaseorder/report?perpage=${HEADERS.PERPAGE}`;

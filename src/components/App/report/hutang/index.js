@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import Paginationq from "helper";
-import {
-  FetchHutangReport,
-  FetchHutangReportExcel,
-  DeleteHutangReport,
-  FetchHutangReportDetail,
-} from "redux/actions/hutang/hutang.action";
+import { FetchHutangReport, FetchHutangReportExcel, DeleteHutangReport, FetchHutangReportDetail } from "redux/actions/hutang/hutang.action";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 // import DetailHutang from "components/App/modals/report/inventory/hutang_report/detail_hutang";
@@ -23,7 +18,7 @@ import { toRp } from "../../../../helper";
 // import DetailHutang from "../../modals/hutang/detail_hutang_report";
 import OtorisasiModal from "../../modals/otorisasi.modal";
 import { FetchReportDetail } from "../../../../redux/actions/purchase/receive/receive.action";
-import DetailTrxHutang from "../../modals/hutang/detail_trx_hutang";
+import DetailReceiveReport from "../../modals/report/purchase/receive/detail_receive_report";
 class HutangReport extends Component {
   constructor(props) {
     super(props);
@@ -73,52 +68,28 @@ class HutangReport extends Component {
     this.handleParameter(page !== undefined && page !== null ? page : 1);
   }
   componentDidMount() {
-    if (
-      localStorage.location_hutang_report !== undefined &&
-      localStorage.location_hutang_report !== ""
-    ) {
+    if (localStorage.location_hutang_report !== undefined && localStorage.location_hutang_report !== "") {
       this.setState({ location: localStorage.location_hutang_report });
     }
-    if (
-      localStorage.any_hutang_report !== undefined &&
-      localStorage.any_hutang_report !== ""
-    ) {
+    if (localStorage.any_hutang_report !== undefined && localStorage.any_hutang_report !== "") {
       this.setState({ any: localStorage.any_hutang_report });
     }
-    if (
-      localStorage.date_from_hutang_report !== undefined &&
-      localStorage.date_from_hutang_report !== null
-    ) {
+    if (localStorage.date_from_hutang_report !== undefined && localStorage.date_from_hutang_report !== null) {
       this.setState({ startDate: localStorage.date_from_hutang_report });
     }
-    if (
-      localStorage.date_to_hutang_report !== undefined &&
-      localStorage.date_to_hutang_report !== null
-    ) {
+    if (localStorage.date_to_hutang_report !== undefined && localStorage.date_to_hutang_report !== null) {
       this.setState({ endDate: localStorage.date_to_hutang_report });
     }
-    if (
-      localStorage.sort_hutang_report !== undefined &&
-      localStorage.sort_hutang_report !== null
-    ) {
+    if (localStorage.sort_hutang_report !== undefined && localStorage.sort_hutang_report !== null) {
       this.setState({ sort: localStorage.sort_hutang_report });
     }
-    if (
-      localStorage.filter_hutang_report !== undefined &&
-      localStorage.filter_hutang_report !== null
-    ) {
+    if (localStorage.filter_hutang_report !== undefined && localStorage.filter_hutang_report !== null) {
       this.setState({ filter: localStorage.filter_hutang_report });
     }
-    if (
-      localStorage.status_hutang_report !== undefined &&
-      localStorage.status_hutang_report !== null
-    ) {
+    if (localStorage.status_hutang_report !== undefined && localStorage.status_hutang_report !== null) {
       this.setState({ status: localStorage.status_hutang_report });
     }
-    if (
-      localStorage.search_by_hutang_report !== undefined &&
-      localStorage.search_by_hutang_report !== null
-    ) {
+    if (localStorage.search_by_hutang_report !== undefined && localStorage.search_by_hutang_report !== null) {
       this.setState({
         search_by: localStorage.search_by_hutang_report,
       });
@@ -150,11 +121,11 @@ class HutangReport extends Component {
     });
     localStorage.setItem("search_by_hutang_report", sb.value);
   }
-  handleDetail(e,v) {
+  handleDetail(e, v) {
     e.preventDefault();
     this.setState({
       isModalDetail: true,
-      detail:v
+      detail: v,
     });
 
     this.props.dispatch(FetchReportDetail(v.fak_beli, "", true));
@@ -291,18 +262,8 @@ class HutangReport extends Component {
       }
     }
     // localStorage.setItem('status_hutang_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_hutang_report)
-    localStorage.setItem(
-      "sort_hutang_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_hutang_report
-    );
-    localStorage.setItem(
-      "filter_hutang_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_hutang_report
-    );
+    localStorage.setItem("sort_hutang_report", this.state.sort === "" || this.state.sort === undefined ? sort[0].kode : localStorage.sort_hutang_report);
+    localStorage.setItem("filter_hutang_report", this.state.filter === "" || this.state.filter === undefined ? filter[0].kode : localStorage.filter_hutang_report);
   };
   HandleChangeLokasi(lk) {
     this.setState({
@@ -384,19 +345,8 @@ class HutangReport extends Component {
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
                   <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
+                  <DateRangePicker style={{ display: "unset" }} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{ padding: "10px", fontWeight: "bolder" }} />
                   </DateRangePicker>
                 </div>
               </div>
@@ -431,34 +381,17 @@ class HutangReport extends Component {
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
                   <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
+                  <input className="form-control" type="text" style={{ padding: "9px", fontWeight: "bolder" }} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)} />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="col-12 col-xs-12 col-md-2 text-right">
-            <button
-              style={{ marginTop: "28px", marginRight: "5px" }}
-              className="btn btn-primary"
-              onClick={this.handleSearch}
-            >
+            <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={this.handleSearch}>
               <i className="fa fa-search" />
             </button>
-            <button
-              style={{ marginTop: "28px" }}
-              className="btn btn-primary"
-              onClick={(e) =>
-                this.toggleModal(e, last_page * per_page, per_page)
-              }
-            >
+            <button style={{ marginTop: "28px" }} className="btn btn-primary" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
               <i className="fa fa-print" />
             </button>
           </div>
@@ -509,28 +442,15 @@ class HutangReport extends Component {
 
                     return (
                       <tr key={i}>
+                        <td style={centerStyle}>{i + 1 + 10 * (parseInt(current_page, 10) - 1)}</td>
                         <td style={centerStyle}>
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                        </td>
-                        <td style={centerStyle}>
-                          <button
-                            className="btn btn-primary"
-                            onClick={(e) =>
-                              this.handlePaymentSlip(e, v.payment_slip)
-                            }
-                          >
+                          <button className="btn btn-primary" onClick={(e) => this.handlePaymentSlip(e, v.payment_slip)}>
                             <i className="fa fa-eye" />
                           </button>
-                          <button
-                            className="btn btn-danger ml-2"
-                            onClick={(e) => this.handleDelete(e, v.no_nota)}
-                          >
+                          <button className="btn btn-danger ml-2" onClick={(e) => this.handleDelete(e, v.no_nota)}>
                             <i className="fa fa-trash" />
                           </button>
-                          <button
-                            className="btn btn-info ml-2"
-                            onClick={(e) => this.handleDetail(e, v)}
-                          >
+                          <button className="btn btn-info ml-2" onClick={(e) => this.handleDetail(e, v)}>
                             <i className="fa fa-list-alt" />
                           </button>
                         </td>
@@ -538,15 +458,9 @@ class HutangReport extends Component {
                         <td style={leftStyle}>{v.no_nota}</td>
                         <td style={leftStyle}>{v.nama}</td>
                         <td style={leftStyle}>{v.nm_bank}</td>
-                        <td style={rightStyle}>
-                          {toRp(parseInt(v.jumlah, 10))}
-                        </td>
-                        <td style={leftStyle}>
-                          {moment(v.tgl_byr).format("YYYY-MM-DD")}
-                        </td>
-                        <td style={leftStyle}>
-                          {moment(v.tgl_jatuh_tempo).format("YYYY-MM-DD")}
-                        </td>
+                        <td style={rightStyle}>{toRp(parseInt(v.jumlah, 10))}</td>
+                        <td style={leftStyle}>{moment(v.tgl_byr).format("YYYY-MM-DD")}</td>
+                        <td style={leftStyle}>{moment(v.tgl_jatuh_tempo).format("YYYY-MM-DD")}</td>
                       </tr>
                     );
                   })
@@ -571,23 +485,13 @@ class HutangReport extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={parseInt(per_page * last_page, 10)} callback={this.handlePageChange.bind(this)} />
         </div>
         {/* {this.state.isModalDetail ? (
           <DetailHutang detail={this.state.detail} />
         ) : null} */}
-        {this.props.isOpen && this.state.isModalDetail ? <DetailTrxHutang master={this.state.detail} receiveReportDetail={this.props.receiveReportDetail} /> : null}
-        {this.state.isModalExport ? (
-          <HutangReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
-        ) : null}
+        {this.props.isOpen && this.state.isModalDetail ? <DetailReceiveReport master={this.state.detail} receiveReportDetail={this.props.receiveReportDetail} /> : null}
+        {this.state.isModalExport ? <HutangReportExcel startDate={this.state.startDate} endDate={this.state.endDate} /> : null}
         {this.state.isModalOtorisasi ? (
           <OtorisasiModal
             datum={{

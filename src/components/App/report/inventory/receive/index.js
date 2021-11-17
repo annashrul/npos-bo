@@ -217,8 +217,8 @@ class ReceiveReport extends Component {
           ]}
         />
 
-        {this.props.isOpen && isModalDetail ? <DetailReceiveReport master={detail} receiveReportDetail={this.props.receiveReportDetail} /> : null}
-        {this.props.isOpen && isModalForm ? <FormReturReceive dataRetur={this.props.dataRetur} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail} /> : null}
+        {this.props.isOpen && isModalForm ? <FormReturReceive history={this.props.history} dataRetur={this.props.dataRetur} /> : null}
         {this.props.isOpen && isModalExport ? <ReceiveReportExcel startDate={dateFrom} endDate={dateTo} location={location} /> : null}
       </Layout>
     );
