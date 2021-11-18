@@ -3,12 +3,9 @@ import { ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle } from "redux/actions/modal.action";
-import {
-  saveCustomerPrice,
-  FetchCustomerPrice,
-} from "redux/actions/masterdata/customer/customer.action";
+import { saveCustomerPrice, FetchCustomerPrice } from "redux/actions/masterdata/customer/customer.action";
 import Paginationq from "helper";
-import { generateNo, rmComma, toCurrency } from "../../../../../helper";
+import { generateNo, rmComma, toCurrency, toRp } from "../../../../../helper";
 
 class CustomerPrice extends Component {
   constructor(props) {
@@ -31,6 +28,8 @@ class CustomerPrice extends Component {
           kd_cust: v.kd_cust,
           nama: v.nama,
           harga: v.harga,
+          harga_beli_asli: v.harga_beli_asli,
+          harga_jual_asli: v.harga_jual_asli,
           satuan: v.satuan,
           barcode: v.barcode,
           nama_toko: v.nama_toko,
@@ -75,38 +74,22 @@ class CustomerPrice extends Component {
   handlePageChange(pageNumber) {
     let q = localStorage.getItem("q_price_customer");
     localStorage.setItem("page_price_customer", pageNumber);
-    this.props.dispatch(
-      FetchCustomerPrice(
-        btoa(localStorage.getItem("kd_brg_price_customer")),
-        pageNumber,
-        q === undefined || q === null ? "" : q
-      )
-    );
+    this.props.dispatch(FetchCustomerPrice(btoa(localStorage.getItem("kd_brg_price_customer")), pageNumber, q === undefined || q === null ? "" : q));
   }
   handleOnSearch() {
     localStorage.setItem("page_price_customer", 1);
 
     localStorage.setItem("q_price_customer", this.state.q);
-    this.props.dispatch(
-      FetchCustomerPrice(
-        btoa(localStorage.getItem("kd_brg_price_customer")),
-        1,
-        this.state.q
-      )
-    );
+    this.props.dispatch(FetchCustomerPrice(btoa(localStorage.getItem("kd_brg_price_customer")), 1, this.state.q));
   }
 
   render() {
     const { total, per_page, current_page } = this.props.dataCustomerPrice;
 
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "CustomerPrice"}
-        size="md"
-      >
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "CustomerPrice"} size="lg">
         <ModalHeader toggle={this.toggle}>
-          {localStorage.getItem("nm_brg_price_customer")} ({" "}
-          {localStorage.getItem("kd_brg_price_customer")} ) <br />
+          {localStorage.getItem("nm_brg_price_customer")} ( {localStorage.getItem("kd_brg_price_customer")} ) <br />
           <small>( Enter Untuk Menyimpan Data )</small>
         </ModalHeader>
         <ModalBody>
@@ -130,15 +113,13 @@ class CustomerPrice extends Component {
                 <th className="text-left middle text-center" width="1%">
                   No
                 </th>
-                <th className="text-left middle" width="30%">
-                  Lokasi
-                </th>
-                <th className="text-left middle" width="29%">
+                <th className="text-left middle">Lokasi</th>
+                <th className="text-left middle" width="1%">
                   Customer
                 </th>
-                <th className="text-left middle" width="40%">
-                  Harga
-                </th>
+                <th className="text-left middle">Harga jual</th>
+                <th className="text-left middle">Harga beli</th>
+                <th className="text-left middle">Harga</th>
                 {/* <th>Satuan</th> */}
               </tr>
             </thead>
@@ -147,11 +128,11 @@ class CustomerPrice extends Component {
                 this.state.dataCustomer.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td className="middle nowrap text-center">
-                        {generateNo(i, current_page)}
-                      </td>
+                      <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                       <td className="middle nowrap">{v.nama_toko}</td>
                       <td className="middle nowrap">{v.nama}</td>
+                      <td className="middle nowrap text-right">{toRp(v.harga_jual_asli)}</td>
+                      <td className="middle nowrap text-right">{toRp(v.harga_beli_asli)}</td>
                       <td className="middle nowrap">
                         <div class="input-group">
                           <input
@@ -162,7 +143,14 @@ class CustomerPrice extends Component {
                             onChange={(e) => this.handleChange(e, i)}
                             onKeyPress={(event) => {
                               if (event.key === "Enter") {
-                                this.handleOnEnter(i);
+                                console.log(parseInt(rmComma(event.target.value)));
+                                console.log(parseInt(v.harga_beli_asli));
+
+                                if (parseInt(rmComma(event.target.value)) < parseInt(v.harga_beli_asli)) {
+                                  alert("harga customer kurang dari harga beli");
+                                } else {
+                                  this.handleOnEnter(i);
+                                }
                               }
                             }}
                           />
@@ -187,12 +175,7 @@ class CustomerPrice extends Component {
         </ModalBody>
         <ModalFooter>
           <div style={{ float: "right" }}>
-            <Paginationq
-              current_page={current_page}
-              per_page={per_page}
-              total={total}
-              callback={this.handlePageChange.bind(this)}
-            />
+            <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
           </div>
         </ModalFooter>
       </WrapperModal>

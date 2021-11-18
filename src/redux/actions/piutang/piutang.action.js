@@ -69,8 +69,7 @@ export const FetchPiutang = (nota) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
       });
   };
@@ -131,10 +130,7 @@ export const storePiutang = (data, param) => {
           // param({
           //     pathname: `/bayar_piutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
           // })
-          const win = window.open(
-            `/bayar_piutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
-            "_blank"
-          );
+          const win = window.open(`/bayar_piutang3ply/${response.data.result.insertId}|${data.nota_jual}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -159,8 +155,7 @@ export const storePiutang = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -204,11 +199,7 @@ export const FetchPiutangReportDetail = (page = 1, where = "", id = null) => {
 };
 
 //FILTER PIUTANG REPORT EXCEL//
-export const FetchPiutangReportExcel = (
-  page = 1,
-  where = "",
-  perpage = 99999
-) => {
+export const FetchPiutangReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     let url = `piutang/report?page=${page}&perpage=${perpage}`;
@@ -254,14 +245,7 @@ export const DeletePiutangReport = (id) => {
           });
         }
         dispatch(setLoading(false));
-        dispatch(
-          FetchPiutangReport(
-            localStorage.getItem("page_piutang_report")
-              ? localStorage.getItem("page_piutang_report")
-              : 1,
-            localStorage.getItem("where_piutang_report")
-          )
-        );
+        dispatch(FetchPiutangReport(localStorage.getItem("page_piutang_report") ? localStorage.getItem("page_piutang_report") : 1, localStorage.getItem("where_piutang_report")));
       })
       .catch(function (error) {
         dispatch(setLoading(false));
@@ -270,8 +254,7 @@ export const DeletePiutangReport = (id) => {
           allowOutsideClick: false,
           title: "failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
         if (error.response) {
         }
@@ -279,12 +262,12 @@ export const DeletePiutangReport = (id) => {
   };
 };
 
-export const FetchKartuPiutang = (page = 1, where = "") => {
+export const FetchKartuPiutang = (where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    let url = `piutang/kartu_piutang?page=${page}`;
+    let url = `piutang/kartu_piutang`;
     if (where !== "") {
-      url += `${where}`;
+      url += `?${where}`;
     }
 
     axios

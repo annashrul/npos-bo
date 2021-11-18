@@ -105,24 +105,18 @@ export const storeHutang = (data, param) => {
           allowOutsideClick: false,
           title: "Transaksi berhasil.",
           type: "info",
-          html:
-            `Data telah disimpan!` +
-            "<br><br>" +
-            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+          html: `Data telah disimpan!` + "<br><br>" + '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
           localStorage.removeItem("nota_pembelian_hutang");
           localStorage.removeItem("jenis_trx_hutang");
           if (result.dismiss === "cancel") {
-            // window.location.reload(false);
+            window.location.reload(false);
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          const win = window.open(
-            `/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_beli}`,
-            "_blank"
-          );
+          const win = window.open(`/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_beli}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -135,8 +129,7 @@ export const storeHutang = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -180,11 +173,7 @@ export const FetchHutangReportDetail = (page = 1, where = "", id = null) => {
 };
 
 //FILTER HUTANG REPORT EXCEL//
-export const FetchHutangReportExcel = (
-  page = 1,
-  where = "",
-  perpage = 99999
-) => {
+export const FetchHutangReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     let url = `hutang/report?page=${page}&perpage=${perpage}`;
@@ -239,8 +228,7 @@ export const DeleteHutangReport = (id) => {
           allowOutsideClick: false,
           title: "failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
         if (error.response) {
         }

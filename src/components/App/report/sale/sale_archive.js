@@ -129,6 +129,7 @@ class SaleArchive extends Component {
       { rowSpan: "2", label: "Customer" },
       { rowSpan: "2", label: "Kasir" },
       { rowSpan: "2", label: "Sales" },
+      { rowSpan: "2", label: "Jatuh tempo" },
       { rowSpan: "2", label: "Omset" },
       { colSpan: "3", label: "Diskon" },
       { rowSpan: "2", label: "Pajak" },
@@ -215,6 +216,7 @@ class SaleArchive extends Component {
                         <td className="middle nowrap">{v.customer}</td>
                         <td className="middle nowrap">{v.nama}</td>
                         <td className="middle nowrap">{v.sales}</td>
+                        <td className="middle nowrap">{v.jenis_trx === "Kredit" ? toDate(v.tempo) : "-"}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.omset)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.diskon_item)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.dis_rp)}</td>
@@ -242,7 +244,7 @@ class SaleArchive extends Component {
           footer={[
             {
               data: [
-                { colSpan: 11, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 12, label: "Total perhalaman", className: "text-left" },
                 { colSpan: 1, label: parseToRp(totalOmsetPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalDiskonItemPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalDiskonRpPerHalaman) },
@@ -265,7 +267,7 @@ class SaleArchive extends Component {
             {
               data: [
                 {
-                  colSpan: 11,
+                  colSpan: 12,
                   label: "Total keseluruhan",
                   className: "text-left",
                 },

@@ -74,13 +74,13 @@ class ListPriceProduct extends Component {
             { label: "barcode" },
             { label: "nm_brg" },
             { label: "nama_toko" },
-            { label: "harga_beli", className: "text-right" },
-            { label: "harga", className: "text-right" },
-            { label: "harga2", className: "text-right" },
-            { label: "harga3", className: "text-right" },
-            { label: "harga4", className: "text-right" },
-            { label: "ppn", className: "text-right" },
-            { label: "service", className: "text-right" },
+            { label: "harga_beli", className: "text-right", isCurrency: true },
+            { label: "harga", className: "text-right", isCurrency: true },
+            { label: "harga2", className: "text-right", isCurrency: true },
+            { label: "harga3", className: "text-right", isCurrency: true },
+            { label: "harga4", className: "text-right", isCurrency: true },
+            { label: "ppn", className: "text-right", isCurrency: true },
+            { label: "service", className: "text-right", isCurrency: true },
           ]}
           current_page={current_page}
           action={[{ label: "Edit" }]}

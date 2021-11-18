@@ -135,9 +135,9 @@ class OpnameReport extends Component {
                 { colSpan: 8, label: "Total perhalaman", className: "text-left" },
                 { colSpan: 1, label: parseToRp(totalAkhirPerPage), className: `text-right` },
                 { colSpan: 1, label: parseToRp(totalFisikPerPage), className: `text-right ` },
-                { colSpan: 1, label: "" },
+                { colSpan: 2, label: "" },
                 { colSpan: 1, label: parseToRp(totalHppPerPage), className: `text-right ` },
-                { colSpan: 3, label: "" },
+                { colSpan: 2, label: "" },
               ],
             },
             {
@@ -145,9 +145,9 @@ class OpnameReport extends Component {
                 { colSpan: 8, label: "Total keseluruhan", className: "text-left" },
                 { colSpan: 1, label: parseToRp(total_opname ? total_opname.total_akhir : 0), className: `text-right` },
                 { colSpan: 1, label: parseToRp(total_opname ? total_opname.total_fisik : 0), className: `text-right ` },
-                { colSpan: 1, label: "" },
+                { colSpan: 2, label: "" },
                 { colSpan: 1, label: parseToRp(total_opname ? total_opname.total_hpp : 0), className: `text-right ` },
-                { colSpan: 3, label: "" },
+                { colSpan: 2, label: "" },
               ],
             },
           ]}

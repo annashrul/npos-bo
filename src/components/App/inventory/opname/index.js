@@ -108,7 +108,7 @@ class TrxOpname extends Component {
     if (e.target.name === "qty") {
       let val = parseInt(e.target.value, 10);
       if (isNaN(val) || val < 1) {
-        Object.assign(this.state.brgval[i], { qty: 1 });
+        // Object.assign(this.state.brgval[i], { qty: 1 });
         actionDataCommon(table, this.state.brgval[i], (res) => {
           if (res !== undefined) update(table, this.state.brgval[i]);
           this.getData();
@@ -185,7 +185,7 @@ class TrxOpname extends Component {
           for (let i = 0; i < databrg.length; i++) {
             let item = res[i];
             let qty = rmComma(item.qty);
-            if (qty < 1) {
+            if (qty < 0) {
               setFocus(this, `${qty - btoa(item.barcode)}`);
               handleError("", "Qty tidak boleh kosong");
               return;

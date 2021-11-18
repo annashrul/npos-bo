@@ -296,7 +296,7 @@ class Receive extends Component {
           localStorage.setItem("lk", nextProps.po_data.master.lokasi);
           localStorage.setItem("sp", nextProps.po_data.master.kode_supplier);
           localStorage.setItem("catatan", nextProps.po_data.master.catatan);
-
+          this.props.dispatch(FetchBrg(1, "barcode", "", nextProps.po_data.master.lokasi, nextProps.po_data.master.kode_supplier, this.autoSetQty, 5));
           nextProps.po_data.detail.map((item) => {
             let newbrg = [];
             item.tambahan.map((i) => {
@@ -374,6 +374,7 @@ class Receive extends Component {
 
     localStorage.setItem("nota", nota.value);
     this.props.dispatch(FetchPoData(nota.value));
+
     destroy(table);
     localStorage.removeItem("sp");
     localStorage.removeItem("lk");
@@ -1349,7 +1350,7 @@ class Receive extends Component {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="row">
-                                <div className="col-md-12">
+                                <div className="col-md-6">
                                   <div className="custom-control custom-radio">
                                     <input
                                       type="radio"
@@ -1365,7 +1366,7 @@ class Receive extends Component {
                                     </label>
                                   </div>
                                 </div>
-                                <div className="col-md-12">
+                                <div className="col-md-6">
                                   <div className="custom-control custom-radio">
                                     <input
                                       type="radio"
@@ -1383,7 +1384,7 @@ class Receive extends Component {
                                 </div>
                               </div>
                             </div>
-                            <div className="col-md-4">
+                            {/* <div className="col-md-4">
                               <div className="custom-control custom-radio">
                                 <input
                                   type="radio"
@@ -1398,7 +1399,7 @@ class Receive extends Component {
                                   Konsinyasi
                                 </label>
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>

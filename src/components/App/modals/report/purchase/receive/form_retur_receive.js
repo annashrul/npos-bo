@@ -44,7 +44,6 @@ class FormReturReceive extends Component {
       key = 1;
     }
     setFocus(this, `qty-${key}`);
-    console.log("key", key);
     this.setState({ qtyFocus: key });
   }
   getProps(props) {
@@ -53,14 +52,24 @@ class FormReturReceive extends Component {
       if (typeof props.dataRetur.detail === "object") {
         props.dataRetur.detail.map((v, i) => {
           dataRetur.push({
-            kode_barang: v.kode_barang,
+            barcode: v.barcode,
+            disc2: v.disc2,
+            disc3: v.disc3,
+            disc4: v.disc4,
+            diskon: v.diskon,
             harga: v.harga,
             harga_beli: v.harga_beli,
-            barcode: v.barcode,
+            jumlah_beli: v.jumlah_beli,
+            jumlah_bonus: v.jumlah_bonus,
+            jumlah_po: v.jumlah_po,
+            jumlah_retur: v.jumlah_retur,
+            kode_barang: v.kode_barang,
+            nm_brg: v.nm_brg,
+            no_faktur_beli: v.no_faktur_beli,
+            ppn: v.ppn,
+            qty: v.qty,
             satuan: v.satuan,
             stock: v.stock,
-            nm_brg: v.nm_brg,
-            qty: v.qty,
             qty_retur: 0,
             kondisi: "bad_stock",
           });
@@ -121,11 +130,36 @@ class FormReturReceive extends Component {
     let props = this.props.dataRetur.master;
     let data = {};
     let detail = [];
+    let detailOther = [];
+    let masterOther = props;
     let subtotal = 0;
+    console.log(this.state.data_retur);
     for (let i = 0; i < this.state.data_retur.length; i++) {
       let v = this.state.data_retur[i];
       let qty = float(v.qty_retur);
       subtotal += qty * parseInt(v.harga_beli, 10);
+      detailOther.push({
+        disc2: v.disc2,
+        disc3: v.disc3,
+        disc4: v.disc4,
+        diskon: v.diskon,
+        harga: v.harga,
+        jumlah_beli: v.jumlah_beli,
+        jumlah_bonus: v.jumlah_bonus,
+        jumlah_po: v.jumlah_po,
+        jumlah_retur: v.jumlah_retur,
+        nm_brg: v.nm_brg,
+        no_faktur_beli: v.no_faktur_beli,
+        ppn: v.ppn,
+        stock: v.stock,
+        kd_brg: v.kode_barang,
+        barcode: v.barcode,
+        satuan: v.satuan,
+        qty: v.qty_retur,
+        harga_beli: v.harga_beli,
+        keterangan: "-",
+        kondisi: v.kondisi,
+      });
       detail.push({
         kd_brg: v.kode_barang,
         barcode: v.barcode,
@@ -135,7 +169,7 @@ class FormReturReceive extends Component {
         keterangan: "-",
         kondisi: v.kondisi,
       });
-      if (qty < 1 || isNaN(qty)) {
+      if (isNaN(qty)) {
         handleError("", `Qty retur ${v.nm_brg} tidak boleh kosong`);
         setFocus(this, `qty-${i + 1}`);
         return;
@@ -152,6 +186,14 @@ class FormReturReceive extends Component {
       }
       continue;
     }
+    // data["tanggal"] = toDate(new Date(), "-");
+    // data["supplier"] = props.supplier;
+    // data["keterangan"] = "-";
+    // data["subtotal"] = subtotal;
+    // data["lokasi"] = props.lokasi_nama;
+    // data["userid"] = props.operator_nama;
+    // data["nobeli"] = props.no_faktur_beli;
+    // data["detail"] = detail;
     data["tanggal"] = toDate(new Date(), "-");
     data["supplier"] = props.kode_supplier;
     data["keterangan"] = "-";
@@ -160,15 +202,26 @@ class FormReturReceive extends Component {
     data["userid"] = this.state.userid;
     data["nobeli"] = props.no_faktur_beli;
     data["detail"] = detail;
+
     let parsedata = {};
     parsedata["detail"] = data;
     parsedata["master"] = this.state.data_retur;
     parsedata["nota"] = "";
-    this.props.dispatch(storeReturTanpaNota(parsedata, (arr) => this.props.history.push(arr), true));
+    this.props.dispatch(
+      storeReturTanpaNota(
+        parsedata,
+        { master: masterOther, detail: detailOther },
+        (arr) => {
+          this.props.history.push(arr);
+        },
+        true
+      )
+    );
   }
   render() {
     let master = this.props.dataRetur.master;
     const head = [
+      { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
       { rowSpan: 2, label: "Stok", width: "1%" },
@@ -219,8 +272,10 @@ class FormReturReceive extends Component {
                     totalRetur += float(v.qty_retur) * float(v.harga_beli);
                     return (
                       <tr key={i}>
+                        <td className="middle nowrap text-center">{i + 1}</td>
+
                         <td className="middle nowrap">
-                          {lengthBrg(v.nm_brg)}
+                          {v.nm_brg}
                           <br /> <small style={{ fontWeight: "bold" }}>{v.kode_barang}</small>
                         </td>
                         <td className="middle nowrap text-right">{toRp(parseInt(v.harga_beli, 10))}</td>
@@ -260,7 +315,7 @@ class FormReturReceive extends Component {
             footer={[
               {
                 data: [
-                  { colSpan: 5, label: "Total", className: "text-left" },
+                  { colSpan: 6, label: "Total", className: "text-left" },
                   { colSpan: 1, label: <input disabled={true} className="form-control in-table text-right" value={toRp(totalQty)} /> },
                   { colSpan: 1, label: <input disabled={true} className="form-control in-table text-right" value={toRp(totalRetur)} /> },
                 ],
@@ -269,7 +324,7 @@ class FormReturReceive extends Component {
           />
         </ModalBody>
         <ModalFooter>
-          <button className="btn btn-primary" onClick={this.handleSubmit}>
+          <button className="btn btn-primary" onClick={(e) => this.handleSubmit(e)}>
             Simpan
           </button>
         </ModalFooter>
