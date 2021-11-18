@@ -39,7 +39,7 @@ class SaleOmsetReportExcel extends Component {
   };
   printDocument = (e) => {
     e.preventDefault();
-    const headers = [["No", "Tanggal", "Grand Total", "Diskon Trx", "Diskon Item", "Tunai", "Non Tunai", "Net Sales", "Setoran", "Selisih"]];
+    const headers = [["No", "Tanggal", "Omset Kotor", "Diskon Trx", "Diskon Item", "Tunai", "Non Tunai", "Net Sales", "Setoran", "Selisih"]];
     let data =
       typeof this.props.sale_omsetReportExcel.data === "object"
         ? this.props.sale_omsetReportExcel.data.map((v, i) => [
