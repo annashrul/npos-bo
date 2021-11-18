@@ -76,13 +76,13 @@ class SaleOmsetReportExcel extends Component {
       ["LAPORAN OMSET PENJUALAN"],
       ["PERIODE : " + this.props.startDate + " - " + this.props.endDate + ""],
       [""],
-      ["Tanggal", "Grand Total", "Diskon Trx", "Diskon Item", "Tunai", "Non Tunai", "Net Sales", "Setoran", "Selisih"],
+      ["Tanggal", "Omset Kotor", "Diskon Trx", "Diskon Item", "Tunai", "Non Tunai", "Net Sales", "Setoran", "Selisih"],
     ];
     let raw =
       typeof this.props.sale_omsetReportExcel.data === "object"
         ? this.props.sale_omsetReportExcel.data.map((v, i) => [
             moment(v.tanggal).format("YYYY-MM-DD"),
-            parseFloat(v.grand_total),
+            parseFloat(v.gross_sales),
             parseFloat(v.diskon_trx),
             parseFloat(v.diskon_item),
             parseFloat(v.tunai),

@@ -96,7 +96,7 @@ class SaleOmsetArchive extends Component {
     const head = [
       { rowSpan: 2, label: "No", width: "1%", className: "text-center" },
       { rowSpan: 2, label: "Tanggal", width: "1%" },
-      { rowSpan: 2, label: "Grand Total" },
+      { rowSpan: 2, label: "Omset Kotor" },
       { colSpan: 2, label: "Diskon" },
       { rowSpan: 2, label: "Tunai" },
       { rowSpan: 2, label: "Non Tunai" },
