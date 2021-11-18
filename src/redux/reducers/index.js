@@ -28,6 +28,7 @@ import { laba_rugiReducer } from "./report/laba_rugi/laba_rugi_report.reducer";
 import { adjustmentReducer } from "./adjustment/adjustment.reducer";
 import { poReducer } from "./purchase/purchase_order/po.reducer";
 import { receiveReducer } from "./purchase/receive/receive.reducer";
+import { returReducer } from "./purchase/retur/retur.reducer";
 import { siteReducer } from "./site.reducer";
 import { dnReducer } from "./inventory/delivery_note/dn.reducer";
 import { alokasiReducer } from "./inventory/alokasi/alokasi.reducer";
@@ -80,6 +81,7 @@ export default combineReducers({
   adjustmentReducer,
   poReducer,
   receiveReducer,
+  returReducer,
   siteReducer,
   dnReducer,
   alokasiReducer,

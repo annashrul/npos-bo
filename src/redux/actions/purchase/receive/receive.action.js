@@ -108,20 +108,9 @@ export const storeReceive = (data, param) => {
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
-          // if (result.value) {
-          //     const win = window.open(data.result.nota,'_blank');
-          //     if (win != null) {
-          //         win.focus();
-          //     }
-          // }
           destroy("receive");
-          localStorage.removeItem("sp");
-          localStorage.removeItem("lk");
-          localStorage.removeItem("ambil_data");
-          localStorage.removeItem("nota");
-          localStorage.removeItem("catatan");
           if (result.dismiss === "cancel") {
-            window.location.reload(false);
+            param({ pathname: "/receive" });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {
@@ -138,7 +127,7 @@ export const storeReceive = (data, param) => {
               nota: data.result.kode,
             },
           });
-          Swal.closeModal();
+
           return false;
         });
         dispatch(setLoading(false));

@@ -16,7 +16,7 @@ import { HEADERS, CONFIG_HIDE } from "redux/actions/_constants";
 import { withRouter } from "react-router-dom";
 import StickyBox from "react-sticky-box";
 import { toRp, ToastQ } from "helper";
-import { rmComma, toCurrency } from "../../../../helper";
+import { handleError, isEmptyOrUndefined, rmComma, swal, swallOption, toCurrency } from "../../../../helper";
 import Spinner from "Spinner";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 
@@ -661,21 +661,10 @@ class Receive extends Component {
   }
   HandleRemove(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        del(table, id);
-        this.getData();
-        Swal.fire("Deleted!", "Your data has been deleted.", "success");
-      }
+    swallOption("Anda yakin akan menghapus data ini ?", () => {
+      del(table, id);
+      this.getData();
+      swal("data berhasil dihapus");
     });
   }
   HandleAddBrg(e, item) {
@@ -743,174 +732,130 @@ class Receive extends Component {
   }
   HandleReset(e) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes!",
-    }).then((result) => {
-      if (result.value) {
-        destroy(table);
-        localStorage.removeItem("sp");
-        localStorage.removeItem("lk");
-        localStorage.removeItem("ambil_data");
-        localStorage.removeItem("nota");
-        localStorage.removeItem("catatan");
-        window.location.reload(false);
-      }
+    swallOption("anda yakin akan membatalkan transaksi ini ?", () => {
+      destroy(table);
+      localStorage.removeItem("sp");
+      localStorage.removeItem("lk");
+      localStorage.removeItem("ambil_data");
+      localStorage.removeItem("nota");
+      localStorage.removeItem("catatan");
+      this.getData();
     });
   }
   HandleSubmit(e) {
     e.preventDefault();
-
     // validator head form
     let err = this.state.error;
-    if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "" || this.props.checkNotaPem) {
-      if (this.state.catatan === "") {
-        err = Object.assign({}, err, {
-          catatan: "Catatan tidak boleh kosong.",
-        });
-      }
-      if (this.state.location === "") {
-        err = Object.assign({}, err, {
-          location: "Lokasi tidak boleh kosong.",
-        });
-      }
-
-      if (this.state.supplier === "") {
-        err = Object.assign({}, err, {
-          supplier: "Supplier tidak boleh kosong.",
-        });
-      }
-      if (this.state.penerima === "") {
-        err = Object.assign({}, err, {
-          penerima: "Penerima tidak boleh kosong.",
-        });
-      }
-      if (this.state.notasupplier === "" || this.props.checkNotaPem) {
-        err = Object.assign({}, err, {
-          notasupplier: this.props.checkNotaPem ? "Nota supplier telah digunakan." : "Nota supplier tidak boleh kosong.",
-        });
-      }
-      this.setState({
-        error: err,
-      });
-    } else {
-      const data = get(table);
-      data.then((res) => {
-        if (res.length === 0) {
-          Swal.fire("Error!", "Pilih barang untuk melanjutkan Pembelian.", "error");
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Simpan Receive Pembelian?",
-            text: "Pastikan data yang anda masukan sudah benar!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Simpan!",
-            cancelButtonText: "Tidak!",
-          }).then((result) => {
-            if (result.value) {
-              let subtotal = 0;
-              let detail = [];
-
-              res.map((item) => {
-                let disc1 = 0;
-                let ppn = 0;
-                if (item.diskon !== 0) {
-                  disc1 = parseFloat(item.harga_beli) * (parseFloat(item.diskon) / 100);
-                }
-
-                if (item.ppn !== 0) {
-                  ppn = (parseFloat(item.harga_beli) - disc1) * (parseFloat(item.ppn) / 100);
-                }
-                const subtotal_perrow = (parseFloat(item.harga_beli) - disc1 + ppn) * parseFloat(item.qty);
-                subtotal += subtotal_perrow;
-
-                let harga_ = 0;
-                let harga_2 = 0;
-                let harga_3 = 0;
-                let harga_4 = 0;
-                if (this.state.set_harga === 1) harga_ = rmComma(item.harga);
-                else if (this.state.set_harga === 2) {
-                  harga_ = rmComma(item.harga);
-                  harga_2 = rmComma(item.harga2);
-                } else if (this.state.set_harga === 3) {
-                  harga_ = rmComma(item.harga);
-                  harga_2 = rmComma(item.harga2);
-                  harga_3 = rmComma(item.harga3);
-                } else if (this.state.set_harga === 4) {
-                  harga_ = rmComma(item.harga);
-                  harga_2 = rmComma(item.harga2);
-                  harga_3 = rmComma(item.harga3);
-                  harga_4 = rmComma(item.harga4);
-                }
-
-                detail.push({
-                  kd_brg: item.kd_brg,
-                  barcode: item.barcode,
-                  satuan: item.satuan,
-                  diskon: item.diskon,
-                  diskon2: item.diskon2,
-                  diskon3: item.diskon3,
-                  diskon4: item.diskon4,
-
-                  harga_jual: harga_,
-                  harga_jual2: harga_2,
-                  harga_jual3: harga_3,
-                  harga_jual4: harga_4,
-
-                  ppn: item.ppn,
-                  harga_beli: item.harga_beli,
-                  qty: item.qty,
-                  qty_po: item.qty_po,
-                  qty_bonus: item.qty_bonus,
-                });
-                return null;
-              });
-              let data_final = {
-                tanggal: moment(this.state.tanggal).format("YYYY-MM-DD HH:mm:ss"),
-                type: this.state.jenis_trx,
-                tgl_jatuh_tempo: moment(this.state.tanggal_tempo).format("YYYY-MM-DD HH:mm:ss"),
-                no_po: this.state.no_po,
-                pre_receive: this.state.pre_receive,
-                sub_total: subtotal,
-                supplier: this.state.supplier,
-                nota_supplier: this.state.notasupplier,
-                nama_penerima: this.state.penerima,
-                discount_harga: this.state.discount_harga,
-                discount_persen: this.state.discount_persen,
-                ppn: this.state.pajak,
-                ppn_harga: this.state.ppn_harga,
-                lokasi_beli: this.state.location,
-                userid: this.state.userid,
-                detail: detail,
-                lvl: this.props.auth.user.lvl,
-              };
-              let parsedata = {};
-              parsedata["detail"] = data_final;
-              parsedata["master"] = this.state.databrg;
-              parsedata["nota"] = this.props.nota;
-              parsedata["logo"] = this.props.auth.user.logo;
-              parsedata["user"] = this.props.auth.user.username;
-              parsedata["lokasi_beli"] = this.state.location_val;
-              if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
-                this.props.dispatch(updateReceive(parsedata, this.props.match.params.slug));
-              } else {
-                this.props.dispatch(storeReceive(parsedata, (arr) => this.props.history.push(arr)));
-              }
-              return null;
-            }
-          });
-        }
-      });
+    if (!isEmptyOrUndefined(this.state.penerima)) {
+      handleError("penerima");
+      return;
     }
+    if (!isEmptyOrUndefined(this.state.notasupplier)) {
+      handleError("nota supplier");
+      return;
+    }
+    if (this.props.checkNotaPem) {
+      handleError("nota supplier", "telah digunakan");
+      return;
+    }
+
+    const data = get(table);
+    data.then((res) => {
+      if (res.length === 0) {
+        swal("Pilih barang untuk melanjutkan Pembelian.");
+      } else {
+        swallOption("Pastikan data yang anda masukan sudah benar!", () => {
+          let subtotal = 0;
+          let detail = [];
+
+          res.map((item) => {
+            let disc1 = 0;
+            let ppn = 0;
+            if (item.diskon !== 0) {
+              disc1 = parseFloat(item.harga_beli) * (parseFloat(item.diskon) / 100);
+            }
+
+            if (item.ppn !== 0) {
+              ppn = (parseFloat(item.harga_beli) - disc1) * (parseFloat(item.ppn) / 100);
+            }
+            const subtotal_perrow = (parseFloat(item.harga_beli) - disc1 + ppn) * parseFloat(item.qty);
+            subtotal += subtotal_perrow;
+
+            let harga_ = 0;
+            let harga_2 = 0;
+            let harga_3 = 0;
+            let harga_4 = 0;
+            if (this.state.set_harga === 1) harga_ = rmComma(item.harga);
+            else if (this.state.set_harga === 2) {
+              harga_ = rmComma(item.harga);
+              harga_2 = rmComma(item.harga2);
+            } else if (this.state.set_harga === 3) {
+              harga_ = rmComma(item.harga);
+              harga_2 = rmComma(item.harga2);
+              harga_3 = rmComma(item.harga3);
+            } else if (this.state.set_harga === 4) {
+              harga_ = rmComma(item.harga);
+              harga_2 = rmComma(item.harga2);
+              harga_3 = rmComma(item.harga3);
+              harga_4 = rmComma(item.harga4);
+            }
+
+            detail.push({
+              kd_brg: item.kd_brg,
+              barcode: item.barcode,
+              satuan: item.satuan,
+              diskon: item.diskon,
+              diskon2: item.diskon2,
+              diskon3: item.diskon3,
+              diskon4: item.diskon4,
+
+              harga_jual: harga_,
+              harga_jual2: harga_2,
+              harga_jual3: harga_3,
+              harga_jual4: harga_4,
+
+              ppn: item.ppn,
+              harga_beli: item.harga_beli,
+              qty: item.qty,
+              qty_po: item.qty_po,
+              qty_bonus: item.qty_bonus,
+            });
+            return null;
+          });
+          let data_final = {
+            tanggal: moment(this.state.tanggal).format("YYYY-MM-DD HH:mm:ss"),
+            type: this.state.jenis_trx,
+            tgl_jatuh_tempo: moment(this.state.tanggal_tempo).format("YYYY-MM-DD HH:mm:ss"),
+            no_po: this.state.no_po,
+            pre_receive: this.state.pre_receive,
+            sub_total: subtotal,
+            supplier: this.state.supplier,
+            nota_supplier: this.state.notasupplier,
+            nama_penerima: this.state.penerima,
+            discount_harga: this.state.discount_harga,
+            discount_persen: this.state.discount_persen,
+            ppn: this.state.pajak,
+            ppn_harga: this.state.ppn_harga,
+            lokasi_beli: this.state.location,
+            userid: this.state.userid,
+            detail: detail,
+            lvl: this.props.auth.user.lvl,
+          };
+          let parsedata = {};
+          parsedata["detail"] = data_final;
+          parsedata["master"] = this.state.databrg;
+          parsedata["nota"] = this.props.nota;
+          parsedata["logo"] = this.props.auth.user.logo;
+          parsedata["user"] = this.props.auth.user.username;
+          parsedata["lokasi_beli"] = this.state.location_val;
+          if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
+            this.props.dispatch(updateReceive(parsedata, this.props.match.params.slug));
+          } else {
+            this.props.dispatch(storeReceive(parsedata, (arr) => this.props.history.push(arr)));
+          }
+        });
+      }
+    });
   }
   autoSetQty(kode, data) {
     const cek = cekData("kd_brg", kode, table);

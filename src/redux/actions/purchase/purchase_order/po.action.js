@@ -158,7 +158,11 @@ export const storePo = (data, param) => {
           localStorage.removeItem("sp");
           localStorage.removeItem("lk");
           if (result.dismiss === "cancel") {
-            window.location.reload(false);
+            param({
+              pathname: "/purchase_order",
+            });
+            // this.props.history.push({ pathname: "/purchase_order" });
+            // window.location.reload(false);
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {

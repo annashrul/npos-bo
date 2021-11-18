@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
-import {
-  createUserLevel,
-  updateUserLevel,
-} from "redux/actions/masterdata/user_level/user_level.action";
+import { createUserLevel, updateUserLevel } from "redux/actions/masterdata/user_level/user_level.action";
 import { ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 
 import { ModalToggle } from "redux/actions/modal.action";
@@ -139,6 +136,7 @@ class FormUserLevel extends Component {
         { id: 80, value: "0", isChecked: false, label: "Omset Penjualan" },
         { id: 81, value: "0", isChecked: false, label: "Omset Penj. Periode" },
         { id: 82, value: "0", isChecked: false, label: "Nilai Persediaan" },
+        { id: 83, value: "0", isChecked: false, label: "Retur pembelian" },
       ],
       produksi: [
         { id: 100, value: "0", isChecked: false, label: "Produksi" },
@@ -166,17 +164,7 @@ class FormUserLevel extends Component {
       ],
       lvl: "",
       access: [],
-      array_modul: [
-        "setting",
-        "masterdata",
-        "produksi",
-        "inventory",
-        "pembelian",
-        "transaksi",
-        "pembayaran",
-        "report",
-        "cetak_barcode",
-      ],
+      array_modul: ["setting", "masterdata", "produksi", "inventory", "pembelian", "transaksi", "pembayaran", "report", "cetak_barcode"],
       error: {
         lvl: "",
       },
@@ -379,8 +367,7 @@ class FormUserLevel extends Component {
     let moduls = this.state[param];
     moduls.forEach((modul) => {
       modul.isChecked = event.target.checked;
-      modul.value =
-        modul.label !== "" ? (modul.isChecked === false ? "0" : "1") : "0";
+      modul.value = modul.label !== "" ? (modul.isChecked === false ? "0" : "1") : "0";
     });
     this.setState({ param: moduls });
   };
@@ -389,8 +376,7 @@ class FormUserLevel extends Component {
     moduls.forEach((modul) => {
       if (modul.label === event.target.getAttribute("id")) {
         modul.isChecked = event.target.checked;
-        modul.value =
-          modul.label !== "" ? (modul.isChecked === false ? "0" : "1") : "0";
+        modul.value = modul.label !== "" ? (modul.isChecked === false ? "0" : "1") : "0";
       }
     });
     this.setState({ param: moduls });
@@ -442,36 +428,16 @@ class FormUserLevel extends Component {
   render() {
     const { array_modul } = this.state;
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formUserLevel"}
-        size="lg"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined
-            ? "Tambah User Level"
-            : "Ubah User Level"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserLevel"} size="lg">
+        <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah User Level" : "Ubah User Level"}</ModalHeader>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           <ModalBody>
             <div className="row">
               <div className="col-12">
                 <div className="form-group">
                   <label>Nama User Level</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="lvl"
-                    value={this.state.lvl}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.lvl !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
+                  <input type="text" className="form-control" name="lvl" value={this.state.lvl} onChange={(e) => this.handleChange(e)} />
+                  <div className="invalid-feedback" style={this.state.error.lvl !== "" ? { display: "block" } : { display: "none" }}>
                     {this.state.error.lvl}
                   </div>
                 </div>
@@ -480,33 +446,14 @@ class FormUserLevel extends Component {
                 return (
                   <div className="col-12" key={i}>
                     <div className="form-group">
-                      <input
-                        type="checkbox"
-                        onChange={(e) => this.handleAllChecked(e, val)}
-                        value="checkedall"
-                      />{" "}
-                      <b style={{ color: "red" }}>
-                        {val.replace("_", " ").toUpperCase()}
-                      </b>
+                      <input type="checkbox" onChange={(e) => this.handleAllChecked(e, val)} value="checkedall" /> <b style={{ color: "red" }}>{val.replace("_", " ").toUpperCase()}</b>
                     </div>
                     <div className="row">
                       {this.state[val].map((modul, index) => {
                         return modul.label !== "" ? (
                           <div className="col-md-3" key={index}>
-                            <div
-                              className="form-group"
-                              style={{ marginLeft: "6px", fontSize: "12px" }}
-                            >
-                              <input
-                                onChange={(e) =>
-                                  this.handleCheckChieldElement(e, val)
-                                }
-                                id={modul.label}
-                                className={modul.label}
-                                type="checkbox"
-                                checked={modul.isChecked}
-                                value={modul.value}
-                              />{" "}
+                            <div className="form-group" style={{ marginLeft: "6px", fontSize: "12px" }}>
+                              <input onChange={(e) => this.handleCheckChieldElement(e, val)} id={modul.label} className={modul.label} type="checkbox" checked={modul.isChecked} value={modul.value} />{" "}
                               {modul.label}
                             </div>
                           </div>
@@ -523,11 +470,7 @@ class FormUserLevel extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-danger mb-2 mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-danger mb-2 mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Close
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">

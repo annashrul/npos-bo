@@ -105,6 +105,7 @@ class SideMenu extends Component {
       r_purchase_order: "",
       r_receive: "",
       r_arsip_pembelian_by_supplier: "",
+      r_retur_pembelian: "",
       r_hutang: "",
       r_piutang: "",
       r_trx: "",
@@ -488,8 +489,9 @@ class SideMenu extends Component {
         let r_sale_omset = akses[90]["value"] !== null ? akses[90]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_sale_omset_periode = akses[91]["value"] !== null ? akses[91]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_nilai_persediaan = akses[92]["value"] !== null ? akses[92]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let r_retur_pembelian = akses[93]["value"] !== null ? akses[93]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //CETAK BARCODE
-        let cetak_barcode = akses[93]["value"] !== null ? akses[93]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let cetak_barcode = akses[94]["value"] !== null ? akses[94]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         // start pengecekan apabila fitur bernilai 0
         //setting
         if (pengaturan_umum !== "0" || pengguna !== "0" || lokasi !== "0") {
@@ -555,6 +557,7 @@ class SideMenu extends Component {
           r_penjualan_by_customer !== "0" ||
           r_stock !== "0" ||
           r_nilai_persediaan !== "0" ||
+          r_retur_pembelian !== "0" ||
           r_adjusment !== "0" ||
           r_alokasi !== "0" ||
           r_delivery_note !== "0" ||
@@ -578,6 +581,7 @@ class SideMenu extends Component {
         if (
           r_stock !== "0" ||
           r_nilai_persediaan !== "0" ||
+          r_retur_pembelian !== "0" ||
           r_adjusment !== "0" ||
           r_alokasi !== "0" ||
           r_delivery_note !== "0" ||
@@ -588,7 +592,7 @@ class SideMenu extends Component {
         ) {
           this.setState({ modul_report: true, modul_report_inventory: true });
         }
-        if (r_purchase_order !== "0" || r_receive !== "0" || r_arsip_pembelian_by_supplier !== "0") {
+        if (r_purchase_order !== "0" || r_receive !== "0" || r_arsip_pembelian_by_supplier !== "0" || r_retur_pembelian !== "0") {
           this.setState({ modul_report: true, modul_report_pembelian: true });
         }
         if (r_hutang !== "0" || r_piutang !== "0") {
@@ -650,6 +654,7 @@ class SideMenu extends Component {
           r_penjualan_by_customer: r_penjualan_by_customer,
           r_stock: r_stock,
           r_nilai_persediaan: r_nilai_persediaan,
+          r_retur_pembelian: r_retur_pembelian,
           r_adjusment: r_adjusment,
           r_alokasi: r_alokasi,
           r_delivery_note: r_delivery_note,
@@ -770,6 +775,7 @@ class SideMenu extends Component {
       path === "/report/po" ||
       path === "/report/receive" ||
       path === "/report/purchase_by_supplier" ||
+      path === "/report/retur_pembelian" ||
       path === "/report/hutang" ||
       path === "/report/piutang" ||
       path === "/report/sale_omset" ||
@@ -795,7 +801,7 @@ class SideMenu extends Component {
         this.setState({
           isReportInventory: true,
         });
-      } else if (path === "/report/po" || path === "/report/receive" || path === "/report/purchase_by_supplier") {
+      } else if (path === "/report/po" || path === "/report/receive" || path === "/report/purchase_by_supplier" || path === "/report/retur_pembelian") {
         this.setState({
           isReportPembelian: true,
         });
@@ -1515,7 +1521,10 @@ class SideMenu extends Component {
               {/* SUBLAPORAN PEMBELIAN MODUL START */}
               <li
                 className={
-                  "treeview" + (this.state.isReportPembelian === true || path === "/report/po" || path === "/report/receive" || path === "/report/purchase_by_supplier" ? " active menu-open" : "")
+                  "treeview" +
+                  (this.state.isReportPembelian === true || path === "/report/po" || path === "/report/receive" || path === "/report/purchase_by_supplier" || path === "/report/retur_pembelian"
+                    ? " active menu-open"
+                    : "")
                 }
                 style={modul_report_pembelian === true ? { display: "block" } : { display: "none" }}
               >
@@ -1531,23 +1540,22 @@ class SideMenu extends Component {
                 >
                   <li className={path === "/report/po" ? "active" : ""} style={this.state.r_purchase_order === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/po" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="fa fa-list-ol" />
                       Purchase Order
                     </Link>
                   </li>
                   <li className={path === "/report/receive" ? "active" : ""} style={this.state.r_receive === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/receive" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-assignment-check" />
                       Receive
                     </Link>
                   </li>
                   <li className={path === "/report/purchase_by_supplier" ? "active" : ""} style={this.state.r_arsip_pembelian_by_supplier === "0" ? { display: "none" } : { display: "block" }}>
                     <Link to="/report/purchase_by_supplier" style={{ width: "fit-content" }}>
-                      {" "}
-                      <i className="zmdi zmdi-assignment-check" />
                       Pembelian by Supplier
+                    </Link>
+                  </li>
+                  <li className={path === "/report/retur_pembelian" ? "active" : ""} style={this.state.r_retur_pembelian === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to="/report/retur_pembelian" style={{ width: "fit-content" }}>
+                      Retur Pembelian
                     </Link>
                   </li>
                 </ul>

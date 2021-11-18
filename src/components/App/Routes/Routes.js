@@ -59,6 +59,7 @@ import ReportLabaRugi from "../report/laba_rugi";
 import HutangReport from "../report/hutang";
 import PiutangReport from "../report/piutang";
 import PurchaseBySupplierReport from "../report/purchase/purchase_by_supplier";
+import ReturPembelianReport from "../report/purchase/retur_pembelian";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
 import BayarPiutang from "../piutang/bayar_piutang";
@@ -193,6 +194,7 @@ const Routes = (
       <PrivateRoute path="/report/sale_omset" exact strict component={SaleOmsetArchive} />
       <PrivateRoute path="/report/sale_omset_periode" exact strict component={SaleOmsetPeriodeArchive} />
       <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
+      <PrivateRoute path="/report/retur_pembelian" exact strict component={ReturPembelianReport} />
       <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
       <PrivateRoute path="/log/trx" exact strict component={LogTrxReport} />
       <PrivateRoute path="/log/act" exact strict component={LogActReport} />

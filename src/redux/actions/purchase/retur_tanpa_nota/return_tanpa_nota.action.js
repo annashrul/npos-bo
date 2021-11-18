@@ -2,8 +2,9 @@ import { RETUR_TANPA_NOTA, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { ModalToggle } from "../../modal.action";
+import { ModalToggle, ModalType } from "../../modal.action";
 import { FetchReport } from "redux/actions/purchase/receive/receive.action";
+import { handleGet } from "../../handleHttp";
 
 export function setLoading(load) {
   return {
@@ -17,6 +18,49 @@ export function setCode(data = []) {
     data,
   };
 }
+export function setDataReport(data = []) {
+  return {
+    type: RETUR_TANPA_NOTA.GET_REPORT,
+    data,
+  };
+}
+export function setDataReportDetail(data = []) {
+  return {
+    type: RETUR_TANPA_NOTA.GET_REPORT_DETAIL,
+    data,
+  };
+}
+
+export const FetchReportRetur = (where = "") => {
+  return (dispatch) => {
+    let url = `retur/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(
+      url,
+      (res) => {
+        let data = res.data;
+        dispatch(setDataReport(data));
+      },
+      true
+    );
+  };
+};
+export const FetchReportDetailRetur = (code, where = "") => {
+  return (dispatch) => {
+    let url = `retur/report/${code}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(
+      url,
+      (res) => {
+        let data = res.data;
+        dispatch(setDataReportDetail(data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailReportRetur"));
+      },
+      true
+    );
+  };
+};
 
 export const storeReturTanpaNota = (data, otherData, param, isModal = false) => {
   return (dispatch) => {
@@ -50,21 +94,17 @@ export const storeReturTanpaNota = (data, otherData, param, isModal = false) => 
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
-          // if (result.value) {
-          //     const win = window.open(data.result.nota,'_blank');
-          //     if (win != null) {
-          //         win.focus();
-          //     }
-          // }
           destroy("retur_tanpa_nota");
           localStorage.removeItem("grand_total");
           localStorage.removeItem("sp");
           localStorage.removeItem("lk");
           if (result.dismiss === "cancel") {
+            console.log(isModal);
             if (isModal) {
               dispatch(FetchReport("page=1"));
+              param({ pathname: "/report/receive" });
             } else {
-              window.location.reload(false);
+              param({ pathname: "/retur_tanpa_nota" });
             }
           }
         });

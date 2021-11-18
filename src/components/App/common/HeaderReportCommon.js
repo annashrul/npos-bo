@@ -222,7 +222,7 @@ class HeaderReportCommon extends Component {
                 <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
                   <i className="fa fa-search" />
                 </button>
-                {isProgress(this.props.excelData, () => this.props.callbackExcel())}
+                {this.props.callbackExcel && isProgress(this.props.excelData, () => this.props.callbackExcel())}
               </span>
             </div>
           </div>
