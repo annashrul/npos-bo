@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import { FetchReportRetur, FetchReportDetailRetur } from "../../../../redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import connect from "react-redux/es/connect/connect";
-import { CURRENT_DATE, DEFAULT_WHERE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, toDate } from "../../../../helper";
+import { CURRENT_DATE, DEFAULT_WHERE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../helper";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
@@ -117,13 +117,13 @@ class ReturPembelianReport extends Component {
                         <td className="middle nowrap">{v.supplier}</td>
                         <td className="text-right middle nowrap">{parseToRp(v.qty_retur)}</td>
                         <td className="text-right middle nowrap">{parseToRp(v.total_retur)}</td>
-                        <td className="middle nowrap">{v.keterangan}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.keterangan)}</td>
                         <td className="middle nowrap">{toDate(v.tanggal)}</td>
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {

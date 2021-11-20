@@ -82,8 +82,8 @@ class ReturTanpaNota extends Component {
         supplier_nama: localStorage.sp_nama,
       });
     }
-    if (localStorage.sp !== undefined && localStorage.sp !== "" && localStorage.lk !== undefined && localStorage.lk !== "") {
-      this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, localStorage.sp, this.autoSetQty, 5));
+    if (localStorage.lk !== undefined && localStorage.lk !== "") {
+      this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5));
     }
   }
   componentWillReceiveProps = (nextProps) => {
@@ -362,6 +362,10 @@ class ReturTanpaNota extends Component {
     let err = this.state.error;
     if (!isEmptyOrUndefined(this.state.catatan)) {
       handleError("catatan");
+      return;
+    }
+    if (!isEmptyOrUndefined(this.state.supplier)) {
+      handleError("supplier");
       return;
     }
     const data = get(table);

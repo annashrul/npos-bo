@@ -592,6 +592,10 @@ export const handleError = (val, msg = "tidak boleh kosong") => {
   return ToastQ.fire({ icon: "error", title: `${val} ${msg}` });
 };
 
+export const rmUnderscore = (val) => {
+  return val.replaceAll("_", " ");
+};
+
 export const rmSpaceToStrip = (val) => {
   return val === "" || val === null || val === undefined ? "-" : val;
 };

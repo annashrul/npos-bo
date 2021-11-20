@@ -5,19 +5,14 @@ import WrapperModal from "../../../_wrapper.modal";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchReportDetail } from "redux/actions/purchase/receive/receive.action";
 import HeaderDetailCommon from "../.../../../../../common/HeaderDetailCommon";
-import { getMargin, float, generateNo, noData, parseToRp, toDate, rmPage } from "../../../../../../helper";
+import { getMargin, float, generateNo, noData, parseToRp, toDate, rmPage, rmSpaceToStrip, rmUnderscore } from "../../../../../../helper";
 import TableCommon from "../../../../common/TableCommon";
 class DetailReturReport extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
   }
-  handlePageChange(pageNumber) {
-    let master = this.props.master;
-    let where = `page=${pageNumber}`;
-    where += rmPage(master.where);
-    this.props.dispatch(FetchReportDetail(master.no_faktur_beli, where));
-  }
+
   toggle(e) {
     e.preventDefault();
     const bool = !this.props.isOpen;
@@ -25,24 +20,18 @@ class DetailReturReport extends Component {
   }
   render() {
     console.log("props", this.props.data);
-    // const { data } = this.props.data;
-    // barcode: "211029450303";
-    // hrg_beli: "250000";
-    // kd_brg: "2110294503";
-    // keterangan: "-";
-    // kondisi: "bad_stock";
-    // nm_brg: "Yataro";
-    // no_retur: "NR-2111180002-7";
-    // qty_retur: "1";
-    // satuan: "Karton";
     const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "No retur", width: "1%" },
       { colSpan: 5, label: "Barang", width: "1%" },
       { rowSpan: 2, label: "Kondisi", width: "1%" },
       { rowSpan: 2, label: "Qty retur", width: "1%" },
+      { rowSpan: 2, label: "Total retur", width: "1%" },
       { rowSpan: 2, label: "Keterangan" },
     ];
     const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Barcode" }, { label: "Satuan" }, { label: "Harga beli" }];
+    let totalQtyReturPerHalaman = 0;
+    let totalSubTotalPerHalaman = 0;
 
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailReportRetur"} size="lg">
@@ -64,18 +53,40 @@ class DetailReturReport extends Component {
             head={head}
             rowSpan={rowSpan}
             renderRow={
-              <tr>
-                <td className="middle nowrap">{this.props.data.detail.no_retur}</td>
-                <td className="middle nowrap">{this.props.data.detail.kd_brg}</td>
-                <td className="middle nowrap">{this.props.data.detail.nm_brg}</td>
-                <td className="middle nowrap">{this.props.data.detail.barcode}</td>
-                <td className="middle nowrap">{this.props.data.detail.satuan}</td>
-                <td className="middle nowrap text-right">{parseToRp(this.props.data.detail.hrg_beli)}</td>
-                <td className="middle nowrap">{this.props.data.detail.kondisi}</td>
-                <td className="middle nowrap text-right">{parseToRp(this.props.data.detail.qty_retur)}</td>
-                <td className="middle nowrap">{this.props.data.detail.keterangan}</td>
-              </tr>
+              typeof this.props.data.detail === "object"
+                ? this.props.data.detail.length > 0
+                  ? this.props.data.detail.map((v, i) => {
+                      totalQtyReturPerHalaman += parseFloat(v.qty_retur);
+                      totalSubTotalPerHalaman += parseFloat(v.qty_retur) * parseFloat(v.hrg_beli);
+                      return (
+                        <tr key={i}>
+                          <td className="middle nowrap text-center">{i + 1}</td>
+                          <td className="middle nowrap">{v.no_retur}</td>
+                          <td className="middle nowrap">{v.kd_brg}</td>
+                          <td className="middle nowrap">{v.nm_brg}</td>
+                          <td className="middle nowrap">{v.barcode}</td>
+                          <td className="middle nowrap">{v.satuan}</td>
+                          <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
+                          <td className="middle nowrap">{rmUnderscore(v.kondisi)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(v.qty_retur)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(parseFloat(v.qty_retur) * parseFloat(v.hrg_beli))}</td>
+                          <td className="middle nowrap">{rmSpaceToStrip(v.keterangan)}</td>
+                        </tr>
+                      );
+                    })
+                  : noData(head.length + rowSpan.length)
+                : noData(head.length + rowSpan.length)
             }
+            footer={[
+              {
+                data: [
+                  { colSpan: 8, label: "Total perhalaman", className: "text-left" },
+                  { colSpan: 1, label: parseToRp(totalQtyReturPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalSubTotalPerHalaman) },
+                  { colSpan: 1, label: "" },
+                ],
+              },
+            ]}
           />
         </ModalBody>
       </WrapperModal>
