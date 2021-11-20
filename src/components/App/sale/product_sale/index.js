@@ -519,7 +519,10 @@ class Sale extends Component {
           kode_trx: this.props.nota,
           subtotal: subtotal,
           lokasi: this.state.location,
-          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" || atob(atob(Cookies.get("tnt="))) === "miski" ? "Z" : "Q",
+          kassa:
+            atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" || atob(atob(Cookies.get("tnt="))) === "miski"
+              ? "Z"
+              : "Q",
           jns_kartu: "Debit",
           status: "LUNAS",
           optional_note: isEmptyOrUndefined(this.state.catatan) ? this.state.catatan : "-",
@@ -754,7 +757,6 @@ class Sale extends Component {
             keyEventName={KEYPRESS}
             keyValue={["Enter", "c", "h", "l", "x"]}
             onKeyHandle={(e) => {
-              console.log(e);
               if (e.key === "Enter") {
                 this.HandleSubmit(e);
                 return;
@@ -1150,7 +1152,10 @@ class Sale extends Component {
                               Hold bill
                             </button>
                           )}
-                          {atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" || atob(atob(Cookies.get("tnt="))) === "miski" ? (
+                          {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
+                          atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
+                          atob(atob(Cookies.get("tnt="))) === "npos" ||
+                          atob(atob(Cookies.get("tnt="))) === "miski" ? (
                             <div>
                               <button className={"btn btn-outline-info ml-1"} onClick={(e) => this.handleClosing(e)}>
                                 Closing

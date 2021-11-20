@@ -144,11 +144,9 @@ class ReturPembelianReport extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    download: state.poReducer.downloadPoSupplier,
     data: state.returReducer.data,
     auth: state.auth,
     isLoading: state.poReducer.isLoading,
-    purchase_by_supplierReportExcel: state.poReducer.pbs_data_excel,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

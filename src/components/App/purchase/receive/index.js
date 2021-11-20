@@ -19,7 +19,8 @@ import { toRp, ToastQ } from "helper";
 import { handleError, isEmptyOrUndefined, rmComma, swal, swallOption, toCurrency } from "../../../../helper";
 import Spinner from "Spinner";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
-
+import Cookies from "js-cookie";
+import Autocomplete from "react-autocomplete";
 const table = "receive";
 class Receive extends Component {
   constructor(props) {
@@ -64,6 +65,7 @@ class Receive extends Component {
       scrollPage: 0,
       isScroll: false,
       toggleSide: false,
+      anyField: "",
       error: {
         location: "",
         supplier: "",
@@ -315,7 +317,7 @@ class Receive extends Component {
               diskon4: item.disc4,
               ppn: item.ppn,
               harga_beli: item.harga_beli,
-              qty: item.jumlah_beli,
+              qty: atob(atob(Cookies.get("tnt="))) === "rb" || atob(atob(Cookies.get("tnt="))) === "npos" ? 0 : item.jumlah_beli,
               qty_po: item.jumlah_beli,
               qty_bonus: 0,
               stock: item.stock,
@@ -1372,6 +1374,14 @@ class Receive extends Component {
                       </div>
                     </div>
                   </form>
+                  {/* <Select
+                    options={opSupplier}
+                    placeholder="Pilih Supplier"
+                    onChange={this.HandleChangeSupplier}
+                    value={opSupplier.find((op) => {
+                      return op.value === this.state.supplier;
+                    })}
+                  /> */}
                   <div style={{ overflow: "scroll", height: "400px" }}>
                     <table className="table table-hover table-noborder">
                       <thead>

@@ -18,6 +18,12 @@ export const returReducer = (state = initialState, action) => {
         data: action.data.result,
         total: action.data.result.total,
       });
+    case RETUR_TANPA_NOTA.GET_REPORT_DETAIL:
+      return Object.assign({}, state, {
+        status: action.data.status,
+        msg: action.data.msg,
+        returReportDetail: action.data.result,
+      });
     default:
       return state;
   }

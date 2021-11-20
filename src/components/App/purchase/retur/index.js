@@ -139,9 +139,9 @@ class ReturTanpaNota extends Component {
     });
     localStorage.setItem("lk", lk.value);
     localStorage.setItem("lk_nama", lk.label);
-    if (this.state.supplier !== "") {
-      this.props.dispatch(FetchBrg(1, "barcode", "", lk.value, this.state.supplier, this.autoSetQty, 5));
-    }
+
+    this.props.dispatch(FetchBrg(1, "barcode", "", lk.value, null, this.autoSetQty, 5));
+
     destroy(table);
     this.getData();
   }
@@ -157,11 +157,11 @@ class ReturTanpaNota extends Component {
     });
     localStorage.setItem("sp", sp.value);
     localStorage.setItem("sp_nama", sp.label);
-    if (this.state.location !== "") {
-      this.props.dispatch(FetchBrg(1, "barcode", "", this.state.location, sp.value, this.autoSetQty, 5));
-    }
-    destroy(table);
-    this.getData();
+    // if (this.state.location !== "") {
+    //   this.props.dispatch(FetchBrg(1, "barcode", "", this.state.location, sp.value, this.autoSetQty, 5));
+    // }
+    // destroy(table);
+    // this.getData();
   }
   HandleCommonInputChange(e, errs = true, st = 0) {
     const column = e.target.name;
@@ -458,7 +458,7 @@ class ReturTanpaNota extends Component {
       localStorage.setItem("anyReturTanpaNota", this.state.search);
 
       const searchby = parseInt(this.state.searchby, 10) === 1 ? "kd_brg" : parseInt(this.state.searchby, 10) === 2 ? "barcode" : "deskripsi";
-      this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier, this.autoSetQty, 5));
+      this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, null, this.autoSetQty, 5));
       this.setState({ search: "" });
     }
   }
@@ -499,9 +499,7 @@ class ReturTanpaNota extends Component {
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
       }
-      this.props.dispatch(
-        FetchBrg(1, searchby, localStorage.anyReturTanpaNota !== undefined ? localStorage.anyReturTanpaNota : "", this.state.location, this.state.supplier, this.autoSetQty, this.state.perpage)
-      );
+      this.props.dispatch(FetchBrg(1, searchby, localStorage.anyReturTanpaNota !== undefined ? localStorage.anyReturTanpaNota : "", this.state.location, null, this.autoSetQty, this.state.perpage));
       this.setState({ scrollPage: this.state.scrollPage + 5 });
     } else {
       Swal.fire({ allowOutsideClick: false, title: "Perhatian", icon: "warning", text: "Tidak ada data." });
@@ -534,7 +532,7 @@ class ReturTanpaNota extends Component {
     }
     const columnStyle = { verticalAlign: "middle", textAlign: "center", whiteSpace: "nowrap" };
     const head = [
-      { rowSpan: 2, label: "No" },
+      { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang" },
       { rowSpan: 2, label: "Satuan", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
@@ -743,10 +741,8 @@ class ReturTanpaNota extends Component {
                         <tr key={index}>
                           <td className="middle nowrap text-center">{index + 1}</td>
                           <td className="middle nowrap">
-                            <small>
-                              {item.nm_brg} <br />
-                              {item.barcode}
-                            </small>
+                            {item.nm_brg} <br />
+                            {item.barcode}
                           </td>
 
                           <td className="middle nowrap">
