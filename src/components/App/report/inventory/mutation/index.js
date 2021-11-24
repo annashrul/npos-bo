@@ -4,11 +4,13 @@ import { FetchMutation, FetchMutationExcel, FetchMutationData, rePrintFaktur } f
 import connect from "react-redux/es/connect/connect";
 import DetailMutation from "components/App/modals/report/inventory/mutation_report/detail_mutation";
 import MutationReportExcel from "components/App/modals/report/inventory/mutation_report/form_mutation_excel";
-import { CURRENT_DATE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, rmSpaceToStrip, toDate, toRp } from "../../../../../helper";
+import { CURRENT_DATE, generateNo, getFetchWhere, getPeriode, noData, parseToRp, rmSpaceToStrip, swallOption, toDate, toRp } from "../../../../../helper";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import TableCommon from "../../../common/TableCommon";
 import { statusMutasi, STATUS_MUTASI } from "../../../../../helperStatus";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import OtorisasiModal from "../../../modals/otorisasi.modal";
+import { ModalToggle, ModalType } from "../../../../../redux/actions/modal.action";
 
 class MutationReport extends Component {
   constructor(props) {
@@ -16,6 +18,8 @@ class MutationReport extends Component {
     this.handleModal = this.handleModal.bind(this);
     this.handleService = this.handleService.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.onDone = this.onDone.bind(this);
     this.state = {
       where_data: `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`,
       startDate: CURRENT_DATE,
@@ -27,6 +31,8 @@ class MutationReport extends Component {
       ],
       isModalDetail: false,
       isModalExport: false,
+      isModalOtorisasi: false,
+      id_trx: "",
     };
   }
 
@@ -69,6 +75,21 @@ class MutationReport extends Component {
   handleRePrint(id) {
     this.props.dispatch(rePrintFaktur(id));
   }
+  handleDelete(id) {
+    this.setState({ id_trx: id });
+    swallOption("Data yang telah dihapus tidak bisa dikembalikan.", () => {
+      this.setState({ isModalOtorisasi: true });
+      this.props.dispatch(ModalToggle(true));
+      this.props.dispatch(ModalType("modalOtorisasi"));
+    });
+  }
+  onDone(id, id_trx) {
+    console.log(id, id_trx);
+    // this.props.dispatch(deleteReportPo(id_trx));
+    this.setState({
+      id_trx: "",
+    });
+  }
 
   render() {
     const { per_page, last_page, current_page, data, total } = this.props.mutationReport;
@@ -78,11 +99,11 @@ class MutationReport extends Component {
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
       { colSpan: "2", label: "Faktur", width: "1%" },
       { colSpan: "2", label: "Lokasi", width: "1%" },
-      { rowSpan: "2", label: "qty", width: "1%" },
+      { rowSpan: "2", label: "Qty", width: "1%" },
       { rowSpan: "2", label: "Total transaksi", width: "1%" },
       { rowSpan: "2", label: "Keterangan" },
       { rowSpan: "2", label: "Status", width: "1%" },
-      { rowSpan: "2", label: "Tanggal mutasi", width: "1%" },
+      { rowSpan: "2", label: "Tanggal", width: "1%" },
     ];
     const rowSpan = [{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }];
     let totalQtyPerHalaman = 0;
@@ -116,9 +137,9 @@ class MutationReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Edit" }];
+                    let action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Hapus" }, { label: "Edit" }];
                     if (v.status !== "0") {
-                      action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }];
+                      action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Hapus" }];
                     }
                     totalQtyPerHalaman = totalQtyPerHalaman + parseInt(v.total_qty);
                     totalAmounPerHalaman = totalAmounPerHalaman + parseInt(v.total);
@@ -132,9 +153,10 @@ class MutationReport extends Component {
                               console.log(e);
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleRePrint(v.no_faktur_mutasi);
-                              if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
+                              if (e === 2) this.handleRePrint(v.no_faktur_mutasi);
+                              if (e === 3) this.handleDelete(v.no_faktur_mutasi);
                               if (v.status === "0") {
-                                if (e === 3) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
+                                if (e === 4) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
                               }
                             }}
                           />
@@ -173,6 +195,16 @@ class MutationReport extends Component {
         {this.props.isOpen && isModalDetail ? <DetailMutation /> : null}
 
         {this.props.isOpen && isModalExport ? <MutationReportExcel startDate={startDate} endDate={endDate} /> : null}
+        {this.props.isOpen && this.state.isModalOtorisasi ? (
+          <OtorisasiModal
+            datum={{
+              module: "Mutasi",
+              aksi: "delete",
+              id_trx: this.state.id_trx,
+            }}
+            onDone={this.onDone}
+          />
+        ) : null}
       </Layout>
     );
   }

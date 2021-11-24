@@ -76,7 +76,6 @@ class SaleByProductArchive extends Component {
       { rowSpan: 2, label: "Pajak" },
       { rowSpan: 2, label: "Servis" },
       { rowSpan: 2, label: "Toko  " },
-      { rowSpan: 2, label: "Tanggal" },
     ];
     const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Barcode" }, { label: "Deskripsi" }, { label: "Satuan" }];
 
@@ -131,7 +130,6 @@ class SaleByProductArchive extends Component {
                         <td className="middle nowrap text-right">{parseToRp(val.tax)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.service)}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(val.toko)}</td>
-                        <td className="middle nowrap">{rmSpaceToStrip(toDate(val.tgl))}</td>
                       </tr>
                     );
                   })
@@ -147,7 +145,6 @@ class SaleByProductArchive extends Component {
                 { colSpan: 1, label: parseToRp(totalDiskonPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalPajakPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalServicePerHalaman) },
-                { colSpan: 2, label: "" },
               ],
             },
           ]}

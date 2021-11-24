@@ -5,37 +5,26 @@ import Swal from "sweetalert2";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import AsyncSelect from "react-select/async";
-import {
-  store,
-  get,
-  update,
-  destroy,
-  cekData,
-  del,
-} from "components/model/app.model";
+import { store, get, update, destroy, cekData, del } from "components/model/app.model";
 import Layout from "components/App/Layout";
-import {
-  FetchBrg,
-  setProductbrg,
-} from "redux/actions/masterdata/product/product.action";
+import { FetchBrg, setProductbrg } from "redux/actions/masterdata/product/product.action";
 import { FetchCheck } from "redux/actions/site.action";
 import { FetchNota, storeDN } from "redux/actions/inventory/dn.action";
-import {
-  FetchReceiveData,
-  setPoData,
-} from "redux/actions/purchase/receive/receive.action";
+import { FetchReceiveData, setPoData } from "redux/actions/purchase/receive/receive.action";
 import { HEADERS } from "redux/actions/_constants";
 import { toRp, ToastQ } from "helper";
 import { withRouter } from "react-router-dom";
 import StickyBox from "react-sticky-box";
 import Spinner from "Spinner";
+import TableCommon from "../../common/TableCommon";
+import ButtonTrxCommon from "../../common/ButtonTrxCommon";
+import { handleError, isEmptyOrUndefined, setFocus, swal, swallOption } from "../../../../helper";
 
 const table = "delivery_note";
 
 const filterColors = (inputValue) => {
   let search = "receive/report?page=1&perpage=40";
-  if (inputValue !== "")
-    search = "receive/report?page=1&perpage=40&q=" + inputValue;
+  if (inputValue !== "") search = "receive/report?page=1&perpage=40&q=" + inputValue;
   return axios
     .get(HEADERS.URL + search)
     .then(function (response) {
@@ -106,7 +95,6 @@ class DeliveryNote extends Component {
     this.getData = this.getData.bind(this);
     this.HandleChangeNota = this.HandleChangeNota.bind(this);
     this.handleLoadMore = this.handleLoadMore.bind(this);
-    this.handleLoad = this.handleLoad.bind(this);
     this.handleClickToggle = this.handleClickToggle.bind(this);
   }
   handleClickToggle(e) {
@@ -179,10 +167,7 @@ class DeliveryNote extends Component {
       });
     }
 
-    if (
-      localStorage.ambil_data !== undefined &&
-      localStorage.ambil_data !== ""
-    ) {
+    if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== "") {
       if (localStorage.ambil_data === 2) {
         // this.props.dispatch(FetchPoReport(1, 1000))
       }
@@ -202,9 +187,7 @@ class DeliveryNote extends Component {
 
     if (localStorage.lk !== undefined && localStorage.lk !== "") {
       this.props.dispatch(FetchNota(localStorage.lk));
-      this.props.dispatch(
-        FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5)
-      );
+      this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5));
 
       this.setState({
         location: localStorage.lk,
@@ -227,9 +210,7 @@ class DeliveryNote extends Component {
     this.getProps(nextProps);
   };
   componentWillUnmount() {
-    this.props.dispatch(
-      setProductbrg({ status: "", msg: "", result: { data: [] } })
-    );
+    this.props.dispatch(setProductbrg({ status: "", msg: "", result: { data: [] } }));
     destroy(table);
     localStorage.removeItem("sp");
     localStorage.removeItem("lk");
@@ -270,9 +251,7 @@ class DeliveryNote extends Component {
     });
     localStorage.setItem("lk", lk.value);
     this.props.dispatch(FetchNota(lk.value));
-    this.props.dispatch(
-      FetchBrg(1, "barcode", "", lk.value, null, this.autoSetQty, 5)
-    );
+    this.props.dispatch(FetchBrg(1, "barcode", "", lk.value, null, this.autoSetQty, 5));
     destroy(table);
     this.getData();
   }
@@ -407,21 +386,11 @@ class DeliveryNote extends Component {
   }
   HandleRemove(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        del(table, id);
+    swallOption("Anda yakin akan menghapus data ini ?", () => {
+      del(table, id).then((res) => {
         this.getData();
-        Swal.fire("Deleted!", "Your data has been deleted.", "success");
-      }
+        swal("data berhasil dihapus");
+      });
     });
   }
   HandleAddBrg(e, item) {
@@ -464,120 +433,72 @@ class DeliveryNote extends Component {
   }
   HandleReset(e) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes!",
-    }).then((result) => {
-      if (result.value) {
-        destroy(table);
-        localStorage.removeItem("lk2");
-        localStorage.removeItem("lk");
-        localStorage.removeItem("ambil_data");
-        localStorage.removeItem("nota");
-        window.location.reload(false);
-      }
+    swallOption("Anda yakin akan menghapus data ini ?", () => {
+      destroy(table);
+      localStorage.removeItem("lk2");
+      localStorage.removeItem("lk");
+      localStorage.removeItem("ambil_data");
+      localStorage.removeItem("nota");
+      this.getData();
     });
   }
   HandleSubmit(e) {
     e.preventDefault();
-
-    // validator head form
-    let err = this.state.error;
-    if (
-      this.state.catatan === "" ||
-      this.state.location === "" ||
-      this.state.location2 === ""
-    ) {
-      if (this.state.catatan === "") {
-        err = Object.assign({}, err, {
-          catatan: "Catatan tidak boleh kosong.",
-        });
-      }
-      if (this.state.location === "") {
-        err = Object.assign({}, err, {
-          location: "Lokasi asal tidak boleh kosong.",
-        });
-      }
-
-      if (this.state.location2 === "") {
-        err = Object.assign({}, err, {
-          location2: "Lokasi tujuan tidak boleh kosong.",
-        });
-      }
-
-      this.setState({
-        error: err,
-      });
-    } else {
-      const data = get(table);
-      data.then((res) => {
-        if (res.length === 0) {
-          Swal.fire(
-            "Error!",
-            "Pilih barang untuk melanjutkan Delivery Note.",
-            "error"
-          );
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Simpan Delivery Note?",
-            text: "Pastikan data yang anda masukan sudah benar!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Simpan!",
-            cancelButtonText: "Tidak!",
-          }).then((result) => {
-            if (result.value) {
-              let subtotal = 0;
-              let detail = [];
-              res.map((item) => {
-                subtotal +=
-                  parseInt(item.harga_beli, 10) * parseFloat(item.qty);
-                detail.push({
-                  kd_brg: item.kd_brg,
-                  barcode: item.barcode,
-                  satuan: item.satuan,
-                  qty: item.qty,
-                  hrg_beli: item.harga_beli,
-                  hrg_jual: item.hrg_jual,
-                });
-                return null;
-              });
-              let data_final = {
-                tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
-                lokasi_asal: this.state.location,
-                lokasi_tujuan: this.state.location2,
-                catatan: this.state.catatan,
-                kode_pembelian: this.state.ambil_nota,
-                subtotal,
-                userid: this.state.userid,
-                detail: detail,
-              };
-              //
-              let parsedata = {};
-              parsedata["detail"] = data_final;
-              parsedata["master"] = this.state.databrg;
-              parsedata["nota"] = this.props.nota;
-              parsedata["logo"] = this.props.auth.user.logo;
-              parsedata["user"] = this.props.auth.user.username;
-              parsedata["lokasi_asal"] = this.state.location_val;
-              parsedata["lokasi_tujuan"] = this.state.location2_val;
-              this.props.dispatch(
-                storeDN(parsedata, (arr) => this.props.history.push(arr))
-              );
-            }
-          });
-        }
-      });
+    if (!isEmptyOrUndefined(this.state.location)) {
+      handleError("Lokasi asal");
+      return;
     }
+    if (!isEmptyOrUndefined(this.state.location2)) {
+      handleError("Lokasi tujuan");
+      return;
+    }
+    if (!isEmptyOrUndefined(this.state.catatan)) {
+      handleError("Catatan");
+      return;
+    }
+    const data = get(table);
+    data.then((res) => {
+      if (res.length === 0) {
+        swal("Pilih barang untuk melanjutkan Delivery Note.");
+      } else {
+        swallOption("Pastikan data yang anda masukan sudah benar!", () => {
+          let subtotal = 0;
+          let detail = [];
+          res.map((item) => {
+            subtotal += parseInt(item.harga_beli, 10) * parseFloat(item.qty);
+            detail.push({
+              kd_brg: item.kd_brg,
+              barcode: item.barcode,
+              satuan: item.satuan,
+              qty: item.qty,
+              hrg_beli: item.harga_beli,
+              hrg_jual: item.hrg_jual,
+            });
+            return null;
+          });
+          let data_final = {
+            tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
+            lokasi_asal: this.state.location,
+            lokasi_tujuan: this.state.location2,
+            catatan: this.state.catatan,
+            kode_pembelian: this.state.ambil_nota,
+            subtotal,
+            userid: this.state.userid,
+            detail: detail,
+          };
+          //
+          let parsedata = {};
+          parsedata["detail"] = data_final;
+          parsedata["master"] = this.state.databrg;
+          parsedata["nota"] = this.props.nota;
+          parsedata["logo"] = this.props.auth.user.logo;
+          parsedata["user"] = this.props.auth.user.username;
+          parsedata["lokasi_asal"] = this.state.location_val;
+          parsedata["lokasi_tujuan"] = this.state.location2_val;
+          this.props.dispatch(storeDN(parsedata, (arr) => this.props.history.push(arr)));
+        });
+      }
+    });
   }
   autoSetQty(kode, data) {
     const cek = cekData("kd_brg", kode, table);
@@ -613,30 +534,11 @@ class DeliveryNote extends Component {
   }
   HandleSearch() {
     if (this.state.supplier === "" || this.state.location === "") {
-      Swal.fire(
-        "Gagal!",
-        "Pilih lokasi dan supplier terlebih dahulu.",
-        "error"
-      );
+      Swal.fire("Gagal!", "Pilih lokasi dan supplier terlebih dahulu.", "error");
     } else {
       localStorage.setItem("anyDeliveryNote", this.state.search);
-      const searchby =
-        parseInt(this.state.searchby, 10) === 1
-          ? "kd_brg"
-          : parseInt(this.state.searchby, 10) === 2
-          ? "barcode"
-          : "deskripsi";
-      this.props.dispatch(
-        FetchBrg(
-          1,
-          searchby,
-          this.state.search,
-          this.state.location,
-          this.state.supplier,
-          this.autoSetQty,
-          5
-        )
-      );
+      const searchby = parseInt(this.state.searchby, 10) === 1 ? "kd_brg" : parseInt(this.state.searchby, 10) === 2 ? "barcode" : "deskripsi";
+      this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier, this.autoSetQty, 5));
       this.setState({ search: "" });
     }
   }
@@ -673,10 +575,7 @@ class DeliveryNote extends Component {
     let lengthBrg = parseInt(this.props.barang.length, 10);
     if (perpage === lengthBrg || perpage < lengthBrg) {
       let searchby = "";
-      if (
-        parseInt(this.state.searchby, 10) === 1 ||
-        this.state.searchby === ""
-      ) {
+      if (parseInt(this.state.searchby, 10) === 1 || this.state.searchby === "") {
         searchby = "kd_brg";
       }
       if (parseInt(this.state.searchby, 10) === 2) {
@@ -685,19 +584,7 @@ class DeliveryNote extends Component {
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
       }
-      this.props.dispatch(
-        FetchBrg(
-          1,
-          searchby,
-          localStorage.anyDeliveryNote !== undefined
-            ? localStorage.anyDeliveryNote
-            : "",
-          this.state.location,
-          null,
-          this.autoSetQty,
-          this.state.perpage
-        )
-      );
+      this.props.dispatch(FetchBrg(1, searchby, localStorage.anyDeliveryNote !== undefined ? localStorage.anyDeliveryNote : "", this.state.location, null, this.autoSetQty, this.state.perpage));
       this.setState({ scrollPage: this.state.scrollPage + 5 });
     } else {
       Swal.fire({
@@ -720,36 +607,18 @@ class DeliveryNote extends Component {
     }
   }
 
-  handleLoad(e) {}
-
   render() {
     if (this.state.isScroll === true) this.handleScroll();
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
     let subtotal = 0;
     return (
       <Layout page="Delivery Note">
         <div className="card">
           <div className="card-header">
             <h4>
-              <button
-                onClick={this.handleClickToggle}
-                className={
-                  this.state.toggleSide
-                    ? "btn btn-danger mr-3"
-                    : "btn btn-outline-dark text-dark mr-3"
-                }
-              >
-                <i
-                  className={
-                    this.state.toggleSide ? "fa fa-remove" : "fa fa-bars"
-                  }
-                />
+              <button onClick={this.handleClickToggle} className={this.state.toggleSide ? "btn btn-danger mr-3" : "btn btn-outline-dark text-dark mr-3"}>
+                <i className={this.state.toggleSide ? "fa fa-remove" : "fa fa-bars"} />
               </button>
-              Delivery Note
+              Delivery Note #{this.props.nota}
             </h4>
           </div>
           <div className="card-body">
@@ -766,53 +635,25 @@ class DeliveryNote extends Component {
                 <StickyBox
                   offsetTop={100}
                   offsetBottom={20}
-                  style={
-                    this.state.toggleSide
-                      ? { display: "none", width: "25%", marginRight: "10px" }
-                      : { display: "block", width: "25%", marginRight: "10px" }
-                  }
+                  style={this.state.toggleSide ? { display: "none", width: "25%", marginRight: "10px" } : { display: "block", width: "25%", marginRight: "10px" }}
                 >
                   <div className="row">
                     <div className="col-md-12">
                       <div className="form-group">
-                        <label className="control-label font-12">
-                          {parseInt(this.state.ambil_data, 10) === 1
-                            ? "Delivery note langsung."
-                            : "Ambil data DN dari Pembelian."}
-                        </label>
+                        <label className="control-label font-12">{parseInt(this.state.ambil_data, 10) === 1 ? "Delivery note langsung." : "Ambil data DN dari Pembelian."}</label>
                         <div className="input-group input-group-sm">
-                          <select
-                            name="ambil_data"
-                            className="form-control form-control-sm"
-                            onChange={(e) =>
-                              this.HandleCommonInputChange(e, false)
-                            }
-                          >
+                          <select name="ambil_data" className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
                             <option value={1}>Delivery Note Langsung</option>
                             <option value={2}>Pembelian</option>
                           </select>
                         </div>
                       </div>
                     </div>
-                    <div
-                      className="col-md-12"
-                      style={
-                        parseInt(this.state.ambil_data, 10) === 1
-                          ? { display: "none" }
-                          : { display: "block" }
-                      }
-                    >
+                    <div className="col-md-12" style={parseInt(this.state.ambil_data, 10) === 1 ? { display: "none" } : { display: "block" }}>
                       <div className="form-group">
-                        <label className="control-label font-12">
-                          Nota Pembelian
-                        </label>
+                        <label className="control-label font-12">Nota Pembelian</label>
                         <AsyncSelect
-                          placeholder={
-                            "Pilih Nota " +
-                            (parseInt(this.state.ambil_data, 10) === 1
-                              ? ""
-                              : "Pembelian")
-                          }
+                          placeholder={"Pilih Nota " + (parseInt(this.state.ambil_data, 10) === 1 ? "" : "Pembelian")}
                           onChange={this.HandleChangeNota}
                           value={{
                             label: this.state.ambil_nota,
@@ -831,7 +672,7 @@ class DeliveryNote extends Component {
                   <div className="chat-area">
                     <div className="chat-header-text d-flex border-none mb-10">
                       <div className="chat-about">
-                        <div className="chat-with font-18">Pilih Barang</div>
+                        <div className="chat-with font-12">Pilih Barang</div>
                       </div>
                     </div>
                     <div className="chat-search">
@@ -839,28 +680,14 @@ class DeliveryNote extends Component {
                         <div className="col-md-12">
                           <div className="form-group">
                             <div className="input-group input-group-sm">
-                              <select
-                                name="searchby"
-                                className="form-control form-control-sm"
-                                onChange={(e) =>
-                                  this.HandleCommonInputChange(e, false)
-                                }
-                              >
+                              <select name="searchby" className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
                                 <option value={1}>Kode Barang</option>
                                 <option value={2}>Barcode</option>
                                 <option value={3}>Deskripsi</option>
                               </select>
                             </div>
-                            <small
-                              id="passwordHelpBlock"
-                              className="form-text text-muted"
-                            >
-                              Cari berdasarkan{" "}
-                              {parseInt(this.state.searchby, 10) === 1
-                                ? "Kode Barang"
-                                : parseInt(this.state.searchby, 10) === 2
-                                ? "Barcode"
-                                : "Deskripsi"}
+                            <small id="passwordHelpBlock" className="form-text text-muted">
+                              Cari berdasarkan {parseInt(this.state.searchby, 10) === 1 ? "Kode Barang" : parseInt(this.state.searchby, 10) === 2 ? "Barcode" : "Deskripsi"}
                             </small>
                           </div>
                         </div>
@@ -874,14 +701,8 @@ class DeliveryNote extends Component {
                                 name="search"
                                 className="form-control form-control-sm"
                                 value={this.state.search}
-                                placeholder={`Search ${
-                                  localStorage.anyDeliveryNote !== undefined
-                                    ? localStorage.anyDeliveryNote
-                                    : ""
-                                }`}
-                                onChange={(e) =>
-                                  this.HandleCommonInputChange(e, false)
-                                }
+                                placeholder={`Search ${localStorage.anyDeliveryNote !== undefined ? localStorage.anyDeliveryNote : ""}`}
+                                onChange={(e) => this.HandleCommonInputChange(e, false)}
                                 onKeyPress={(event) => {
                                   if (event.key === "Enter") {
                                     this.HandleSearch();
@@ -918,15 +739,12 @@ class DeliveryNote extends Component {
                       {!this.props.loadingbrg ? (
                         <div id="chat_user_2">
                           <ul className="chat-list list-unstyled">
-                            {this.props.barang.length !== 0 ? (
+                            {this.props.barang && this.props.barang.length > 0 ? (
                               this.props.barang.map((i, inx) => {
                                 return (
                                   <li
                                     style={{
-                                      backgroundColor:
-                                        this.state.scrollPage === inx
-                                          ? "#eeeeee"
-                                          : "",
+                                      backgroundColor: this.state.scrollPage === inx ? "#eeeeee" : "",
                                     }}
                                     id={`item${inx}`}
                                     className="clearfix"
@@ -945,12 +763,6 @@ class DeliveryNote extends Component {
                                       })
                                     }
                                   >
-                                    {i.gambar ===
-                                    `${HEADERS.URL}images/barang/default.png` ? (
-                                      <span className="circle">{inx + 1}</span>
-                                    ) : (
-                                      <img src={i.gambar} alt="avatar" />
-                                    )}
                                     <div className="about">
                                       <div
                                         className="status"
@@ -999,63 +811,27 @@ class DeliveryNote extends Component {
                     </div>
                     <hr />
                     <div className="form-group">
-                      <button
-                        className={"btn btn-primary"}
-                        style={{ width: "100%" }}
-                        onClick={this.handleLoadMore}
-                      >
-                        {this.props.loadingbrg
-                          ? "tunggu sebentar ..."
-                          : "tampilkan lebih banyak"}
+                      <button className={"btn btn-primary"} style={{ width: "100%" }} onClick={this.handleLoadMore}>
+                        {this.props.loadingbrg ? "tunggu sebentar ..." : "tampilkan lebih banyak"}
                       </button>
                     </div>
                   </div>
                 </StickyBox>
                 {/*END LEFT*/}
                 {/*START RIGHT*/}
-                <div
-                  style={
-                    this.state.toggleSide ? { width: "100%" } : { width: "75%" }
-                  }
-                >
-                  <div className="card-header" style={{ zoom: "85%" }}>
+                <div style={this.state.toggleSide ? { width: "100%" } : { width: "75%" }}>
+                  <div className="card-header">
                     <form className="">
                       <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                           <div className="form-group">
-                            <label className="control-label font-12">
-                              No. Transaksi
-                            </label>
-                            <input
-                              type="text"
-                              readOnly
-                              className="form-control"
-                              id="nota"
-                              value={this.props.nota}
-                              style={{ padding: "9px" }}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-2">
-                          <div className="form-group">
-                            <label className="control-label font-12">
-                              Tanggal
-                            </label>
-                            <input
-                              type="date"
-                              name={"tanggal"}
-                              className={"form-control"}
-                              value={this.state.tanggal}
-                              onChange={(e) => this.HandleCommonInputChange(e)}
-                              style={{ padding: "9px" }}
-                            />
+                            <label className="control-label font-12">Tanggal</label>
+                            <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e) => this.HandleCommonInputChange(e)} style={{ padding: "9px" }} />
                           </div>
                         </div>
                         <div className="col-md-3">
                           <div className="form-group">
-                            <label className="control-label font-12">
-                              Lokasi Asal
-                            </label>
+                            <label className="control-label font-12">Lokasi Asal</label>
                             <Select
                               options={this.state.location_data}
                               placeholder="=== Pilih ==="
@@ -1064,66 +840,32 @@ class DeliveryNote extends Component {
                                 return op.value === this.state.location;
                               })}
                             />
-                            <div
-                              className="invalid-feedback"
-                              style={
-                                this.state.error.location !== ""
-                                  ? { display: "block" }
-                                  : { display: "none" }
-                              }
-                            >
+                            <div className="invalid-feedback" style={this.state.error.location !== "" ? { display: "block" } : { display: "none" }}>
                               {this.state.error.location}
                             </div>
                           </div>
                         </div>
                         <div className="col-md-3">
                           <div className="form-group">
-                            <label className="control-label font-12">
-                              Lokasi Tujuan
-                            </label>
+                            <label className="control-label font-12">Lokasi Tujuan</label>
                             <Select
-                              options={this.state.location_data.filter(
-                                (option) => option.value !== this.state.location
-                              )}
+                              options={this.state.location_data.filter((option) => option.value !== this.state.location)}
                               placeholder="=== Pilih ==="
                               onChange={this.HandleChangeLokasi2}
                               value={this.state.location_data.find((op) => {
                                 return op.value === this.state.location2;
                               })}
                             />
-                            <div
-                              className="invalid-feedback"
-                              style={
-                                this.state.error.supplier !== ""
-                                  ? { display: "block" }
-                                  : { display: "none" }
-                              }
-                            >
+                            <div className="invalid-feedback" style={this.state.error.supplier !== "" ? { display: "block" } : { display: "none" }}>
                               {this.state.error.supplier}
                             </div>
                           </div>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                           <div className="form-group">
-                            <label className="control-label font-12">
-                              Catatan
-                            </label>
-                            <input
-                              type="text"
-                              name="catatan"
-                              className="form-control"
-                              value={this.state.catatan}
-                              onChange={(e) => this.HandleCommonInputChange(e)}
-                              style={{ padding: "9px" }}
-                            />
-                            <div
-                              className="invalid-feedback"
-                              style={
-                                this.state.error.catatan !== ""
-                                  ? { display: "block" }
-                                  : { display: "none" }
-                              }
-                            >
+                            <label className="control-label font-12">Catatan</label>
+                            <input type="text" name="catatan" className="form-control" value={this.state.catatan} onChange={(e) => this.HandleCommonInputChange(e)} style={{ padding: "9px" }} />
+                            <div className="invalid-feedback" style={this.state.error.catatan !== "" ? { display: "block" } : { display: "none" }}>
                               {this.state.error.catatan}
                             </div>
                           </div>
@@ -1131,188 +873,90 @@ class DeliveryNote extends Component {
                       </div>
                     </form>
                   </div>
-                  <div
-                    style={{
-                      overflowX: "auto",
-                      zoom: "80%",
-                      marginTop: "10px",
-                    }}
-                  >
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th style={columnStyle}>No</th>
-                          <th style={columnStyle}>#</th>
-                          <th style={columnStyle}>Nama</th>
-                          <th style={columnStyle}>Barcode</th>
-                          <th style={columnStyle}>Satuan</th>
-                          <th style={columnStyle}>Harga beli</th>
-                          <th style={columnStyle}>Harga jual1</th>
-                          <th style={columnStyle}>Stock</th>
-                          <th style={columnStyle}>Qty</th>
-                          <th style={columnStyle}>Subtotal</th>
+                  <TableCommon
+                    head={[
+                      { label: "No", width: "1%" },
+                      { label: "Barang", width: "1%" },
+                      { label: "Satuan", width: "1%" },
+                      { label: "Harga beli", width: "1%" },
+                      { label: "Harga jual 1", width: "1%" },
+                      { label: "Stok", width: "1%" },
+                      { label: "Qty" },
+                      { label: "Subtotal", width: "1%" },
+                      { label: "#", className: "text-center", width: "1%" },
+                    ]}
+                    renderRow={this.state.databrg.map((item, index) => {
+                      subtotal += parseInt(item.harga_beli, 10) * parseFloat(item.qty);
+                      return (
+                        <tr key={index}>
+                          <td className="middle nowrap">{index + 1}</td>
+                          <td className="middle nowrap">
+                            {item.nm_brg} <br />
+                            {item.barcode}
+                          </td>
+                          <td className="middle nowrap">
+                            <select
+                              className="form-control in-table"
+                              name="satuan"
+                              disabled={item.tambahan.length <= 1 ? true : false}
+                              style={{ width: "100px" }}
+                              onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}
+                            >
+                              {item.tambahan.map((i, s) => {
+                                return (
+                                  <option key={s} value={i.satuan} selected={i.satuan === item.satuan}>
+                                    {i.satuan}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          </td>
+                          <td className="middle nowrap text-right">{toRp(item.harga_beli)}</td>
+                          <td className="middle nowrap text-right">{toRp(item.hrg_jual)}</td>
+                          <td className="middle nowrap text-right">{item.stock}</td>
+                          <td className="middle nowrap">
+                            <input
+                              type="text"
+                              name="qty"
+                              className="form-control in-table"
+                              style={{ textAlign: "right" }}
+                              onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                              onChange={(e) => this.HandleChangeInputValue(e, index)}
+                              value={this.state.brgval[index].qty}
+                            />
+                            <div className="invalid-feedback" style={parseInt(this.state.brgval[index].qty, 10) > parseInt(item.stock, 10) ? { display: "block" } : { display: "none" }}>
+                              Qty Melebihi Stock.
+                            </div>
+                          </td>
+                          <td className="middle nowrap text-right">{toRp(parseInt(item.harga_beli, 10) * parseFloat(item.qty))}</td>
+                          <td className="middle nowrap">
+                            <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
+                              <i className="fa fa-trash" />
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
+                      );
+                    })}
+                    footer={[
+                      {
+                        data: [
+                          { colSpan: 7, label: "Total", className: "text-left" },
+                          { colSpan: 1, label: toRp(subtotal), className: `text-right` },
+                          { colSpan: 1, label: "" },
+                        ],
+                      },
+                    ]}
+                  />
 
-                      <tbody>
-                        {this.state.databrg.map((item, index) => {
-                          subtotal +=
-                            parseInt(item.harga_beli, 10) *
-                            parseFloat(item.qty);
-                          return (
-                            <tr key={index}>
-                              <td style={columnStyle}>{index + 1}</td>
-
-                              <td style={columnStyle}>
-                                <a
-                                  href="about:blank"
-                                  className="btn btn-danger btn-sm"
-                                  onClick={(e) => this.HandleRemove(e, item.id)}
-                                >
-                                  <i className="fa fa-trash" />
-                                </a>
-                              </td>
-                              <td style={columnStyle}>{item.nm_brg}</td>
-                              <td style={columnStyle}>{item.barcode}</td>
-                              <td style={columnStyle}>
-                                <select
-                                  className="form-control"
-                                  name="satuan"
-                                  disabled={
-                                    item.tambahan.length <= 1 ? true : false
-                                  }
-                                  style={{ width: "100px" }}
-                                  onChange={(e) =>
-                                    this.HandleChangeInputValue(
-                                      e,
-                                      index,
-                                      item.barcode,
-                                      item.tambahan
-                                    )
-                                  }
-                                >
-                                  {item.tambahan.map((i, s) => {
-                                    return (
-                                      <option
-                                        key={s}
-                                        value={i.satuan}
-                                        selected={i.satuan === item.satuan}
-                                      >
-                                        {i.satuan}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
-                              </td>
-                              <td style={columnStyle}>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  value={toRp(item.harga_beli)}
-                                  readOnly
-                                  style={{ textAlign: "right", width: "100px" }}
-                                />
-                              </td>
-                              <td style={columnStyle}>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  value={toRp(item.hrg_jual)}
-                                  readOnly
-                                  style={{ textAlign: "right", width: "100px" }}
-                                />
-                              </td>
-                              <td style={columnStyle}>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  value={item.stock}
-                                  readOnly
-                                  style={{ textAlign: "right", width: "100px" }}
-                                />
-                              </td>
-                              <td style={columnStyle}>
-                                <input
-                                  type="text"
-                                  name="qty"
-                                  onBlur={(e) =>
-                                    this.HandleChangeInput(e, item.barcode)
-                                  }
-                                  style={{ width: "100px", textAlign: "right" }}
-                                  onChange={(e) =>
-                                    this.HandleChangeInputValue(e, index)
-                                  }
-                                  className="form-control"
-                                  value={this.state.brgval[index].qty}
-                                />
-                                <div
-                                  className="invalid-feedback"
-                                  style={
-                                    parseInt(this.state.brgval[index].qty, 10) >
-                                    parseInt(item.stock, 10)
-                                      ? { display: "block" }
-                                      : { display: "none" }
-                                  }
-                                >
-                                  Qty Melebihi Stock.
-                                </div>
-                              </td>
-                              <td style={columnStyle}>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  value={toRp(
-                                    parseInt(item.harga_beli, 10) *
-                                      parseFloat(item.qty)
-                                  )}
-                                  readOnly
-                                  style={{ textAlign: "right", width: "100px" }}
-                                />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                  <hr />
                   <div className="row">
                     <div className="col-md-7">
-                      <div className="dashboard-btn-group d-flex align-items-center">
-                        <a
-                          href="about:blank"
-                          onClick={(e) => this.HandleSubmit(e)}
-                          className="btn btn-primary ml-1"
-                        >
-                          Simpan
-                        </a>
-                        <a
-                          href="about:blank"
-                          onClick={(e) => this.HandleReset(e)}
-                          className="btn btn-danger ml-1"
-                        >
-                          Reset
-                        </a>
-                      </div>
-                    </div>
-                    <div className="col-md-5" style={{ zoom: "70%" }}>
-                      <div className="pull-right">
-                        <form className="form_head">
-                          <div className="row" style={{ marginBottom: "3px" }}>
-                            <label className="col-sm-4">Sub Total</label>
-                            <div className="col-sm-8">
-                              <input
-                                type="text"
-                                id="sub_total"
-                                name="sub_total"
-                                className="form-control text-right"
-                                value={toRp(subtotal)}
-                                readOnly
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      </div>
+                      <ButtonTrxCommon
+                        disabled={this.state.databrg.length < 1}
+                        callback={(e, res) => {
+                          if (res === "simpan") this.HandleSubmit(e);
+                          if (res === "batal") this.HandleReset(e);
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

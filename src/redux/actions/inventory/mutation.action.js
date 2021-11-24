@@ -193,7 +193,7 @@ export const FetchApprovalMutationDetail = (page = 1, kd_trx) => {
   };
 };
 
-export const saveApprovalMutation = (data, param) => {
+export const saveApprovalMutation = (data, param, lokasi) => {
   return (dispatch) => {
     // let rawdata = data;
     dispatch(setLoadingApprove(true));
@@ -224,7 +224,11 @@ export const saveApprovalMutation = (data, param) => {
           showConfirmButton: false,
         }).then((result) => {
           if (result.dismiss === "cancel") {
-            window.location.reload();
+            dispatch(FetchApprovalMutation(1, "", lokasi, ""));
+            dispatch(ModalToggle(false));
+            param({ pathname: "/approval_mutasi" });
+
+            // window.location.reload();
             // window.open(`/approval_mutasi`, '_top');
           }
         });

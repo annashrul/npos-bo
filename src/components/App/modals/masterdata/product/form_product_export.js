@@ -15,6 +15,7 @@ import Spinner from "../../../../../Spinner";
 import { RESET_PROPS_ARR } from "../../../../../redux/actions/_constants";
 import MyPdfL from "../../../../../myPdfL";
 import { pdf } from "@react-pdf/renderer";
+import LokasiCommon from "../../../common/LokasiCommon";
 
 // kategori 1 = Dijual, kategori 0 = TIdak Dijual
 // jenis 0 = Karton, jenis 1 = Satuan, jenis 2 = Paket, jenis 3 = Servis, jenis 4 = Bahan
@@ -24,7 +25,7 @@ class FormProductExport extends Component {
     this.toggle = this.toggle.bind(this);
     this.handleView = this.handleView.bind(this);
     this.printDocument = this.printDocument.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.state = {
       title: "",
       jenis: "",
@@ -69,7 +70,7 @@ class FormProductExport extends Component {
     // e.preventDefault();
     this.setState({ [param]: !this.state[param] });
   };
-  HandleChangeLokasi(lk) {
+  handleSelect(lk) {
     this.setState({
       location: lk.value,
       location_lbl: lk.label,
@@ -77,6 +78,7 @@ class FormProductExport extends Component {
     this.props.dispatch(setProductbrgAll(RESET_PROPS_ARR));
     this.props.dispatch(FetchBrgAll(encodeURIComponent(lk.value)));
   }
+
   handleView = (e) => {
     e.preventDefault();
     this.setState({
@@ -358,7 +360,8 @@ class FormProductExport extends Component {
             <div className="row">
               <div className="col-12">
                 <div className="form-group">
-                  <label className="control-label font-12">Pilih Lokasi</label>
+                  <LokasiCommon callback={(res) => this.handleSelect(res)} dataEdit={this.state.location} />
+                  {/* <label className="control-label font-12">Pilih Lokasi</label>
                   <Select
                     // menuPortalTarget={document.body}
                     // menuPosition={'fixed'}
@@ -372,7 +375,7 @@ class FormProductExport extends Component {
                     value={this.state.location_data.find((op) => {
                       return op.value === this.state.location;
                     })}
-                  />
+                  /> */}
                 </div>
                 <div class="new-checkbox d-none">
                   <p>Export Juga Untuk PDF</p>

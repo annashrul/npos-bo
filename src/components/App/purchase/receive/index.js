@@ -357,6 +357,7 @@ class Receive extends Component {
     localStorage.removeItem("catatan");
     localStorage.removeItem("data_master_receive");
     localStorage.removeItem("data_detail_receive");
+    localStorage.removeItem("anyReceive");
     destroy("receive");
     if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
       localStorage.removeItem("data_master_receive");
@@ -1195,7 +1196,7 @@ class Receive extends Component {
                       {!this.props.loadingbrg ? (
                         <div id="chat_user_2">
                           <ul className="chat-list list-unstyled">
-                            {this.props.barang.length !== 0 ? (
+                            {this.props.barang && this.props.barang.length > 0 ? (
                               this.props.barang.map((i, inx) => {
                                 return (
                                   <abbr title={i.nm_brg} key={inx}>

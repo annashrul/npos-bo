@@ -105,7 +105,7 @@ class AdjustmentReport extends Component {
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
           body={typeof data === "object" && data}
-          label={[{ label: "kd_trx" }, { label: "username" }, { label: "lokasi" }, { label: "keterangan" }, { label: "tgl", date: true }]}
+          label={[{ label: "kd_trx" }, { label: "username" }, { label: "lokasi_nama" }, { label: "keterangan" }, { label: "tgl", date: true }]}
           action={[{ label: "Detail" }, { label: "Nota" }, { label: "3ply" }, { label: "Hapus" }]}
           callback={(e, index) => {
             if (e === 0) this.handleModal("detail", data[index]);

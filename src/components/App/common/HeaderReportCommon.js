@@ -72,8 +72,7 @@ class HeaderReportCommon extends Component {
     let getOther = props.isOther ? getStorage(`${props.otherState}Storage${path}`) : "";
     let where = `page=1`;
     let state = {};
-    console.log("column", getColumn);
-    console.log("sort", getSort);
+
     if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
       where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
       Object.assign(state, { dateFrom: getDateFrom, dateTo: getDateTo });

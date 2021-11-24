@@ -2,6 +2,7 @@ import { LOCATION, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { store, get, update, destroy, cekData, del } from "components/model/app.model";
+import { handleGet } from "../../handleHttp";
 
 export function setLoading(load) {
   return { type: LOCATION.LOADING, load };
@@ -21,6 +22,14 @@ export function setLocation(data = []) {
 export function setLocationFailed(data = []) {
   return { type: LOCATION.FAILED, data };
 }
+
+export const getLocation = (where = "") => {
+  return (dispatch) => {
+    let url = "lokasi";
+    if (where !== "") url += `?${where}`;
+    handleGet(url, (res) => dispatch(setLocation(res.data)));
+  };
+};
 
 // const newNumCode = (stringNum) => {
 //   let numberPart = stringNum.split("LK/")[1];

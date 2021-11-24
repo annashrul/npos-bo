@@ -13,10 +13,10 @@ class DetailReceiveReport extends Component {
     this.toggle = this.toggle.bind(this);
   }
   handlePageChange(pageNumber) {
-    let master = this.props.master;
+    let master = this.props.where;
     let where = `page=${pageNumber}`;
-    where += rmPage(master.where);
-    this.props.dispatch(FetchReportDetail(master.no_faktur_beli, where));
+    where += rmPage(master);
+    this.props.dispatch(FetchReportDetail(this.props.receiveReportDetail.master.no_faktur_beli, where));
   }
   toggle(e) {
     e.preventDefault();

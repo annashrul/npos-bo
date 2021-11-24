@@ -10,13 +10,14 @@ import {
 import Swal from "sweetalert2";
 import { withRouter } from "react-router-dom";
 import Spinner from "Spinner";
+import TableCommon from "../../../common/TableCommon";
+import { handleError, parseToRp } from "../../../../../helper";
 
 class FormApprovalMutation extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleOnEnter = this.handleOnEnter.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.state = {
       dataApproval: [],
@@ -47,9 +48,6 @@ class FormApprovalMutation extends Component {
         if (parseInt(v.total_qty, 10) === parseInt(v.total_approval, 10)) {
           isAppove.push({ count: i });
         }
-        // Object.assign(v,{
-        //     isReadonly:false,
-        // });
         return null;
       });
     }
@@ -58,25 +56,6 @@ class FormApprovalMutation extends Component {
         this.setState({ allCheck: true });
       }
     }
-    // typeof nextProps.dataApproval.data==='object'?
-    //     nextProps.dataApproval.data.map((v,i)=>{
-    //         data.push({
-    //             "kd_brg":v.kd_brg,
-    //             "barcode":v.barcode,
-    //             "nm_brg":v.nm_brg,
-    //             "satuan":v.satuan,
-    //             "hrg_beli":v.hrg_beli,
-    //             "total_qty":v.total_qty,
-    //             "total_approval":v.total_approval,
-    //             "sisa_approval":v.total_qty,
-    //             "isReadonly":parseInt(v.total_qty,10)===parseInt(v.total_approval,10)?true:false,
-    //         });
-    //         // Object.assign(v,{
-    //         //     isReadonly:false,
-    //         // });
-    //         return null;
-    //     })
-    //     : "";
     this.setState({ dataApproval: data });
   }
   handleChange(event, i) {
@@ -99,26 +78,7 @@ class FormApprovalMutation extends Component {
     }
     this.setState({ dataApproval });
   }
-  handleOnEnter(i) {
-    // let data={};
-    // if(parseInt(this.state.dataApproval[i].sisa_approval,10) > (parseInt(this.state.dataApproval[i].total_qty,10)-parseInt(this.state.dataApproval[i].total_approval,10))){
-    // }else{
-    //     data['kd_trx']          = localStorage.getItem("kd_trx_mutasi");
-    //     data['sisa_approval']   = this.state.dataApproval[i].sisa_approval;
-    //     data['barcode']         = this.state.dataApproval[i].barcode;
-    //     //
-    //     // let total_qty =  this.state.dataApproval[i].total_qty;
-    //     // let total_approval =  this.state.dataApproval[i].total_approval;
-    //     if(parseInt(this.state.dataApproval[i].sisa_approval,10)>0){
-    //         this.props.dispatch(saveApprovalMutation(data,(arr)=>this.props.history.push(arr)));
-    //         // this.state.dataApproval[i].isReadonly=true;
-    //         var dataApproval = this.state.dataApproval;
-    //         dataApproval[i].isReadonly = true;
-    //         this.setState({dataApproval: dataApproval});
-    //     }
-    //     this.setState({});
-    // }
-  }
+
   handleApproveAll(e) {
     e.preventDefault();
     let isValid = true;
@@ -134,7 +94,7 @@ class FormApprovalMutation extends Component {
             data.push(val);
             detail.push(this.state.dataApproval[i]);
             if (parseInt(this.state.dataApproval[i].sisa_approval, 10) > parseInt(this.state.dataApproval[i].total_qty, 10) - parseInt(this.state.dataApproval[i].total_approval, 10)) {
-              Swal.fire({ allowOutsideClick: false, title: "Informasi", type: "error", text: "Terdapat QTY yang tidak sesuai!" });
+              handleError("Terdapat qty yang tidak sesuai", "");
               isValid = false;
             }
           }
@@ -153,10 +113,10 @@ class FormApprovalMutation extends Component {
     newParse["detail"] = detail;
     if (data.length > 0) {
       if (isValid) {
-        this.props.dispatch(saveApprovalMutation(newParse, (arr) => this.props.history.push(arr)));
+        this.props.dispatch(saveApprovalMutation(newParse, (arr) => this.props.history.push(arr), this.props.lokasi));
       }
     } else {
-      Swal.fire({ allowOutsideClick: false, title: "failed", type: "error", text: "ceklis item yang akan di approve!" });
+      handleError("Ceklis item yang akan di approve", "");
     }
     this.setState({});
   }
@@ -164,26 +124,27 @@ class FormApprovalMutation extends Component {
     e.preventDefault();
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
-    // this.props.dispatch(FetchApprovalMutation(1,'','',this.props.parameterMutasi==='TR'?'TR':''))
   }
 
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formApprovalMutation"} size="lg" className="custom-map-modal">
         <ModalHeader toggle={this.toggle}>
+          {localStorage.getItem("kd_trx_mutasi")} <br />
           <p style={{ color: "white" }}>
-            {localStorage.getItem("kd_trx_mutasi")} <br /> <small style={{ color: "white" }}>( Enter Atau Klik Button Approval Untuk Menyimpan Data )</small>{" "}
+            <small style={{ color: "white" }}>( Enter Atau Klik Button Approval Untuk Menyimpan Data )</small>{" "}
           </p>
         </ModalHeader>
-        <ModalBody style={{ height: "100vh" }}>
+        <ModalBody style={{ height: "90vh" }}>
           {this.props.isLoadingApprovalDetail ? (
             <Spinner />
           ) : (
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th className="text-black" style={columnStyle}>
+            <TableCommon
+              head={[
+                { rowSpan: 2, label: "No", width: "1%" },
+                {
+                  rowSpan: 2,
+                  label: (
                     <input
                       type="checkbox"
                       name="checked_all"
@@ -192,69 +153,39 @@ class FormApprovalMutation extends Component {
                       defaultValue={this.state.checked_all}
                       onChange={(e) => this.handleCheck(e)}
                     />
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    No
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Kode Barang
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Barcode
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Nama Barang
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Satuan
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Harga Beli
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Harga Jual
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Total Qty
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Total Approval
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Qty Approval
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.dataApproval.length > 0
+                  ),
+                  width: "1%",
+                },
+                { colSpan: 6, label: "Barang", width: "1%" },
+                { colSpan: 2, label: "Total", width: "1%" },
+                { rowSpan: 2, label: "Qty approval" },
+              ]}
+              rowSpan={[{ label: "Nama" }, { label: "Kode" }, { label: "Barcode" }, { label: "Satuan" }, { label: "Harga jual" }, { label: "Harga beli" }, { label: "Qty" }, { label: "Approval" }]}
+              renderRow={
+                this.state.dataApproval.length > 0
                   ? this.state.dataApproval.map((v, i) => {
                       return (
                         <tr key={i}>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap text-center">{i + 1}</td>
+                          <td className="middle nowrap text-center">
                             <input type="checkbox" className={v.isReadonly ? "d-none" : ""} name="checked" checked={v.checked} defaultValue={v.checked} onChange={(e) => this.handleCheck(e, i)} />
                           </td>
-                          <td style={columnStyle}>{i + 1}</td>
-                          <td style={columnStyle}>{v.kd_brg}</td>
-                          <td style={columnStyle}>{v.barcode}</td>
-                          <td style={columnStyle}>{v.nm_brg}</td>
-                          <td style={columnStyle}>{v.satuan}</td>
-                          <td style={columnStyle}>{v.hrg_beli}</td>
-                          <td style={columnStyle}>{v.hrg_jual}</td>
-                          <td style={columnStyle}>{v.total_qty}</td>
-                          <td style={columnStyle}>{v.total_approval}</td>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap">{v.nm_brg}</td>
+                          <td className="middle nowrap">{v.kd_brg}</td>
+                          <td className="middle nowrap">{v.barcode}</td>
+                          <td className="middle nowrap">{v.satuan}</td>
+                          <td className="middle nowrap">{parseToRp(v.hrg_beli)}</td>
+                          <td className="middle nowrap">{parseToRp(v.hrg_jual)}</td>
+                          <td className="middle nowrap">{parseToRp(v.total_qty)}</td>
+                          <td className="middle nowrap">{parseToRp(v.total_approval)}</td>
+                          <td className="middle nowrap">
                             <input
                               readOnly={v.isReadonly}
                               type="text"
                               name="sisa_approval"
-                              className={`form-control ${v.isReadonly ? "d-none" : ""}`}
+                              className={`form-control text-right in-table ${v.isReadonly ? "d-none" : ""}`}
                               value={v.sisa_approval}
                               onChange={(e) => this.handleChange(e, i)}
-                              onKeyPress={(event) => {
-                                if (event.key === "Enter") {
-                                  this.handleOnEnter(i);
-                                }
-                              }}
                             />
                             {!v.isReadonly ? (
                               <div
@@ -270,9 +201,9 @@ class FormApprovalMutation extends Component {
                         </tr>
                       );
                     })
-                  : "No data."}
-              </tbody>
-            </table>
+                  : "No data."
+              }
+            />
           )}
         </ModalBody>
         <ModalFooter>

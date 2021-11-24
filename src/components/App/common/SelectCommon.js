@@ -13,6 +13,7 @@ class SelectCommon extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
+    this.getProps = this.getProps.bind(this);
     this.state = {
       value: "",
       value_data: [],
@@ -26,34 +27,31 @@ class SelectCommon extends Component {
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
       if (props.dataEdit === "-") {
         Object.assign(state, { value: "" });
+      } else {
+        const check = props.options.filter((val) => val.value === props.dataEdit);
+        Object.assign(state, { value: check[0] });
       }
-      // else {
-      //   const check = propsGroup.filter((val) => val.value === props.dataEdit);
-      //   if (check[0] !== undefined) {
-      //     console.log("data edit", check);
-      //     Object.assign(state, { value: check[0] });
-      //     // this.props.callback(check[0]);
-      //   }
-      // }
     }
     this.setState(state);
   }
 
-  componentWillMount() {
-    this.getProps(this.props);
-  }
-  componentDidMount() {
-    this.getProps(this.props);
-    if (this.props.dataEdit !== undefined || this.props.dataEdit !== "") {
-      const check = this.props.options.filter((val) => val.value === this.props.dataEdit);
-      if (check[0] !== undefined) {
-        this.onChange(check[0]);
-      }
-    }
-  }
+  // componentWillMount() {
+  //   this.getProps(this.props);
+  //   console.log("##################", "componentWillMount");
+  // }
+  // componentDidMount() {
+  //   this.getProps(this.props);
+  //   if (this.props.dataEdit !== undefined || this.props.dataEdit !== "") {
+  //     const check = this.props.options.filter((val) => val.value === this.props.dataEdit);
+  // if (check[0] !== undefined) {
+  //   this.onChange(check[0]);
+  // }
+  //   }
+  //   console.log("##################", "componentDidMount");
+  // }
   componentWillReceiveProps(nextProps) {
     this.getProps(nextProps);
-    console.log("componentWillReceiveProps", nextProps.dataEdit);
+    console.log("##################", "componentWillReceiveProps");
   }
 
   onChange(value) {

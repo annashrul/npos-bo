@@ -97,7 +97,7 @@ class SaleReturReport extends Component {
                         <td className="middle nowrap">{val.nama}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.nilai_retur)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.diskon_item)}</td>
-                        <td className="middle nowrap">{val.lokasi}</td>
+                        <td className="middle nowrap">{val.lokasi_nama}</td>
                         <td className="middle nowrap">{toDate(val.tgl)}</td>
                       </tr>
                     );

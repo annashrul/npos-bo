@@ -2,7 +2,7 @@ import { PO, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet, handleGetExport } from "../../handleHttp";
+import { handleDelete, handleGet, handleGetExport } from "../../handleHttp";
 import { ModalToggle, ModalType } from "../../modal.action";
 
 export function setDownloadPoSupplier(load) {
@@ -332,5 +332,11 @@ export const rePrintFakturPo = (id) => {
       .catch(function (error) {
         Swal.close();
       });
+  };
+};
+
+export const deleteReportPo = (kdTrx) => {
+  return (dispatch) => {
+    // handleDelete()
   };
 };

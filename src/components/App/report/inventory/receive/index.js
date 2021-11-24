@@ -117,7 +117,24 @@ class ReceiveReport extends Component {
     let totalSisaPembayaranPerHalaman = 0;
     let totalQtyBeliPerHalaman = 0;
     let totalJumlahBeliPerHalaman = 0;
-
+    const head = [
+      { label: "No", className: "text-center", width: "1%" },
+      { label: "#", className: "text-center", width: "1%" },
+      { label: "No faktur beli" },
+      { label: "Tanggal" },
+      { label: "Penerima" },
+      { label: "Tipe" },
+      { label: "Pelunasan" },
+      { label: "Diskon (%)" },
+      { label: "Ppn (%)" },
+      { label: "Supplier" },
+      { label: "Operator" },
+      { label: "Lokasi" },
+      { label: "Pembayaran-ke" },
+      { label: "Sisa pembayaran" },
+      { label: "Qty beli" },
+      { label: "Total beli" },
+    ];
     return (
       <Layout page="Laporan receive pembelian">
         <HeaderReportCommon
@@ -135,24 +152,7 @@ class ReceiveReport extends Component {
           excelData={this.props.download}
         />
         <TableCommon
-          head={[
-            { label: "No", className: "text-center", width: "1%" },
-            { label: "#", className: "text-center", width: "1%" },
-            { label: "No faktur beli" },
-            { label: "Tanggal" },
-            { label: "Penerima" },
-            { label: "Tipe" },
-            { label: "Pelunasan" },
-            { label: "Diskon (%)" },
-            { label: "Ppn (%)" },
-            { label: "Supplier" },
-            { label: "Operator" },
-            { label: "Lokasi" },
-            { label: "Pembayaran-ke" },
-            { label: "Sisa pembayaran" },
-            { label: "Qty beli" },
-            { label: "Total beli" },
-          ]}
+          head={head}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
@@ -199,8 +199,8 @@ class ReceiveReport extends Component {
                       </tr>
                     );
                   })
-                : noData(17)
-              : noData(17)
+                : noData(head.length)
+              : noData(head.length)
           }
           footer={[
             {
@@ -217,7 +217,7 @@ class ReceiveReport extends Component {
           ]}
         />
 
-        {this.props.isOpen && isModalDetail ? <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail} where={this.state.where_data} /> : null}
         {this.props.isOpen && isModalForm ? <FormReturReceive history={this.props.history} dataRetur={this.props.dataRetur} /> : null}
         {this.props.isOpen && isModalExport ? <ReceiveReportExcel startDate={dateFrom} endDate={dateTo} location={location} /> : null}
       </Layout>

@@ -192,7 +192,9 @@ export const storeDN = (data, param) => {
           localStorage.removeItem("nota");
           localStorage.removeItem("catatan");
           if (result.dismiss === "cancel") {
-            window.location.reload(false);
+            param({
+              pathname: "/delivery_note",
+            });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {

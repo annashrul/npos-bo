@@ -150,7 +150,9 @@ export const storeAlokasi = (data, param) => {
           localStorage.removeItem("catatan");
 
           if (result.dismiss === "cancel") {
-            window.location.reload(false);
+            // window.location.reload(false);
+            // window.history.back();
+            param({ pathname: "/alokasi" });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {
@@ -222,6 +224,7 @@ export const updateAlokasi = (data, param) => {
 
           if (result.dismiss === "cancel") {
             window.history.back();
+            // param({ pathname: "/alokasi" });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {

@@ -296,7 +296,7 @@ class TrxAdjustment extends Component {
                               </td>
                               <td className="middle nowrap">
                                 <select
-                                  defaultValue={item.satuan}
+                                  value={item.satuan}
                                   className="form-control in-table"
                                   name="satuan"
                                   style={{ width: "100px" }}

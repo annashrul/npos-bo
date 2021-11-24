@@ -81,7 +81,9 @@ class ApprovalMutasi extends Component {
   }
   toggle(e, index, lokasi) {
     e.preventDefault();
+    console.log(lokasi);
     this.setState({
+      location: lokasi,
       isOpen: !this.state.isOpen,
       indexOpen: index === this.state.indexOpen ? null : index,
     });
@@ -326,7 +328,7 @@ class ApprovalMutasi extends Component {
             </div>
           </div>
         </div>
-        <FormApprovalMutation parameterMutasi={this.state.status} dataApproval={this.props.detailApproval} />
+        <FormApprovalMutation parameterMutasi={this.state.status} dataApproval={this.props.detailApproval} lokasi={this.state.location} />
       </Layout>
     );
   }
