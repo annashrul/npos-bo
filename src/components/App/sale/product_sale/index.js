@@ -410,7 +410,7 @@ class Sale extends Component {
   }
   HanldeSetAddBrg(item, param, index) {
     if (param === "hold") {
-      Object.assign(item, { isOpenPrice: false, qty: 0 });
+      Object.assign(item, { isOpenPrice: false });
     } else {
       Object.assign(item, { isOpenPrice: false });
     }
@@ -1274,6 +1274,7 @@ class Sale extends Component {
             <ListHoldBill
               objectHoldBill={this.state.objectHoldBill}
               callback={(res) => {
+                console.log(res);
                 this.setState({
                   modalListHoldBill: false,
                 });

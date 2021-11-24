@@ -15,7 +15,6 @@ class SaleOmsetArchive extends Component {
     this.state = {
       where_data: "",
       periode: "",
-
       sort_data: [
         {
           value: "qty|DESC",
@@ -75,15 +74,8 @@ class SaleOmsetArchive extends Component {
     const { periode, sort_data, isModalExport } = this.state;
     const startDate = periode.split("-")[0];
     const endDate = periode.split("-")[1];
-    let tot_qty = 0;
-    let tot_gross_sales = 0;
-    let tot_net_sales = 0;
-    let tot_grand_total = 0;
-    let tot_diskon_item = 0;
-    let tot_diskon_trx = 0;
-    let tot_tax = 0;
-    let tot_service = 0;
-
+    console.log(startDate);
+    console.log(endDate);
     let totalGTPerHalaman = 0;
     let totalDiskonTransaksiPerHalaman = 0;
     let totalDiskonItemPerhalaman = 0;

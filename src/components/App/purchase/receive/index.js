@@ -20,12 +20,15 @@ import { handleError, isEmptyOrUndefined, rmComma, swal, swallOption, toCurrency
 import Spinner from "Spinner";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import Cookies from "js-cookie";
-import Autocomplete from "react-autocomplete";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+
 const table = "receive";
 class Receive extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      itemSearch: [],
+      anyCart: "",
       setHarga: 0,
       addingItemName: "",
       no_faktur_beli: "-",
@@ -698,6 +701,7 @@ class Receive extends Component {
       tambahan: item.tambahan,
     };
     const cek = cekData("kd_brg", item.kd_brg, table);
+    let no = 0;
     cek.then((res) => {
       if (res === undefined) {
         store(table, finaldt);
@@ -713,7 +717,6 @@ class Receive extends Component {
           diskon2: res.diskon2,
           diskon3: 0,
           diskon4: 0,
-
           harga: res.harga,
           harga2: res.harga2,
           harga3: res.harga3,
@@ -931,7 +934,14 @@ class Receive extends Component {
     const data = get(table);
     data.then((res) => {
       let brg = [];
+      let item = [];
       res.map((i) => {
+        item.push({
+          name: `${i.kd_brg} | ${i.nm_brg} | ${i.barcode}`,
+          kd_brg: i.kd_brg,
+          nm_brg: i.nm_brg,
+          barcode: i.barcode,
+        });
         brg.push({
           harga_beli: i.harga_beli,
           harga: i.harga,
@@ -950,6 +960,7 @@ class Receive extends Component {
         return null;
       });
       this.setState({
+        itemSearch: item,
         databrg: res,
         brgval: brg,
       });
@@ -1000,6 +1011,18 @@ class Receive extends Component {
       });
     }
   }
+
+  handleOnSelect = (item) => {
+    // the item selected
+    console.log(item);
+    this.setState({ anyCart: item.kd_brg });
+    setTimeout(() => this[`qty-${btoa(item.barcode)}`].focus(), 500);
+  };
+
+  formatResult = (item) => {
+    return item;
+    // return (<p dangerouslySetInnerHTML={{__html: '<strong>'+item+'</strong>'}}></p>); //To format result as html
+  };
 
   render() {
     if (this.state.isScroll === true) this.handleScroll();
@@ -1238,100 +1261,99 @@ class Receive extends Component {
             <div style={this.state.toggleSide ? { width: "100%", zoom: "85%" } : { width: "75%", zoom: "85%" }}>
               <div className="card">
                 <div className="card-body">
-                  <form className="">
-                    <div className="row">
-                      <div className="col-md-3">
-                        <div className="form-group">
-                          <label className="control-label font-12">Lokasi</label>
-                          <Select
-                            options={this.state.location_data}
-                            placeholder="Pilih Lokasi"
-                            onChange={this.HandleChangeLokasi}
-                            value={this.state.location_data.find((op) => {
-                              return op.value === this.state.location;
-                            })}
-                          />
-                          <div className="invalid-feedback" style={this.state.error.location !== "" ? { display: "block" } : { display: "none" }}>
-                            {this.state.error.location}
-                          </div>
+                  <div className="row">
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label className="control-label font-12">Lokasi</label>
+                        <Select
+                          options={this.state.location_data}
+                          placeholder="Pilih Lokasi"
+                          onChange={this.HandleChangeLokasi}
+                          value={this.state.location_data.find((op) => {
+                            return op.value === this.state.location;
+                          })}
+                        />
+                        <div className="invalid-feedback" style={this.state.error.location !== "" ? { display: "block" } : { display: "none" }}>
+                          {this.state.error.location}
                         </div>
                       </div>
-                      <div className="col-md-3">
-                        <div className="form-group">
-                          <label className="control-label font-12">Supplier</label>
-                          <Select
-                            options={opSupplier}
-                            placeholder="Pilih Supplier"
-                            onChange={this.HandleChangeSupplier}
-                            value={opSupplier.find((op) => {
-                              return op.value === this.state.supplier;
-                            })}
-                          />
-                          <div className="invalid-feedback" style={this.state.error.supplier !== "" ? { display: "block" } : { display: "none" }}>
-                            {this.state.error.supplier}
-                          </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label className="control-label font-12">Supplier</label>
+                        <Select
+                          options={opSupplier}
+                          placeholder="Pilih Supplier"
+                          onChange={this.HandleChangeSupplier}
+                          value={opSupplier.find((op) => {
+                            return op.value === this.state.supplier;
+                          })}
+                        />
+                        <div className="invalid-feedback" style={this.state.error.supplier !== "" ? { display: "block" } : { display: "none" }}>
+                          {this.state.error.supplier}
                         </div>
                       </div>
-                      <div className="col-md-3">
-                        <div className="form-group">
-                          <label className="control-label font-12">Penerima</label>
-                          <input type="text" id="chat-search" name="penerima" className="form-control" onChange={(e) => this.HandleCommonInputChange(e, true)} value={this.state.penerima} />
-                          <div className="invalid-feedback" style={this.state.error.penerima !== "" ? { display: "block" } : { display: "none" }}>
-                            {this.state.error.penerima}
-                          </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label className="control-label font-12">Penerima</label>
+                        <input type="text" id="chat-search" name="penerima" className="form-control" onChange={(e) => this.HandleCommonInputChange(e, true)} value={this.state.penerima} />
+                        <div className="invalid-feedback" style={this.state.error.penerima !== "" ? { display: "block" } : { display: "none" }}>
+                          {this.state.error.penerima}
                         </div>
                       </div>
-                      <div className="col-md-3">
-                        <div className="form-group">
-                          <label className="control-label font-12">Nota Supplier</label>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label className="control-label font-12">Nota Supplier</label>
 
-                          <input type="text" id="chat-search" name="notasupplier" className="form-control" onChange={(e) => this.HandleCommonInputChange(e)} value={this.state.notasupplier} />
-                          <div className="invalid-feedback" style={this.state.error.notasupplier !== "" ? { display: "block" } : { display: "none" }}>
-                            {this.state.error.notasupplier}
-                          </div>
+                        <input type="text" id="chat-search" name="notasupplier" className="form-control" onChange={(e) => this.HandleCommonInputChange(e)} value={this.state.notasupplier} />
+                        <div className="invalid-feedback" style={this.state.error.notasupplier !== "" ? { display: "block" } : { display: "none" }}>
+                          {this.state.error.notasupplier}
                         </div>
                       </div>
-                      <div className="col-md-3">
-                        <div className="form-group">
-                          <label className="control-label font-12">Jenis transaksi</label>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <div className="row">
-                                <div className="col-md-6">
-                                  <div className="custom-control custom-radio">
-                                    <input
-                                      type="radio"
-                                      id="customRadio1"
-                                      name="jenis_trx"
-                                      onChange={(e) => this.HandleCommonInputChange(e)}
-                                      value="Tunai"
-                                      className="custom-control-input"
-                                      checked={this.state.jenis_trx === "Tunai"}
-                                    />
-                                    <label className="custom-control-label" htmlFor="customRadio1">
-                                      Tunai
-                                    </label>
-                                  </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label className="control-label font-12">Jenis transaksi</label>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="custom-control custom-radio">
+                                  <input
+                                    type="radio"
+                                    id="customRadio1"
+                                    name="jenis_trx"
+                                    onChange={(e) => this.HandleCommonInputChange(e)}
+                                    value="Tunai"
+                                    className="custom-control-input"
+                                    checked={this.state.jenis_trx === "Tunai"}
+                                  />
+                                  <label className="custom-control-label" htmlFor="customRadio1">
+                                    Tunai
+                                  </label>
                                 </div>
-                                <div className="col-md-6">
-                                  <div className="custom-control custom-radio">
-                                    <input
-                                      type="radio"
-                                      id="customRadio2"
-                                      name="jenis_trx"
-                                      onChange={(e) => this.HandleCommonInputChange(e)}
-                                      value="Kredit"
-                                      className="custom-control-input"
-                                      checked={this.state.jenis_trx === "Kredit"}
-                                    />
-                                    <label className="custom-control-label" htmlFor="customRadio2">
-                                      Kredit
-                                    </label>
-                                  </div>
+                              </div>
+                              <div className="col-md-6">
+                                <div className="custom-control custom-radio">
+                                  <input
+                                    type="radio"
+                                    id="customRadio2"
+                                    name="jenis_trx"
+                                    onChange={(e) => this.HandleCommonInputChange(e)}
+                                    value="Kredit"
+                                    className="custom-control-input"
+                                    checked={this.state.jenis_trx === "Kredit"}
+                                  />
+                                  <label className="custom-control-label" htmlFor="customRadio2">
+                                    Kredit
+                                  </label>
                                 </div>
                               </div>
                             </div>
-                            {/* <div className="col-md-4">
+                          </div>
+                          {/* <div className="col-md-4">
                               <div className="custom-control custom-radio">
                                 <input
                                   type="radio"
@@ -1347,33 +1369,45 @@ class Receive extends Component {
                                 </label>
                               </div>
                             </div> */}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="col-md-6">
-                        <div className="row">
-                          <div className="col-md-6">
-                            {this.state.jenis_trx === "Kredit" ? (
-                              <div className="form-group">
-                                <label className="control-label font-12">Tanggal Jatuh Tempo</label>
-                                <input
-                                  type="date"
-                                  name={"tanggal_tempo"}
-                                  min={this.state.tanggal}
-                                  className={"form-control"}
-                                  value={this.state.tanggal_tempo}
-                                  onChange={(e) => this.HandleCommonInputChange(e, true)}
-                                />
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                          </div>
                         </div>
                       </div>
                     </div>
-                  </form>
+
+                    <div className="col-md-3">
+                      {this.state.jenis_trx === "Kredit" ? (
+                        <div className="form-group">
+                          <label className="control-label font-12">Tanggal Jatuh Tempo</label>
+                          <input
+                            type="date"
+                            name={"tanggal_tempo"}
+                            min={this.state.tanggal}
+                            className={"form-control"}
+                            value={this.state.tanggal_tempo}
+                            onChange={(e) => this.HandleCommonInputChange(e, true)}
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="control-label font-12">Cari barang di keranjang</label>
+                        <ReactSearchAutocomplete
+                          // showIcon={false}
+                          items={this.state.itemSearch}
+                          onSelect={this.handleOnSelect}
+                          onClear={() => {
+                            this.setState({ anyCart: "" });
+                          }}
+                          autoFocus={false}
+                          formatResult={this.formatResult}
+                          styling={{ boxShadow: "rgba(32, 33, 36, 0.28) 0px 0px 0px 0px", borderRadius: "4px", border: "1px solid hsl(0, 0%, 80%)", height: "38px" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   {/* <Select
                     options={opSupplier}
                     placeholder="Pilih Supplier"
@@ -1429,7 +1463,7 @@ class Receive extends Component {
                           subtotal += subtotal_perrow;
                           //
                           return (
-                            <tr key={index}>
+                            <tr key={index} style={{ backgroundColor: this.state.anyCart === item.kd_brg ? "#EEEEEE" : "" }}>
                               <td className="middle nowrap">
                                 {item.nm_brg}
                                 <div className="subtitle">{item.barcode}</div>

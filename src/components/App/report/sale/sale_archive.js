@@ -99,6 +99,7 @@ class SaleArchive extends Component {
   render() {
     const startDate = this.state.periode.split("-")[0];
     const endDate = this.state.periode.split("-")[1];
+    console.log(startDate);
     const { total, last_page, per_page, current_page, data } = this.props.saleReport;
     const { omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit, hpp, total_tunai_all } = this.props.totalPenjualan;
 

@@ -15,10 +15,7 @@ class HeaderGeneralCommon extends Component {
 
   handleSearch(e) {
     e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    let any = data.get("any");
-    this.props.callbackGet(any);
+    this.props.callbackGet(this.state.any);
   }
 
   render() {
@@ -34,7 +31,12 @@ class HeaderGeneralCommon extends Component {
                 placeholder="tulis sesuatu disini"
                 value={this.state.any}
                 onChange={(e) => {
-                  this.setState({ any: e.target.value });
+                  if (e.target.value === "") {
+                    this.setState({ any: "" });
+                    this.props.callbackGet("");
+                  } else {
+                    this.setState({ any: e.target.value });
+                  }
                 }}
               />
               <span className="input-group-append">

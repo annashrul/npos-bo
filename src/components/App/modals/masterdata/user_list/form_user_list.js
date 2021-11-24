@@ -10,6 +10,7 @@ import FileBase64 from "react-file-base64";
 import { ModalToggle } from "redux/actions/modal.action";
 import axios from "axios";
 import { HEADERS } from "redux/actions/_constants";
+import { handleError, isEmptyOrUndefined, setFocus } from "../../../../../helper";
 
 class FormUserList extends Component {
   constructor(props) {
@@ -29,17 +30,15 @@ class FormUserList extends Component {
       email: "",
       alamat: "",
       tgl_lahir: moment().format("YYYY-MM-DD"),
-      foto: "-",
+      foto: "",
       nohp: "",
       lokasi: "",
-      user_lvl: "0",
+      user_lvl: "",
       status: "1",
       user_lvl_data: [],
-      selectedOption: [],
       isChecked: false,
-      opt: [],
-      opt1: [],
-      token: "",
+      location_data: [],
+      location: [],
       error: {
         nama: "",
         username: "",
@@ -52,7 +51,7 @@ class FormUserList extends Component {
         foto: "",
         nohp: "",
         lokasi: "",
-        selectedOption: "",
+        location: [],
         user_lvl: "",
         status: "",
       },
@@ -61,7 +60,6 @@ class FormUserList extends Component {
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-
     if (event.target.name === "username") {
       const data = this.fetchData({
         table: "user_akun",
@@ -70,19 +68,8 @@ class FormUserList extends Component {
       });
       data.then((res) => {
         if (res.result === 1) {
-          let err = Object.assign({}, this.state.error, {
-            username: "Username telah digunakan.",
-          });
-          this.setState({
-            error: err,
-          });
-        } else {
-          let err = Object.assign({}, this.state.error, {
-            username: "",
-          });
-          this.setState({
-            error: err,
-          });
+          handleError("username", "telah digunakan");
+          return;
         }
       });
     } else {
@@ -110,165 +97,155 @@ class FormUserList extends Component {
   }
 
   toggleChange = (e) => {
-    this.setState({ isChecked: e.target.checked });
+    let state = { isChecked: e.target.checked };
     if (e.target.checked === true) {
-      this.setState({
-        opt: [],
-        selectedOption: this.state.opt,
-      });
+      Object.assign(state, { location: this.state.location_data });
     } else {
-      this.setState({
-        opt: this.state.opt1,
-        selectedOption: [],
-      });
+      Object.assign(state, { location: [] });
     }
+    this.setState(state);
   };
 
-  componentDidMount() {
-    if (this.props.userListEdit !== undefined && this.props.userListEdit !== []) {
-      let lokasiUser = typeof this.props.userListEdit.lokasi === "object" ? this.props.userListEdit.lokasi : [];
-      let lokasi = typeof this.props.lokasi.data === "object" ? this.props.lokasi.data : [];
-      let loc = [];
-      let val = [];
-      for (let i = 0; i < lokasi.length; i++) {
-        for (let x = 0; x < lokasiUser.length; x++) {
-          if (lokasi[i].kode === lokasiUser[x].kode) {
-            loc.push({ value: lokasiUser[x].kode, label: lokasi[i].nama_toko });
-            val.push({ kode: lokasiUser[x].kode });
+  getProps(props) {
+    const propsDetail = props.userListEdit;
+    let propsLokasi = typeof props.lokasi.data === "object" ? props.lokasi.data : [];
+    let propsUserLevel = typeof props.userLevel.data === "object" ? props.userLevel.data : [];
+    let arrayUserLevel = [];
+    let arrayLokasi = [];
+    let valueLokasi = [];
+    let state = {};
+
+    for (let i = 0; i < propsUserLevel.length; i++) {
+      arrayUserLevel.push({ value: propsUserLevel[i].id, label: propsUserLevel[i].lvl });
+    }
+
+    for (let i = 0; i < propsLokasi.length; i++) {
+      valueLokasi.push({ value: propsLokasi[i].kode, label: propsLokasi[i].nama_toko });
+      if (propsDetail !== undefined) {
+        let propsLokasiUserDetail = typeof propsDetail.lokasi === "object" ? propsDetail.lokasi : [];
+        for (let x = 0; x < propsLokasiUserDetail.length; x++) {
+          if (propsLokasi[i].kode === propsLokasiUserDetail[x].kode) {
+            arrayLokasi.push({ value: propsLokasiUserDetail[x].kode, label: propsLokasi[i].nama_toko });
           }
         }
+      } else {
+        arrayLokasi.push({ value: propsLokasi[i].kode, label: propsLokasi[i].nama_toko });
       }
-      this.setState({
-        nama: this.props.userListEdit.nama,
-        username: this.props.userListEdit.username,
-        email: this.props.userListEdit.email,
-        alamat: this.props.userListEdit.alamat,
-        tgl_lahir: moment(this.props.userListEdit.tgl_lahir).format("yyyy-MM-DD"),
-        foto: this.props.userListEdit.foto,
-        nohp: this.props.userListEdit.nohp,
-        selectedOption: loc,
-        opt: val,
-        user_lvl: this.props.userListEdit.user_lvl,
-        status: this.props.userListEdit.status,
+    }
+    Object.assign(state, {
+      location_data: valueLokasi,
+      user_lvl_data: arrayUserLevel,
+    });
+    if (propsDetail !== undefined) {
+      if (propsLokasi.length > 0 && propsLokasi.length === arrayLokasi.length) {
+        Object.assign(state, { isChecked: true });
+      }
+      Object.assign(state, {
+        location: arrayLokasi,
+        nama: propsDetail.nama,
+        username: propsDetail.username,
+        email: propsDetail.email,
+        alamat: propsDetail.alamat,
+        tgl_lahir: moment(propsDetail.tgl_lahir).format("yyyy-MM-DD"),
+        foto: propsDetail.foto,
+        nohp: propsDetail.nohp,
+        user_lvl: propsDetail.user_lvl,
+        status: propsDetail.status,
       });
     }
+    this.setState(state);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  componentDidMount() {
+    this.getProps(this.props);
   }
   handleSubmit(e) {
     e.preventDefault();
-    let err = this.state.error;
-    if (this.state.nama === "" || this.state.nama === undefined || this.state.error.username !== "") {
-      if (this.state.nama === "" || this.state.nama === undefined) {
-        err = Object.assign({}, err, {
-          nama: "nama tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
+    const state = this.state;
+    if (!isEmptyOrUndefined(state.nama, "nama")) {
+      setFocus(this, "nama");
+      return;
+    }
+    if (!isEmptyOrUndefined(state.username, "username")) {
+      setFocus(this, "username");
+      return;
+    }
+
+    if (this.props.userListEdit === undefined) {
+      if (!isEmptyOrUndefined(state.password, "password")) {
+        setFocus(this, "password");
+        return;
       }
-    } else if (this.state.username === "" || this.state.username === undefined) {
-      err = Object.assign({}, err, {
-        username: "username tidak boleh kosong.",
-      });
-      this.setState({
-        error: err,
-      });
-    } else if (this.state.selectedOption.length <= 0 || this.state.selectedOption === "" || this.state.selectedOption === undefined) {
-      err = Object.assign({}, err, {
-        selectedOption: "lokasi tidak boleh kosong.",
-      });
-      this.setState({
-        error: err,
-      });
-    } else if (this.state.user_lvl === "" || this.state.user_lvl === undefined) {
-      err = Object.assign({}, err, {
-        user_lvl: "level user tidak boleh kosong.",
-      });
-      this.setState({
-        error: err,
-      });
-    } else if (this.state.tgl_lahir === "" || this.state.tgl_lahir === undefined) {
-      err = Object.assign({}, err, {
-        tgl_lahir: "tgl_lahir tidak boleh kosong.",
-      });
-      this.setState({
-        error: err,
-      });
-    } else if (this.state.alamat === "" || this.state.alamat === undefined) {
-      err = Object.assign({}, err, {
-        alamat: "alamat tidak boleh kosong.",
-      });
-      this.setState({
-        error: err,
-      });
+      if (!isEmptyOrUndefined(state.password_confirmation, "konfirmasi password")) {
+        setFocus(this, "password_confirmation");
+        return;
+      }
+      if (state.password !== state.password_confirmation) {
+        handleError("password", " tidak sesuai");
+        setFocus(this, "password_confirmation");
+        return;
+      }
+      if (!isEmptyOrUndefined(state.password_otorisasi, "otorisasi password")) {
+        setFocus(this, "password_otorisasi");
+        return;
+      }
     } else {
-      const form = e.target;
-      let data = new FormData(form);
-      let parseData = stringifyFormData(data);
-      let lok = [];
-      for (let i = 0; i < this.state.selectedOption.length; i++) {
-        lok.push({ kode: this.state.selectedOption[i].value });
-      }
-      parseData["username"] = this.state.username;
-      parseData["user_lvl"] = this.state.user_lvl;
-      parseData["lokasi"] = lok;
-      parseData["status"] = this.state.status === undefined ? 1 : this.state.status;
-      parseData["nama"] = this.state.nama;
-      parseData["alamat"] = this.state.alamat === undefined ? "-" : this.state.alamat;
-      parseData["email"] = this.state.email === undefined ? "-" : this.state.email;
-      parseData["nohp"] = this.state.nohp === undefined ? 0 : this.state.nohp;
-      parseData["tgl_lahir"] = this.state.tgl_lahir;
-      parseData["password"] = parseInt(this.state.password.length, 10) > 0 ? this.state.password : "-";
-      parseData["password_confirmation"] = parseInt(this.state.password_confirmation.length, 10) > 0 ? this.state.password_confirmation : "-";
-      parseData["password_otorisasi"] = parseInt(this.state.password_otorisasi.length, 10) > 0 ? this.state.password_otorisasi : "-";
-      if (this.state.foto !== undefined) {
-        if (this.state.foto.base64 !== undefined) {
-          parseData["foto"] = this.state.foto.base64;
-        }
-      } else {
-        parseData["foto"] = "-";
-      }
-      if (this.props.userListEdit !== undefined && this.props.userListEdit !== []) {
-        if (parseData.password === "-") {
-          delete parseData.password;
-        }
-        if (parseData.password_confirmation === "-") {
-          delete parseData.password_confirmation;
-        }
-        if (parseData.password_otorisasi === "-") {
-          delete parseData.password_otorisasi;
-        }
-        if (parseData.foto === "-") {
-          delete parseData.foto;
-        }
-        this.props.dispatch(updateUserList(this.props.userListEdit.id, parseData));
-        this.props.dispatch(ModalToggle(false));
-      } else {
-        if (this.state.password === "" || this.state.password === undefined) {
-          err = Object.assign({}, err, {
-            password: "password tidak boleh kosong.",
-          });
-          this.setState({
-            error: err,
-          });
-        } else if (this.state.password_confirmation === "" || this.state.password_confirmation === undefined) {
-          err = Object.assign({}, err, {
-            password_confirmation: "konfirmasi password tidak boleh kosong.",
-          });
-          this.setState({
-            error: err,
-          });
-        } else if (this.state.password_otorisasi === "" || this.state.password_otorisasi === undefined) {
-          err = Object.assign({}, err, {
-            password_otorisasi: "otorisasi password tidak boleh kosong.",
-          });
-          this.setState({
-            error: err,
-          });
-        } else {
-          this.props.dispatch(sendUserList(parseData));
-          this.props.dispatch(ModalToggle(false));
-        }
-      }
+      state.password = state.password.length > 0 ? state.password : "-";
+      state.password_confirmation = state.password_confirmation.length > 0 ? state.password_confirmation : "-";
+      state.password_otorisasi = state.password_otorisasi.length > 0 ? state.password_otorisasi : "-";
+    }
+    if (state.location.length <= 0 || !isEmptyOrUndefined(state.location)) {
+      handleError("Lokasi");
+      setFocus(this, "location");
+      return;
+    }
+    if (!isEmptyOrUndefined(state.user_lvl, "level pengguna")) {
+      setFocus(this, "user_lvl");
+      return;
+    }
+    if (!isEmptyOrUndefined(state.tgl_lahir, "tanggal lahir")) {
+      setFocus(this, "tgl_lahir");
+      return;
+    }
+    if (!isEmptyOrUndefined(state.alamat, "alamat")) {
+      setFocus(this, "alamat");
+      return;
+    }
+    let kodeLokasi = [];
+    for (let i = 0; i < state.location.length; i++) {
+      kodeLokasi.push({ kode: state.location[i].value });
+    }
+    if (!isEmptyOrUndefined(state.foto)) {
+      state.foto = "-";
+    } else {
+      state.foto = this.state.foto.base64;
+    }
+
+    let parseData = {
+      username: state.username,
+      user_lvl: state.user_lvl,
+      lokasi: kodeLokasi,
+      status: state.status,
+      nama: state.nama,
+      alamat: state.alamat,
+      email: state.email,
+      nohp: state.nohp,
+      tgl_lahir: state.tgl_lahir,
+      password: state.password,
+      password_confirmation: state.password_confirmation,
+      password_otorisasi: state.password_otorisasi,
+      foto: state.foto,
+    };
+
+    if (this.props.userListEdit !== undefined) {
+      this.props.dispatch(updateUserList(this.props.userListEdit.id, parseData));
+    } else {
+      this.props.dispatch(sendUserList(parseData));
     }
   }
   getFiles(files) {
@@ -282,15 +259,9 @@ class FormUserList extends Component {
       error: err,
     });
   }
-  handleOnChange = (selectedOption) => {
+  handleOnChange = (location) => {
     this.setState({
-      selectedOption: selectedOption,
-    });
-    let err = Object.assign({}, this.state.error, {
-      selectedOption: "",
-    });
-    this.setState({
-      error: err,
+      location: location,
     });
   };
   toggle(e) {
@@ -308,52 +279,31 @@ class FormUserList extends Component {
       email: "",
       alamat: "",
       tgl_lahir: moment().format("YYYY-MM-DD"),
-      foto: "-",
+      foto: "",
       nohp: "",
       lokasi: "",
       user_lvl: "",
       status: "1",
-      selectedOption: [],
+      location: [],
+      location_data: [],
       isChecked: true,
-      opt: [],
-      opt1: [],
-      token: "",
     });
   }
   HandleChangeUserLevel(val) {
     this.setState({
       user_lvl: val.value,
     });
-    let err = Object.assign({}, this.state.error, {
-      user_lvl: "",
-    });
-    this.setState({
-      error: err,
-    });
   }
-  static getDerivedStateFromProps(props, state) {
-    let userLevel = typeof props.userLevel.data === "object" ? props.userLevel.data : [];
-    let userG = [];
-    let lokasi = typeof props.lokasi.data === "object" ? props.lokasi.data : [];
-    let locG = [];
-    for (let i = 0; i < lokasi.length; i++) {
-      locG.push({ value: lokasi[i].kode, label: lokasi[i].nama_toko });
-    }
-    for (let i = 0; i < userLevel.length; i++) {
-      userG.push({ value: userLevel[i].id, label: userLevel[i].lvl });
-    }
-    state.opt = locG;
-    state.user_lvl_data = userG;
-    return null;
-  }
+
   render() {
     const curr = new Date();
     curr.setDate(curr.getDate() + 3);
     const date = curr.toISOString().substr(0, 10);
+    // console.log(this.props);
 
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserList"} size="lg">
-        <ModalHeader toggle={this.toggle}>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? `Ubah User List` : `Tambah User List`}</ModalHeader>
+        <ModalHeader toggle={this.toggle}>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? `Ubah` : `Tambah`} pengguna</ModalHeader>
 
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
@@ -363,16 +313,13 @@ class FormUserList extends Component {
                   <label>
                     Nama <small style={{ color: "red" }}>*</small>
                   </label>
-                  <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
-                  <div className="invalid-feedback" style={this.state.error.nama !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.nama}
-                  </div>
+                  <input ref={(input) => (this[`nama`] = input)} type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
                     Username <small style={{ color: "red" }}>*</small>
                   </label>
-                  <input type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
+                  <input ref={(input) => (this[`username`] = input)} type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
                   <div className="invalid-feedback" style={this.state.error.username !== "" ? { display: "block" } : { display: "none" }}>
                     {this.state.error.username}
                   </div>
@@ -382,45 +329,56 @@ class FormUserList extends Component {
                     Password
                     <small>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? " ( kosongkan jika tidak akan diubah )" : <small style={{ color: "red" }}>*</small>}</small>
                   </label>
-                  <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
-                  <div className="invalid-feedback" style={this.state.error.password !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.password}
-                  </div>
+                  <input ref={(input) => (this[`password`] = input)} type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
                     Konfirmasi Password
                     <small>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? "(  kosongkan jika tidak akan diubah )" : <small style={{ color: "red" }}>*</small>}</small>
                   </label>
-                  <input type="password" className="form-control" name="password_confirmation" value={this.state.password_confirmation} onChange={this.handleChange} />
-                  <div className="invalid-feedback" style={this.state.error.password_confirmation !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.password_confirmation}
-                  </div>
+                  <input
+                    ref={(input) => (this[`password_confirmation`] = input)}
+                    type="password"
+                    className="form-control"
+                    name="password_confirmation"
+                    value={this.state.password_confirmation}
+                    onChange={this.handleChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>
                     Otorisasi Password
                     <small>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? "( kosongkan jika tidak akan diubah )" : <small style={{ color: "red" }}>*</small>}</small>
                   </label>
-                  <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
-                  <div className="invalid-feedback" style={this.state.error.password_otorisasi !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.password_otorisasi}
-                  </div>
+                  <input
+                    ref={(input) => (this[`password_otorisasi`] = input)}
+                    type="password"
+                    className="form-control"
+                    name="password_otorisasi"
+                    value={this.state.password_otorisasi}
+                    onChange={this.handleChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label htmlFor="inputState" className="col-form-label">
-                    Lokasi&nbsp; <small style={{ color: "red" }}>*</small>
-                    <input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange} /> Pilih Semua{" "}
+                    <input className="text-right" type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange} /> Pilih semua lokasi{" "}
                   </label>
-                  <Select required disabled isMulti value={this.state.selectedOption} onChange={this.handleOnChange} options={this.state.opt} name="lokasi" />
-                  <div className="invalid-feedback" style={this.state.error.selectedOption !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.selectedOption}
-                  </div>
+                  <Select
+                    ref={(input) => (this[`location`] = input)}
+                    required
+                    disabled
+                    isMulti
+                    value={this.state.location}
+                    onChange={this.handleOnChange}
+                    options={this.state.location_data}
+                    name="lokasi"
+                  />
                 </div>
                 <label className="control-label font-12">
                   User Level <small style={{ color: "red" }}>*</small>
                 </label>
                 <Select
+                  ref={(input) => (this[`user_lvl`] = input)}
                   options={this.state.user_lvl_data}
                   placeholder="Pilih User Level"
                   onChange={this.HandleChangeUserLevel}
@@ -428,40 +386,27 @@ class FormUserList extends Component {
                     return op.value === this.state.user_lvl;
                   })}
                 />
-                <div className="invalid-feedback" style={this.state.error.user_lvl !== "" ? { display: "block" } : { display: "none" }}>
-                  {this.state.error.user_lvl}
-                </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label htmlFor="inputState" className="col-form-label">
-                    Photo
-                  </label>
+                  <label>Photo</label>
                   <br />
                   <FileBase64 multiple={false} className="mr-3 form-control-file" onDone={this.getFiles.bind(this)} />
-                  <div className="invalid-feedback" style={this.state.error.foto !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.foto}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>No. Hp</label>
                   <input type="text" className="form-control" name="nohp" defaultValue="0" value={this.state.nohp} onChange={this.handleChange} />
-                  <div className="invalid-feedback" style={this.state.error.nohp !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.nohp}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>Email</label>
-                  <input type="email" className="form-control" aria-describedby="emailHelp" name="email" value={this.state.email} onChange={this.handleChange} />
-                  <div className="invalid-feedback" style={this.state.error.email !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.email}
-                  </div>
+                  <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
                     Tanggal Lahir <small style={{ color: "red" }}>*</small>
                   </label>
                   <input
+                    ref={(input) => (this[`tgl_lahir`] = input)}
                     type="date"
                     name="tgl_lahir"
                     className="form-control"
@@ -472,9 +417,6 @@ class FormUserList extends Component {
                     pattern="\d{2}\/\d{2}/\d{4}"
                     onChange={this.handleChange}
                   />
-                  <div className="invalid-feedback" style={this.state.error.tgl_lahir !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.tgl_lahir}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label htmlFor="inputState" className="col-form-label">
@@ -484,20 +426,22 @@ class FormUserList extends Component {
                     <option value="1">Aktif</option>
                     <option value="0">Tidak Aktif</option>
                   </select>
-                  <div className="invalid-feedback" style={this.state.error.status !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.status}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>
                     Alamat <small style={{ color: "red" }}>*</small>
                   </label>
-                  <textarea rows="2" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} style={{ height: "125px" }}>
+                  <textarea
+                    ref={(input) => (this[`alamat`] = input)}
+                    rows="2"
+                    className="form-control"
+                    name="alamat"
+                    value={this.state.alamat}
+                    onChange={this.handleChange}
+                    style={{ height: "125px" }}
+                  >
                     -
                   </textarea>
-                  <div className="invalid-feedback" style={this.state.error.alamat !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.alamat}
-                  </div>
                 </div>
               </div>
             </div>
@@ -505,7 +449,7 @@ class FormUserList extends Component {
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
               <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.toggle}>
-                <i className="ti-close" /> Cancel
+                <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
                 <i className="ti-save" /> Simpan

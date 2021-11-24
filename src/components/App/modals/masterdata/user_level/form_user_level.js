@@ -6,6 +6,7 @@ import { createUserLevel, updateUserLevel } from "redux/actions/masterdata/user_
 import { ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 
 import { ModalToggle } from "redux/actions/modal.action";
+import { isEmptyOrUndefined, setFocus } from "../../../../../helper";
 
 class FormUserLevel extends Component {
   //MENU ACCESS MASTERDATA = 0-9
@@ -393,7 +394,12 @@ class FormUserLevel extends Component {
     let parseData = stringifyFormData(data);
     let akses = [];
     let err = this.state.error;
-
+    parseData["lvl"] = this.state.lvl;
+    parseData["access"] = akses;
+    if (!isEmptyOrUndefined(parseData["lvl"], "Nama Level pengguna")) {
+      setFocus(this, "lvl");
+      return;
+    }
     this.state.array_modul.forEach((val) => {
       this.state[val].forEach((key) => {
         akses.push({
@@ -405,41 +411,32 @@ class FormUserLevel extends Component {
       });
     });
 
-    parseData["lvl"] = this.state.lvl;
-    parseData["access"] = akses;
-
-    if (parseData["lvl"] === "") {
-      err = Object.assign({}, err, {
-        lvl: "nama user level tidak boleh kosong",
-      });
-      this.setState({ error: err });
+    if (this.props.detail !== undefined) {
+      this.props.dispatch(
+        updateUserLevel(this.props.detail.id, parseData, (showModal) => {
+          if (!showModal) this.clearState();
+        })
+      );
     } else {
-      if (this.props.detail !== undefined) {
-        this.props.dispatch(updateUserLevel(this.props.detail.id, parseData));
-        this.props.dispatch(ModalToggle(false));
-        this.clearState();
-      } else {
-        this.props.dispatch(createUserLevel(parseData));
-        this.props.dispatch(ModalToggle(false));
-        this.clearState();
-      }
+      this.props.dispatch(
+        createUserLevel(parseData, (showModal) => {
+          if (!showModal) this.clearState();
+        })
+      );
     }
   }
   render() {
     const { array_modul } = this.state;
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserLevel"} size="lg">
-        <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah User Level" : "Ubah User Level"}</ModalHeader>
+        <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah" : "Ubah"} level pengguna</ModalHeader>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           <ModalBody>
             <div className="row">
               <div className="col-12">
                 <div className="form-group">
-                  <label>Nama User Level</label>
-                  <input type="text" className="form-control" name="lvl" value={this.state.lvl} onChange={(e) => this.handleChange(e)} />
-                  <div className="invalid-feedback" style={this.state.error.lvl !== "" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.lvl}
-                  </div>
+                  <label>Nama level pengguna</label>
+                  <input ref={(input) => (this[`lvl`] = input)} type="text" className="form-control" name="lvl" value={this.state.lvl} onChange={(e) => this.handleChange(e)} />
                 </div>
               </div>
               {array_modul.map((val, i) => {
@@ -462,7 +459,7 @@ class FormUserLevel extends Component {
                         );
                       })}
                     </div>
-                    <hr />
+                    {val !== "cetak_barcode" && <hr />}
                   </div>
                 );
               })}
@@ -470,11 +467,11 @@ class FormUserLevel extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button type="button" className="btn btn-danger mb-2 mr-2" onClick={this.toggle}>
-                <i className="ti-close" /> Close
+              <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.toggle}>
+                <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
-                <i className="ti-save" /> Save
+                <i className="ti-save" /> Simpan
               </button>
             </div>
           </ModalFooter>

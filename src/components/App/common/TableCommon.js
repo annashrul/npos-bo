@@ -83,7 +83,7 @@ class TableCommon extends Component {
               <tfoot style={{ border: "1px solid black" }}>
                 {props.footer.map((val, key) => {
                   return (
-                    <tr key={key} style={{ backgroundColor: "#EEEEEE" }}>
+                    <tr key={key} style={{ backgroundColor: key === 0 ? "#EEEEEE" : "#b0bec5" }}>
                       {val.data.map((res, index) => {
                         return (
                           <th key={index} colSpan={res.colSpan ? res.colSpan : ""} className={`middle nowrap text-black ${res.className ? res.className : "text-right"}`}>
