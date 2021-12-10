@@ -1,8 +1,14 @@
 import { PIUTANG, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet } from "../handleHttp";
-
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+export function setDownload(load) {
+  return {
+    type: PIUTANG.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: PIUTANG.LOADING,
@@ -166,11 +172,11 @@ export const storePiutang = (data, param) => {
 
 //FILTER PIUTANG REPORT//
 // perpage=10,page=1,searchby=kd_brg,dateFrom=2020-01-01,dateTo=2020-07-01,lokasi=LK%2F0001
-export const FetchPiutangReport = (page = 1, where = "") => {
+export const FetchPiutangReport = (where = "") => {
   return (dispatch) => {
-    let url = `piutang/report/detail?page=${page}`;
+    let url = `piutang/report/detail`;
     if (where !== "") {
-      url += `${where}`;
+      url += `?${where}`;
     }
     handleGet(url, (res) => {
       let data = res.data;
@@ -199,23 +205,21 @@ export const FetchPiutangReportDetail = (page = 1, where = "", id = null) => {
 };
 
 //FILTER PIUTANG REPORT EXCEL//
-export const FetchPiutangReportExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchPiutangReportExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    let url = `piutang/report?page=${page}&perpage=${perpage}`;
+    let url = `piutang/report/detail?perpage=${perpage}`;
     if (where !== "") {
       url += `${where}`;
     }
-
-    axios
-      .get(HEADERS.URL + `${url}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setPiutangReportExcel(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setPiutangReportExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formPiutangExcel"));
+      },
+      (percent) => dispatch(setDownload(percent))
+    );
   };
 };
 

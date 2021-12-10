@@ -9,11 +9,13 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import XLSX from "xlsx";
 import { EXTENSION, HEADERS } from "./redux/actions/_constants";
-import Default from "assets/default.png";
+import Default from "assets/nodata.png";
 
 export const CURRENT_DATE = moment(new Date()).format("yyyy-MM-DD");
 
 export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`;
+
+export const noDataImg = Default;
 
 export const rmPage = (res) => {
   let whereProps = res.split("&");

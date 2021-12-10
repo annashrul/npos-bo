@@ -11,9 +11,9 @@ import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle 
 class ButtonActionCommon extends Component {
   render() {
     return (
-      <UncontrolledButtonDropdown>
+      <UncontrolledButtonDropdown direction="down">
         <DropdownToggle caret></DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu positionFixed={true}>
           {this.props.action.map((res, index) => {
             return (
               <DropdownItem

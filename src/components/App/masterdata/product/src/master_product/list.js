@@ -33,6 +33,7 @@ import { dateRange, generateNo, getStorage, rmSpaceToStrip, setStorage } from ".
 import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
 import SelectCommon from "../../../../common/SelectCommon";
 import Cookies from "js-cookie";
+import ButtonActionCommon from "../../../../common/ButtonActionCommon";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -228,8 +229,7 @@ class ListProduct extends Component {
       this.props.dispatch(FetchProduct(pageNumber, ""));
     }
   }
-  handleDelete = (e, kode) => {
-    e.preventDefault();
+  handleDelete = (kode) => {
     this.props.dispatch(deleteProduct(kode));
   };
 
@@ -358,18 +358,15 @@ class ListProduct extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProductExcel"));
   }
-  loc_detail(e, res) {
-    e.preventDefault();
+  loc_detail(res) {
     this.setState({ isModalDetail: true, detail: res });
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("detailProduct"));
     this.props.dispatch(FetchProductDetail(res.kd_brg));
   }
-  handlePriceCustomer(e, kode, nm_brg) {
-    e.preventDefault();
+  handlePriceCustomer(kode, nm_brg) {
     this.setState({ isModalCustomer: true });
-
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("CustomerPrice"));
@@ -393,8 +390,7 @@ class ListProduct extends Component {
     this.props.dispatch(setProductEdit([]));
     // this.props.dispatch(FetchProductCode());
   }
-  handleEdit = (e, kode, pricing) => {
-    e.preventDefault();
+  handleEdit = (kode, pricing) => {
     if (pricing) {
       this.setState({ isModalFormPer: true });
     } else {
@@ -585,7 +581,6 @@ class ListProduct extends Component {
                 <th className={`middle ${!cekTambahan && "none"}`} width="10%">
                   <div className="form-group m-0 p-0">
                     <select
-                      name="searchby"
                       className="nradius np form-control in-table nbt nbl nbr"
                       style={{ width: "-webkit-fill-available" }}
                       name="any_rak_barang"
@@ -631,18 +626,16 @@ class ListProduct extends Component {
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret></DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem onClick={(e) => this.handlePriceCustomer(e, v.kd_brg, v.nm_brg)}>Set Harga Customer</DropdownItem>
-                                <DropdownItem onClick={(e) => this.loc_detail(e, v)}>Detail</DropdownItem>
-                                <DropdownItem onClick={(e) => loc_edit(e, v.kd_brg)}>Edit</DropdownItem>
-                                <DropdownItem onClick={(e) => loc_edit_per(e, v.kd_brg, true)}>Edit Harga per Lokasi</DropdownItem>
-                                <DropdownItem onClick={(e) => loc_delete(e, v.kd_brg)}>Delete</DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
+                          <ButtonActionCommon
+                            action={[{ label: "Set Harga Customer" }, { label: "Detail" }, { label: "Edit" }, { label: "Edit Harga per Lokasi" }, { label: "Delete" }]}
+                            callback={(e) => {
+                              if (e === 0) this.handlePriceCustomer(v.kd_brg, v.nm_brg);
+                              if (e === 1) this.loc_detail(v);
+                              if (e === 2) loc_edit(v.kd_brg);
+                              if (e === 3) loc_edit_per(v.kd_brg, true);
+                              if (e === 4) loc_delete(v.kd_brg);
+                            }}
+                          />
                         </td>
                         <td className={`middle nowrap`}>{v.kd_brg}</td>
                         <td className={`middle nowrap`}>{v.nm_brg}</td>

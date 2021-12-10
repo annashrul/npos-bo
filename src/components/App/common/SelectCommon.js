@@ -32,13 +32,13 @@ class SelectCommon extends Component {
         Object.assign(state, { value: check[0] });
       }
     }
+    console.log(state);
     this.setState(state);
   }
 
-  // componentWillMount() {
-  //   this.getProps(this.props);
-  //   console.log("##################", "componentWillMount");
-  // }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
   // componentDidMount() {
   //   this.getProps(this.props);
   //   if (this.props.dataEdit !== undefined || this.props.dataEdit !== "") {
@@ -49,9 +49,9 @@ class SelectCommon extends Component {
   //   }
   //   console.log("##################", "componentDidMount");
   // }
+
   componentWillReceiveProps(nextProps) {
     this.getProps(nextProps);
-    console.log("##################", "componentWillReceiveProps");
   }
 
   onChange(value) {
@@ -67,7 +67,7 @@ class SelectCommon extends Component {
             display: !this.props.isLabel && this.props.isLabel !== undefined ? "none" : "block",
           }}
         >
-          {this.state.label} <span className="text-danger">{this.props.isRequired && "*"}</span>
+          {this.props.label} <span className="text-danger">{this.props.isRequired && "*"}</span>
         </label>
         <Select
           // autoFocus={true}

@@ -103,7 +103,7 @@ class HeaderReportCommon extends Component {
         Object.assign(state, { sort: getSort });
       }
     } else {
-      if (isEmptyOrUndefined(getColumn)) {
+      if (isEmptyOrUndefined(getSort)) {
         where += `&${props.otherColumn ? props.otherColumn : "sort"}=${getColumn}`;
         Object.assign(state, { column: getColumn });
         if (isEmptyOrUndefined(getSort)) {
@@ -154,7 +154,6 @@ class HeaderReportCommon extends Component {
     if (this.props.col) {
       col = this.props.col;
     }
-    console.log(this.props.isAll);
     return (
       <div className="row">
         <div className={`col-6 col-xs-6 ${col}`}>

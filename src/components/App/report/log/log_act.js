@@ -1,285 +1,185 @@
-import React,{Component} from 'react'
-import Layout from 'components/App/Layout'
+import React, { Component } from "react";
+import Layout from "components/App/Layout";
 import Paginationq from "helper";
-import {FetchLogAct} from "redux/actions/report/log/log_act.action";
+import { FetchLogAct } from "redux/actions/report/log/log_act.action";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
-import DateRangePicker from 'react-bootstrap-daterangepicker';
-import {rangeDate} from "helper";
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import { rangeDate } from "helper";
 import Preloader from "Preloader";
-import { isArray } from 'lodash';
-class LogActReport extends Component{
-    constructor(props){
-        super(props);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleGet = this.handleGet.bind(this);
-        this.state={
-            where_data:"",
-            any:"",
-            startDate:moment(new Date()).format("yyyy-MM-DD"),
-            endDate:moment(new Date()).format("yyyy-MM-DD"),
-            keyName_:[],
-            valData_:[],
-        }
-    }
-    componentWillMount(){
-        let page=localStorage.page_log_act_report;
-        this.handleParameter(page!==undefined&&page!==null?page:1);
-    }
-    componentDidMount(){
-        if (localStorage.any_log_act_report !== undefined && localStorage.any_log_act_report !== '') {
-            this.setState({any: localStorage.any_log_act_report})
-        }
-        if (localStorage.date_from_log_act_report !== undefined && localStorage.date_from_log_act_report !== null) {
-            this.setState({startDate: localStorage.date_from_log_act_report})
-        }
-        if (localStorage.date_to_log_act_report !== undefined && localStorage.date_to_log_act_report !== null) {
-            this.setState({endDate: localStorage.date_to_log_act_report})
-        }
-    }
-    handlePageChange(pageNumber){
-        localStorage.setItem("page_log_act_report",pageNumber);
-        this.props.dispatch(FetchLogAct(pageNumber))
-    }
-    handleEvent = (event, picker) => {
-        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
-        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
-        localStorage.setItem("date_from_log_act_report",`${awal}`);
-        localStorage.setItem("date_to_log_act_report",`${akhir}`);
-        this.setState({
-            startDate:awal,
-            endDate:akhir
-        });
+import { isArray } from "lodash";
+import HeaderReportCommon from "../../common/HeaderReportCommon";
+import { CapitalizeEachWord, getFetchWhere, noDataImg } from "../../../../helper";
+class LogActReport extends Component {
+  constructor(props) {
+    super(props);
+    this.handleGet = this.handleGet.bind(this);
+    this.state = {
+      where_data: "",
+      any: "",
+      startDate: moment(new Date()).format("yyyy-MM-DD"),
+      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      keyName_: [],
+      valData_: [],
     };
-    handleSearch(e){
-        e.preventDefault();
-        localStorage.setItem("any_log_act_report",this.state.any);
-        this.handleParameter(1);
+  }
+
+  handleGet(e, data) {
+    e.preventDefault();
+    const arr_data = isArray(JSON.parse(data)) ? JSON.parse(data) : [JSON.parse(data)];
+    arr_data.map((v, i) => {
+      const not_allowed = ["id", "password", "password_otorisasi", "kode", "username", "user_id", "user_lvl"];
+      Object.keys(arr_data[i])
+        .filter((key) => not_allowed.includes(key))
+        .forEach((key) => delete arr_data[i][key]);
+      return null;
+    });
+
+    const keyName = arr_data
+      .map((o) => {
+        return Object.keys(o);
+      })
+      .reduce((prev, curr) => {
+        return prev.concat(curr);
+      })
+      .filter((col, i, array) => {
+        return array.indexOf(col) === i;
+      });
+
+    this.setState({
+      keyName_: keyName,
+      valData_: arr_data,
+    });
+  }
+
+  handleService(res, page = 1) {
+    if (res !== undefined) {
+      let where = getFetchWhere(res, page);
+      let state = { where_data: where };
+      this.setState(state);
+      this.props.dispatch(FetchLogAct(where));
     }
-    handleParameter(pageNumber){
-        let dateFrom=localStorage.date_from_log_act_report;
-        let dateTo=localStorage.date_to_log_act_report;
-        let any = localStorage.any_log_act_report;
-        let where='';
-        if(dateFrom!==undefined&&dateFrom!==null){
-            where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
-        }
-        if(any!==undefined&&any!==null&&any!==''){
-            where+=`&q=${any}`
-        }
-        this.setState({
-            where_data:where
-        })
-        this.props.dispatch(FetchLogAct(pageNumber,where))
-        // this.props.dispatch(FetchLogActExcel(pageNumber,where))
-    }
-    handleGet(e,data){
-        e.preventDefault();
+  }
+  handlePageChange(page) {
+    this.handleService(this.state.where_data, page);
+  }
 
-        const arr_data = isArray(JSON.parse(data))?JSON.parse(data):[JSON.parse(data)];
+  render() {
+    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
+    const {
+      per_page,
+      last_page,
+      current_page,
+      // from,
+      // to,
+      data,
+    } = this.props.log_actReport;
+    return (
+      <Layout page="Laporan LogAct">
+        <HeaderReportCommon col="col-md-2" pathName="LogAktivitas" callbackWhere={(res) => this.handleService(res)} />
+        <div className="row">
+          <div className="col-4">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title">LOG AKTIFITAS</h4>
+                <div style={{ overflowX: "auto", width: "auto", height: 400 }}>
+                  <ul className="dashboard-active-timeline list-unstyled">
+                    <tbody>
+                      {typeof data === "object"
+                        ? data.length > 0
+                          ? data.map((v, i) => {
+                              const items = ["bg-primary"];
+                              let rand_bg = items[Math.floor(Math.random() * items.length)];
+                              let icon = "";
+                              let table = v.tabel.split("_");
+                              if (table.length === 1) {
+                                icon = `${table[0]}`.charAt(0);
+                              }
+                              if (table.length > 1) {
+                                icon = `${table[0].charAt(0)}${table[1].charAt(0)}`;
+                              }
 
-        arr_data.map((v,i)=>{
-            const not_allowed = ['id','password','password_otorisasi','kode','username','user_id','user_lvl'];
-            Object.keys(arr_data[i]).filter(key => not_allowed.includes(key))
-            .forEach(key => delete arr_data[i][key]);
-            return null
-        })
-
-        const keyName = arr_data.map((o) => {
-                return Object.keys(o)
-            }).reduce((prev, curr) => {
-                return prev.concat(curr)
-            }).filter((col, i, array) => {
-                return array.indexOf(col) === i
-            });
-
-
-        this.setState({
-            keyName_:keyName,
-            valData_:arr_data
-        })
-        
-        
-    }
-
-
-    render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {
-            per_page,
-            last_page,
-            current_page,
-            // from,
-            // to,
-            data
-        } = this.props.log_actReport;
-        return (
-            <Layout page="Laporan LogAct">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
-
-                                <div className="col-md-10" style={{zoom:"85%"}}>
-                                    <div className="row">
-                                        <div className="col-6 col-xs-6 col-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="" className="control-label"> Periode </label>
-                                                <DateRangePicker
-                                                    style={{display:'unset'}}
-                                                    ranges={rangeDate}
-                                                    alwaysShowCalendars={true}
-                                                    onEvent={this.handleEvent}
-                                                >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
-                                                </DateRangePicker>
-                                            </div>
-                                        </div>
-                                        <div className="col-6 col-xs-6 col-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="" >Cari</label>
-                                                <div className="input-group">
-                                                    <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
-                                                    <div className="input-group-append">
-                                                        <button className="btn btn-primary" type="button" onClick={this.handleSearch}>
-                                                                <i className="fa fa-search"/>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                </div>
-
-                                </div>
-
-                            </div>
-
-                            <div className="row">
-                                <div className="col-4">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <h4 className="card-title">LOG ACT</h4>
-                                            <div style={{position: 'relative', overflowX: 'auto', width: 'auto', height: 400}}>
-                                                <ul className="dashboard-active-timeline list-unstyled">
-                                                    {
-                                                        !this.props.isLoading?(
-                                                            <tbody>
-                                                            {
-                                                                (
-                                                                    typeof data === 'object' ? data.length>0?
-                                                                        data.map((v,i)=>{
-                                                                            const items = ['bg-primary','bg-info','bg-warning','bg-danger','bg-dark']
-                                                                            let rand_bg = items[Math.floor(Math.random() * items.length)];
-                                                                            return(
-                                                                                <a href="!#" onClick={(e)=>this.handleGet(e,v.detail)}>
-                                                                                    <li className="d-flex align-items-center mb-15" key={i}>
-                                                                                        <div className={"timeline-icon " +(rand_bg) +" mr-3"}>
-                                                                                            {(v.tabel).substring(0,2).toUpperCase()}
-                                                                                        </div>
-                                                                                        <div className="timeline-info">
-                                                                                            <p className="font-weight-bold mb-0">{v.aksi}</p>
-                                                                                            <span>{v.tabel} | {v.nama}</span>
-                                                                                            <p className="mb-0">{moment(v.tgl).format('LLLL')}</p>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </a>
-                                                                )
-                                                            })
-                                                            : "No data." : "No data."
-                                                    )
-                                                }
-                                                </tbody>
-                                            ):<Preloader/>
-                                        }
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer text-center">
-                                            <div className="mt-2 float-right">
-                                                <Paginationq
-                                                    current_page={current_page}
-                                                    per_page={per_page}
-                                                    total={(per_page*last_page)}
-                                                    callback={this.handlePageChange.bind(this)}
-                                                />
-                                            </div>
-                                        </div>
+                              return (
+                                <a href="!#" onClick={(e) => this.handleGet(e, v.detail)} key={i}>
+                                  <li className="d-flex align-items-center mb-15">
+                                    <div className={"timeline-icon " + rand_bg + " mr-3"}>{icon.toUpperCase()}</div>
+                                    <div className="timeline-info">
+                                      <p className="font-weight-bold mb-0">{v.aksi}</p>
+                                      <span>
+                                        {v.tabel} | {v.nama}
+                                      </span>
+                                      <p className="mb-0">{moment(v.tgl).format("LLLL")}</p>
                                     </div>
-                                </div>
-                                <div className="col-8">
-                                    <h4 className="card-title">DETAIL ACT</h4>
-                                    <div className="table-responsive" ref={element => {if (element) element.style.setProperty('overflow-x', 'auto', 'important');}}>
-                                    <table className="table table-hover table-bordered">
-                                        <thead className="bg-light">
-                                        <tr>
-                                                {
-                                                    (
-                                                        typeof this.state.keyName_ === 'object' ? this.state.keyName_.length>0?
-                                                            this.state.keyName_.map((v,i)=>{
-                                                                return(
-                                                                    <th className="text-black" style={columnStyle} rowSpan="2" key={i}>{v.split('_').map(f=>{ return f.toUpperCase(); }).join(' ')}</th>
-                                                                )
-                                                            })
-                                                            : "No data." : "No data."
-                                                    )
-                                                }
-                                        </tr>
-                                        </thead>
-                                        {
-                                            !this.props.isLoading?(
-                                                <tbody>
-                                                {
-                                                    (
-                                                        typeof this.state.valData_ === 'object' ? this.state.valData_.length>0?
-                                                            this.state.valData_.map((v,i)=>{
-                                                                return(
-                                                                    <tr key={i}>
-                                                                        {
-                                                                            (
-                                                                                typeof this.state.keyName_ === 'object' ? this.state.keyName_.length>0?
-                                                                                    this.state.keyName_.map((w,j)=>{
-                                                                                        return(
-                                                                                            <td style={columnStyle} key={j}>{v[w]}</td>
-                                                                                        )
-                                                                                    })
-                                                                                    : "No data." : "No data."
-                                                                            )
-                                                                        }
-
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                            : "No data." : "No data."
-                                                    )
-                                                }
-                                                </tbody>
-                                            ):<Preloader/>
-                                        }
-                                    </table>
-
-                                </div>
-                                </div>
-                            </div>
-                            {/* <DetailLogAct log_actDetail={this.props.log_actDetail}/> */}
-                            {/* <LogActReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} /> */}
-                        </div>
-                    </div>
+                                  </li>
+                                </a>
+                              );
+                            })
+                          : "No data."
+                        : "No data."}
+                    </tbody>
+                  </ul>
                 </div>
-            </Layout>
-            );
-    }
+                <hr />
+                <div className="mt-10 float-right">
+                  <Paginationq current_page={current_page} per_page={per_page} total={per_page * last_page} callback={this.handlePageChange.bind(this)} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-8">
+            <div
+              className="table-responsive"
+              ref={(element) => {
+                if (element) element.style.setProperty("overflow-x", "auto", "important");
+              }}
+            >
+              {typeof this.state.valData_ === "object" && this.state.valData_.length > 0 ? (
+                <table className="table table-hover table-noborder">
+                  <thead className="bg-light">
+                    {this.state.valData_.map((v, i) => {
+                      return typeof this.state.keyName_ === "object"
+                        ? this.state.keyName_.length > 0
+                          ? this.state.keyName_.map((w, j) => {
+                              return (
+                                <>
+                                  <tr>
+                                    <th className="middle nowrap" style={{ width: "50%" }}>
+                                      {CapitalizeEachWord(w.replaceAll("_", " "))}
+                                    </th>
+                                    <th className="middle nowrap text-center" width="1%">
+                                      :
+                                    </th>
+                                    <th className="middle nowrap text-right">{v[w]}</th>
+                                  </tr>
+                                </>
+                              );
+                            })
+                          : "No data."
+                        : "No data.";
+                    })}
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              ) : (
+                <img src={noDataImg} />
+              )}
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    
-    return {
-        log_actReport:state.log_actReducer.report,
-        isLoadingDetail: state.log_actReducer.isLoadingDetail,
-        log_actReportExcel:state.log_actReducer.report_excel,
-        auth:state.auth,
-        isLoading: state.log_actReducer.isLoading,
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-    }
-}
+  return {
+    log_actReport: state.log_actReducer.report,
+    isLoadingDetail: state.log_actReducer.isLoadingDetail,
+    log_actReportExcel: state.log_actReducer.report_excel,
+    auth: state.auth,
+    isLoading: state.log_actReducer.isLoading,
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+  };
+};
 export default connect(mapStateToProps)(LogActReport);

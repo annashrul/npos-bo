@@ -1,7 +1,15 @@
 import { HUTANG, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet } from "../handleHttp";
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+
+export function setDownload(load) {
+  return {
+    type: HUTANG.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: HUTANG.LOADING,
@@ -140,11 +148,11 @@ export const storeHutang = (data, param) => {
 
 //FILTER HUTANG REPORT//
 // perpage=10,page=1,searchby=kd_brg,dateFrom=2020-01-01,dateTo=2020-07-01,lokasi=LK%2F0001
-export const FetchHutangReport = (page = 1, where = "") => {
+export const FetchHutangReport = (where = "") => {
   return (dispatch) => {
-    let url = `hutang/report/detail?page=${page}`;
+    let url = `hutang/report/detail`;
     if (where !== "") {
-      url += `${where}`;
+      url += `?${where}`;
     }
     handleGet(url, (res) => {
       let data = res.data;
@@ -173,23 +181,21 @@ export const FetchHutangReportDetail = (page = 1, where = "", id = null) => {
 };
 
 //FILTER HUTANG REPORT EXCEL//
-export const FetchHutangReportExcel = (page = 1, where = "", perpage = 99999) => {
+export const FetchHutangReportExcel = (where = "", perpage = 99999) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    let url = `hutang/report?page=${page}&perpage=${perpage}`;
+    let url = `hutang/report/detail?page=1&perpage=${perpage}`;
     if (where !== "") {
       url += `${where}`;
     }
-
-    axios
-      .get(HEADERS.URL + `${url}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setHutangReportExcel(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setHutangReportExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formHutangExcel"));
+      },
+      (percent) => dispatch(setDownload(percent))
+    );
   };
 };
 

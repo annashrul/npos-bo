@@ -133,13 +133,11 @@ export const handleGetExport = (url, callback, download) => {
       },
     })
     .then(function (response) {
-      console.log("response helper http", response.data.result.data);
       if (response.data.result.data !== undefined && response.data.result.data.length > 0) {
         callback(response);
       } else {
         swal("Data tidak tersedia");
       }
-
       Nprogress.done();
       download(0);
     })

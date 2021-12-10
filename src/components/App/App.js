@@ -15,7 +15,6 @@ import jwt_decode from "jwt-decode";
 initDB(DBConfig);
 // Check token in cookie
 const token = Cookies.get("datum_exp");
-console.log(token);
 if (token) {
   setAuthToken(atob(token));
   store.dispatch(setLoggedin(true));

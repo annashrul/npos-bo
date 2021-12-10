@@ -311,13 +311,13 @@ class FormUserList extends Component {
               <div className="col-md-6">
                 <div className="form-group">
                   <label>
-                    Nama <small style={{ color: "red" }}>*</small>
+                    Nama <span className="text-danger">*</span>
                   </label>
                   <input ref={(input) => (this[`nama`] = input)} type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
-                    Username <small style={{ color: "red" }}>*</small>
+                    Username <span className="text-danger">*</span>
                   </label>
                   <input ref={(input) => (this[`username`] = input)} type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
                   <div className="invalid-feedback" style={this.state.error.username !== "" ? { display: "block" } : { display: "none" }}>
@@ -327,14 +327,14 @@ class FormUserList extends Component {
                 <div className="form-group">
                   <label>
                     Password
-                    <small>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? " ( kosongkan jika tidak akan diubah )" : <small style={{ color: "red" }}>*</small>}</small>
+                    {this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? <small> ( kosongkan jika tidak akan diubah )</small> : <span className="text-danger">*</span>}
                   </label>
                   <input ref={(input) => (this[`password`] = input)} type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
                     Konfirmasi Password
-                    <small>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? "(  kosongkan jika tidak akan diubah )" : <small style={{ color: "red" }}>*</small>}</small>
+                    {this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? <small> ( kosongkan jika tidak akan diubah )</small> : <span className="text-danger">*</span>}
                   </label>
                   <input
                     ref={(input) => (this[`password_confirmation`] = input)}
@@ -348,7 +348,7 @@ class FormUserList extends Component {
                 <div className="form-group">
                   <label>
                     Otorisasi Password
-                    <small>{this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? "( kosongkan jika tidak akan diubah )" : <small style={{ color: "red" }}>*</small>}</small>
+                    {this.props.userListEdit !== undefined && this.props.userListEdit !== [] ? <small> ( kosongkan jika tidak akan diubah )</small> : <span className="text-danger">*</span>}
                   </label>
                   <input
                     ref={(input) => (this[`password_otorisasi`] = input)}
@@ -375,7 +375,7 @@ class FormUserList extends Component {
                   />
                 </div>
                 <label className="control-label font-12">
-                  User Level <small style={{ color: "red" }}>*</small>
+                  User Level <span className="text-danger">*</span>
                 </label>
                 <Select
                   ref={(input) => (this[`user_lvl`] = input)}
@@ -403,7 +403,7 @@ class FormUserList extends Component {
                 </div>
                 <div className="form-group">
                   <label>
-                    Tanggal Lahir <small style={{ color: "red" }}>*</small>
+                    Tanggal Lahir <span className="text-danger">*</span>
                   </label>
                   <input
                     ref={(input) => (this[`tgl_lahir`] = input)}
@@ -420,7 +420,7 @@ class FormUserList extends Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="inputState" className="col-form-label">
-                    Status <small style={{ color: "red" }}>*</small>
+                    Status <span className="text-danger">*</span>
                   </label>
                   <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
                     <option value="1">Aktif</option>
@@ -429,7 +429,7 @@ class FormUserList extends Component {
                 </div>
                 <div className="form-group">
                   <label>
-                    Alamat <small style={{ color: "red" }}>*</small>
+                    Alamat <span className="text-danger">*</span>
                   </label>
                   <textarea
                     ref={(input) => (this[`alamat`] = input)}

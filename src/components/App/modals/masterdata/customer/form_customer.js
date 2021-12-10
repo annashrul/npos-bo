@@ -10,7 +10,7 @@ import moment from "moment";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import IsActiveCommon from "../../../common/IsActiveCommon";
-import { isEmptyOrUndefined } from "../../../../../helper";
+import { handleError, isEmptyOrUndefined, setFocus } from "../../../../../helper";
 
 class FormCustomer extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class FormCustomer extends Component {
       tlp: "",
       cust_type: "",
       cust_type_data: [],
-      password: "-",
+      password: "",
       register: "",
       foto: "-",
       jenis_kelamin: "",
@@ -63,7 +63,7 @@ class FormCustomer extends Component {
         alamat: detail.alamat,
         status: detail.status,
         tgl_ultah: moment(detail.tgl_ultah).format("yyyy-MM-DD"),
-        tlp: detail.tlp,
+        tlp: detail.tlp.replaceAll(" ", ""),
         cust_type: detail.kd_type,
         password: "",
         register: detail.register,
@@ -117,6 +117,7 @@ class FormCustomer extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    console.log(this.props.detail);
     const form = e.target;
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
@@ -135,9 +136,20 @@ class FormCustomer extends Component {
     parseData["biografi"] = this.state.biografi;
     parseData["special_price"] = 0;
 
-    if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
+    if (!isEmptyOrUndefined(parseData["nama"], "nama")) {
+      setFocus(this, "nama");
+      return;
+    }
     if (!isEmptyOrUndefined(parseData["lokasi"], "lokasi")) return;
     if (!isEmptyOrUndefined(parseData["cust_type"], "tipe Customer")) return;
+    if (!isEmptyOrUndefined(parseData["password"])) {
+      if (this.props.detail.id !== "") {
+        parseData["password"] = "-";
+      } else {
+        handleError("password");
+        return;
+      }
+    }
     if (!isEmptyOrUndefined(parseData["jenis_kelamin"], "jenis kelamin")) return;
     if (!isEmptyOrUndefined(parseData["tlp"], "telepon")) return;
     if (!isEmptyOrUndefined(parseData["email"], "email")) return;
@@ -169,10 +181,11 @@ class FormCustomer extends Component {
                   <label>
                     Nama <span className="text-danger">*</span>
                   </label>
-                  <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
+                  <input ref={(input) => (this[`nama`] = input)} type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
                 </div>
-                <LokasiCommon callback={(res) => this.setState({ location: res.value })} isRequired={true} dataEdit={this.state.location} />
+                <LokasiCommon ref={(input) => (this[`lokasi`] = input)} callback={(res) => this.setState({ location: res.value })} isRequired={true} dataEdit={this.state.location} />
                 <SelectCommon
+                  ref={(input) => (this[`cust_type`] = input)}
                   label="Tipe Customer"
                   options={this.state.cust_type_data}
                   callback={(res) => {

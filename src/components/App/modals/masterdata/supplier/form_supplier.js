@@ -81,6 +81,9 @@ class FormSupplier extends Component {
   componentWillMount() {
     this.getProps(this.props);
   }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -120,12 +123,12 @@ class FormSupplier extends Component {
       setFocus(this, "nama");
       return;
     }
-    if (!isEmptyOrUndefined(parseData["penanggung_jawab"], "penanggun jawab")) {
-      setFocus(this, "penanggung_jawab");
-      return;
-    }
     if (!isEmptyOrUndefined(parseData["no_penanggung_jawab"], "no penanggun jawab")) {
       setFocus(this, "no_penanggung_jawab");
+      return;
+    }
+    if (!isEmptyOrUndefined(parseData["penanggung_jawab"], "penanggun jawab")) {
+      setFocus(this, "penanggung_jawab");
       return;
     }
 
@@ -144,7 +147,6 @@ class FormSupplier extends Component {
       if (this.props.fastAdd === undefined) {
         this.props.dispatch(ModalToggle(false));
       }
-
       if (this.props.fastAdd === true) {
         this.props.dispatch(ModalType("formProduct"));
       }
@@ -152,6 +154,7 @@ class FormSupplier extends Component {
   }
 
   render() {
+    const { statusData } = this.state;
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSupplier"} size="lg">
         <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah Supplier" : "Ubah Supplier"}</ModalHeader>
@@ -174,20 +177,26 @@ class FormSupplier extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Alamat</label>
-                  <input type="text" placeholder="Isi alamat lengkap" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} />
-                </div>
-                <div className="form-group">
-                  <label>Kota</label>
-                  <input type="text" placeholder="Isi nama kota" className="form-control" name="kota" value={this.state.kota} onChange={this.handleChange} />
+                  <label>Email</label>
+                  <input type="email" placeholder="ex. example@mail.com" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Telepon</label>
                   <input type="number" placeholder="ex. 6281324654665" className="form-control" name="telp" value={this.state.telp} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
+                  <label>Kota</label>
+                  <input type="text" placeholder="Isi nama kota" className="form-control" name="kota" value={this.state.kota} onChange={this.handleChange} />
+                </div>
+                <div className="form-group">
+                  <label>Alamat Lengkap</label>
+                  <input type="text" placeholder="Isi alamat lengkap" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} />
+                </div>
+              </div>
+              <div className="col-6 col-md-6">
+                <div className="form-group">
                   <label>
-                    Penanggung Jawab <span className="text-danger">*</span>
+                    Nama Penanggung Jawab <span className="text-danger">*</span>
                   </label>
                   <input
                     ref={(input) => (this[`penanggung_jawab`] = input)}
@@ -199,15 +208,13 @@ class FormSupplier extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
-              </div>
-              <div className="col-6 col-md-6">
                 <div className="form-group">
                   <label>
                     No Penanggung Jawab <span className="text-danger">*</span>
                   </label>
                   <input
                     ref={(input) => (this[`no_penanggung_jawab`] = input)}
-                    type="text"
+                    type="number"
                     placeholder="ex. 628513456789"
                     className="form-control"
                     name="no_penanggung_jawab"
@@ -215,6 +222,7 @@ class FormSupplier extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
+
                 <div className="form-group">
                   <label>Bank</label>
                   <input type="bank" placeholder="ex. BANK MANDIRI" className="form-control" name="bank" value={this.state.bank} onChange={this.handleChange} />
@@ -223,13 +231,10 @@ class FormSupplier extends Component {
                   <label>No Rek</label>
                   <input type="no_rek" placeholder="ex. 21850180181812" className="form-control" name="no_rek" value={this.state.no_rek} onChange={this.handleChange} />
                 </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input type="email" placeholder="ex. example@mail.com" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} />
-                </div>
+
                 <SelectCommon
                   label="status"
-                  options={this.state.statusData}
+                  options={statusData}
                   callback={(res) => {
                     this.setState({ status: res.value });
                   }}
