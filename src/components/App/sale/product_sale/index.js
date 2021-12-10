@@ -1163,6 +1163,9 @@ class Sale extends Component {
                               <button className="btn btn-outline-info ml-1" onClick={(e) => this.handleHoldBill(e, "listHoldBill")}>
                                 List Hold bill
                               </button>
+                              <button className="btn btn-outline-info ml-1" onClick={(e) => this.handleHoldBill(e, "formHoldBill")}>
+                                Hold bill
+                              </button>
                             </div>
                           ) : (
                             ""

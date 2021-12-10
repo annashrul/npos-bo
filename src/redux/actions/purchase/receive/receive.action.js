@@ -120,15 +120,20 @@ export const storeReceive = (data, param) => {
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          param({
-            pathname: "/pembelian3plyId/" + data.result.insertId,
-            state: {
-              data: rawdata,
-              nota: data.result.kode,
-            },
-          });
-
+          const win = window.open(`/pembelian3plyId/${data.result.insertId}`, "_blank");
+          if (win != null) {
+            win.focus();
+          }
           return false;
+          // param({
+          //   pathname: "/pembelian3plyId/" + data.result.insertId,
+          //   state: {
+          //     data: rawdata,
+          //     nota: data.result.kode,
+          //   },
+          // });
+
+          // return false;
         });
         dispatch(setLoading(false));
       })

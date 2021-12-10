@@ -391,7 +391,6 @@ class ReturTanpaNota extends Component {
           data["lokasi"] = this.state.location;
           data["userid"] = this.state.userid;
           res.map((item) => {
-            
             detail.push({
               kd_brg: item.kd_brg,
               barcode: item.barcode,
@@ -405,14 +404,13 @@ class ReturTanpaNota extends Component {
           });
           data["detail"] = detail;
           let parsedata = {};
-
           parsedata["detail"] = data;
           parsedata["master"] = this.state.databrg;
           parsedata["nota"] = "";
           parsedata["logo"] = this.props.auth.user.logo;
           parsedata["user"] = this.props.auth.user.username;
           parsedata["lokasi"] = this.state.location_val;
-          // this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: detail }, (arr) => this.props.history.push(arr)));
+          this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: detail }, (arr) => this.props.history.push(arr)));
         });
       }
     });

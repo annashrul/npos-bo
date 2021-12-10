@@ -123,7 +123,7 @@ export const storeReturTanpaNota = (data, otherData, param, isModal = false) => 
               nota: data.result.kode,
             },
           });
-          //Swal.closeModal();==
+          Swal.closeModal();
           return false;
         });
         dispatch(setLoading(false));
