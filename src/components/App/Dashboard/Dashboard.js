@@ -456,7 +456,7 @@ class Dashboard extends Component {
           <div className="col-md-2 col-sm-2 col-lg-2">
             <div className="form-group">
               <DateRangePicker ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{ padding: "9px", fontWeight: "bolder" }} />
+                <input readOnly type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{ padding: "9px", fontWeight: "bolder" }} />
               </DateRangePicker>
             </div>
           </div>
