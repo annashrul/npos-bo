@@ -6,16 +6,22 @@ import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_
 import "jspdf-autotable";
 import { to_pdf } from "helper";
 import { FetchAllLocation } from "redux/actions/masterdata/location/location.action";
-import { FetchProduct, deleteProduct } from "redux/actions/masterdata/product/product.action";
+import {
+  FetchProduct,
+  deleteProduct,
+} from "redux/actions/masterdata/product/product.action";
 import Paginationq from "helper";
 import { FetchSupplierAll } from "redux/actions/masterdata/supplier/supplier.action";
 import { FetchSubDepartmentAll } from "redux/actions/masterdata/department/sub_department.action";
 import Swal from "sweetalert2";
-import { FetchProductDetail, FetchProductEdit, setProductEdit } from "redux/actions/masterdata/product/product.action";
+import {
+  FetchProductDetail,
+  FetchProductEdit,
+  setProductEdit,
+} from "redux/actions/masterdata/product/product.action";
 import DetailProduct from "components/App/modals/masterdata/product/detail_product";
 import { FetchCustomerPrice } from "redux/actions/masterdata/customer/customer.action";
 import CustomerPrice from "components/App/modals/masterdata/customer/customer_price";
-// import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import moment from "moment";
@@ -23,17 +29,30 @@ import imgY from "assets/status-Y.png";
 import imgT from "assets/status-T.png";
 import { rangeDate } from "helper";
 import Select from "react-select";
-import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
+import {
+  UncontrolledButtonDropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+} from "reactstrap";
 import FormProductExport from "../../../../modals/masterdata/product/form_product_export";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
-import { dateRange, generateNo, getStorage, rmSpaceToStrip, setStorage } from "../../../../../../helper";
+import {
+  dateRange,
+  generateNo,
+  getStorage,
+  handleDataSelect,
+  rmSpaceToStrip,
+  setStorage,
+} from "../../../../../../helper";
 import { FetchRak } from "../../../../../../redux/actions/masterdata/rak/rak.action";
 import SelectCommon from "../../../../common/SelectCommon";
 import Cookies from "js-cookie";
 import ButtonActionCommon from "../../../../common/ButtonActionCommon";
+import SelectSortCommon from "../../../../common/SelectSortCommon";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -44,6 +63,7 @@ class ListProduct extends Component {
     this.handleEnter = this.handleEnter.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.handlePeriode = this.handlePeriode.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.state = {
       isExcel: false,
       array1: [],
@@ -51,8 +71,7 @@ class ListProduct extends Component {
       byValue: "",
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
-      sort_by_data: [],
-      sort_by: "",
+      sort: "",
       semua_periode: true,
       detail: {},
       any_kode_barang: "",
@@ -111,7 +130,11 @@ class ListProduct extends Component {
   componentDidMount() {
     this.getProps(this.props);
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
-    if (getIsPeriodeBarang === null || getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
+    if (
+      getIsPeriodeBarang === null ||
+      getIsPeriodeBarang === "null" ||
+      getIsPeriodeBarang === "true"
+    ) {
       this.setState({ semua_periode: true });
     } else {
       this.setState({
@@ -131,7 +154,12 @@ class ListProduct extends Component {
       this.props.dispatch(FetchProduct());
     }
     if (!checked && column === "semua_periode") {
-      this.props.dispatch(FetchProduct(1, `datefrom=${this.state.startDate}&dateto=${this.state.endDate}`));
+      this.props.dispatch(
+        FetchProduct(
+          1,
+          `datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
+        )
+      );
     }
     this.setState({
       [column]: column === "semua_periode" ? checked : value,
@@ -140,7 +168,10 @@ class ListProduct extends Component {
 
   handlePageChange(pageNumber) {
     let column = localStorage.getItem("column_search");
-    let where = "";
+    let where = `sort=nm_brg|${this.state.sort}`;
+    if(!this.state.semua_periode){
+      where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}&`
+    }
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
@@ -151,7 +182,16 @@ class ListProduct extends Component {
     let tag = this.state.any_tag_barang;
     let rak = this.state.any_rak_barang;
     let kategori = this.state.any_kategori_barang;
-    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || subdept !== "" || tag !== "" || rak !== "" || kategori !== "") {
+    if (
+      kode !== "" ||
+      nama !== "" ||
+      kelompok !== "" ||
+      supplier !== "" ||
+      subdept !== "" ||
+      tag !== "" ||
+      rak !== "" ||
+      kategori !== ""
+    ) {
       if (column === "any_kode_barang") {
         if (where !== "") {
           where += "&";
@@ -226,7 +266,7 @@ class ListProduct extends Component {
       localStorage.removeItem(`${que}_rak_barang`);
       localStorage.removeItem(`${que}_tag_barang`);
       localStorage.removeItem(`${que}_kategori_barang`);
-      this.props.dispatch(FetchProduct(pageNumber, ""));
+      this.props.dispatch(FetchProduct(pageNumber, where));
     }
   }
   handleDelete = (kode) => {
@@ -272,7 +312,17 @@ class ListProduct extends Component {
     let rak = this.state.any_rak_barang;
     let kategori = this.state.any_kategori_barang;
 
-    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || dept !== "" || subdept !== "" || tag !== "" || rak !== "" || kategori !== "") {
+    if (
+      kode !== "" ||
+      nama !== "" ||
+      kelompok !== "" ||
+      supplier !== "" ||
+      dept !== "" ||
+      subdept !== "" ||
+      tag !== "" ||
+      rak !== "" ||
+      kategori !== ""
+    ) {
       if (column === "any_kode_barang") {
         if (where !== "") {
           where += "&";
@@ -399,7 +449,9 @@ class ListProduct extends Component {
 
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType(pricing ? "formProductPricing" : "formProduct"));
+    this.props.dispatch(
+      ModalType(pricing ? "formProductPricing" : "formProduct")
+    );
     this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
     // this.props.dispatch(FetchRak("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
@@ -413,10 +465,21 @@ class ListProduct extends Component {
       tprice = 0;
     stringHtml += `<h3 align="center"><center>PRODUCT REPORT</center></h3>`;
     stringHtml += `<h3 align="center">PT NETINDO MEDIATAMA PERKASA</h3>`;
-    const headers = [["CODE", "NAME", "GROUP", "SUPPLIER", "SUB DEPARTEMEN", "PRICE"]];
+    const headers = [
+      ["CODE", "NAME", "GROUP", "SUPPLIER", "SUB DEPARTEMEN", "PRICE"],
+    ];
     const data =
       typeof this.props.data.data === "object"
-        ? this.props.data.data.map((elt) => [elt.kd_brg, elt.nm_brg, elt.kel_brg, elt.group1, elt.group2, Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 }).format(elt.hrg_beli)])
+        ? this.props.data.data.map((elt) => [
+            elt.kd_brg,
+            elt.nm_brg,
+            elt.kel_brg,
+            elt.group1,
+            elt.group2,
+            Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 }).format(
+              elt.hrg_beli
+            ),
+          ])
         : "";
     const footer = ["TOTAL", "", "", "", "", tprice];
     to_pdf("product_report", stringHtml, headers, data, footer);
@@ -429,7 +492,8 @@ class ListProduct extends Component {
         value={this.state[name]}
         onChange={(e) => {
           this.handleChange(e);
-          if (e.target.value === "") setTimeout(() => this.handleEnter(name), 300);
+          if (e.target.value === "")
+            setTimeout(() => this.handleEnter(name), 300);
         }}
         onKeyPress={(event) => {
           if (event.key === "Enter") this.handleEnter(`${name}`);
@@ -437,14 +501,31 @@ class ListProduct extends Component {
         style={{ width: "-webkit-fill-available" }}
         type="search"
         className="nradius np form-control in-table nbt nbl nbr"
-        placeholder={`semua ${name}`.replaceAll("_", " ").replaceAll("any ", "").replaceAll(" barang", "")}
+        placeholder={`semua ${name}`
+          .replaceAll("_", " ")
+          .replaceAll("any ", "")
+          .replaceAll(" barang", "")}
       />
     );
   }
 
   handlePeriode(first, last) {
-    this.props.dispatch(FetchProduct(1, `datefrom=${first}&dateto=${last}`));
+    this.props.dispatch(FetchProduct(1, `datefrom=${first}&dateto=${last}&sort=nm_brg|${this.state.sort}`));
     this.setState({ startDate: first, endDate: last });
+  }
+  handleSelect(res){
+    console.log("res",res);
+    let sortBy = `${res.value}`.toUpperCase();
+    if(!this.state.semua_periode){
+      console.log("periode",`${this.state.startDate} - ${this.state.endDate}`);
+      this.props.dispatch(FetchProduct(1, `datefrom=${this.state.startDate}&dateto=${this.state.endDate}&sort=nm_brg|${sortBy}`));
+    this.setState({ sort: sortBy });
+    }else{
+      console.log("asdasdasd");
+
+      this.props.dispatch(FetchProduct(1, `sort=nm_brg|${sortBy}`));
+      this.setState({ sort: sortBy });
+    }
   }
 
   render() {
@@ -481,7 +562,10 @@ class ListProduct extends Component {
       }
     }
     body.unshift(headers);
-    const cekTambahan = document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >= 0;
+    const cekTambahan =
+      document
+        .getElementById("tambahan_barang")
+        .value.search(atob(atob(Cookies.get("tnt=")))) >= 0;
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -491,20 +575,33 @@ class ListProduct extends Component {
               <div className="row">
                 <div className="col-6 col-xs-6 col-md-3">
                   <div className="form-group">
-                    <label htmlFor="inputState" className="col-form-label">
-                      <input name="semua_periode" type="checkbox" checked={this.state.semua_periode} onChange={this.handleChange} />
-                      &nbsp; semua periode
+                    <label>
+                      <input
+                        name="semua_periode"
+                        type="checkbox"
+                        checked={this.state.semua_periode}
+                        onChange={this.handleChange}
+                      />
+                      &nbsp; periode
                     </label>
-                    {dateRange(
+                    {!this.state.semua_periode?dateRange(
                       (first, last) => {
                         this.handlePeriode(first, last);
                       },
                       `${this.state.startDate} s/d ${this.state.endDate}`,
                       "",
-                      !this.state.semua_periode ? true : false,
+                      true,
                       false
-                    )}
+                    ):<input type="text" value="semua periode" className="form-control" disabled={true}/>}
                   </div>
+                </div>
+                <div className="col-12 col-xs-12 col-md-3" style={{marginTop:"2px"}}>
+                  <SelectSortCommon
+                    callback={(res) => {
+                      this.handleSelect(res);
+                    }}
+                    dataEdit={this.state.sort}
+                  />
                 </div>
               </div>
             </div>
@@ -522,12 +619,26 @@ class ListProduct extends Component {
                 <i className="fa fa-plus"></i>
               </button>
               <PDFDownloadLink
-                document={<MyPdfL title={["Data Barang per Halaman", `${this.state.startDate} sampai ${this.state.endDate}`]} result={body} />}
+                document={
+                  <MyPdfL
+                    title={[
+                      "Data Barang per Halaman",
+                      `${this.state.startDate} sampai ${this.state.endDate}`,
+                    ]}
+                    result={body}
+                  />
+                }
                 style={{ marginRight: "2px" }}
                 fileName="semua_barang.pdf"
                 className="btn btn-primary py-2 d-none"
               >
-                {({ blob, url, loading, error }) => (loading ? <i className="spinner-border spinner-border-sm"></i> : <i className="fa fa-file-pdf-o"></i>)}
+                {({ blob, url, loading, error }) =>
+                  loading ? (
+                    <i className="spinner-border spinner-border-sm"></i>
+                  ) : (
+                    <i className="fa fa-file-pdf-o"></i>
+                  )
+                }
               </PDFDownloadLink>
               {/* <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
@@ -564,8 +675,12 @@ class ListProduct extends Component {
               <tr>
                 <th className="middle text-center">No</th>
                 <th className="middle text-center">#</th>
-                <th className="middle">{this.handleInput("any_kode_barang")}</th>
-                <th className="middle">{this.handleInput("any_nama_barang")}</th>
+                <th className="middle">
+                  {this.handleInput("any_kode_barang")}
+                </th>
+                <th className="middle">
+                  {this.handleInput("any_nama_barang")}
+                </th>
                 <th className="middle" width="10%">
                   {this.handleInput("any_kelompok_barang")}
                 </th>
@@ -586,12 +701,16 @@ class ListProduct extends Component {
                       name="any_rak_barang"
                       onChange={(e) => {
                         this.handleChange(e);
-                        setTimeout(() => this.handleEnter("any_rak_barang"), 300);
+                        setTimeout(
+                          () => this.handleEnter("any_rak_barang"),
+                          300
+                        );
                       }}
                     >
                       <option value="">semua rak</option>
                       {typeof this.state.rak_data === "object"
-                        ? this.state.rak_data !== undefined && this.state.rak_data.length > 0
+                        ? this.state.rak_data !== undefined &&
+                          this.state.rak_data.length > 0
                           ? this.state.rak_data.map((v, i) => {
                               return (
                                 <option value={`${v.value}`} key={i}>
@@ -624,12 +743,21 @@ class ListProduct extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
+                          {generateNo(i, current_page)}
+                        </td>
                         <td className="middle nowrap text-center">
                           <ButtonActionCommon
-                            action={[{ label: "Set Harga Customer" }, { label: "Detail" }, { label: "Edit" }, { label: "Edit Harga per Lokasi" }, { label: "Delete" }]}
+                            action={[
+                              { label: "Set Harga Customer" },
+                              { label: "Detail" },
+                              { label: "Edit" },
+                              { label: "Edit Harga per Lokasi" },
+                              { label: "Delete" },
+                            ]}
                             callback={(e) => {
-                              if (e === 0) this.handlePriceCustomer(v.kd_brg, v.nm_brg);
+                              if (e === 0)
+                                this.handlePriceCustomer(v.kd_brg, v.nm_brg);
                               if (e === 1) this.loc_detail(v);
                               if (e === 2) loc_edit(v.kd_brg);
                               if (e === 3) loc_edit_per(v.kd_brg, true);
@@ -643,10 +771,24 @@ class ListProduct extends Component {
                         <td className={`middle nowrap`}>{v.supplier}</td>
                         <td className={`middle nowrap`}>{v.dept}</td>
                         <td className={`middle nowrap`}>{v.subdept}</td>
-                        <td className={`middle nowrap ${!cekTambahan && "none"}`}>{rmSpaceToStrip(v.rak)}</td>
-                        <td className={`middle nowrap ${!cekTambahan && "none"}`}>{rmSpaceToStrip(v.tag)}</td>
+                        <td
+                          className={`middle nowrap ${!cekTambahan && "none"}`}
+                        >
+                          {rmSpaceToStrip(v.rak)}
+                        </td>
+                        <td
+                          className={`middle nowrap ${!cekTambahan && "none"}`}
+                        >
+                          {rmSpaceToStrip(v.tag)}
+                        </td>
                         <td className={`middle nowrap`}>{v.kategori}</td>
-                        <td>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
+                        <td>
+                          {v.jenis === "0" ? (
+                            <img alt="netindo" src={imgT} width="20px" />
+                          ) : (
+                            <img alt="netindo" src={imgY} width="20px" />
+                          )}
+                        </td>
                         <td>{v.stock_min}</td>
                       </tr>
                     );
@@ -665,7 +807,12 @@ class ListProduct extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
+          <Paginationq
+            current_page={current_page}
+            per_page={per_page}
+            total={total}
+            callback={this.handlePageChange.bind(this)}
+          />
         </div>
         {this.state.isModalForm ? (
           <FormProduct
@@ -690,9 +837,18 @@ class ListProduct extends Component {
           />
         ) : null}
 
-        {this.state.isModalDetail ? <DetailProduct detail={this.state.detail} dataDetail={this.props.productDetail} /> : null}
-        {this.state.isModalCustomer ? <CustomerPrice dataCustomerPrice={this.props.customerPrice} /> : null}
-        {this.props.isOpen || this.state.isModalExportExcel ? <FormProductExport /> : null}
+        {this.state.isModalDetail ? (
+          <DetailProduct
+            detail={this.state.detail}
+            dataDetail={this.props.productDetail}
+          />
+        ) : null}
+        {this.state.isModalCustomer ? (
+          <CustomerPrice dataCustomerPrice={this.props.customerPrice} />
+        ) : null}
+        {this.props.isOpen || this.state.isModalExportExcel ? (
+          <FormProductExport />
+        ) : null}
       </div>
     );
   }

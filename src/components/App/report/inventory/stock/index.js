@@ -25,6 +25,7 @@ class InventoryReport extends Component {
       search_by_data: [
         { value: "br.kd_brg", label: "Kode Barang" },
         { value: "br.nm_brg", label: "Nama Barang" },
+        { value: "br.kel_brg", label: "Kelompok Barang" },
         { value: "br.group1", label: "Supplier" },
       ],
       isModalExcel: false,

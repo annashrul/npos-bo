@@ -28,15 +28,15 @@ class SelectSortCommon extends Component {
       }
     }
   }
-  componentDidMount() {
-    this.getProps(this.props);
-  }
+  // componentDidMount() {
+  //   this.getProps(this.props);
+  // }
   componentWillMount() {
     this.getProps(this.props);
   }
-  componentWillReceiveProps(nextProps) {
-    this.getProps(nextProps);
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.getProps(nextProps);
+  // }
 
   onChange(value) {
     this.setState({ dataObject: value });

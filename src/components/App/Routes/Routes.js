@@ -87,6 +87,7 @@ import Po3ply from "../print/po3ply";
 import Receive3plyId from "../print/receive3plyId";
 import priceTagPrint from "../print/priceTag";
 import paket from "../masterdata/paket";
+import SaleByGroupProduct from "../report/sale/sale_by_group_product";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
@@ -191,6 +192,7 @@ const Routes = (
       <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
       <PrivateRoute path="/report/sale_by_product_archive" exact strict component={SaleByProductArchive} />
       <PrivateRoute path="/report/sale_by_sales_archive" exact strict component={SaleBySalesArchive} />
+      <PrivateRoute path="/report/sale_by_group_product" exact strict component={SaleByGroupProduct} />
       <PrivateRoute path="/report/sale_omset" exact strict component={SaleOmsetArchive} />
       <PrivateRoute path="/report/sale_omset_periode" exact strict component={SaleOmsetPeriodeArchive} />
       <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
