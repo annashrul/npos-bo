@@ -337,6 +337,9 @@ export const rePrintFakturPo = (id) => {
 
 export const deleteReportPo = (kdTrx) => {
   return (dispatch) => {
+    handleDelete(`purchaseorder/${kdTrx}`, () => {
+      dispatch(fetchPoReport("page=1"));
+    });
     // handleDelete()
   };
 };

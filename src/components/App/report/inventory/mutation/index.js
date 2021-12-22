@@ -11,6 +11,8 @@ import { statusMutasi, STATUS_MUTASI } from "../../../../../helperStatus";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
 import OtorisasiModal from "../../../modals/otorisasi.modal";
 import { ModalToggle, ModalType } from "../../../../../redux/actions/modal.action";
+import { deleteReportPo } from "../../../../../redux/actions/purchase/purchase_order/po.action";
+import { deleteReportMutation } from "../../../../../redux/actions/inventory/mutation.action";
 
 class MutationReport extends Component {
   constructor(props) {
@@ -84,8 +86,7 @@ class MutationReport extends Component {
     });
   }
   onDone(id, id_trx) {
-    console.log(id, id_trx);
-    // this.props.dispatch(deleteReportPo(id_trx));
+    this.props.dispatch(deleteReportMutation(id_trx));
     this.setState({
       id_trx: "",
     });

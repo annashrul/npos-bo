@@ -2,7 +2,7 @@ import { MUTATION, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { setLoading } from "../masterdata/customer/customer.action";
-import { handleGet, handleGetExport } from "../handleHttp";
+import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
 
 export function setDownload(load) {
@@ -308,6 +308,15 @@ export const FetchMutationData = (code, where = "", isModal = false) => {
         dispatch(ModalType("detailMutation"));
       }
     });
+  };
+};
+
+export const deleteReportMutation = (kdTrx) => {
+  return (dispatch) => {
+    handleDelete(`alokasi/${kdTrx}`, () => {
+      dispatch(FetchMutation("page=1"));
+    });
+    // handleDelete()
   };
 };
 

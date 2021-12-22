@@ -88,7 +88,7 @@ class DetailTrxHutang extends Component {
                       let sisa = float(v.qty);
                       let ppn = float(v.ppn_item);
 
-                      let subtotal = float(hrgBeli * v.qty - diskon1 - diskon2 + ppn);
+                      let subtotal = float(hrgBeli * v.jumlah_beli - diskon1 - diskon2 + ppn);
 
                       totalSisaPerHalaman += float(sisa);
                       totalReturPerHalaman += float(retur);
