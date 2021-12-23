@@ -12,7 +12,7 @@ import Select from "react-select";
 import moment from "moment";
 import { storeReturTanpaNota } from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import { withRouter } from "react-router-dom";
-import { handleError, isEmptyOrUndefined, rmComma, swal, swallOption, toCurrency } from "../../../../helper";
+import { handleError, isEmptyOrUndefined, rmComma, setFocus, swal, swallOption, toCurrency } from "../../../../helper";
 import Spinner from "Spinner";
 import { HEADERS } from "../../../../redux/actions/_constants";
 import TableCommon from "../../common/TableCommon";
@@ -359,7 +359,6 @@ class ReturTanpaNota extends Component {
   HandleSubmit(e) {
     e.preventDefault();
     // validator head form
-    let err = this.state.error;
     if (!isEmptyOrUndefined(this.state.catatan)) {
       handleError("catatan");
       return;
@@ -390,7 +389,13 @@ class ReturTanpaNota extends Component {
           data["subtotal"] = localStorage.getItem("grand_total");
           data["lokasi"] = this.state.location;
           data["userid"] = this.state.userid;
+          console.log(res);
           res.map((item) => {
+            if(!isEmptyOrUndefined(item.kondisi)){
+              handleError(`kondisi barang ${item.nm_brg}`);
+              setFocus(this, `kondisi_${item.barcode}`);
+              return;
+            }
             detail.push({
               kd_brg: item.kd_brg,
               barcode: item.barcode,
@@ -410,7 +415,7 @@ class ReturTanpaNota extends Component {
           parsedata["logo"] = this.props.auth.user.logo;
           parsedata["user"] = this.props.auth.user.username;
           parsedata["lokasi"] = this.state.location_val;
-          this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: detail }, (arr) => this.props.history.push(arr)));
+          // this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: detail }, (arr) => this.props.history.push(arr)));
         });
       }
     });
@@ -532,7 +537,6 @@ class ReturTanpaNota extends Component {
         return null;
       });
     }
-    const columnStyle = { verticalAlign: "middle", textAlign: "center", whiteSpace: "nowrap" };
     const head = [
       { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang" },
@@ -777,6 +781,7 @@ class ReturTanpaNota extends Component {
                               onChange={(e) => this.HandleChangeInput(e, item.barcode)}
                               value={this.state.brgval[index].kondisi}
                               defaultValue={this.state.brgval[index].kondisi}
+                              ref={(input) => (this[`kondisi_${item.barcode}`] = input)}
                             >
                               <option value="">Pilih Kondisi</option>
                               <option value="bad_stock">Bad Stock</option>
@@ -812,8 +817,8 @@ class ReturTanpaNota extends Component {
                               value={this.state.brgval[index].qty_retur}
                             />
                           </td>
-                          <td className="middle nowrap">
-                            <input className="form-control in-table" style={{ width: "100px", textAlign: "right" }} readOnly={true} type="text" value={toRp(total_retur)} />
+                          <td className="middle nowrap text-right">
+                            {toRp(total_retur)}
                           </td>
                           <td className="middle nowrap">
                             <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
@@ -823,6 +828,19 @@ class ReturTanpaNota extends Component {
                         </tr>
                       );
                     })}
+                    footer={
+                      [
+                        {
+                          data:[
+                            {label:"Total",colSpan:6,className:"text-left"},
+                            {label:toRp(total_stock),colSpan:1},
+                            {label:toRp(qty_retur),colSpan:1},
+                            {label:toRp(grand_total),colSpan:1},
+                            {label:"",colSpan:1},
+                          ]
+                        }
+                      ]
+                    }
                   />
                   <hr />
                   <div className="row">
@@ -837,26 +855,7 @@ class ReturTanpaNota extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-md-5">
-                      <div className="pull-right">
-                        <table className="table table-hover">
-                          <thead>
-                            <tr>
-                              <th>TOTAL STOCK</th>
-                              <th>{total_stock}</th>
-                            </tr>
-                            <tr>
-                              <th>TOTAL QTY</th>
-                              <th>{qty_retur}</th>
-                            </tr>
-                            <tr>
-                              <th>GRAND TOTAL</th>
-                              <th>{toRp(grand_total)}</th>
-                            </tr>
-                          </thead>
-                        </table>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

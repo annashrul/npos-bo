@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
+import { linkArea, linkBank, linkBarang, linkCustomer, linkDepartment, linkKas, linkMeja, linkPaket, linkPrinter, linkPromo, linkRak, linkSales, linkSupplier } from "../../../helperLink";
 class SideMenu extends Component {
   constructor(props) {
     super(props);
@@ -696,24 +697,24 @@ class SideMenu extends Component {
         isSetting: true,
       });
     } else if (
-      path === "/department" ||
-      path === "/supplier" ||
-      path === "/sales" ||
-      path === "/cash" ||
-      path === "/customer" ||
-      path === "/product" ||
-      path === "/promo" ||
-      path === "/bank" ||
-      path === "/area" ||
-      path === "/meja" ||
-      path === "/printer" ||
-      path === "/rak" ||
-      path === "/paket"
+      path === linkDepartment ||
+      path === linkSupplier ||
+      path === linkSales ||
+      path === linkKas ||
+      path === linkCustomer ||
+      path === linkBarang ||
+      path === linkPromo ||
+      path === linkBank ||
+      path === linkArea ||
+      path === linkMeja ||
+      path === linkPrinter ||
+      path === linkRak ||
+      path === linkPaket
     ) {
       this.setState({
         isMasterdata: true,
       });
-      if (path === "/area" || path === "/meja") {
+      if (path === linkArea || path === linkMeja) {
         this.setState({
           isArea: true,
         });
@@ -925,16 +926,16 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isMasterdata === true ||
-              path === "/department" ||
-              path === "/supplier" ||
-              path === "/sales" ||
-              path === "/cash" ||
-              path === "/customer" ||
-              path === "/product" ||
-              path === "/promo" ||
-              path === "/bank" ||
-              path === "/printer" ||
-              path === "/paket"
+              path === linkDepartment ||
+              path === linkSupplier ||
+              path === linkSales ||
+              path === linkKas ||
+              path === linkCustomer ||
+              path === linkBarang ||
+              path === linkPromo ||
+              path === linkBank ||
+              path === linkPrinter ||
+              path === linkPaket
                 ? " active menu-open"
                 : "")
             }
@@ -949,78 +950,78 @@ class SideMenu extends Component {
                 display: this.state.isMasterdata === true ? "block" : "none",
               }}
             >
-              <li className={path === "/product" ? "active" : ""} style={this.state.barang === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/product" style={{ width: "fit-content" }}>
+              <li className={path === linkBarang ? "active" : ""} style={this.state.barang === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkBarang} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-list-alt" />
                   Barang
                 </Link>
               </li>
-              <li className={path === "/department" ? "active" : ""} style={this.state.departemen === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/department" style={{ width: "fit-content" }}>
+              <li className={path === linkDepartment ? "active" : ""} style={this.state.departemen === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkDepartment} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="zmdi zmdi-store-24" />
                   Departmen
                 </Link>
               </li>
-              <li className={path === "/supplier" ? "active" : ""} style={this.state.supplier === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/supplier" style={{ width: "fit-content" }}>
+              <li className={path === linkSupplier ? "active" : ""} style={this.state.supplier === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkSupplier} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-truck" />
                   Supplier{" "}
                 </Link>
               </li>
-              <li className={path === "/customer" ? "active" : ""} style={this.state.customer === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/customer" style={{ width: "fit-content" }}>
+              <li className={path === linkCustomer ? "active" : ""} style={this.state.customer === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkCustomer} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-user" />
                   Customer{" "}
                 </Link>
               </li>
-              <li className={path === "/cash" ? "active" : ""} style={this.state.kas === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/cash" style={{ width: "fit-content" }}>
+              <li className={path === linkKas ? "active" : ""} style={this.state.kas === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkKas} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-money" />
                   Kas{" "}
                 </Link>
               </li>
-              <li className={path === "/sales" ? "active" : ""} style={this.state.sales === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/sales" style={{ width: "fit-content" }}>
+              <li className={path === linkSales ? "active" : ""} style={this.state.sales === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkSales} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-user-secret" />
                   Sales{" "}
                 </Link>
               </li>
-              <li className={path === "/bank" ? "active" : ""} style={this.state.bank === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/bank" style={{ width: "fit-content" }}>
+              <li className={path === linkBank ? "active" : ""} style={this.state.bank === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkBank} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-bank" />
                   Bank{" "}
                 </Link>
               </li>
-              <li className={path === "/promo" ? "active" : ""} style={this.state.promo === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/promo" style={{ width: "fit-content" }}>
+              <li className={path === linkPromo ? "active" : ""} style={this.state.promo === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPromo} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-ticket" />
                   Promo{" "}
                 </Link>
               </li>
-              <li className={path === "/printer" ? "active" : ""} style={this.state.printer === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/printer" style={{ width: "fit-content" }}>
+              <li className={path === linkPrinter ? "active" : ""} style={this.state.printer === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPrinter} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-print" />
                   Printer{" "}
                 </Link>
               </li>
-              <li className={path === "/paket" ? "active" : ""} style={this.state.paket === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/paket" style={{ width: "fit-content" }}>
+              <li className={path === linkPaket ? "active" : ""} style={this.state.paket === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPaket} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-object-group" />
                   Paket{" "}
                 </Link>
               </li>
-              <li className={path === "/rak" ? "active" : ""} style={this.state.rak === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/rak" style={{ width: "fit-content" }}>
+              <li className={path === linkRak ? "active" : ""} style={this.state.rak === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkRak} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-building-o" />
                   Rak{" "}
@@ -1028,7 +1029,7 @@ class SideMenu extends Component {
               </li>
 
               <li
-                className={"treeview" + (this.state.isArea === true || path === "/area" || path === "/meja" ? " active menu-open" : "")}
+                className={"treeview" + (this.state.isArea === true || path === linkArea || path === linkMeja ? " active menu-open" : "")}
                 style={modul_masterdata === true ? { display: "block" } : { display: "none" }}
               >
                 <a href="!#" onClick={(e) => this.changeMenu(e, "area")}>
@@ -1040,15 +1041,15 @@ class SideMenu extends Component {
                     display: this.state.isArea === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/area" ? "active" : ""} style={this.state.area === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/area" style={{ width: "fit-content" }}>
+                  <li className={path === linkArea ? "active" : ""} style={this.state.area === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkArea} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-balance" />
                       Area{" "}
                     </Link>
                   </li>
-                  <li className={path === "/meja" ? "active" : ""} style={this.state.meja === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/meja" style={{ width: "fit-content" }}>
+                  <li className={path === linkMeja ? "active" : ""} style={this.state.meja === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkMeja} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-panorama-wide-angle" />
                       Meja{" "}

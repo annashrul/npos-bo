@@ -4,6 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import { toRp } from "helper";
 import Barcode from "react-barcode";
 import { poAmbilData } from "../../../redux/actions/purchase/purchase_order/po.action";
+import { toDate } from "../../../helper";
 
 class Adjust3ply extends Component {
   constructor(props) {
@@ -76,11 +77,12 @@ class Adjust3ply extends Component {
                   <td width="2%" />
                   <td width="29%" />
                 </tr>
+            
                 <tr>
                   <td />
                   <td>Tanggal</td>
                   <td>:</td>
-                  <td>{master.tgl_po}</td>
+                  <td>{toDate(master.tgl_po)}</td>
                   <td />
                   <td>Operator</td>
                   <td>:</td>

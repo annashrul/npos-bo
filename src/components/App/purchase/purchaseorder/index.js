@@ -904,7 +904,7 @@ class PurchaseOrder extends Component {
                             </small>
                           </td>
                           <td className="middle nowrap">
-                            <select style={{ width: "100px" }} className="form-control" name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                            <select style={{ width: "100px" }} className="form-control in-table" name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
                               {item.tambahan.map((i) => {
                                 return (
                                   <option value={i.satuan} selected={i.satuan === item.satuan}>

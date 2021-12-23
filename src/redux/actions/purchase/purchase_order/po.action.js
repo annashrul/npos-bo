@@ -305,6 +305,7 @@ export const rePrintFakturPo = (id) => {
         Swal.close();
         const data = response.data;
         if (data.status === "success") {
+          console.log(data);
           window.open(data.result.nota, "_blank");
           Swal.fire({
             allowOutsideClick: false,

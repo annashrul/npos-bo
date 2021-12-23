@@ -540,6 +540,15 @@ export const SALE_BY_PRODUCT = {
 /****************
  SALE_BY_CUST
  *****************/
+ export const SALE_BY_GROUP_PRODUCT = {
+  DOWNLOAD: "SET_SALE_BY_GROUP_PRODUCT_DOWNLOAD",
+  SUCCESS: "SET_SALE_BY_GROUP_PRODUCT_SUCCESS",
+  EXPORT: "SET_SALE_BY_GROUP_PRODUCT_EXPORT",
+};
+
+/****************
+ SALE_BY_CUST
+ *****************/
 export const SALE_BY_CUST = {
   DOWNLOAD: "SET_SALE_BY_CUST_DOWNLOAD",
   LOADING: "SET_SALE_BY_CUST_LOADING",

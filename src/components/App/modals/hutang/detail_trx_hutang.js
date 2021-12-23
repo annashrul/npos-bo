@@ -62,8 +62,8 @@ class DetailTrxHutang extends Component {
             data={[
               { title: "No faktur beli", desc: master.no_faktur_beli },
               { title: "Penerima", desc: master.nama_penerima },
-              { title: "Lokasi", desc: master.lokasi },
-              { title: "Operator", desc: master.operator },
+              { title: "Lokasi", desc: master.lokasi_nama },
+              { title: "Operator", desc: master.operator_nama },
               { title: "Pelunasan", desc: master.pelunasan },
               { title: "Tanggal", desc: toDate(master.tgl_beli) },
             ]}

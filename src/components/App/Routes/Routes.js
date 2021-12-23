@@ -88,6 +88,7 @@ import Receive3plyId from "../print/receive3plyId";
 import priceTagPrint from "../print/priceTag";
 import paket from "../masterdata/paket";
 import SaleByGroupProduct from "../report/sale/sale_by_group_product";
+import { linkArea, linkBank, linkBarang, linkCustomer, linkDepartment, linkKas, linkMeja, linkPaket, linkPrinter, linkPromo, linkRak, linkSales, linkSupplier } from "../../../helperLink";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
@@ -118,20 +119,19 @@ const Routes = (
       {/* DASHBOARD SECTION END */}
 
       {/* MASTERDATA SECTION START */}
-      <PrivateRoute path="/bank" exact strict component={Bank} />
-      <PrivateRoute path="/rak" exact strict component={Rak} />
-      <PrivateRoute path="/promo" exact strict component={Promo} />
-      <PrivateRoute path="/cash" exact strict component={Cash} />
-      <PrivateRoute path="/customer" exact strict component={Customer} />
-      <PrivateRoute path="/supplier" exact strict component={Supplier} />
-      <PrivateRoute path="/sales" exact strict component={Sales} />
-      <PrivateRoute path="/department" exact strict component={Department} />
-      <PrivateRoute path="/product" exact strict component={Product} />
-
-      <PrivateRoute path="/area" exact strict component={Area} />
-      <PrivateRoute path="/meja" exact strict component={Meja} />
-      <PrivateRoute path="/printer" exact strict component={Printer} />
-      <PrivateRoute path="/paket" exact strict component={paket} />
+      <PrivateRoute path={linkBarang} exact strict component={Product} />
+      <PrivateRoute path={linkDepartment} exact strict component={Department} />
+      <PrivateRoute path={linkSupplier} exact strict component={Supplier} />
+      <PrivateRoute path={linkCustomer} exact strict component={Customer} />
+      <PrivateRoute path={linkKas} exact strict component={Cash} />
+      <PrivateRoute path={linkSales} exact strict component={Sales} />
+      <PrivateRoute path={linkBank} exact strict component={Bank} />
+      <PrivateRoute path={linkPromo} exact strict component={Promo} />
+      <PrivateRoute path={linkPrinter} exact strict component={Printer} />
+      <PrivateRoute path={linkPaket} exact strict component={paket} />
+      <PrivateRoute path={linkRak} exact strict component={Rak} />
+      <PrivateRoute path={linkArea} exact strict component={Area} />
+      <PrivateRoute path={linkMeja} exact strict component={Meja} />
       {/* MASTERDATA SECTION END */}
 
       {/* PRODUCTION SECTION START */}
