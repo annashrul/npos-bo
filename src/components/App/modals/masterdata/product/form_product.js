@@ -713,12 +713,13 @@ class FormProduct extends Component {
       setFocus(this, "kd_brg");
       return;
     }
+    let propsUser=param.auth.user;
     this.setState({
-      nm_harga1: param.auth.user.harga1,
-      nm_harga2: param.auth.user.harga2,
-      nm_harga3: param.auth.user.harga3,
-      nm_harga4: param.auth.user.harga4,
-      set_harga: param.auth.user.set_harga,
+      nm_harga1: propsUser.nama_harga===undefined?propsUser.harga1:propsUser.nama_harga.harga1,
+      nm_harga2: propsUser.nama_harga===undefined?propsUser.harga2:propsUser.nama_harga.harga2,
+      nm_harga3: propsUser.nama_harga===undefined?propsUser.harga3:propsUser.nama_harga.harga3,
+      nm_harga4: propsUser.nama_harga===undefined?propsUser.harga4:propsUser.nama_harga.harga4,
+      set_harga: propsUser.set_harga,
       codeServer: param.productCode,
     });
     if (param.dataEdit !== undefined && param.dataEdit !== []) {
@@ -2873,6 +2874,7 @@ class FormProduct extends Component {
                                         {(() => {
                                           let containers = [];
                                           for (let z = 0; z < this.state.set_harga; z++) {
+                                            console.log(this.props.auth);
                                             let place = `nm_harga${z + 1}`;
                                             let stateHargaJual = i === 0 ? `hrgjual${z + 1}` : i === 1 ? `hrgjual${z + 1}_pack` : `hrgjual${z + 1}_karton`;
                                             containers.push(

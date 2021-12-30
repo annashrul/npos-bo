@@ -656,12 +656,12 @@ export const rmStorage = (key) => {
   return localStorage.removeItem(key);
 };
 
-export const noData = (colSpan) => {
+export const noData = (colSpan,msg="") => {
   return (
     <tr>
       <td colSpan={colSpan} className="middle text-center">
         <span className="badge badge-warning" style={{ fontSize: "18px", padding: "10px" }}>
-          Data tidak tersedia
+         {msg===null||msg===""||msg===undefined?"Data tidak tersedia":msg}
         </span>
       </td>
     </tr>

@@ -24,6 +24,7 @@ class SaleByGroupProduct extends Component {
         { value: "kel_brg", label: "Kode" },
         { value: "kelompok", label: "Nama" },
       ],
+      isFirstHit:false,
     };
   }
   componentWillUnmount() {
@@ -31,7 +32,8 @@ class SaleByGroupProduct extends Component {
   }
 
   handleService(res, page = 1) {
-    if (res !== undefined) {
+    this.setState({isFirstHit:true});
+    if (res !== undefined && this.state.isFirstHit) {
       let where = getFetchWhere(res, page);
       this.setState({ where_data: where });
       this.props.dispatch(FetchSaleByGroupProduct(where));
@@ -62,7 +64,7 @@ class SaleByGroupProduct extends Component {
 
   render() {
     const { total,last_page, per_page, current_page, data } = this.props.data;
-    const { sort_data, periode, isModalExport, isModalDetail, detail } = this.state;
+    const { sort_data, periode, isModalExport, isModalDetail, detail,isFirstHit } = this.state;
     const startDate = periode.split("-")[0];
     const endDate = periode.split("-")[1];
     const head = [
@@ -129,8 +131,8 @@ class SaleByGroupProduct extends Component {
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length,isFirstHit?"Pilih lokasi untuk menampilkan data":"")
+              : noData(head.length,isFirstHit?"Pilih lokasi untuk menampilkan data":"")
           }
           footer={[
             {
