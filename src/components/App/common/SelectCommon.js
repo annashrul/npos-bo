@@ -32,7 +32,6 @@ class SelectCommon extends Component {
         Object.assign(state, { value: check[0] });
       }
     }
-    console.log(state);
     this.setState(state);
   }
 

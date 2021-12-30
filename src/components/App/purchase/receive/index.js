@@ -1015,9 +1015,11 @@ class Receive extends Component {
 
   handleOnSelect = (item) => {
     // the item selected
-    console.log(item);
-    this.setState({ anyCart: item.kd_brg });
-    setTimeout(() => this[`qty-${btoa(item.barcode)}`].focus(), 500);
+    this.setState({ anyCart: item.name });
+    setTimeout(() => {
+      this[`qty-${btoa(item.barcode)}`].focus();
+      this.setState({anyCart:""})
+    }, 500);
   };
 
   formatResult = (item) => {
@@ -1396,7 +1398,8 @@ class Receive extends Component {
                       <div className="form-group">
                         <label className="control-label font-12">Cari barang di keranjang</label>
                         <ReactSearchAutocomplete
-                          // showIcon={false}
+                          maxResults={this.state.databrg.length}
+                          inputSearchString={this.state.anyCart}
                           items={this.state.itemSearch}
                           onSelect={this.handleOnSelect}
                           onClear={() => {
@@ -1404,7 +1407,7 @@ class Receive extends Component {
                           }}
                           autoFocus={false}
                           formatResult={this.formatResult}
-                          styling={{ boxShadow: "rgba(32, 33, 36, 0.28) 0px 0px 0px 0px", borderRadius: "4px", border: "1px solid hsl(0, 0%, 80%)", height: "38px" }}
+                          styling={{ boxShadow: "rgba(32, 33, 36, 0.28) 0px 0px 0px 0px", borderRadius: "4px", border: "1px solid hsl(0, 0%, 80%)", height: "38px", zIndex:"99" }}
                         />
                       </div>
                     </div>
@@ -1472,9 +1475,9 @@ class Receive extends Component {
 
                               <td style={columnStyle}>
                                 <select name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)} className="form-control in-table" style={{ width: "100px" }}>
-                                  {item.tambahan.map((i) => {
+                                  {item.tambahan.map((i,b) => {
                                     return (
-                                      <option value={i.satuan} selected={i.satuan === item.satuan}>
+                                      <option key={b} value={i.satuan} selected={i.satuan === item.satuan}>
                                         {i.satuan}
                                       </option>
                                     );
@@ -1674,7 +1677,7 @@ class Receive extends Component {
                   </div>
                   <hr />
                   <div className="row">
-                    <div className="col-md-7">
+                    <div className="col-md-2">
                       <ButtonTrxCommon
                         disabled={this.state.databrg.length < 1}
                         callback={(e, res) => {
@@ -1682,6 +1685,14 @@ class Receive extends Component {
                           if (res === "batal") this.HandleReset(e);
                         }}
                       />
+                      
+                    </div>
+                    <div className="col-md-5">
+                      <button
+                        className="btn btn-outline-info"
+                      >
+                        Total Barang = {this.state.databrg.length}
+                      </button>
                     </div>
                     {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
                       <div className="col-md-5">

@@ -103,7 +103,7 @@ class FormPriceProduct extends Component {
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
-              <label>Harga Beli</label>
+              <label>Harga Beli <span className="text-danger">*</span></label>
               <input type="text" className="form-control" name="harga_beli" value={toCurrency(this.state.harga_beli)} onChange={this.handleChange} />
             </div>
             <div className="row">
@@ -113,7 +113,7 @@ class FormPriceProduct extends Component {
                   container.push(
                     <div className={setHarga>1?`col-md-6`:`col-md-12`}>
                       <div className="form-group">
-                        <label>{ setHarga>1?`Harga ${propsUser.nama_harga[`harga${indexHarga+1}`]}`:"Harga"}</label>
+                        <label>{ setHarga>1?`Harga ${propsUser.nama_harga[`harga${indexHarga+1}`]}`:"Harga"} <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" name={`harga${indexHarga+1}`} value={toCurrency(this.state[`harga${indexHarga+1}`])} onChange={this.handleChange} />
                       </div>
                     </div>
@@ -123,13 +123,13 @@ class FormPriceProduct extends Component {
               })()}
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>PPN</label>
+                  <label>PPN <span className="text-danger">*</span></label>
                   <input type="text" className="form-control" name="ppn" value={toCurrency(this.state.ppn)} onChange={this.handleChange} />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>Servis</label>
+                  <label>Servis <span className="text-danger">*</span></label>
                   <input type="text" className="form-control" name="service" value={toCurrency(this.state.service)} onChange={this.handleChange} />
                 </div>
               </div>
