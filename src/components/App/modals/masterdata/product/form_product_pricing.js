@@ -586,11 +586,13 @@ class FormProductPricing extends Component {
         this.setState(this.props.allState);
       }
     }
+    let propsUser=param.auth.user;
+
     this.setState({
-      nm_harga1: param.auth.user.harga1,
-      nm_harga2: param.auth.user.harga2,
-      nm_harga3: param.auth.user.harga3,
-      nm_harga4: param.auth.user.harga4,
+      nm_harga1: propsUser.nama_harga===undefined?propsUser.harga1:propsUser.nama_harga.harga1,
+      nm_harga2: propsUser.nama_harga===undefined?propsUser.harga2:propsUser.nama_harga.harga2,
+      nm_harga3: propsUser.nama_harga===undefined?propsUser.harga3:propsUser.nama_harga.harga3,
+      nm_harga4: propsUser.nama_harga===undefined?propsUser.harga4:propsUser.nama_harga.harga4,
       set_harga: param.auth.user.set_harga,
       codeServer: param.productCode,
     });
@@ -2389,7 +2391,7 @@ class FormProductPricing extends Component {
                                       <th className="text-black" colSpan={9} width="10%" style={{ verticalAlign: "middle", textAlign: "left" }}>
                                         <div className="d-flex align-items-center">
                                           <label className="mb-0">
-                                            {v[x].nama_toko} ( {lbl} )
+                                            {v[x].nama_toko}
                                           </label>
                                         </div>
                                       </th>
@@ -2397,7 +2399,7 @@ class FormProductPricing extends Component {
                                     <tr>
                                       <td className="text-black" style={{ verticalAlign: "top", textAlign: "center" }}>
                                         <div className="form-group">
-                                          <label className="font-11 text-secondary float-left">Harga Beli</label>
+                                          <label className="text-secondary float-left">Harga Beli</label>
                                           <input
                                             type="text"
                                             placeholder="hrg beli"
@@ -2417,7 +2419,7 @@ class FormProductPricing extends Component {
                                             let marginValue = v[x][marginName];
                                             container.push(
                                               <div className="form-group" key={z}>
-                                                <label className="font-11 text-secondary float-left">Margin{this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}</label>
+                                                <label className="text-secondary float-left">Margin{this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}</label>
                                                 <div className="input-group">
                                                   <input
                                                     type="text"
@@ -2450,7 +2452,7 @@ class FormProductPricing extends Component {
                                             let hrgValue = v[x][hrg];
                                             container.push(
                                               <div className="form-group" key={z}>
-                                                <label className="font-11 text-secondary float-left">Harga Jual{this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}</label>
+                                                <label className="text-secondary float-left">Harga Jual{this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}</label>
                                                 <input
                                                   type="text"
                                                   placeholder={`hrg jual ${this.state[place]}`}
@@ -2469,7 +2471,7 @@ class FormProductPricing extends Component {
                                       {this.props.auth.user.is_resto === 1 ? (
                                         <td className="text-black" style={{ verticalAlign: "top", textAlign: "center" }}>
                                           <div className="form-group">
-                                            <label className="font-11 text-secondary float-left">Service</label>
+                                            <label className="text-secondary float-left">Service</label>
                                             <div className="input-group">
                                               <input
                                                 // readOnly={
@@ -2498,7 +2500,7 @@ class FormProductPricing extends Component {
                                       {this.props.auth.user.is_resto === 1 ? (
                                         <td className="text-black" style={{ verticalAlign: "top", textAlign: "center" }}>
                                           <div className="form-group">
-                                            <label className="font-11 text-secondary float-left">PPN</label>
+                                            <label className="text-secondary float-left">PPN</label>
                                             <div className="input-group">
                                               <input
                                                 // readOnly={
@@ -2543,7 +2545,7 @@ class FormProductPricing extends Component {
                                           }
                                         />
                                         <label className="mb-0">
-                                          {v[x].nama_toko} ( {lbl} )
+                                          {v[x].nama_toko}
                                         </label>
                                       </div>
                                     </td>
@@ -2889,7 +2891,7 @@ class FormProductPricing extends Component {
                                         <div className="d-flex align-items-center">
                                           <input className="mr-2" type="checkbox" name="lokasi" value={v[x].lokasi} checked={checked} onChange={(e) => this.handleCheckChieldElementSku(e, i)} />
                                           <label className="mb-0">
-                                            {v[x].nama_toko} ( {lbl} )
+                                            {v[x].nama_toko}
                                           </label>
                                         </div>
                                       </div>

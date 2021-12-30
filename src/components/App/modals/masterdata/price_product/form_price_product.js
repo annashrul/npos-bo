@@ -17,7 +17,7 @@ class FormPriceProduct extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.state = {
       id: "",
-      harga: "0",
+      harga1: "0",
       harga2: "0",
       harga3: "0",
       harga4: "0",
@@ -34,7 +34,7 @@ class FormPriceProduct extends Component {
   resetState() {
     this.setState({
       id: "",
-      harga: "0",
+      harga1: "0",
       harga2: "0",
       harga3: "0",
       harga4: "0",
@@ -47,7 +47,7 @@ class FormPriceProduct extends Component {
     if (param.detail.id !== "") {
       this.setState({
         id: param.detail.id,
-        harga: param.detail.harga,
+        harga1: param.detail.harga,
         harga2: param.detail.harga2,
         harga3: param.detail.harga3,
         harga4: param.detail.harga4,
@@ -75,7 +75,9 @@ class FormPriceProduct extends Component {
     const form = e.target;
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
-    parseData["harga"] = rmComma(this.state.harga);
+    const propsUser=this.props.auth.user;
+    const setHarga=propsUser.set_harga;
+    parseData["harga"] = rmComma(this.state.harga1);
     parseData["ppn"] = rmComma(this.state.ppn);
     parseData["service"] = rmComma(this.state.service);
     parseData["harga2"] = rmComma(this.state.harga2);
@@ -83,18 +85,20 @@ class FormPriceProduct extends Component {
     parseData["harga4"] = rmComma(this.state.harga4);
     parseData["harga_beli"] = rmComma(this.state.harga_beli);
     if (!isEmptyOrUndefined(parseData.harga_beli, "harga beli")) return;
-    if (!isEmptyOrUndefined(parseData.harga, "harga 1")) return;
-    if (!isEmptyOrUndefined(parseData.harga2, "harga 2")) return;
-    if (!isEmptyOrUndefined(parseData.harga3, "harga 3")) return;
-    if (!isEmptyOrUndefined(parseData.harga4, "harga 4")) return;
-    if (!isEmptyOrUndefined(parseData.ppn, "ppn")) return;
-    if (!isEmptyOrUndefined(parseData.service, "service")) return;
+    if (!isEmptyOrUndefined(this.state.harga1, `harga ${propsUser.nama_harga.harga1}`)) return;
+    if(setHarga>1) if (!isEmptyOrUndefined(this.state.harga2, `harga ${propsUser.nama_harga.harga2}`)) return;
+    if(setHarga>2) if (!isEmptyOrUndefined(this.state.harga3,`harga ${propsUser.nama_harga.harga3}`)) return;
+    if(setHarga>3) if (!isEmptyOrUndefined(this.state.harga4, `harga ${propsUser.nama_harga.harga4}`)) return;
+    if (!isEmptyOrUndefined(this.state.ppn, "ppn")) return;
+    if (!isEmptyOrUndefined(this.state.service, "service")) return;
     this.props.dispatch(updatePriceProduct(this.state.id, parseData, this.props.detail.where));
   }
 
   render() {
+    const propsUser=this.props.auth.user;
+    const setHarga=propsUser.set_harga;
     return (
-      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPriceProduct"} size="md">
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPriceProduct"} siindexHargae="md">
         <ModalHeader toggle={this.closeModal}>Ubah Harga Barang</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
@@ -103,7 +107,33 @@ class FormPriceProduct extends Component {
               <input type="text" className="form-control" name="harga_beli" value={toCurrency(this.state.harga_beli)} onChange={this.handleChange} />
             </div>
             <div className="row">
+              {(() => {
+                let container = [];
+                for (let indexHarga = 0; indexHarga < setHarga; indexHarga++) {
+                  container.push(
+                    <div className={setHarga>1?`col-md-6`:`col-md-12`}>
+                      <div className="form-group">
+                        <label>{ setHarga>1?`Harga ${propsUser.nama_harga[`harga${indexHarga+1}`]}`:"Harga"}</label>
+                        <input type="text" className="form-control" name={`harga${indexHarga+1}`} value={toCurrency(this.state[`harga${indexHarga+1}`])} onChange={this.handleChange} />
+                      </div>
+                    </div>
+                  );
+                }
+                return container;
+              })()}
               <div className="col-md-6">
+                <div className="form-group">
+                  <label>PPN</label>
+                  <input type="text" className="form-control" name="ppn" value={toCurrency(this.state.ppn)} onChange={this.handleChange} />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Servis</label>
+                  <input type="text" className="form-control" name="service" value={toCurrency(this.state.service)} onChange={this.handleChange} />
+                </div>
+              </div>
+              {/* <div className="col-md-6">
                 <div className="form-group">
                   <label>Harga 1</label>
                   <input type="text" className="form-control" name="harga" value={toCurrency(this.state.harga)} onChange={this.handleChange} />
@@ -130,7 +160,7 @@ class FormPriceProduct extends Component {
                   <label>Servis</label>
                   <input type="text" className="form-control" name="service" value={toCurrency(this.state.service)} onChange={this.handleChange} />
                 </div>
-              </div>
+              </div> */}
             </div>
           </ModalBody>
           <ModalFooter>
@@ -146,6 +176,8 @@ const mapStateToProps = (state) => {
   return {
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
+    auth: state.auth,
+
   };
 };
 export default connect(mapStateToProps)(FormPriceProduct);

@@ -2826,7 +2826,7 @@ class FormProduct extends Component {
                                       <div className="col-md-4">
                                         <div className="form-group">
                                           <label>
-                                            Harga Beli ({lbl}) {i}
+                                            Harga Beli
                                           </label>
                                           <input
                                             type="text"
@@ -3032,7 +3032,7 @@ class FormProduct extends Component {
                                             }
                                           /> */}
                                           <label className="mb-0">
-                                            {v[x].nama_toko} ( {lbl} )
+                                            {v[x].nama_toko}
                                           </label>
                                         </div>
                                       </div>

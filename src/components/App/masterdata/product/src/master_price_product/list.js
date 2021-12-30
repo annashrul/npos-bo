@@ -40,18 +40,40 @@ class ListPriceProduct extends Component {
 
   render() {
     const { total, per_page, current_page, data } = this.props.data;
+    let setHarga=this.props.auth.user.set_harga;
+
     const head = [
-      { label: "No", className: "text-center", width: "1%", rowSpan: "2" },
-      { label: "#", className: "text-center", width: "1%", rowSpan: "2" },
-      { label: "Kode", rowSpan: "2" },
-      { label: "Barcode", rowSpan: "2" },
-      { label: "Nama", rowSpan: "2" },
-      { label: "Lokasi", rowSpan: "2" },
-      { label: "Harga beli", rowSpan: "2" },
-      { label: "Harga jual", className: "text-center", colSpan: "4" },
-      { label: "Ppn (%)", width: "1%", rowSpan: "2" },
-      { label: "Servis (%)", rowSpan: "2" },
+      { width: "1%", rowSpan: "2", label: "No", className: "text-center" },
+      { width: "1%", rowSpan: "2", label: "#", className: "text-center", },
+      { width: "1%", rowSpan: "2", label: "Kode"},
+      { width: "1%", rowSpan: "2", label: "Barcode"},
+      { rowSpan: "2", label: "Nama"},
+      { width: "1%", rowSpan: "2", label: "Lokasi"},
+      { width: "1%", rowSpan: "2", label: "Harga beli"},
     ];
+    const colSpan=[];
+    const result=[
+      { label: "kd_brg" },
+      { label: "barcode" },
+      { label: "nm_brg" },
+      { label: "nama_toko" },
+      { label: "harga_beli", className: "text-right", isCurrency: true },
+      { label: "harga", className: "text-right", isCurrency: true },
+    ];
+
+    if(setHarga > 1){
+      head.push({colSpan: setHarga, label: "Harga jual"});
+      for(let i=0;i<setHarga;i++)colSpan.push({label: this.props.auth.user.nama_harga[`harga${i+1}`]});
+      result.push({ label: "harga2", className: "text-right", isCurrency: true });
+      setHarga>2&&result.push({ label: "harga3", className: "text-right", isCurrency: true });
+      setHarga>3&&result.push({ label: "harga4", className: "text-right", isCurrency: true });
+    }else{
+      head.push({rowSpan: 2,label: "Harga jual"})
+    }
+    head.push({ width: "1%", rowSpan: "2", label: "Ppn (%)"})
+    head.push({ width: "1%", rowSpan: "2", label: "Servis (%)"});
+    result.push( { label: "ppn", className: "text-right", isCurrency: true })
+    result.push( { label: "service", className: "text-right", isCurrency: true })
     return (
       <div>
         <HeaderGeneralCommon
@@ -67,21 +89,9 @@ class ListPriceProduct extends Component {
             per_page: per_page,
           }}
           head={head}
-          rowSpan={[{ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" }]}
+          rowSpan={colSpan}
           body={typeof data === "object" && data}
-          label={[
-            { label: "kd_brg" },
-            { label: "barcode" },
-            { label: "nm_brg" },
-            { label: "nama_toko" },
-            { label: "harga_beli", className: "text-right", isCurrency: true },
-            { label: "harga", className: "text-right", isCurrency: true },
-            { label: "harga2", className: "text-right", isCurrency: true },
-            { label: "harga3", className: "text-right", isCurrency: true },
-            { label: "harga4", className: "text-right", isCurrency: true },
-            { label: "ppn", className: "text-right", isCurrency: true },
-            { label: "service", className: "text-right", isCurrency: true },
-          ]}
+          label={result}
           current_page={current_page}
           action={[{ label: "Edit" }]}
           callback={(e, index) => {
@@ -105,6 +115,8 @@ class ListPriceProduct extends Component {
 const mapStateToProps = (state) => {
   return {
     isOpen: state.modalReducer,
+    auth: state.auth,
+
   };
 };
 export default connect(mapStateToProps)(ListPriceProduct);

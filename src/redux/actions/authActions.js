@@ -45,10 +45,13 @@ export const loginUser =
             foto: res.data.result.foto,
             logo: res.data.result.logo,
             fav_icon: res.data.result.fav_icon,
-            harga1: res.data.result.nama_harga.harga1,
-            harga2: res.data.result.nama_harga.harga2,
-            harga3: res.data.result.nama_harga.harga3,
-            harga4: res.data.result.nama_harga.harga4,
+            nama_harga:{
+              harga1: res.data.result.nama_harga.harga1,
+              harga2: res.data.result.nama_harga.harga2,
+              harga3: res.data.result.nama_harga.harga3,
+              harga4: res.data.result.nama_harga.harga4,
+            },
+            
             set_harga: res.data.result.set_harga,
             site_title: res.data.result.title,
             use_supplier: res.data.result.use_supplier,
