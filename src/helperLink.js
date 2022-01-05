@@ -34,7 +34,47 @@ export const linkReturTanpaNota = "/pembelian/retur_tanpa_nota";
 export const linkTransaksiBarang = "/transaksi/barang";
 export const linkTransaksiKas = "/transaksi/kas";
 // ###################################### DAFTAR LINK MENU PEMBAYARAN ##############################//
-export const linkPembayaranHutang = "/pembayarang/hutang";
-export const linkPembayaranPiutang = "/pembayarang/piutang";
+export const linkPembayaranHutang = "/pembayaran/hutang";
+export const linkPembayaranPiutang = "/pembayaran/piutang";
 
-
+// ###################################### DAFTAR LINK MENU REPORT ##############################//
+export const linkReportClosing = "/report/closing";
+export const linkReportKas = "/report/kas";
+export const linkReportLabaRugi = "/report/laba_rugi";
+export const linkReportProduksi = "/report/produksi";
+// ************************************** REPORT PENJUALAN ************************************//
+export const linkReportArsipPenjualan = "/report/penjualan/arsip_penjualan";
+export const linkReportArsipReturPenjualan = "/report/penjualan/arsip_retur_penjualan";
+export const linkReportArsipPenjualanByCustomer = "/report/penjualan/arsip_penjualan_by_customer";
+export const linkReportArsipPenjualanByBarang = "/report/penjualan/arsip_penjualan_by_barang";
+export const linkReportOmsetPenjualan = "/report/penjualan/omset_penjualan";
+export const linkReportOmsetPenjualanByPeriode = "/report/penjualan/omset_penjualan_by_periode";
+export const linkReportArsipPenjualanByKelompokBarang = "/report/penjualan/penjualan_by_kelompok_barang";
+// ************************************** REPORT INVENTORY ************************************//
+export const linkReportStock = "/report/inventory/stock";
+export const linkReportNilaiPersediaan = "/report/inventory/nilai_persediaan";
+export const linkReportAdjustment = "/report/inventory/adjustment";
+export const linkReportAlokasi = "/report/inventory/alokasi";
+export const linkReportDeliveryNote = "/report/inventory/delivery_note";
+export const linkReportOpname = "/report/inventory/opname";
+export const linkReportMutasi = "/report/inventory/mutasi";
+export const linkReportAlokasiTransaksi = "/report/inventory/alokasi_transaksi";
+export const linkReportPacking = "/report/inventory/packing";
+export const linkReportExpedisi = "/report/inventory/expedisi";
+// ************************************** REPORT PEMBELIAN ************************************//
+export const linkReportPurchaseOrder = "/report/pembelian/purchase_order";
+export const linkReportReceive = "/report/pembelian/receive";
+export const linkReportPembelianBySupplier = "/report/pembelian/pembelian_by_supplier";
+export const linkReportReturPembelian = "/report/pembelian/retur_pembelian";
+// ************************************** REPORT PEMBAYARAN ************************************//
+export const linkReportHutang = "/report/pembayaran/hutang";
+export const linkReportPiutang = "/report/pembayaran/piutang";
+// ************************************** REPORT PEMBAYARAN ************************************//
+export const linkReportLogTransaksi = "/report/log/transaksi";
+export const linkReportLogAktifitas = "/report/log/aktifitas";
+// ###################################### DAFTAR link MENU CETAK BARCODE ##############################//
+export const linkCetakBarcode = "/cetak_barcode";
+// ###################################### DAFTAR link MENU PENGATURAN ##############################//
+export const linkPengaturanUmum = "/pengaturan/umum";
+export const linkPengaturanPengguna = "/pengaturan/pengguna";
+export const linkPengaturanLokasi = "/pengaturan/lokasi";

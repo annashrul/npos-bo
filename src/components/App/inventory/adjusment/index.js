@@ -88,11 +88,12 @@ class TrxAdjustment extends Component {
     let data = this.state.brgval[i];
     let saldo_stock = data.stock;
     if (data.status === "kurang") {
-      saldo_stock = parseInt(data.stock, 10) - parseInt(val, 10);
+      saldo_stock = parseInt(data.stock, 10) - parseInt(rmComma(val), 10);
     }
     if (data.status === "tambah" || data.status === "" || data.status === undefined) {
-      saldo_stock = parseInt(data.stock, 10) + parseInt(val, 10);
+      saldo_stock = parseInt(data.stock, 10) + parseInt(rmComma(val), 10);
     }
+   
     return saldo_stock;
   }
 
