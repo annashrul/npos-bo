@@ -13,6 +13,7 @@ import OtorisasiModal from "../../../modals/otorisasi.modal";
 import { ModalToggle, ModalType } from "../../../../../redux/actions/modal.action";
 import { deleteReportPo } from "../../../../../redux/actions/purchase/purchase_order/po.action";
 import { deleteReportMutation } from "../../../../../redux/actions/inventory/mutation.action";
+import { linkAlokasi, linkReportAlokasi3ply } from "../../../../../helperLink";
 
 class MutationReport extends Component {
   constructor(props) {
@@ -102,8 +103,8 @@ class MutationReport extends Component {
       { colSpan: "2", label: "Lokasi", width: "1%" },
       { rowSpan: "2", label: "Qty", width: "1%" },
       { rowSpan: "2", label: "Total transaksi", width: "1%" },
-      { rowSpan: "2", label: "Keterangan" },
       { rowSpan: "2", label: "Status", width: "1%" },
+      { rowSpan: "2", label: "Keterangan" },
       { rowSpan: "2", label: "Tanggal", width: "1%" },
     ];
     const rowSpan = [{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }];
@@ -142,8 +143,8 @@ class MutationReport extends Component {
                     if (v.status !== "0") {
                       action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Hapus" }];
                     }
-                    totalQtyPerHalaman = totalQtyPerHalaman + parseInt(v.total_qty);
-                    totalAmounPerHalaman = totalAmounPerHalaman + parseInt(v.total);
+                    totalQtyPerHalaman+=parseInt(v.total_qty);
+                    totalAmounPerHalaman+=parseInt(v.total);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -151,13 +152,12 @@ class MutationReport extends Component {
                           <ButtonActionCommon
                             action={action}
                             callback={(e) => {
-                              console.log(e);
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleRePrint(v.no_faktur_mutasi);
-                              if (e === 2) this.handleRePrint(v.no_faktur_mutasi);
+                              if (e === 2) this.props.history.push(`${linkReportAlokasi3ply}${v.no_faktur_mutasi}`);
                               if (e === 3) this.handleDelete(v.no_faktur_mutasi);
                               if (v.status === "0") {
-                                if (e === 4) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
+                                if (e === 4) this.props.history.push(`${linkAlokasi}/${btoa(v.no_faktur_mutasi)}`);
                               }
                             }}
                           />
@@ -168,8 +168,8 @@ class MutationReport extends Component {
                         <td className="middle nowrap">{v.lokasi_tujuan}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.total_qty)}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.total)}</td>
-                        <td className="middle nowrap">{v.keterangan}</td>
                         <td className="middle nowrap">{statusMutasi(v.status, true)}</td>
+                        <td className="middle nowrap">{v.keterangan}</td>
                         <td className="middle nowrap">{toDate(v.tgl_mutasi)}</td>
                       </tr>
                     );
@@ -180,13 +180,9 @@ class MutationReport extends Component {
           footer={[
             {
               data: [
-                {
-                  colSpan: 6,
-                  label: "Total perhalaman",
-                  className: "text-left",
-                },
-                { colSpan: 1, label: toRp(parseFloat(totalQtyPerHalaman)) },
-                { colSpan: 1, label: toRp(parseFloat(totalAmounPerHalaman)) },
+                {colSpan: 6,label: "Total perhalaman",className: "text-left"},
+                { colSpan: 1, label: parseToRp(totalQtyPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalAmounPerHalaman) },
                 { colSpan: 3, label: "" },
               ],
             },

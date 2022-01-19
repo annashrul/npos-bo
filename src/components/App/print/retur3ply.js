@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Layout from "./layout";
 import { toRp } from "helper";
-import { rmComma, toDate } from "../../../helper";
+import { CapitalizeEachWord, parseToRp, rmComma, toDate } from "../../../helper";
 
 export default class Print3ply extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ export default class Print3ply extends Component {
   render() {
     const { master, data, logo, user, lokasi, detail } = this.state;
     // const { detail,master}
-    console.log(data);
+    console.log(this.props.location);
     if (this.state.newLogo === "") {
       const xhr = new XMLHttpRequest();
       xhr.onload = () => {
@@ -63,12 +63,7 @@ export default class Print3ply extends Component {
     return (
       <Layout>
         <div id="print_3ply">
-          <table
-            width="100%"
-            cellSpacing={0}
-            cellPadding={1}
-            style={{ letterSpacing: 5, fontFamily: '"OpenSans-Regular", "Lucida Sans Typewriter", "Lucida Typewriter", "Arial", "Helvetica", "sans-serif"', marginBottom: 10, fontSize: "9pt" }}
-          >
+          <table width="100%" cellSpacing={0} cellPadding={1} style={{ letterSpacing: 5, fontFamily: '"OpenSans-Regular", "Lucida Sans Typewriter", "Lucida Typewriter", "Arial", "Helvetica", "sans-serif"', marginBottom: 10, fontSize: "9pt" }}>
             <thead>
               <tr>
                 <td colSpan={3} style={{ textAlign: "center" }}>
@@ -143,10 +138,10 @@ export default class Print3ply extends Component {
             </thead>
             <tbody>
               {detail.map((item, index) => {
-                let total_retur = parseInt(item.qty, 10) * parseInt(rmComma(item.harga_beli), 10);
+                let total_retur = parseInt(item.qty_retur, 10) * parseInt(rmComma(item.harga_beli), 10);
                 grand_total = grand_total + total_retur;
                 localStorage.setItem("grand_total", grand_total);
-                qty_retur = qty_retur + parseInt(item.qty, 10);
+                qty_retur = qty_retur + parseInt(item.qty_retur, 10);
                 total_stock = total_stock + parseInt(item.stock, 10);
                 return (
                   <tr key={index}>
@@ -163,30 +158,30 @@ export default class Print3ply extends Component {
                       {item.satuan}
                     </td>
                     <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
-                      {toRp(rmComma(item.harga_beli))}
+                      {parseToRp(rmComma(item.harga_beli))}
                     </td>
                     <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
-                      {item.kondisi}
+                      {item.kondisi ? CapitalizeEachWord(item.kondisi) : "Bad Stock"}
                     </td>
                     <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
-                      {item.qty}
+                      {parseToRp(item.qty_retur)}
                     </td>
                     <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
-                      {toRp(total_retur)}
+                      {parseToRp(total_retur)}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
             <tfoot>
-              <tr>
+              <tr style={{ border: "solid", borderWidth: "thin", backgroundColor: "#EEEEEE" }}>
                 <td style={{ borderTop: "", borderWidth: "thin" }} colSpan={3}>
                   TOTAL
                 </td>
                 <td style={{ borderTop: "", borderWidth: "thin" }}>{/*?=$tqty?*/}</td>
                 <td style={{ borderTop: "", borderWidth: "thin" }} colSpan={3} />
                 <td style={{ borderTop: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
-                  {toRp(data.subtotal)}
+                  {parseToRp(grand_total)}
                 </td>
               </tr>
             </tfoot>
@@ -239,11 +234,7 @@ export default class Print3ply extends Component {
               </tr>
             </tbody>
           </table>
-          <table
-            width="100%"
-            border={0}
-            style={{ marginTop: "5mm", letterSpacing: 5, fontFamily: '"OpenSans-Regular", "Lucida Sans Typewriter", "Lucida Typewriter", "Arial", "Helvetica", "sans-serif"', fontSize: "9pt" }}
-          >
+          <table width="100%" border={0} style={{ marginTop: "5mm", letterSpacing: 5, fontFamily: '"OpenSans-Regular", "Lucida Sans Typewriter", "Lucida Typewriter", "Arial", "Helvetica", "sans-serif"', fontSize: "9pt" }}>
             <tbody>
               <tr>
                 <td colSpan={3}>Ket : {data.keterangan}</td>

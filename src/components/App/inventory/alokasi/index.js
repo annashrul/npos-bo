@@ -198,6 +198,7 @@ class Alokasi extends Component {
       });
     }
     if (localStorage.lk2 !== undefined && localStorage.lk2 !== "") {
+      console.log("component did mount",localStorage.lk2)
       this.setState({
         location2: localStorage.lk2,
       });
@@ -291,6 +292,7 @@ class Alokasi extends Component {
     this.setState({ nota_trx: "-" });
     localStorage.removeItem("sp");
     localStorage.removeItem("lk");
+    localStorage.removeItem("lk2");
     localStorage.removeItem("ambil_data");
     localStorage.removeItem("nota");
     localStorage.removeItem("catatan");
@@ -326,7 +328,9 @@ class Alokasi extends Component {
       location: lk.value,
       location_val: lk.label,
       error: err,
+      location2:""
     });
+    this.HandleChangeLokasi2(lk,"change");
     localStorage.setItem("lk", lk.value);
     let prefix = this.state.jenis_trx.toLowerCase() === "alokasi" ? "MC" : this.state.jenis_trx.toLowerCase() === "mutasi" ? "MU" : "TR";
     this.props.dispatch(FetchNota(lk.value, prefix));
@@ -335,16 +339,20 @@ class Alokasi extends Component {
     this.getData();
   }
 
-  HandleChangeLokasi2(sp) {
-    let err = Object.assign({}, this.state.error, {
-      location2: "",
-    });
-    this.setState({
+  HandleChangeLokasi2(sp,par="") {
+    let setState={
       location2: sp.value,
-      location2_val: sp.label,
-      error: err,
-    });
-    localStorage.setItem("lk2", sp.value);
+      location2_val: sp.label
+    };
+    if(par==="change"){
+      let anotherLocation = this.state.location_data.filter((option) => option.value !== sp.value)
+      Object.assign(setState,{
+        location2: anotherLocation[0].value,
+        location2_val: anotherLocation[0].label,
+      });
+    }
+    localStorage.setItem("lk2", setState.location2);
+    this.setState(setState);
   }
   HandleChangeJenisTrx(sp) {
     this.setState({
@@ -598,15 +606,19 @@ class Alokasi extends Component {
           parsedata["user"] = this.props.auth.user.username;
           parsedata["lokasi_asal"] = this.state.location_val;
           parsedata["lokasi_tujuan"] = this.state.location2_val;
+          let prefix = this.state.jenis_trx.toLowerCase() === "alokasi" ? "MC" : this.state.jenis_trx.toLowerCase() === "mutasi" ? "MU" : "TR";
+
           if (this.props.match.params.id !== undefined && this.props.match.params.id !== "") {
             swallOption(`Anda yakin akan memperbarui transaksi?`, () => {
               parsedata["nota"] = this.state.nota_trx;
-              this.props.dispatch(updateAlokasi(parsedata, (arr) => this.props.history.push(arr)));
-              this.setState({ nota_trx: "-" });
+              this.props.dispatch(storeAlokasi(parsedata, () => {
+                this.props.dispatch(FetchNota(localStorage.lk, prefix));
+              }));
             });
           } else {
-            this.props.dispatch(storeAlokasi(parsedata, (arr) => this.props.history.push(arr)));
-            this.setState({ nota_trx: "-" });
+            this.props.dispatch(storeAlokasi(parsedata, () => {
+              this.props.dispatch(FetchNota(localStorage.lk, prefix));
+            }));
           }
         });
       }
@@ -736,11 +748,7 @@ class Alokasi extends Component {
   render() {
     if (this.state.isScroll === true) this.handleScroll();
     let subtotal = 0;
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
+   
     return (
       <Layout page="Alokasi">
         <div className="card">
@@ -750,7 +758,7 @@ class Alokasi extends Component {
                 <i className={this.state.toggleSide ? "fa fa-remove" : "fa fa-bars"} />
               </button>{" "}
               {this.props.match.params.id === undefined
-                ? "Alokasi " + this.state.nota_trx
+                ? "Alokasi #" + this.state.nota_trx
                 : `Edit ${
                     (String(atob(this.props.match.params.id)).substr(0, 2) === "MU" ? "Mutasi" : String(atob(this.props.match.params.id)).substr(0, 2) === "TR" ? "Transaksi" : "Alokasi") +
                     " : " +
@@ -983,8 +991,7 @@ class Alokasi extends Component {
                 </StickyBox>
                 {/*START RIGHT*/}
                 <div style={this.state.toggleSide ? { width: "100%" } : { width: "75%" }}>
-                  <div className="card-header" style={{ zoom: "90%" }}>
-                    <form className="">
+                <form className="">
                       <div className="row">
                         <div className="col-md-4">
                           <div className="form-group">
@@ -1035,7 +1042,6 @@ class Alokasi extends Component {
                         </div>
                       </div>
                     </form>
-                  </div>
                   <TableCommon
                     head={[
                       { rowSpan: 2, label: "No", width: "1%" },
@@ -1060,7 +1066,7 @@ class Alokasi extends Component {
                             {item.barcode}
                           </td>
                           <td className="middle nowrap">
-                            <select className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                            <select disabled={item.tambahan.length <= 1 ? true : false} className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
                               {item.tambahan.map((i) => {
                                 return (
                                   <option value={i.satuan} selected={i.satuan === item.satuan}>

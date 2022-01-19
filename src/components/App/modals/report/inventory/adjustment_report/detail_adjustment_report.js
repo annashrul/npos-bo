@@ -41,29 +41,7 @@ class DetailAdjustmentReport extends Component {
               { title: "Operator", desc: operator },
             ]}
           />
-          <TableCommon
-            head={[
-              { label: "Barcode" },
-              { label: "Nama barang" },
-              { label: "Satuan" },
-              { label: "Harga beli" },
-              { label: "Qty adjusment" },
-              { label: "Saldo stok" },
-              { label: "Stok terakhir" },
-              { label: "Status" },
-            ]}
-            body={typeof [detail] === "object" && [detail]}
-            label={[
-              { label: "brcd_brg" },
-              { label: "nm_brg" },
-              { label: "satuan" },
-              { label: "harga_beli", isCurrency: true },
-              { label: "qty_adjust", isCurrency: true },
-              { label: "saldo_stock", isCurrency: true },
-              { label: "stock_terakhir", isCurrency: true },
-              { label: "status" },
-            ]}
-          />
+          <TableCommon head={[{ label: "Barcode" }, { label: "Nama barang" }, { label: "Satuan" }, { label: "Harga beli" }, { label: "Qty adjusment" }, { label: "Stok terakhir" }, { label: "Saldo stok" }, { label: "Status" }]} body={typeof [detail] === "object" && [detail]} label={[{ label: "brcd_brg" }, { label: "nm_brg" }, { label: "satuan" }, { label: "harga_beli", isCurrency: true }, { label: "qty_adjust", isCurrency: true }, { label: "stock_terakhir", isCurrency: true }, { label: "saldo_stock", isCurrency: true }, { label: "status" }]} />
           {/* <div className="table-responsive" style={{ overflowX: "auto" }}>
             <table className="table table-hover table-bordered">
               <thead className="bg-light">

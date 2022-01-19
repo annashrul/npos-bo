@@ -11,6 +11,7 @@ import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import { statusAlokasi, STATUS_ALOKASI } from "../../../../../helperStatus";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import { linkAlokasi, linkReportAlokasi, linkReportAlokasi3ply } from "../../../../../helperLink";
 
 class AlokasiReport extends Component {
   constructor(props) {
@@ -121,8 +122,8 @@ class AlokasiReport extends Component {
                             action={action}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
-                              if (e === 1) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
-                              if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
+                              if (e === 1) this.props.history.push(`${linkAlokasi}/${btoa(v.no_faktur_mutasi)}`);
+                              if (e === 2) this.props.history.push(`${linkReportAlokasi3ply}${v.no_faktur_mutasi}`);
                               if (e === 3) this.handleRePrint(v.no_faktur_mutasi);
                             }}
                           />

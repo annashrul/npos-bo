@@ -4,6 +4,7 @@ import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle } from "redux/actions/modal.action";
 import {
+  FetchApprovalMutation,
   // FetchApprovalMutation,
   saveApprovalMutation,
 } from "../../../../../redux/actions/inventory/mutation.action";
@@ -113,7 +114,13 @@ class FormApprovalMutation extends Component {
     newParse["detail"] = detail;
     if (data.length > 0) {
       if (isValid) {
-        this.props.dispatch(saveApprovalMutation(newParse, (arr) => this.props.history.push(arr), this.props.lokasi));
+        //  dispatch(FetchApprovalMutation(1, "", lokasi, ""));
+        //  dispatch(ModalToggle(false));
+        this.props.dispatch(saveApprovalMutation(newParse, (arr) => {
+          // this.props.history.push(arr);
+         this.props.dispatch(FetchApprovalMutation(1, "", this.props.lokasi, this.props.parameterMutasi));
+         this.props.dispatch(ModalToggle(false));
+        }, this.props.lokasi));
       }
     } else {
       handleError("Ceklis item yang akan di approve", "");
@@ -127,6 +134,7 @@ class FormApprovalMutation extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formApprovalMutation"} size="lg" className="custom-map-modal">
         <ModalHeader toggle={this.toggle}>

@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
-import { linkArea, linkBank, linkBarang, linkCustomer, linkDepartment, linkKas, linkMeja, linkPaket, linkPrinter, linkPromo, linkRak, linkSales, linkSupplier } from "../../../helperLink";
+import { linkAdjustment, linkAlokasi, linkApprovalMutasi, linkArea, linkBank, linkBarang, linkCetakBarcode, linkCustomer, linkDeliveryNote, linkDepartment, linkKas, linkMeja, linkMutasiJualBeliApproval, linkMutasiJualBeliBayar, linkOpnameApproval, linkOpnameTransaksi, linkPaket, linkPembayaranHutang, linkPembayaranPiutang, linkPengaturanLokasi,  linkPengaturanPengguna, linkPengaturanUmum, linkPengirimanExpedisi, linkPengirimanPacking, linkPrinter, linkProduksi, linkPromo, linkPurchaseOrder, linkRak, linkReceivePembelian, linkReportAdjustment, linkReportAlokasi, linkReportAlokasiTransaksi, linkReportArsipPenjualan, linkReportArsipPenjualanByBarang, linkReportArsipPenjualanByCustomer, linkReportArsipPenjualanByKelompokBarang, linkReportArsipPenjualanBySales, linkReportArsipReturPenjualan, linkReportClosing, linkReportDeliveryNote, linkReportExpedisi, linkReportHutang, linkReportKas, linkReportLabaRugi, linkReportLogAktifitas, linkReportLogTransaksi, linkReportMutasi, linkReportNilaiPersediaan, linkReportOmsetPenjualan, linkReportOmsetPenjualanByPeriode, linkReportOpname, linkReportPacking, linkReportPembelianBySupplier, linkReportPiutang, linkReportProduksi, linkReportPurchaseOrder, linkReportReceive, linkReportReturPembelian, linkReportStock, linkReturTanpaNota, linkSales, linkSupplier, linkTransaksiBarang, linkTransaksiKas } from "../../../helperLink";
 class SideMenu extends Component {
   constructor(props) {
     super(props);
@@ -688,11 +688,12 @@ class SideMenu extends Component {
       }
     }
   }
+  
   componentDidMount() {
     this.getProps(this.props);
 
     const path = this.props.location.pathname;
-    if (path === "/user" || path === "/location" || path === "/company") {
+    if (path === linkPengaturanPengguna || path === linkPengaturanLokasi || path === linkPengaturanUmum) {
       this.setState({
         isSetting: true,
       });
@@ -720,128 +721,128 @@ class SideMenu extends Component {
         });
       }
     } else if (
-      path === "/delivery_note" ||
-      path === "/alokasi" ||
-      path === "/adjustment" ||
-      path === "/approval_mutasi" ||
-      path === "/opname" ||
-      path === "/approval_opname" ||
-      path === "/packing" ||
-      path === "/expedisi" ||
-      path === "/approval_mutasi_jual_beli" ||
-      path === "/bayar_mutasi_jual_beli"
+      path === linkDeliveryNote ||
+      path === linkAlokasi ||
+      path === linkAdjustment ||
+      path === linkApprovalMutasi ||
+      path === linkOpnameTransaksi ||
+      path === linkOpnameApproval ||
+      path === linkPengirimanPacking ||
+      path === linkPengirimanExpedisi ||
+      path === linkMutasiJualBeliApproval ||
+      path === linkMutasiJualBeliBayar
     ) {
       this.setState({
         isInventory: true,
       });
-      if (path === "/approval_mutasi_jual_beli" || path === "/bayar_mutasi_jual_beli") {
+      if (path === linkMutasiJualBeliApproval || path === linkMutasiJualBeliBayar) {
         this.setState({
           isTrxMutasi: true,
           isTrxOpname: false,
           isTrxPengiriman: false,
         });
       }
-      if (path === "/opname" || path === "/approval_opname") {
+      if (path === linkOpnameTransaksi || path === linkOpnameApproval) {
         this.setState({
           isTrxMutasi: false,
           isTrxOpname: true,
           isTrxPengiriman: false,
         });
       }
-      if (path === "/packing" || path === "/expedisi") {
+      if (path === linkPengirimanPacking || path === linkPengirimanExpedisi) {
         this.setState({
           isTrxMutasi: false,
           isTrxOpname: false,
           isTrxPengiriman: true,
         });
       }
-    } else if (path === "/purchase_order" || path === "/receive" || path === "/retur_tanpa_nota") {
+    } else if (path === linkPurchaseOrder || path === linkReceivePembelian || path === linkReturTanpaNota) {
       this.setState({
         isReceive: true,
       });
-    } else if (path === "/sale" || path === "/cash_trx") {
+    } else if (path === linkTransaksiBarang || path === linkTransaksiKas) {
       this.setState({
         isSale: true,
       });
     } else if (
-      path === "/report/cash" ||
-      path === "/report/laba_rugi" ||
-      path === "/report/sale_archive" ||
-      path === "/report/sale_retur_archive" ||
-      path === "/report/sale_by_cust_archive" ||
-      path === "/report/sale_by_product_archive" ||
-      path === "/report/sale_by_group_product" ||
-      path === "/report/closing" ||
-      path === "/report/inventory" ||
-      path === "/report/inventory/nilai_persediaan" ||
-      path === "/report/adjustment" ||
-      path === "/report/alokasi" ||
-      path === "/report/dn" ||
-      path === "/report/opname" ||
-      path === "/report/expedisi" ||
-      path === "/report/packing" ||
-      path === "/report/mutation" ||
-      path === "/report/alokasi_trx" ||
-      path === "/report/production" ||
-      path === "/report/po" ||
-      path === "/report/receive" ||
-      path === "/report/purchase_by_supplier" ||
-      path === "/report/retur_pembelian" ||
-      path === "/report/hutang" ||
-      path === "/report/piutang" ||
-      path === "/report/sale_omset" ||
-      path === "/report/sale_omset_periode" ||
-      path === "/log/trx" ||
-      path === "/log/act"
+      path === linkReportClosing ||
+      path === linkReportKas ||
+      path === linkReportLabaRugi ||
+      path === linkReportProduksi ||
+      path === linkReportArsipPenjualan ||
+      path === linkReportArsipReturPenjualan ||
+      path === linkReportArsipPenjualanByCustomer ||
+      path === linkReportArsipPenjualanByBarang ||
+      path === linkReportArsipPenjualanByKelompokBarang ||
+      path === linkReportOmsetPenjualan ||
+      path === linkReportOmsetPenjualanByPeriode ||
+      path === linkReportStock ||
+      path === linkReportNilaiPersediaan ||
+      path === linkReportAdjustment ||
+      path === linkReportAlokasi ||
+      path === linkReportDeliveryNote ||
+      path === linkReportOpname ||
+      path === linkReportExpedisi ||
+      path === linkReportPacking ||
+      path === linkReportMutasi ||
+      path === linkReportAlokasiTransaksi ||
+      path === linkReportPurchaseOrder ||
+      path === linkReportReceive ||
+      path === linkReportPembelianBySupplier ||
+      path === linkReportReturPembelian ||
+      path === linkReportHutang ||
+      path === linkReportPiutang ||
+      path === linkReportLogTransaksi ||
+      path === linkReportLogAktifitas
     ) {
       this.setState({
         isReport: true,
       });
       if (
-        path === "/report/inventory" ||
-        path === "/report/inventory/nilai_persediaan" ||
-        path === "/report/adjustment" ||
-        path === "/report/alokasi" ||
-        path === "/report/opname" ||
-        path === "/report/expedisi" ||
-        path === "/report/packing" ||
-        path === "/report/mutation" ||
-        path === "/report/alokasi_trx" ||
-        path === "/report/dn"
+        path === linkReportStock ||
+        path === linkReportNilaiPersediaan ||
+        path === linkReportAdjustment ||
+        path === linkReportAlokasi ||
+        path === linkReportOpname ||
+        path === linkReportExpedisi ||
+        path === linkReportPacking ||
+        path === linkReportMutasi ||
+        path === linkReportAlokasiTransaksi ||
+        path === linkReportDeliveryNote
       ) {
         this.setState({
           isReportInventory: true,
         });
-      } else if (path === "/report/po" || path === "/report/receive" || path === "/report/purchase_by_supplier" || path === "/report/retur_pembelian") {
+      } else if (path === linkReportPurchaseOrder || path === linkReportReceive || path === linkReportPembelianBySupplier || path ===linkReportReturPembelian) {
         this.setState({
           isReportPembelian: true,
         });
       } else if (
-        path === "/report/sale_archive" ||
-        path === "/report/sale_retur_archive" ||
-        path === "/report/sale_by_cust_archive" ||
-        path === "/report/sale_omset" ||
-        path === "/report/sale_omset_periode" ||
-        path === "/report/sale_by_product_archive"||
-        path === "/report/sale_by_group_product"
+        path === linkReportArsipPenjualan ||
+        path === linkReportArsipReturPenjualan ||
+        path === linkReportArsipPenjualanByCustomer ||
+        path === linkReportOmsetPenjualan ||
+        path === linkReportOmsetPenjualanByPeriode ||
+        path === linkReportArsipPenjualanByBarang||
+        path === linkReportArsipPenjualanByKelompokBarang
       ) {
         this.setState({
           isReportPenjualan: true,
         });
-      } else if (path === "/report/hutang" || path === "/report/piutang") {
+      } else if (path === linkReportHutang || path === linkReportPiutang) {
         this.setState({
           isReportPembayaran: true,
         });
-      } else if (path === "/log/trx" || path === "/log/act") {
+      } else if (path ===linkReportLogTransaksi || path === linkReportLogAktifitas) {
         this.setState({
           isReportLog: true,
         });
       }
-    } else if (path === "/production" || path === "/approval_produksi") {
+    } else if (path === linkReportProduksi) {
       this.setState({
         isProduction: true,
       });
-    } else if (path === "/bayar_hutang" || path === "/bayar_piutang") {
+    } else if (path === linkPembayaranHutang || path === linkPembayaranPiutang) {
       this.setState({
         isPaid: true,
       });
@@ -1062,8 +1063,8 @@ class SideMenu extends Component {
           {/* MASTERDATA MODUL END */}
 
           {/* PRODUKSI MODUL START */}
-          <li style={this.state.produksi === "0" ? { display: "none" } : { display: "block" }} className={path === "/production" ? "active" : ""}>
-            <Link to="/production">
+          <li style={this.state.produksi === "0" ? { display: "none" } : { display: "block" }} className={path === linkProduksi ? "active" : ""}>
+            <Link to={linkProduksi}>
               {" "}
               <i className="fa fa-product-hunt" />
               <span> Produksi</span>
@@ -1077,14 +1078,14 @@ class SideMenu extends Component {
               "treeview" +
               (this.state.isInventory === true ||
               this.state.isTrxMutasi ||
-              path === "/delivery_note" ||
-              path === "/alokasi" ||
-              path === "/adjustment" ||
-              path === "/approval_mutasi" ||
-              path === "/opname" ||
-              path === "/approval_opname" ||
-              path === "/packing" ||
-              path === "/expedisi"
+              path === linkDeliveryNote ||
+              path === linkAlokasi ||
+              path === linkAdjustment ||
+              path === linkApprovalMutasi ||
+              path === linkOpnameTransaksi ||
+              path === linkOpnameApproval ||
+              path === linkPengirimanPacking ||
+              path === linkPengirimanExpedisi
                 ? " active menu-open"
                 : "")
             }
@@ -1099,36 +1100,36 @@ class SideMenu extends Component {
                 display: this.state.isInventory === true ? "block" : "none",
               }}
             >
-              <li className={path === "/adjustment" ? "active" : ""} style={this.state.adjusment === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/adjustment" style={{ width: "fit-content" }}>
+              <li className={path === linkAdjustment ? "active" : ""} style={this.state.adjusment === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkAdjustment} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-adjust" />
                   Adjustment{" "}
                 </Link>
               </li>
-              <li className={path === "/delivery_note" ? "active" : ""} style={this.state.delivery_note === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/delivery_note" style={{ width: "fit-content" }}>
+              <li className={path === linkDeliveryNote ? "active" : ""} style={this.state.delivery_note === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkDeliveryNote} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-sticky-note" />
                   Delivery Note
                 </Link>
               </li>
-              <li className={path === "/alokasi" ? "active" : ""} style={this.state.alokasi === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/alokasi" style={{ width: "fit-content" }}>
+              <li className={path === linkAlokasi ? "active" : ""} style={this.state.alokasi === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkAlokasi} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-dropbox" />
                   Alokasi{" "}
                 </Link>
               </li>
-              <li className={path === "/approval_mutasi" ? "active" : ""} style={this.state.approval_mutasi === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/approval_mutasi" style={{ width: "fit-content" }}>
+              <li className={path === linkApprovalMutasi ? "active" : ""} style={this.state.approval_mutasi === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkApprovalMutasi} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="zmdi zmdi-calendar-check" />
                   Approval Mutasi{" "}
                 </Link>
               </li>
               <li
-                className={"treeview" + (this.state.isTrxOpname === true || path === "/opname" || path === "/approval_opname" ? " active menu-open" : "")}
+                className={"treeview" + (this.state.isTrxOpname === true || path === linkOpnameTransaksi || path === linkOpnameApproval ? " active menu-open" : "")}
                 style={modul_inventory_opname === true ? { display: "block" } : { display: "none" }}
               >
                 <a href="!#" onClick={(e) => this.changeMenu(e, "trx_opname")}>
@@ -1140,15 +1141,15 @@ class SideMenu extends Component {
                     display: this.state.isTrxOpname === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/opname" ? "active" : ""} style={this.state.opname === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/opname" style={{ width: "fit-content" }}>
+                  <li className={path === linkOpnameTransaksi ? "active" : ""} style={this.state.opname === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkOpnameTransaksi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-balance-scale" />
                       Transaksi{" "}
                     </Link>
                   </li>
-                  <li className={path === "/approval_opname" ? "active" : ""} style={this.state.approval_opname === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/approval_opname" style={{ width: "fit-content" }}>
+                  <li className={path === linkOpnameApproval ? "active" : ""} style={this.state.approval_opname === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkOpnameApproval} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-calendar-check" />
                       Approval{" "}
@@ -1157,7 +1158,7 @@ class SideMenu extends Component {
                 </ul>
               </li>
               <li
-                className={"treeview" + (this.state.isTrxPengiriman === true || path === "/packing" || path === "/expedisi" ? " active menu-open" : "")}
+                className={"treeview" + (this.state.isTrxPengiriman === true || path === linkPengirimanPacking || path === linkPengirimanExpedisi ? " active menu-open" : "")}
                 style={modul_inventory_pengiriman === true ? { display: "block" } : { display: "none" }}
               >
                 <a href="!#" onClick={(e) => this.changeMenu(e, "trx_pengiriman")}>
@@ -1169,15 +1170,15 @@ class SideMenu extends Component {
                     display: this.state.isTrxPengiriman === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/packing" ? "active" : ""} style={this.state.packing === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/packing" style={{ width: "fit-content" }}>
+                  <li className={path === linkPengirimanPacking ? "active" : ""} style={this.state.packing === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkPengirimanPacking} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-codepen" />
                       Packing{" "}
                     </Link>
                   </li>
-                  <li className={path === "/expedisi" ? "active" : ""} style={this.state.packing === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/expedisi" style={{ width: "fit-content" }}>
+                  <li className={path === linkPengirimanExpedisi ? "active" : ""} style={this.state.expedisi === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkPengirimanExpedisi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-truck" />
                       Expedisi{" "}
@@ -1186,7 +1187,7 @@ class SideMenu extends Component {
                 </ul>
               </li>
               <li
-                className={"treeview" + (this.state.isTrxMutasi === true || path === "/approval_mutasi_jual_beli" || path === "/bayar_mutasi_jual_beli" ? " active menu-open" : "")}
+                className={"treeview" + (this.state.isTrxMutasi === true || path === linkMutasiJualBeliApproval || path === linkMutasiJualBeliBayar ? " active menu-open" : "")}
                 style={modul_inventory_mutasi === true ? { display: "block" } : { display: "none" }}
               >
                 <a href="!#" onClick={(e) => this.changeMenu(e, "trx_mutasi")}>
@@ -1198,15 +1199,15 @@ class SideMenu extends Component {
                     display: this.state.isTrxMutasi === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/approval_mutasi_jual_beli" ? "active" : ""} style={this.state.approval_mutasi_jual_beli === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/approval_mutasi_jual_beli" style={{ width: "fit-content" }}>
+                  <li className={path ===linkMutasiJualBeliApproval ? "active" : ""} style={this.state.approval_mutasi_jual_beli === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkMutasiJualBeliApproval} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-calendar-check" />
                       Approval
                     </Link>
                   </li>
-                  <li className={path === "/bayar_mutasi_jual_beli" ? "active" : ""} style={this.state.bayar_mutasi_jual_beli === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/bayar_mutasi_jual_beli" style={{ width: "fit-content" }}>
+                  <li className={path === linkMutasiJualBeliBayar ? "active" : ""} style={this.state.bayar_mutasi_jual_beli === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkMutasiJualBeliBayar} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-money" />
                       Bayar
@@ -1221,7 +1222,7 @@ class SideMenu extends Component {
           {/* PEMBELIAN MODUL START */}
 
           <li
-            className={"treeview" + (this.state.isReceive === true || path === "/purchase_order" || path === "/receive" || path === "/retur_tanpa_nota" ? " active menu-open" : "")}
+            className={"treeview" + (this.state.isReceive === true || path === linkReceivePembelian || path === linkPurchaseOrder || path === linkReturTanpaNota ? " active menu-open" : "")}
             style={modul_pembelian === true ? { display: "block" } : { display: "none" }}
           >
             <a href="!#" onClick={(e) => this.changeMenu(e, "receive")}>
@@ -1233,22 +1234,22 @@ class SideMenu extends Component {
                 display: this.state.isReceive === true ? "block" : "none",
               }}
             >
-              <li className={path === "/purchase_order" ? "active" : ""} style={this.state.purchase_order === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/purchase_order" style={{ width: "fit-content" }}>
+              <li className={path === linkPurchaseOrder ? "active" : ""} style={this.state.purchase_order === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPurchaseOrder} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-list-ol" />
                   Purchase Order
                 </Link>
               </li>
-              <li className={path === "/receive" ? "active" : ""} style={this.state.receive_pembelian === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/receive" style={{ width: "fit-content" }}>
+              <li className={path === linkReceivePembelian ? "active" : ""} style={this.state.receive_pembelian === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkReceivePembelian} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="zmdi zmdi-assignment-check" />
                   Receive Pembelian
                 </Link>
               </li>
-              <li className={path === "/retur_tanpa_nota" ? "active" : ""} style={this.state.retur_tanpa_nota === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/retur_tanpa_nota" style={{ width: "fit-content" }}>
+              <li className={path === linkReturTanpaNota ? "active" : ""} style={this.state.retur_tanpa_nota === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkReturTanpaNota} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-rotate-left" />
                   Retur Tanpa Nota
@@ -1259,20 +1260,20 @@ class SideMenu extends Component {
           {/* PEMBELIAN MODUL END */}
 
           {/* TRANSAKSI MODUL START */}
-          <li className={"treeview" + (this.state.isSale === true || path === "/sale" ? " active menu-open" : "")} style={modul_penjualan === true ? { display: "block" } : { display: "none" }}>
+          <li className={"treeview" + (this.state.isSale === true || path === linkTransaksiBarang|| path === linkTransaksiKas ? " active menu-open" : "")} style={modul_penjualan === true ? { display: "block" } : { display: "none" }}>
             <a href="!#" onClick={(e) => this.changeMenu(e, "sale")}>
               <i className="fa fa-shopping-cart" /> <span>Transaksi</span> <i className="fa fa-angle-right" />
             </a>
             <ul className={"treeview-menu"} style={{ display: this.state.isSale === true ? "block" : "none" }}>
-              <li className={path === "/sale" ? "active" : ""} style={this.state.penjualan_barang === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/sale" style={{ width: "fit-content" }}>
+              <li className={path === linkTransaksiBarang ? "active" : ""} style={this.state.penjualan_barang === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkTransaksiBarang} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-shopping-bag" />
                   Penjualan Barang
                 </Link>
               </li>
-              <li className={path === "/cash_trx" ? "active" : ""} style={this.state.cash_trx === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/cash_trx" style={{ width: "fit-content" }}>
+              <li className={path === {linkTransaksiKas} ? "active" : ""} style={this.state.cash_trx === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkTransaksiKas} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-archive" />
                   Transaksi Kas
@@ -1284,22 +1285,22 @@ class SideMenu extends Component {
 
           {/* PEMBAYARAN SECTION START */}
           <li
-            className={"treeview" + (this.state.isPaid === true || path === "/bayar_hutang" || path === "/bayar_piutang" ? " active menu-open" : "")}
+            className={"treeview" + (this.state.isPaid === true || path === linkPembayaranHutang || path === linkPembayaranPiutang? " active menu-open" : "")}
             style={modul_pembayaran === true ? { display: "block" } : { display: "none" }}
           >
             <a href="!#" onClick={(e) => this.changeMenu(e, "paid")}>
               <i className="fa fa-money" /> <span>Pembayaran</span> <i className="fa fa-angle-right" />
             </a>
             <ul className={"treeview-menu"} style={{ display: this.state.isPaid === true ? "block" : "none" }}>
-              <li className={path === "/bayar_hutang" ? "active" : ""} style={this.state.hutang === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/bayar_hutang" style={{ width: "fit-content" }}>
+              <li className={path === linkPembayaranHutang ? "active" : ""} style={this.state.hutang === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPembayaranHutang} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-dollar" />
                   Hutang
                 </Link>
               </li>
-              <li className={path === "/bayar_piutang" ? "active" : ""} style={this.state.piutang === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/bayar_piutang" style={{ width: "fit-content" }}>
+              <li className={path === linkPembayaranPiutang ? "active" : ""} style={this.state.piutang === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPembayaranPiutang} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-credit-card" />
                   Piutang
@@ -1319,8 +1320,8 @@ class SideMenu extends Component {
               this.state.isReportPenjualan === true ||
               this.state.isReportPembayaran === true ||
               this.state.isReportLog === true ||
-              path === "/report/cash" ||
-              path === "/report/closing"
+              path === linkReportKas ||
+              path === linkReportClosing
                 ? " active menu-open"
                 : "")
             }
@@ -1329,36 +1330,35 @@ class SideMenu extends Component {
             <a href="!#" onClick={(e) => this.changeMenu(e, "report")}>
               <i className="zmdi zmdi-book" /> <span>Report</span> <i className="fa fa-angle-right" />
             </a>
-
             <ul
               className={"treeview-menu"}
               style={{
                 display: this.state.isReport === true || this.state.isReportInventory === true || this.state.isReportPembelian === true ? "block" : "none",
               }}
             >
-              <li className={path === "/report/closing" ? "active" : ""} style={this.state.r_closing === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/report/closing" style={{ width: "fit-content" }}>
+              <li className={path === linkReportClosing ? "active" : ""} style={this.state.r_closing === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkReportClosing} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="zmdi zmdi-lock" />
                   Closing
                 </Link>
               </li>
-              <li className={path === "/report/cash" ? "active" : ""} style={this.state.r_kas === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/report/cash" style={{ width: "fit-content" }}>
+              <li className={path === linkReportKas ? "active" : ""} style={this.state.r_kas === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkReportKas} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-money" />
                   Kas
                 </Link>
               </li>
-              <li className={path === "/report/laba_rugi" ? "active" : ""} style={this.state.r_laba_rugi === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/report/laba_rugi" style={{ width: "fit-content" }}>
+              <li className={path === linkReportLabaRugi ? "active" : ""} style={this.state.r_laba_rugi === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkReportLabaRugi} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="zmdi zmdi-archive" />
                   Laba Rugi
                 </Link>
               </li>
-              <li className={path === "/report/production" ? "active" : ""} style={this.state.r_produksi === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/report/production" style={{ width: "fit-content" }}>
+              <li className={path === linkReportProduksi ? "active" : ""} style={this.state.r_produksi === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkReportProduksi} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-product-hunt" />
                   Produksi
@@ -1370,13 +1370,14 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPenjualan === true ||
-                  path === "/report/sale_archive" ||
-                  path === "/report/sale_retur_archive" ||
-                  path === "/report/sale_by_cust_archive" ||
-                  path === "/report/sale_omset" ||
-                  path === "/report/sale_omset_periode" ||
-                  path === "/report/sale_by_product_archive"||
-                  path === "/report/sale_by_group_product"
+                  path === linkReportArsipPenjualan ||
+                  path === linkReportArsipReturPenjualan ||
+                  path === linkReportArsipPenjualanByCustomer ||
+                  path === linkReportArsipPenjualanBySales ||
+                  path === linkReportOmsetPenjualan ||
+                  path === linkReportOmsetPenjualanByPeriode ||
+                  path === linkReportArsipPenjualanByBarang||
+                  path === linkReportArsipPenjualanByKelompokBarang
                     ? " active menu-open"
                     : "")
                 }
@@ -1386,45 +1387,50 @@ class SideMenu extends Component {
                   <i className="fa fa-list-alt" />
                   Penjualan <i className="fa fa-angle-right" />
                 </a>
-
                 <ul
                   className={"treeview-menu"}
                   style={{
                     display: this.state.isReportPenjualan === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/report/sale_archive" ? "active" : ""} style={this.state.r_arsip_penjualan === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/sale_archive" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportArsipPenjualan ? "active" : ""} style={this.state.r_arsip_penjualan === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportArsipPenjualan} style={{ width: "fit-content" }}>
                       Arsip Penjualan
                     </Link>
                   </li>
-                  <li className={path === "/report/sale_retur_archive" ? "active" : ""} style={this.state.r_arsip_retur_penjualan === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/sale_retur_archive" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportArsipReturPenjualan ? "active" : ""} style={this.state.r_arsip_retur_penjualan === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportArsipReturPenjualan} style={{ width: "fit-content" }}>
                       Arsip Retur Penjualan
                     </Link>
                   </li>
-                  <li className={path === "/report/sale_by_cust_archive" ? "active" : ""} style={this.state.r_penjualan_by_customer === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/sale_by_cust_archive" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportArsipPenjualanByCustomer ? "active" : ""} style={this.state.r_penjualan_by_customer === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportArsipPenjualanByCustomer} style={{ width: "fit-content" }}>
                       Penjualan by Cust.
                     </Link>
                   </li>
-                  <li className={path === "/report/sale_by_product_archive" ? "active" : ""} style={this.state.r_penjualan_by_barang === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/sale_by_product_archive" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportArsipPenjualanBySales ? "active" : ""} style={this.state.r_penjualan_by_customer === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportArsipPenjualanBySales} style={{ width: "fit-content" }}>
+                      Penjualan by Sales
+                    </Link>
+                  </li>
+                  
+                  <li className={path === linkReportArsipPenjualanByBarang ? "active" : ""} style={this.state.r_penjualan_by_barang === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportArsipPenjualanByBarang} style={{ width: "fit-content" }}>
                       Penjualan by Barang
                     </Link>
                   </li>
-                  <li className={path === "/report/sale_omset" ? "active" : ""} style={this.state.r_sale_omset === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/sale_omset" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportOmsetPenjualan ? "active" : ""} style={this.state.r_sale_omset === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportOmsetPenjualan} style={{ width: "fit-content" }}>
                       Omset Penjualan
                     </Link>
                   </li>
-                  <li className={`${path === "/report/sale_omset_periode" ? "active" : ""}`} style={{ display: this.state.r_sale_omset_periode === "0" ? "none" : "block" }}>
-                    <Link to="/report/sale_omset_periode" style={{ width: "fit-content" }}>
+                  <li className={`${path === linkReportOmsetPenjualanByPeriode ? "active" : ""}`} style={{ display: this.state.r_sale_omset_periode === "0" ? "none" : "block" }}>
+                    <Link to={linkReportOmsetPenjualanByPeriode} style={{ width: "fit-content" }}>
                       Omset Penj. Periode
                     </Link>
                   </li>
-                  <li className={`${path === "/report/sale_by_group_product" ? "active" : ""}`} style={{ display: this.state.r_penjualan_by_kel_barang === "0" ? "none" : "block" }}>
-                    <Link to="/report/sale_by_group_product" style={{ width: "fit-content" }}>
+                  <li className={`${path === linkReportArsipPenjualanByKelompokBarang ? "active" : ""}`} style={{ display: this.state.r_penjualan_by_kel_barang === "0" ? "none" : "block" }}>
+                    <Link to={linkReportArsipPenjualanByKelompokBarang} style={{ width: "fit-content" }}>
                       Penjualan by Kel.Brg
                     </Link>
                   </li>
@@ -1437,16 +1443,16 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportInventory === true ||
-                  path === "/report/inventory" ||
-                  path === "/report/inventory/nilai_persediaani" ||
-                  path === "/report/adjustment" ||
-                  path === "/report/alokasi" ||
-                  path === "/report/opname" ||
-                  path === "/report/packing" ||
-                  path === "/report/expedisi" ||
-                  path === "/report/mutation" ||
-                  path === "/report/alokasi_trx" ||
-                  path === "/report/dn"
+                  path === linkReportStock ||
+                  path === linkReportNilaiPersediaan ||
+                  path === linkReportAdjustment ||
+                  path === linkReportAlokasi ||
+                  path === linkReportOpname ||
+                  path === linkReportPacking ||
+                  path === linkReportExpedisi ||
+                  path === linkReportMutasi ||
+                  path === linkReportAlokasiTransaksi ||
+                  path === linkReportDeliveryNote
                     ? " active menu-open"
                     : "")
                 }
@@ -1462,71 +1468,71 @@ class SideMenu extends Component {
                     display: this.state.isReportInventory === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/report/inventory" ? "active" : ""} style={this.state.r_stock === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/inventory" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportStock ? "active" : ""} style={this.state.r_stock === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportStock} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-chart" />
                       Stock
                     </Link>
                   </li>
-                  <li className={path === "/report/inventory/nilai_persediaan" ? "active" : ""} style={this.state.r_nilai_persediaan === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/inventory/nilai_persediaan" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportNilaiPersediaan ? "active" : ""} style={this.state.r_nilai_persediaan === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportNilaiPersediaan} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-flare" />
                       Nilai Persediaan
                     </Link>
                   </li>
-                  <li className={path === "/report/adjustment" ? "active" : ""} style={this.state.r_adjusment === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/adjustment" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportAdjustment ? "active" : ""} style={this.state.r_adjusment === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportAdjustment} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-adjust" />
                       Adjustment
                     </Link>
                   </li>
-                  <li className={path === "/report/alokasi" ? "active" : ""} style={this.state.r_alokasi === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/alokasi" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportAlokasi ? "active" : ""} style={this.state.r_alokasi === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportAlokasi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-dropbox" />
                       Alokasi
                     </Link>
                   </li>
-                  <li className={path === "/report/dn" ? "active" : ""} style={this.state.r_delivery_note === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/dn" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportDeliveryNote ? "active" : ""} style={this.state.r_delivery_note === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportDeliveryNote} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-sticky-note" />
                       Delivery Note
                     </Link>
                   </li>
-                  <li className={path === "/report/opname" ? "active" : ""} style={this.state.r_opname === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/opname" style={{ width: "fit-content" }}>
+                  <li className={path ===linkReportOpname ? "active" : ""} style={this.state.r_opname === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportOpname} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-balance-scale" />
                       Opname
                     </Link>
                   </li>
-                  <li className={path === "/report/mutation" ? "active" : ""} style={this.state.r_mutasi === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/mutation" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportMutasi ? "active" : ""} style={this.state.r_mutasi === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportMutasi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="zmdi zmdi-card" />
                       Mutasi
                     </Link>
                   </li>
-                  <li className={path === "/report/alokasi_trx" ? "active" : ""} style={this.state.r_alokasi_trx === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/alokasi_trx" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportAlokasiTransaksi ? "active" : ""} style={this.state.r_alokasi_trx === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportAlokasiTransaksi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-money" />
                       Alokasi Trx
                     </Link>
                   </li>
-                  <li className={path === "/report/packing" ? "active" : ""} style={this.state.r_expedisi === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/packing" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportPacking ? "active" : ""} style={this.state.r_expedisi === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportPacking} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-codepen" />
                       Packing
                     </Link>
                   </li>
-                  <li className={path === "/report/expedisi" ? "active" : ""} style={this.state.r_expedisi === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/expedisi" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportExpedisi ? "active" : ""} style={this.state.r_expedisi === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportExpedisi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-truck" />
                       Ekspedisi
@@ -1540,7 +1546,7 @@ class SideMenu extends Component {
               <li
                 className={
                   "treeview" +
-                  (this.state.isReportPembelian === true || path === "/report/po" || path === "/report/receive" || path === "/report/purchase_by_supplier" || path === "/report/retur_pembelian"
+                  (this.state.isReportPembelian === true || path === linkReportPurchaseOrder || path === linkReportReceive || path === linkReportPembelianBySupplier || path === linkReportReturPembelian
                     ? " active menu-open"
                     : "")
                 }
@@ -1556,23 +1562,23 @@ class SideMenu extends Component {
                     display: this.state.isReportPembelian === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/report/po" ? "active" : ""} style={this.state.r_purchase_order === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/po" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportPurchaseOrder ? "active" : ""} style={this.state.r_purchase_order === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportPurchaseOrder} style={{ width: "fit-content" }}>
                       Purchase Order
                     </Link>
                   </li>
-                  <li className={path === "/report/receive" ? "active" : ""} style={this.state.r_receive === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/receive" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportReceive ? "active" : ""} style={this.state.r_receive === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportReceive} style={{ width: "fit-content" }}>
                       Receive
                     </Link>
                   </li>
-                  <li className={path === "/report/purchase_by_supplier" ? "active" : ""} style={this.state.r_arsip_pembelian_by_supplier === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/purchase_by_supplier" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportPembelianBySupplier ? "active" : ""} style={this.state.r_arsip_pembelian_by_supplier === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportPembelianBySupplier} style={{ width: "fit-content" }}>
                       Pembelian by Supplier
                     </Link>
                   </li>
-                  <li className={path === "/report/retur_pembelian" ? "active" : ""} style={this.state.r_retur_pembelian === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/retur_pembelian" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportReturPembelian ? "active" : ""} style={this.state.r_retur_pembelian === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportReturPembelian} style={{ width: "fit-content" }}>
                       Retur Pembelian
                     </Link>
                   </li>
@@ -1582,7 +1588,7 @@ class SideMenu extends Component {
 
               {/* SUBLAPORAN PEMBAYARAN MODUL START */}
               <li
-                className={"treeview" + (this.state.isReportPembayaran === true || path === "/report/hutang" || path === "/report/piutang" ? " active menu-open" : "")}
+                className={"treeview" + (this.state.isReportPembayaran === true || path === linkReportHutang || path === linkReportPiutang ? " active menu-open" : "")}
                 style={modul_report_pembayaran === true ? { display: "block" } : { display: "none" }}
               >
                 <a href="!#" onClick={(e) => this.changeMenu(e, "report_pembayaran")}>
@@ -1595,15 +1601,15 @@ class SideMenu extends Component {
                     display: this.state.isReportPembayaran === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/report/hutang" ? "active" : ""} style={this.state.r_hutang === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/hutang" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportHutang ? "active" : ""} style={this.state.r_hutang === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportHutang} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-dollar" />
                       Hutang
                     </Link>
                   </li>
-                  <li className={path === "/report/piutang" ? "active" : ""} style={this.state.r_piutang === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/report/piutang" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportPiutang ? "active" : ""} style={this.state.r_piutang === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportPiutang} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-credit-card" />
                       Piutang
@@ -1615,7 +1621,7 @@ class SideMenu extends Component {
 
               {/* SUBLAPORAN LOG MODUL START */}
               <li
-                className={"treeview" + (this.state.isReportLog === true || path === "/log/trx" || path === "/log/act" ? " active menu-open" : "")}
+                className={"treeview" + (this.state.isReportLog === true || path === linkReportLogTransaksi || path === linkReportLogAktifitas ? " active menu-open" : "")}
                 style={modul_report_log === true ? { display: "block" } : { display: "none" }}
               >
                 <a href="!#" onClick={(e) => this.changeMenu(e, "report_log")}>
@@ -1628,15 +1634,15 @@ class SideMenu extends Component {
                     display: this.state.isReportLog === true ? "block" : "none",
                   }}
                 >
-                  <li className={path === "/log/trx" ? "active" : ""} style={this.state.r_hutang === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/log/trx" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportLogTransaksi ? "active" : ""} style={this.state.r_hutang === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportLogTransaksi} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-file-text" />
                       Transaksi
                     </Link>
                   </li>
-                  <li className={path === "/log/act" ? "active" : ""} style={this.state.r_piutang === "0" ? { display: "none" } : { display: "block" }}>
-                    <Link to="/log/act" style={{ width: "fit-content" }}>
+                  <li className={path === linkReportLogAktifitas ? "active" : ""} style={this.state.r_piutang === "0" ? { display: "none" } : { display: "block" }}>
+                    <Link to={linkReportLogAktifitas} style={{ width: "fit-content" }}>
                       {" "}
                       <i className="fa fa-file-text" />
                       Aktivitas
@@ -1650,8 +1656,8 @@ class SideMenu extends Component {
           {/* LAPORAN MODUL END */}
 
           {/*START MODUL CETAK BARCODE*/}
-          <li style={modul_cetak_barcode === true ? { display: "block" } : { display: "none" }} className={path === "/cetak_barcode" ? "active" : ""}>
-            <Link to="/cetak_barcode">
+          <li style={modul_cetak_barcode === true ? { display: "block" } : { display: "none" }} className={path === linkCetakBarcode ? "active" : ""}>
+            <Link to={linkCetakBarcode}>
               {" "}
               <i className="fa fa-barcode" />
               <span>Cetak Barcode </span>
@@ -1661,7 +1667,7 @@ class SideMenu extends Component {
 
           {/* SETTINGS MODUL START */}
           <li
-            className={"treeview" + (this.state.isSetting === true || path === "/user" || path === "/location" || path === "/company" ? " active menu-open" : "")}
+            className={"treeview" + (this.state.isSetting === true || path === linkPengaturanPengguna || path === linkPengaturanLokasi || path === linkPengaturanUmum ? " active menu-open" : "")}
             style={modul_setting === true ? { display: "block" } : { display: "none" }}
           >
             <a href="!#" onClick={(e) => this.changeMenu(e, "setting")}>
@@ -1673,22 +1679,22 @@ class SideMenu extends Component {
                 display: this.state.isSetting === true ? "block" : "none",
               }}
             >
-              <li className={path === "/company" ? "active" : ""} style={this.state.pengaturan_umum === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/company" style={{ width: "fit-content" }}>
+              <li className={path === linkPengaturanUmum ? "active" : ""} style={this.state.pengaturan_umum === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPengaturanUmum} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-gear" />
                   Pengaturan Umum
                 </Link>
               </li>
-              <li className={path === "/user" ? "active" : ""} style={this.state.pengguna === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/user" style={{ width: "fit-content" }}>
+              <li className={path === linkPengaturanPengguna ? "active" : ""} style={this.state.pengguna === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPengaturanPengguna} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-group" />
                   Pengguna
                 </Link>
               </li>
-              <li className={path === "/location" ? "active" : ""} style={this.state.lokasi === "0" ? { display: "none" } : { display: "block" }}>
-                <Link to="/location" style={{ width: "fit-content" }}>
+              <li className={path === linkPengaturanLokasi ? "active" : ""} style={this.state.lokasi === "0" ? { display: "none" } : { display: "block" }}>
+                <Link to={linkPengaturanLokasi} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="zmdi zmdi-pin" />
                   Lokasi

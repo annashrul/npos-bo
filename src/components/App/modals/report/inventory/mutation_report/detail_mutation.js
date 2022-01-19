@@ -45,7 +45,7 @@ class DetailMutation extends Component {
     return (
       <div>
         <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailMutation"} size="lg">
-          <ModalHeader toggle={this.toggle}>DETAIL LAPORAN MUTASI</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Detail laporan mutasi</ModalHeader>
           <ModalBody>
             <HeaderDetailCommon
               data={[

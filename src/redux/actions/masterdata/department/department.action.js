@@ -19,7 +19,7 @@ export function setDepartmentFailed(data = []) {
   return { type: DEPT.FAILED, data };
 }
 
-export const FetchDepartment = (where = "") => {
+export const FetchDepartment = (where = "", clearCache=false) => {
   return (dispatch) => {
     let url = baseUrl;
     if (where !== "") url += `?${where}`;
@@ -29,7 +29,8 @@ export const FetchDepartment = (where = "") => {
         const data = res.data;
         dispatch(setDepartment(data));
       },
-      true
+      true,
+      clearCache
     );
   };
 };
@@ -40,7 +41,7 @@ export const createDepartment = (data) => {
       swal(msg);
       if (status) {
         dispatch(ModalToggle(false));
-        dispatch(FetchDepartment("page=1"));
+        dispatch(FetchDepartment("page=1", true));
       }
     });
   };
@@ -54,7 +55,7 @@ export const updateDepartment = (id, data) => {
       swal(msg);
       if (status) {
         dispatch(ModalToggle(false));
-        dispatch(FetchDepartment(data.where));
+        dispatch(FetchDepartment(data.where,true));
       }
     });
   };

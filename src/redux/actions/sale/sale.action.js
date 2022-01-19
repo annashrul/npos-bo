@@ -10,6 +10,7 @@ import { isEmptyOrUndefined, ToastQ } from "../../../helper";
 import { ModalType } from "../modal.action";
 import moment from "moment";
 import Cookies from "js-cookie";
+import { linkReportArsipPenjualan } from "../../../helperLink";
 
 export function setDownload(load) {
   return {
@@ -218,7 +219,8 @@ export const storeSale = (data, param) => {
             }
           });
           document.getElementById("btnNota3ply").addEventListener("click", () => {
-            const win = window.open(`/print3ply/${datum.result.kode}`, "_blank");
+            // `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`;
+            const win = window.open(`${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`, "_blank");
             if (win != null) {
               win.focus();
             }

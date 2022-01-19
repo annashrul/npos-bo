@@ -118,12 +118,20 @@ class FormSale extends Component {
 
   handleChange = (event) => {
     event.preventDefault();
-    this.setState({ [event.target.name]: event.target.value });
-
-    if (event.target.name === "tunai") {
-      let tunai = event.target.value;
+    let col = event.target.name;
+    let val = event.target.value;
+    this.setState({ [col]: val});
+    if (col === "tunai") {
+      let tunai = val;
       if (tunai < 0) {
         tunai = 0;
+      }
+
+      if(this.state.jenis_trx==="Gabungan"){
+        console.log(this.state.gt,val)
+        this.setState({
+          jml_kartu:this.state.gt -  parseInt(rmComma(tunai), 10)
+        })
       }
       this.setState({
         change: parseInt(rmComma(tunai), 10) - this.state.gt,
@@ -136,19 +144,19 @@ class FormSale extends Component {
         kartu: "-",
       });
     }
-    if (event.target.name.toLowerCase() === "dp") {
+    if (col.toLowerCase() === "dp") {
       this.setState({
         change: 0,
-        tunai: event.target.value === "" || event.target.value === undefined || event.target.value === null ? 0 : event.target.value,
+        tunai: val === "" || val === undefined || val === null ? 0 : val,
       });
       Object.assign(this.props.master, {
         change: 0,
         tunai: rmComma(this.state.tunai),
       });
     }
-    if (event.target.name === "tanggal_tempo") {
+    if (col === "tanggal_tempo") {
       Object.assign(this.props.master, {
-        tempo: event.target.value,
+        tempo: val,
       });
     }
   };
@@ -217,11 +225,14 @@ class FormSale extends Component {
     field["join"] = [];
     field["detail"] = this.props.detail;
     let parsedata = field;
-
     let bank = this.state.bank.split("-");
+    let jenisTransaksi = this.state.jenis_trx;
+    let nominalTunai=parseInt(rmComma(this.state.tunai));
+    let nominalTransfer=parseInt(rmComma(this.state.jml_kartu));
+    let totalBayar = this.state.gt;
 
-    if (this.state.jenis_trx.toLowerCase() === "kredit") {
-      if (parseFloat(this.state.tunai.toString().replace(/,/g, "")) < 0) {
+    if (jenisTransaksi.toLowerCase() === "kredit") {
+      if (nominalTunai < 0) {
         handleError("Nominal masih kosong!");
         return;
       } else if (this.state.tanggal_tempo === "") {
@@ -238,33 +249,35 @@ class FormSale extends Component {
         this.resetState();
       }
     } else {
-      if (this.state.jenis_trx === "Tunai") {
-        if (parseFloat(this.state.tunai.toString().replace(/,/g, "")) < this.state.gt) {
+      if (jenisTransaksi === "Tunai") {
+        if (nominalTunai < totalBayar) {
           handleError("", "Jumlah uang tidak boleh kurang dari total pembayaran");
           return;
         }
       }
-      if (this.state.jenis_trx === "Transfer") {
+      if (jenisTransaksi === "Transfer") {
         if (this.state.bank === "") {
           handleError("", "silahkan pilih bank tujuan");
           return false;
         }
-        if (rmComma(this.state.jml_kartu) < this.state.gt) {
+        if (nominalTransfer < totalBayar) {
           handleError("", "Jumlah uang tidak boleh kurang dari total pembayaran");
           return false;
         }
       }
 
-      if (this.state.jenis_trx === "Gabungan") {
-        let jumlah = parseInt(rmComma(this.state.tunai)) + parseInt(rmComma(this.state.jml_kartu));
+      if (jenisTransaksi === "Gabungan") {
+        let jumlah = nominalTunai + nominalTransfer;
         if (this.state.bank === "") {
           handleError("", "silahkan pilih bank tujuan");
           return false;
         }
-        if (jumlah > parseInt(rmComma(this.state.gt))) {
+        
+        if (jumlah > parseInt(rmComma(totalBayar))) {
           handleError("", "uang tunai dan uang transfer tidak boleh lebih dari total pembayaran");
           return false;
         }
+
       }
 
       // parsedata["master"] = propsMaster;
@@ -272,26 +285,26 @@ class FormSale extends Component {
         Object.assign(parsedata["master"], { id_hold: "" });
       }
 
-      parsedata["master"]["jenis_trx"] = this.state.jenis_trx;
+      parsedata["master"]["jenis_trx"] = jenisTransaksi;
 
       let newparse = {};
 
-      if (this.state.jenis_trx === "Transfer") {
+      if (jenisTransaksi === "Transfer") {
         parsedata["master"]["change"] = 0;
         parsedata["master"]["tunai"] = 0;
-        parsedata["master"]["jml_kartu"] = rmComma(this.state.jml_kartu);
+        parsedata["master"]["jml_kartu"] = nominalTransfer;
         parsedata["master"]["pemilik_kartu"] = bank[1];
         parsedata["master"]["kartu"] = bank[0];
-      } else if (this.state.jenis_trx === "Tunai") {
+      } else if (jenisTransaksi === "Tunai") {
         parsedata["master"]["change"] = rmComma(this.state.change);
-        parsedata["master"]["tunai"] = rmComma(this.state.tunai);
+        parsedata["master"]["tunai"] = nominalTunai;
         parsedata["master"]["jml_kartu"] = 0;
         parsedata["master"]["pemilik_kartu"] = "-";
         parsedata["master"]["kartu"] = "-";
-      } else if (this.state.jenis_trx === "Gabungan") {
+      } else if (jenisTransaksi === "Gabungan") {
         parsedata["master"]["change"] = 0;
-        parsedata["master"]["tunai"] = rmComma(this.state.tunai);
-        parsedata["master"]["jml_kartu"] = rmComma(this.state.jml_kartu);
+        parsedata["master"]["tunai"] = nominalTunai;
+        parsedata["master"]["jml_kartu"] = nominalTransfer;
         parsedata["master"]["pemilik_kartu"] = bank[1];
         parsedata["master"]["kartu"] = bank[0];
       }
@@ -312,7 +325,6 @@ class FormSale extends Component {
     return (
       <div className="form-group">
         <label htmlFor="">{label}</label>
-
         <input
           type="text"
           name={name}

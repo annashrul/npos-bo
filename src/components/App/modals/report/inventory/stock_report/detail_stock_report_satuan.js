@@ -67,21 +67,37 @@ class DetailStockReportSatuan extends Component {
     let sumTotPrice2 = 0;
     let sumTotPrice3 = 0;
     let sumTotPrice4 = 0;
+    let propsUser=this.props.auth.user;
+    let setHarga=propsUser.set_harga;
     let head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "Lokasi" },
     ];
-    !tenant && head.push({ colSpan: 4, label: "Harga" });
+    !tenant && setHarga>1?head.push({ colSpan: setHarga, label: "Harga" }):head.push({ rowSpan: 2, label: "Harga" });
     head.push({ colSpan: 4, label: "Stok" });
-    !tenant && head.push({ rowSpan: 2, label: "Hpp" }, { colSpan: 4, label: "Profit" }, { colSpan: 4, label: "Total harga" });
+    !tenant && head.push({ rowSpan: 2, label: "Hpp" });
+    !tenant && setHarga>1?head.push({ colSpan: setHarga, label: "Profit" }):head.push({ rowSpan: 2, label: "Profit" });
+    !tenant && setHarga>1?head.push({ colSpan: setHarga, label: "Total harga" }):head.push({ rowSpan: 2, label: "Total harga" });
 
     let rowSpan = [];
-    !tenant && rowSpan.push({ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" });
+    if(setHarga>1){
+      for(let i=0;i<setHarga;i++){
+        !tenant && rowSpan.push({ label: propsUser.nama_harga[`harga${i+1}`] });
+      }
+    }
     rowSpan.push({ label: "Awal" }, { label: "Masuk" }, { label: "Keluar" }, { label: "Akhir" });
-    !tenant && rowSpan.push({ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" });
-    !tenant && rowSpan.push({ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" });
-
+    if(setHarga>1){
+      for(let i=0;i<setHarga;i++){
+        !tenant && rowSpan.push({ label: propsUser.nama_harga[`harga${i+1}`] });
+      }
+    }
+    if(setHarga>1){
+      for(let i=0;i<setHarga;i++){
+        !tenant && rowSpan.push({ label: propsUser.nama_harga[`harga${i+1}`] });
+      }
+    }
+    console.log(this.props.auth)
     return (
       <div>
         <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailStockReportSatuan"} size="lg">
@@ -136,9 +152,9 @@ class DetailStockReportSatuan extends Component {
                           </td>
                           <td className={`middle nowrap`}>{v.nama_toko}</td>
                           <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga2)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga3)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga4)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>1 ? "" : "dNone"}`}>{parseToRp(v.harga2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>2 ? "" : "dNone"}`}>{parseToRp(v.harga3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>3 ? "" : "dNone"}`}>{parseToRp(v.harga4)}</td>
                           <td className={`middle nowrap text-right`}>{parseToRp(v.stock_awal)}</td>
                           <td className={`middle nowrap text-right`}>{parseToRp(v.stock_masuk)}</td>
                           <td className={`middle nowrap text-right`}>{parseToRp(v.stock_keluar)}</td>
@@ -146,40 +162,40 @@ class DetailStockReportSatuan extends Component {
                           <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga_beli)}</td>
 
                           <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg1)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg2)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg3)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.profit_hrg4)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>1 ? "" : "dNone"}`}>{parseToRp(v.profit_hrg2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>2 ? "" : "dNone"}`}>{parseToRp(v.profit_hrg3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant &&setHarga>3? "" : "dNone"}`}>{parseToRp(v.profit_hrg4)}</td>
 
                           <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg1)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg2)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg3)}</td>
-                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.total_hrg4)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>1 ? "" : "dNone"}`}>{parseToRp(v.total_hrg2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>2 ? "" : "dNone"}`}>{parseToRp(v.total_hrg3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant&&setHarga>3? "" : "dNone"}`}>{parseToRp(v.total_hrg4)}</td>
                         </tr>
                       );
                     })
-                  : noData(head.length)
+                  : noData(head.length+rowSpan.length)
               }
               footer={[
                 {
                   data: [
                     { colSpan: 3, label: "Total", className: "text-left" },
                     { colSpan: 1, label: parseToRp(totPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(totPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(totPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(totPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice2), className: `text-right ${!tenant&&setHarga>1 ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice3), className: `text-right ${!tenant&&setHarga>2 ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totPrice4), className: `text-right ${!tenant&&setHarga>3 ? "" : "dNone"}` },
                     { colSpan: 1, label: parseToRp(totFirstStock) },
                     { colSpan: 1, label: parseToRp(totStockIn) },
                     { colSpan: 1, label: parseToRp(totStockOut) },
                     { colSpan: 1, label: parseToRp(totLastStock) },
                     { colSpan: 1, label: parseToRp(totHpp), className: `text-right ${!tenant ? "" : "dNone"}` },
                     { colSpan: 1, label: parseToRp(totProfitPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(totProfitPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(totProfitPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(totProfitPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice2), className: `text-right ${!tenant&&setHarga>1 ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice3), className: `text-right ${!tenant&&setHarga>2 ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(totProfitPrice4), className: `text-right ${!tenant&&setHarga>3 ? "" : "dNone"}` },
                     { colSpan: 1, label: parseToRp(sumTotPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(sumTotPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(sumTotPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
-                    { colSpan: 1, label: parseToRp(sumTotPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice2), className: `text-right ${!tenant&&setHarga>1 ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice3), className: `text-right ${!tenant&&setHarga>2 ? "" : "dNone"}` },
+                    { colSpan: 1, label: parseToRp(sumTotPrice4), className: `text-right ${!tenant&&setHarga>3 ? "" : "dNone"}` },
                   ],
                 },
               ]}

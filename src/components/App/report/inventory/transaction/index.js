@@ -11,6 +11,7 @@ import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import { statusArsipPenjualan, statusMutasi } from "../../../../../helperStatus";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import { linkAlokasi, linkReportAlokasi3ply } from "../../../../../helperLink";
 
 class TransactionReport extends Component {
   constructor(props) {
@@ -137,10 +138,10 @@ class TransactionReport extends Component {
                               console.log(e);
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleRePrint(v.no_faktur_mutasi);
-                              if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
+                              if (e === 2) this.props.history.push(`${linkReportAlokasi3ply}${v.no_faktur_mutasi}`);
                               if (e === 3) this.HandleRemove(v.no_faktur_mutasi);
                               if (v.status === "0") {
-                                if (e === 4) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
+                                if (e === 4) this.props.history.push(`${linkAlokasi}/${btoa(v.no_faktur_mutasi)}`);
                               }
                             }}
                           />

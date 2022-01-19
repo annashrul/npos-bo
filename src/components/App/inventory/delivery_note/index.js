@@ -180,9 +180,6 @@ class DeliveryNote extends Component {
       this.setState({
         ambil_nota: localStorage.nota,
       });
-      // this.props.dispatch(FetchReceiveData(localStorage.nota));
-      // destroy(table)
-      // this.getData()
     }
 
     if (localStorage.lk !== undefined && localStorage.lk !== "") {
@@ -249,22 +246,27 @@ class DeliveryNote extends Component {
       location_val: lk.label,
       error: err,
     });
+    this.HandleChangeLokasi2(lk,"change")
     localStorage.setItem("lk", lk.value);
     this.props.dispatch(FetchNota(lk.value));
     this.props.dispatch(FetchBrg(1, "barcode", "", lk.value, null, this.autoSetQty, 5));
     destroy(table);
     this.getData();
   }
-  HandleChangeLokasi2(sp) {
-    let err = Object.assign({}, this.state.error, {
-      location2: "",
-    });
-    this.setState({
+  HandleChangeLokasi2(sp,par="") {
+    let setState={
       location2: sp.value,
-      location2_val: sp.label,
-      error: err,
-    });
-    localStorage.setItem("lk2", sp.value);
+      location2_val: sp.label
+    };
+    if(par==="change"){
+      let anotherLocation = this.state.location_data.filter((option) => option.value !== sp.value)
+      Object.assign(setState,{
+        location2: anotherLocation[0].value,
+        location2_val: anotherLocation[0].label,
+      });
+    }
+    localStorage.setItem("lk2", setState.location2);
+    this.setState(setState);
   }
   HandleCommonInputChange(e, errs = true, st = 0) {
     const column = e.target.name;
@@ -452,10 +454,7 @@ class DeliveryNote extends Component {
       handleError("Lokasi tujuan");
       return;
     }
-    if (!isEmptyOrUndefined(this.state.catatan)) {
-      handleError("Catatan");
-      return;
-    }
+  
     const data = get(table);
     data.then((res) => {
       if (res.length === 0) {
@@ -480,7 +479,7 @@ class DeliveryNote extends Component {
             tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
             lokasi_asal: this.state.location,
             lokasi_tujuan: this.state.location2,
-            catatan: this.state.catatan,
+            catatan: !isEmptyOrUndefined(this.state.catatan)?"-":this.state.catatan,
             kode_pembelian: this.state.ambil_nota,
             subtotal,
             userid: this.state.userid,
@@ -495,7 +494,10 @@ class DeliveryNote extends Component {
           parsedata["user"] = this.props.auth.user.username;
           parsedata["lokasi_asal"] = this.state.location_val;
           parsedata["lokasi_tujuan"] = this.state.location2_val;
-          this.props.dispatch(storeDN(parsedata, (arr) => this.props.history.push(arr)));
+          this.props.dispatch(storeDN(parsedata, (arr) => {
+            this.props.dispatch(FetchNota(localStorage.lk));
+            this.props.history.push(arr);
+          }));
         });
       }
     });
@@ -820,8 +822,7 @@ class DeliveryNote extends Component {
                 {/*END LEFT*/}
                 {/*START RIGHT*/}
                 <div style={this.state.toggleSide ? { width: "100%" } : { width: "75%" }}>
-                  <div className="card-header">
-                    <form className="">
+                <form className="">
                       <div className="row">
                         <div className="col-md-3">
                           <div className="form-group">
@@ -872,24 +873,23 @@ class DeliveryNote extends Component {
                         </div>
                       </div>
                     </form>
-                  </div>
                   <TableCommon
                     head={[
-                      { label: "No", width: "1%" },
-                      { label: "Barang", width: "1%" },
-                      { label: "Satuan", width: "1%" },
-                      { label: "Harga beli", width: "1%" },
-                      { label: "Harga jual 1", width: "1%" },
-                      { label: "Stok", width: "1%" },
-                      { label: "Qty" },
-                      { label: "Subtotal", width: "1%" },
-                      { label: "#", className: "text-center", width: "1%" },
+                      { rowSpan:2,label: "No", width: "1%",className:"text-center" },
+                      { rowSpan:2,label: "Barang", width: "1%" },
+                      { rowSpan:2,label: "Satuan", width: "1%" },
+                      { colSpan:2,label: "Harga", width: "1%" },
+                      { rowSpan:2,label: "Stok", width: "1%" },
+                      { rowSpan:2,label: "Qty" },
+                      { rowSpan:2,label: "Subtotal", width: "1%" },
+                      { rowSpan:2,label: "#", className: "text-center", width: "1%" },
                     ]}
+                    rowSpan={[{ label: "Beli" }, { label: "Jual" }]}
                     renderRow={this.state.databrg.map((item, index) => {
                       subtotal += parseInt(item.harga_beli, 10) * parseFloat(item.qty);
                       return (
                         <tr key={index}>
-                          <td className="middle nowrap">{index + 1}</td>
+                          <td className="middle nowrap text-center">{index + 1}</td>
                           <td className="middle nowrap">
                             {item.nm_brg} <br />
                             {item.barcode}

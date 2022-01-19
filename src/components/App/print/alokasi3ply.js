@@ -124,7 +124,7 @@ class Print3ply extends Component {
                   Qty diterima
                 </td>
                 <td style={{ width: "20%", borderBottom: "", borderWidth: "", paddingLeft: "5pt" }} className="text-center">
-                  Harga jual
+                  Harga
                 </td>
                 <td style={{ width: "20%", borderBottom: "", borderWidth: "", paddingLeft: "5pt" }} className="text-center">
                   Amount
@@ -135,8 +135,23 @@ class Print3ply extends Component {
               {detail !== undefined
                 ? detail.data.map((item, index) => {
                     const jenis = item.no_faktur_mutasi.substring(0, 2);
-                    console.log("##################", jenis);
-                    amount_total += jenis === "TR" ? item.hrg_jual : item.hrg_beli * (item.qty_retur > 0 ? item.qty - item.qty_retur : 0);
+                    // amount_total += jenis === "TR" ? parseInt(item.hrg_jual, 10) : parseInt(item.hrg_beli, 10) * (parseInt(item.qty_retur, 10) > 0 ? parseInt(item.qty, 10) - parseInt(item.qty_retur) : parseInt(item.qty, 10));
+                    let amount = 0;
+                    let price = 0;
+                    if (jenis === "TR") {
+                      price = parseInt(item.hrg_jual, 10);
+                    } else {
+                      price = parseInt(item.hrg_beli, 10);
+                    }
+                    if (parseInt(item.qty_retur, 10) > 0) {
+                      amount = price * (parseInt(item.qty, 10) - parseInt(item.qty_retur, 10));
+                    } else {
+                      amount = price * parseInt(item.qty, 10);
+                    }
+                    amount_total+=amount;
+
+                    console.log("amount", amount);
+
                     return (
                       <tr key={index}>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-center">
@@ -158,10 +173,10 @@ class Print3ply extends Component {
                           {item.qty_retur > 0 ? item.qty - item.qty_retur : 0}
                         </td>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-right">
-                          {toRp(jenis === "TR" ? item.hrg_jual : item.hrg_beli)}
+                          {toRp(price)}
                         </td>
                         <td style={{ border: "solid", borderWidth: "", paddingLeft: "5pt" }} className="text-right">
-                          {toRp(jenis === "TR" ? item.hrg_jual : item.hrg_beli * (item.qty_retur > 0 ? item.qty - item.qty_retur : 0))}
+                          {toRp(amount)}
                         </td>
                       </tr>
                     );

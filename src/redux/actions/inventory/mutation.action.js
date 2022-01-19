@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { setLoading } from "../masterdata/customer/customer.action";
 import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
+import { linkApprovalMutasi } from "../../../helperLink";
 
 export function setDownload(load) {
   return {
@@ -95,6 +96,7 @@ export const rePrintFaktur = (id) => {
             showConfirmButton: false,
           }).then((result) => {
             if (result.dismiss === "cancel") {
+              // console.log(this.props);
               window.location.reload();
               // window.open(`/approval_mutasi`, '_top');
             }
@@ -224,31 +226,15 @@ export const saveApprovalMutation = (data, param, lokasi) => {
           showConfirmButton: false,
         }).then((result) => {
           if (result.dismiss === "cancel") {
-            dispatch(FetchApprovalMutation(1, "", lokasi, ""));
-            dispatch(ModalToggle(false));
-            param({ pathname: "/approval_mutasi" });
-
-            // window.location.reload();
-            // window.open(`/approval_mutasi`, '_top');
+            // dispatch(FetchApprovalMutation(1, "", lokasi, ""));
+            // dispatch(ModalToggle(false));
+            param({ pathname: linkApprovalMutasi });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {
-          // const win = window.open(data['kd_trx'], '_blank');
-          // if (win != null) {
-          //     win.focus();
-          // }
-
-          dispatch(rePrintFaktur(data.data["kd_trx"]));
+            dispatch(rePrintFaktur(data.data["kd_trx"]));
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          // param({
-          //     pathname: `/approvalAlokasi3ply`,
-          //     state: {
-          //         data: rawdata,
-          //     }
-          // })
-          // Swal.closeModal();
-          // return false;
           const win = window.open(`/alokasi3ply/${data.data["kd_trx"]}`, "_blank");
           if (win != null) {
             win.focus();

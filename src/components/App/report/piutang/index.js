@@ -91,7 +91,7 @@ class PiutangReport extends Component {
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
       { colSpan: 2, label: "Faktur", width: "1%" },
       { rowSpan: 2, label: "Customer" },
-      { rowSpan: 2, label: "Operator" },
+      { rowSpan: 2, label: "Operator", width: "1%" },
       { rowSpan: 2, label: "Bank", width: "1%" },
       { rowSpan: 2, label: "Jumlah", width: "1%" },
       { colSpan: 2, label: "Tanggal", width: "1%" },

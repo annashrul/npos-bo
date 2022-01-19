@@ -100,15 +100,17 @@ class ReturPembelianReport extends Component {
                       <tr key={i}>
                         <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
-                          <ButtonActionCommon
-                            action={[{ label: "Detail" }]}
-                            callback={(e) => {
-                              if (e === 0) this.handleModal("detail", v);
-                              // if (e === 1) this.props.dispatch(FetchNotaReceipt(v.kd_trx));
-                              // if (e === 2) this.props.history.push(`../print3ply/${v.kd_trx}`);
-                              // if (e === 3) this.handleDelete(v.kd_trx);
-                            }}
-                          />
+                          {v.no_faktur_beli !== "Tanpa Nota" && (
+                            <ButtonActionCommon
+                              action={[{ label: "Detail" }]}
+                              callback={(e) => {
+                                if (e === 0) this.handleModal("detail", v);
+                                // if (e === 1) this.props.dispatch(FetchNotaReceipt(v.kd_trx));
+                                // if (e === 2) this.props.history.push(`../print3ply/${v.kd_trx}`);
+                                // if (e === 3) this.handleDelete(v.kd_trx);
+                              }}
+                            />
+                          )}
                         </td>
                         <td className="middle nowrap">{v.no_retur}</td>
                         <td className="middle nowrap">{v.no_faktur_beli}</td>

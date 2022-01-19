@@ -110,7 +110,7 @@ class AdjustmentReport extends Component {
           callback={(e, index) => {
             if (e === 0) this.handleModal("detail", data[index]);
             if (e === 1) this.props.history.push(`${HEADERS.URL}reports/adjust/${data[index].kd_trx}.pdf`);
-            if (e === 2) this.props.history.push(`../adjust3ply/${data[index].kd_trx}`);
+            if (e === 2) this.props.history.push(`/adjust3ply/${data[index].kd_trx}`);
             if (e === 3) this.handleDelete(data[index]);
           }}
         />

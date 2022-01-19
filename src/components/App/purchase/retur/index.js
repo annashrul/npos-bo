@@ -415,7 +415,8 @@ class ReturTanpaNota extends Component {
           parsedata["logo"] = this.props.auth.user.logo;
           parsedata["user"] = this.props.auth.user.username;
           parsedata["lokasi"] = this.state.location_val;
-          this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: detail }, (arr) => this.props.history.push(arr)));
+          // console.log({ master: masterOther, detail: detail });
+          this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: res }, (arr) => this.props.history.push(arr)));
         });
       }
     });
@@ -752,7 +753,7 @@ class ReturTanpaNota extends Component {
                           </td>
 
                           <td className="middle nowrap">
-                            <select className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                            <select disabled={item.tambahan.length <= 1} className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
                               {item.tambahan.map((i) => {
                                 return (
                                   <option value={i.satuan} selected={i.satuan === item.satuan}>

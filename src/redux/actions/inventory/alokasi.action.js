@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
+import { linkAlokasi, linkReportAlokasi, linkReportAlokasi3ply } from "../../../helperLink";
 export function setDOwnload(load) {
   return {
     type: ALOKASI.DOWNLOAD,
@@ -143,16 +144,10 @@ export const storeAlokasi = (data, param) => {
           //     }
           // }
           destroy("alokasi");
-          localStorage.removeItem("lk2");
-          localStorage.removeItem("lk");
-          localStorage.removeItem("ambil_data");
-          localStorage.removeItem("nota");
-          localStorage.removeItem("catatan");
-
           if (result.dismiss === "cancel") {
             // window.location.reload(false);
             // window.history.back();
-            param({ pathname: "/alokasi" });
+            param({ pathname: linkAlokasi });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {
@@ -162,10 +157,8 @@ export const storeAlokasi = (data, param) => {
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          // param({
-          //     pathname: `/alokasi3ply/${response.data.result.insertId}`
-          // })
-          const win = window.open(`/alokasi3ply/${response.data.result.insertId}`, "_blank");
+          param();
+          const win = window.open(`${linkReportAlokasi3ply}${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }

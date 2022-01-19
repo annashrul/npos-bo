@@ -12,6 +12,7 @@ import { FetchApprovalMutationDetail } from "../../../../redux/actions/inventory
 import { Link } from "react-router-dom";
 import { Card, CardBody, Collapse } from "reactstrap";
 import { toRp } from "../../../../helper";
+import { linkReportAlokasiTransaksi, linkReportMutasi } from "../../../../helperLink";
 
 class ApprovalMutasiJualBeli extends Component {
   constructor(props) {
@@ -107,7 +108,7 @@ class ApprovalMutasiJualBeli extends Component {
             <div className="card-body d-flex align-items-center justify-content-between">
               <h5>Approval Mutasi</h5>
               <div>
-                <Link to="report/alokasi_trx" className="btn btn-outline-info">
+                <Link to={linkReportAlokasiTransaksi} className="btn btn-outline-info">
                   <i className="fa fa-eye"></i>&nbsp;VIEW REPORT
                 </Link>
               </div>

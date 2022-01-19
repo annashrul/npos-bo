@@ -13,6 +13,7 @@ import HeaderReportCommon from "../../common/HeaderReportCommon";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
+import CompareLocationCommon from "../../common/CompareLocationCommon";
 
 const kassStorage = "kassaReportKas";
 const typeStorage = "typeReportKas";
@@ -164,8 +165,9 @@ class ReportCash extends Component {
           }}
           callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
           excelData={this.props.isLoading}
+          isLocation={true}
           renderRow={
-            <div className="col-md-6">
+            <div className="col-md-4">
               <div className="row">
                 <div className="col-6 col-xs-6 col-md-6">
                   <SelectCommon label="kassa" options={this.state.kassa_data} callback={(res) => this.handleSelect("kassa", res)} dataEdit={this.state.kassa} />
@@ -217,7 +219,7 @@ class ReportCash extends Component {
                         <td className="middle nowrap">{v.type}</td>
                         <td className="middle nowrap">{v.jenis}</td>
                         <td className="middle nowrap">
-                          {v.lokasi} ({v.kassa})
+                          <CompareLocationCommon lokasi={v.lokasi} /> &nbsp;({v.kassa})
                         </td>
                         <td className="middle nowrap">{v.kasir}</td>
                         <td className="middle nowrap text-right">{parseToRp(v.jumlah)}</td>

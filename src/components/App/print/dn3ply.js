@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import connect from "react-redux/es/connect/connect";
-import {toRp} from 'helper';
+import {toRp,toDate} from 'helper';
 import Barcode from 'react-barcode';
 import {FetchDnDetail} from "redux/actions/inventory/dn.action";
 
@@ -68,7 +68,7 @@ class Adjust3ply extends Component {
                             <td />
                             <td>Tanggal</td>
                             <td>:</td>
-                            <td>{tanggal}</td>
+                            <td>{toDate(tanggal)}</td>
                             <td />
                             <td>Operator</td>
                             <td>:</td>
@@ -103,7 +103,7 @@ class Adjust3ply extends Component {
                             <td style={{width: '35%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Nama</td>
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Barcode</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
-                            <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock</td>
+                            <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Qty</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
                             {/* <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual</td> */}
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Amount</td>

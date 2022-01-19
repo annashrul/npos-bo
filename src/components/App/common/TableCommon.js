@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Paginationq, { generateNo, isImage, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../helper";
+import Paginationq, { generateNo, isEmptyOrUndefined, isImage, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../helper";
 import { statusGeneral } from "../../../helperStatus";
 import ButtonActionCommon from "./ButtonActionCommon";
 
@@ -8,11 +8,7 @@ class TableCommon extends Component {
     if (val.isStatus) return statusGeneral(res, true);
     if (val.isCurrency) return parseToRp(res);
     if (val.isImage) return isImage(res);
-    if (val.isSubstring) {
-      if (res.length > 30) {
-        return `${res}`.substr(0, 30) + " ..";
-      }
-    }
+    if (val.isSubstring) return rmSpaceToStrip(res).length>30?`${res}`.substr(0, 30) + " ..":"-"
     if (val.date) return toDate(res);
     return rmSpaceToStrip(res);
   }

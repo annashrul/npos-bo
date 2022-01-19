@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { ModalToggle, ModalType } from "../modal.action";
 import { handleGet, handleGetExport } from "../handleHttp";
+import { linkDeliveryNote } from "../../../helperLink";
 export function setDOwnload(load) {
   return {
     type: DN.DOWNLOAD,
@@ -179,21 +180,10 @@ export const storeDN = (data, param) => {
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
-          // if (result.value) {
-          //     const win = window.open(data.result.nota,'_blank');
-          //     if (win != null) {
-          //         win.focus();
-          //     }
-          // }
           destroy("delivery_note");
-          localStorage.removeItem("lk2");
-          localStorage.removeItem("lk");
-          localStorage.removeItem("ambil_data");
-          localStorage.removeItem("nota");
-          localStorage.removeItem("catatan");
           if (result.dismiss === "cancel") {
             param({
-              pathname: "/delivery_note",
+              pathname: linkDeliveryNote,
             });
           }
         });
@@ -204,14 +194,11 @@ export const storeDN = (data, param) => {
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          // param({
-          //     pathname: `/dn3ply/${response.data.result.insertId}`
-          // })
+          param();
           const win = window.open(`/dn3ply/${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }
-          //Swal.closeModal();==
           return false;
         });
         dispatch(setLoading(false));

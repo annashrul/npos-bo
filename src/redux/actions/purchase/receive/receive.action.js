@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { handleDelete, handleGet, handleGetExport } from "../../handleHttp";
 import { ModalToggle, ModalType } from "../../modal.action";
+import { linkReceivePembelian } from "../../../../helperLink";
 export function setDownload(load) {
   return {
     type: RECEIVE.DOWNLOAD,
@@ -110,7 +111,7 @@ export const storeReceive = (data, param) => {
         }).then((result) => {
           destroy("receive");
           if (result.dismiss === "cancel") {
-            param({ pathname: "/receive" });
+            param({ pathname: linkReceivePembelian });
           }
         });
         document.getElementById("btnNotaPdf").addEventListener("click", () => {

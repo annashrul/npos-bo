@@ -17,6 +17,8 @@ export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_D
 
 export const noDataImg = Default;
 
+
+
 export const rmPage = (res) => {
   let whereProps = res.split("&");
   whereProps.shift();
@@ -385,19 +387,19 @@ export const ToastQ = Swal.mixin({
 });
 export const statusQ = (lbl, txt) => {
   if (lbl === "success") {
-    return <button className="btn btn-success btn-sm">{txt}</button>;
+    return <button className="btn btn-success btn-sm" style={{width:"100%"}}>{txt}</button>;
   } else if (lbl === "danger") {
-    return <button className="btn btn-danger btn-sm">{txt}</button>;
+    return <button className="btn btn-danger btn-sm" style={{width:"100%"}}>{txt}</button>;
   } else if (lbl === "warning") {
     return (
-      <button className="btn btn-warning btn-sm" style={{ color: "white" }}>
+      <button className="btn btn-warning btn-sm" style={{ color: "white",width:"100%" }}>
         {txt}
       </button>
     );
   } else if (lbl === "info") {
-    return <button className="btn btn-info btn-sm">{txt}</button>;
+    return <button className="btn btn-info btn-sm" style={{width:"100%"}}>{txt}</button>;
   } else if (lbl === "primary") {
-    return <button className="btn btn-primary btn-sm">{txt}</button>;
+    return <button className="btn btn-primary btn-sm" style={{width:"100%"}}>{txt}</button>;
   }
 };
 
@@ -450,8 +452,8 @@ export const kassa = (param = "") => {
 };
 
 export const lengthBrg = (str) => {
-  let txt = str.length > 15 ? `${str.substr(0, 15)} ...` : str;
-  return txt.toLowerCase();
+  let txt = str.length > 20 ? `${str.substr(0, 20)} ...` : str;
+  return txt;
 };
 export const CapitalizeEachWord = (str) => {
   let splitStr = str.toLowerCase().split(" ");

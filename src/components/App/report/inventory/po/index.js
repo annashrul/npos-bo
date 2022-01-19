@@ -146,7 +146,7 @@ class PoReport extends Component {
                             action={[{ label: "Detail" }, { label: "3ply" }, { label: "Nota" }, { label: "Hapus" }]}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
-                              if (e === 1) this.props.history.push(`../po3plyId/${v.no_po}`);
+                              if (e === 1) this.props.history.push(`/po3plyId/${v.no_po}`);
                               if (e === 2) this.handlePrintFaktur(v.no_po);
                               if (e === 3) this.handleDelete(v.no_po);
                             }}

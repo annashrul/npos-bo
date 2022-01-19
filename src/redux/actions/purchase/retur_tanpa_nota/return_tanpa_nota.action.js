@@ -5,6 +5,7 @@ import { destroy } from "components/model/app.model";
 import { ModalToggle, ModalType } from "../../modal.action";
 import { FetchReport } from "redux/actions/purchase/receive/receive.action";
 import { handleGet } from "../../handleHttp";
+import { linkReportReceive, linkReturTanpaNota } from "../../../../helperLink";
 
 export function setLoading(load) {
   return {
@@ -102,9 +103,9 @@ export const storeReturTanpaNota = (data, otherData, param, isModal = false) => 
             console.log(isModal);
             if (isModal) {
               dispatch(FetchReport("page=1"));
-              param({ pathname: "/report/receive" });
+              param({ pathname: linkReportReceive });
             } else {
-              param({ pathname: "/retur_tanpa_nota" });
+              param({ pathname: linkReturTanpaNota });
             }
           }
         });
@@ -115,7 +116,7 @@ export const storeReturTanpaNota = (data, otherData, param, isModal = false) => 
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          console.log(data);
+          console.log(rawdata);
           param({
             pathname: "/retur3ply",
             state: {

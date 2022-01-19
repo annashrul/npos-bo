@@ -214,6 +214,7 @@ class TrxOpname extends Component {
     const { searchby, databrg, brgval, location, toggleSide } = this.state;
     const head = [
       { rowSpan: 2, label: "Barang" },
+      { rowSpan: 2, label: "Satuan", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
       { colSpan: 2, label: "Stok", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
@@ -268,28 +269,29 @@ class TrxOpname extends Component {
                               <td className="middle nowrap">
                                 {item.nm_brg}
                                 <div className="subtitle">
-                                  {item.barcode} ( {item.satuan} )
+                                  {item.barcode}
                                 </div>
+                              </td>
+                              <td className="middle nowrap">
+                                <select value={item.satuan} className="form-control in-table" name="satuan" style={{ width: "100px" }} disabled={item.tambahan.length <= 1 ? true : false} onChange={(e) => this.HandleOnChange(e, index, item.tambahan)}>
+                                  {item.tambahan.map((i, key) => {
+                                    return (
+                                      <option key={key} value={i.satuan} selected={i.satuan === item.satuan}>
+                                        {i.satuan}
+                                      </option>
+                                    );
+                                  })}
+                                </select>
                               </td>
                               <td className="middle nowrap">
                                 <input style={{ width: "100px" }} disabled={true} type="text" name="saldo_stock" value={toCurrency(item.harga_beli)} className="form-control in-table text-right" />
                               </td>
-
                               <td className="middle nowrap">
                                 <input style={{ width: "100px" }} disabled={true} type="text" name="stock" value={toCurrency(parseInt(item.stock, 10))} className="form-control in-table text-right" />
                               </td>
+
                               <td className="middle nowrap">
-                                <input
-                                  style={{ width: "100px" }}
-                                  type="text"
-                                  name="qty"
-                                  ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)}
-                                  onFocus={(e) => this.HandleFocusInputReset(e, index)}
-                                  onBlur={(e) => this.HandleOnBlur(e, index)}
-                                  onChange={(e) => this.HandleOnChange(e, index)}
-                                  value={toCurrency(brgval[index].qty)}
-                                  className="form-control in-table text-right"
-                                />
+                                <input style={{ width: "100px" }} type="text" name="qty" ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)} onFocus={(e) => this.HandleFocusInputReset(e, index)} onBlur={(e) => this.HandleOnBlur(e, index)} onChange={(e) => this.HandleOnChange(e, index)} value={toCurrency(brgval[index].qty)} className="form-control in-table text-right" />
                               </td>
                               <td className="middle nowrap">
                                 <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>

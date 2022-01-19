@@ -28,6 +28,11 @@ class HeaderReportCommon extends Component {
 
   getProps(props) {
     let state = {};
+    if(props.isSelectedLocationFirstIndex){
+      Object.assign(state, { location: "LK/0001" });
+      setStorage(`locationStorage${this.props.pathName}`, "LK/0001");
+      // LK/001
+    }
     if (props.columnData !== undefined && props.columnData.length > 0) {
       Object.assign(state, { column_data: props.columnData });
       setStorage(`columnStorage${this.props.pathName}`, props.columnData[0].value);
@@ -122,6 +127,7 @@ class HeaderReportCommon extends Component {
   }
 
   handleSelect(state, res) {
+    console.log("handleSelect",res)
     this.setState({ [state]: res.value });
     if (this.props.isOther) {
       if (state === this.props.otherState) setStorage(`${state}Storage${this.props.pathName}`, res.value);
@@ -154,24 +160,27 @@ class HeaderReportCommon extends Component {
     if (this.props.col) {
       col = this.props.col;
     }
+    
     return (
       <div className="row">
-        <div className={`col-6 col-xs-6 ${col}`}>
-          {dateRange(
-            (first, last, isActive) => {
-              setStorage(`activeDateRangePickerStorage${this.props.pathName}`, isActive);
-              setStorage(`dateFromStorage${this.props.pathName}`, first);
-              setStorage(`dateToStorage${this.props.pathName}`, last);
-              this.handleService();
-            },
-            `${toDate(dateFrom)} - ${toDate(dateTo)}`,
-            getStorage(`activeDateRangePickerStorage${this.props.pathName}`)
-          )}
-        </div>
+        {
+          this.props.isPeriode===undefined?<div className={`col-6 col-xs-6 ${col}`}>
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(`activeDateRangePickerStorage${this.props.pathName}`, isActive);
+                setStorage(`dateFromStorage${this.props.pathName}`, first);
+                setStorage(`dateToStorage${this.props.pathName}`, last);
+                this.handleService();
+              },
+              `${toDate(dateFrom)} - ${toDate(dateTo)}`,
+              getStorage(`activeDateRangePickerStorage${this.props.pathName}`)
+            )}
+          </div> : null
+        }
 
         {this.props.isAll || this.props.isLocation ? (
           <div className={`col-6 col-xs-6 ${col}`}>
-            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
+            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={this.props.isSelectedLocationFirstIndex===undefined?true:false} isSelectedFirstIndex={this.props.isSelectedLocationFirstIndex?true:false} />
           </div>
         ) : null}
         {this.props.renderRow && this.props.renderRow}
@@ -209,7 +218,7 @@ class HeaderReportCommon extends Component {
                 type="search"
                 name="any"
                 className="form-control"
-                placeholder="tulis & enter"
+                placeholder={this.props.placeholder?this.props.placeholder:"tulis & enter"}
                 value={any}
                 onChange={this.handleChange}
                 onKeyPress={(e) => {

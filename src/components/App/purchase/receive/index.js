@@ -16,13 +16,15 @@ import { HEADERS, CONFIG_HIDE } from "redux/actions/_constants";
 import { withRouter } from "react-router-dom";
 import StickyBox from "react-sticky-box";
 import { toRp, ToastQ } from "helper";
-import { handleError, isEmptyOrUndefined, rmComma, swal, swallOption, toCurrency } from "../../../../helper";
+import { handleError, isEmptyOrUndefined, lengthBrg, rmComma, swal, swallOption, toCurrency } from "../../../../helper";
 import Spinner from "Spinner";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import Cookies from "js-cookie";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 const table = "receive";
+const receiveLocationStorage="receiveLocationStorage";
+const receiveSupplierStorage="receiveSupplierStorage";
 class Receive extends Component {
   constructor(props) {
     super(props);
@@ -172,9 +174,9 @@ class Receive extends Component {
         });
         this.getData();
         if (this.getConfigSupplier() === 0) {
-          this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5));
+          this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.receiveLocationStorage, null, this.autoSetQty, 5));
         } else {
-          this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, localStorage.sp, this.autoSetQty, 5));
+          this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.receiveLocationStorage, localStorage.receiveSupplierStorage, this.autoSetQty, 5));
         }
         this.setState({
           location: res.master.lokasi,
@@ -197,6 +199,7 @@ class Receive extends Component {
       // let get_master = localStorage.getItem('data_master_receive');
       // let master = JSON.parse(get_master);
     }
+   
   }
   componentDidMount() {
     this.props.dispatch(FetchSupplierAll());
@@ -224,26 +227,29 @@ class Receive extends Component {
       this.getData();
     }
 
-    if (localStorage.lk !== undefined && localStorage.lk !== "") {
-      this.props.dispatch(FetchNota(localStorage.lk));
+    if (localStorage.receiveLocationStorage !== undefined && localStorage.receiveLocationStorage !== "") {
+      this.props.dispatch(FetchNota(localStorage.receiveLocationStorage));
       this.setState({
-        location: localStorage.lk,
+        location: localStorage.receiveLocationStorage,
       });
     }
-    if (localStorage.sp !== undefined && localStorage.sp !== "") {
+    if (localStorage.receiveSupplierStorage !== undefined && localStorage.receiveSupplierStorage !== "") {
       this.setState({
-        supplier: localStorage.sp,
+        supplier: localStorage.receiveSupplierStorage,
       });
     }
-    if (localStorage.sp !== undefined && localStorage.sp !== "" && localStorage.lk !== undefined && localStorage.lk !== "") {
-      if (this.getConfigSupplier === 0) {
-        this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5));
+    if (localStorage.receiveSupplierStorage !== undefined && localStorage.receiveSupplierStorage !== "" && localStorage.receiveLocationStorage !== undefined && localStorage.receiveLocationStorage !== "") {
+      if (this.getConfigSupplier() === 0 || isNaN(this.getConfigSupplier())) {
+        this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.receiveLocationStorage, null, this.autoSetQty, 5));
       } else {
-        this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, localStorage.sp, this.autoSetQty, 5));
+        this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.receiveLocationStorage, localStorage.receiveSupplierStorage, this.autoSetQty, 5));
       }
     }
+
+    this.getData();
   }
   componentWillReceiveProps = (nextProps) => {
+
     let perpage = this.state.perpage;
     if (nextProps.barang.length === perpage) {
       this.setState({
@@ -269,6 +275,7 @@ class Receive extends Component {
     }
     if (nextProps.barang.length > 0) {
       this.getData();
+      
     }
 
     if (nextProps.po_report) {
@@ -298,10 +305,14 @@ class Receive extends Component {
             jenis_trx: nextProps.po_data.master.jenis,
             no_po: nextProps.po_data.master.no_po,
           });
-          localStorage.setItem("lk", nextProps.po_data.master.lokasi);
-          localStorage.setItem("sp", nextProps.po_data.master.kode_supplier);
+          localStorage.setItem(receiveLocationStorage, nextProps.po_data.master.lokasi);
+          localStorage.setItem(receiveSupplierStorage, nextProps.po_data.master.kode_supplier);
           localStorage.setItem("catatan", nextProps.po_data.master.catatan);
-          this.props.dispatch(FetchBrg(1, "barcode", "", nextProps.po_data.master.lokasi, nextProps.po_data.master.kode_supplier, this.autoSetQty, 5));
+          if (this.getConfigSupplier() === 0) {
+            this.props.dispatch(FetchBrg(1, "barcode", "", nextProps.po_data.master.lokasi, null, this.autoSetQty, 5));
+          } else {
+            this.props.dispatch(FetchBrg(1, "barcode", "", nextProps.po_data.master.lokasi, nextProps.po_data.master.kode_supplier, this.autoSetQty, 5));
+          }
           nextProps.po_data.detail.map((item) => {
             let newbrg = [];
             item.tambahan.map((i) => {
@@ -348,17 +359,16 @@ class Receive extends Component {
     }
   };
   componentWillUnmount() {
-    this.props.dispatch(setProductbrg({ status: "", msg: "", result: { data: [] } }));
-    destroy(table);
-    localStorage.removeItem("sp");
-    localStorage.removeItem("lk");
-    localStorage.removeItem("ambil_data");
-    localStorage.removeItem("nota");
-    localStorage.removeItem("catatan");
-    localStorage.removeItem("data_master_receive");
-    localStorage.removeItem("data_detail_receive");
-    localStorage.removeItem("anyReceive");
-    destroy("receive");
+    // this.props.dispatch(setProductbrg({ status: "", msg: "", result: { data: [] } }));
+    // destroy(table);
+    // localStorage.removeItem("sp");
+    // localStorage.removeItem("lk");
+    // localStorage.removeItem("ambil_data");
+    // localStorage.removeItem("nota");
+    // localStorage.removeItem("catatan");
+    // localStorage.removeItem("data_master_receive");
+    // localStorage.removeItem("data_detail_receive");
+    // localStorage.removeItem("anyReceive");
     if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
       localStorage.removeItem("data_master_receive");
       localStorage.removeItem("data_detail_receive");
@@ -396,7 +406,7 @@ class Receive extends Component {
       location_val: lk.label,
       error: err,
     });
-    localStorage.setItem("lk", lk.value);
+    localStorage.setItem(receiveLocationStorage, lk.value);
     this.props.dispatch(FetchNota(lk.value));
     if (this.state.supplier !== "") {
       if (this.getConfigSupplier() === 0) {
@@ -405,6 +415,7 @@ class Receive extends Component {
         this.props.dispatch(FetchBrg(1, "barcode", "", lk.value, this.state.supplier, this.autoSetQty, 5));
       }
     }
+   
     destroy(table);
     this.getData();
   }
@@ -416,8 +427,7 @@ class Receive extends Component {
       supplier: sp.value,
       error: err,
     });
-    localStorage.setItem("sp", sp.value);
-
+    localStorage.setItem(receiveSupplierStorage, sp.value);
     if (this.state.location !== "") {
       if (this.getConfigSupplier() === 0) {
         this.props.dispatch(FetchBrg(1, "barcode", "", this.state.location, null, this.autoSetQty, 5));
@@ -431,7 +441,6 @@ class Receive extends Component {
   HandleCommonInputChange(e, errs = true, st = 0) {
     const column = e.target.name;
     const val = e.target.value;
-    console.log(val, column);
     if (column === "discount_persen" || column === "pajak") {
       let val_final = 0;
       if (val < 0 || val === "") val_final = 0;
@@ -553,10 +562,10 @@ class Receive extends Component {
           });
         }
         update(table, final);
-        ToastQ.fire({
-          icon: "success",
-          title: `${column} has been changed.`,
-        });
+        // ToastQ.fire({
+        //   icon: "success",
+        //   title: `${column} has been changed.`,
+        // });
       }
       this.getData();
     });
@@ -857,7 +866,11 @@ class Receive extends Component {
           if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
             this.props.dispatch(updateReceive(parsedata, this.props.match.params.slug));
           } else {
-            this.props.dispatch(storeReceive(parsedata, (arr) => this.props.history.push(arr)));
+            this.props.dispatch(storeReceive(parsedata, (arr) => {
+              this.props.dispatch(FetchNota(localStorage.receiveLocationStorage));
+              this.setState({notasupplier:""})
+              this.props.history.push(arr);
+            }));
           }
         });
       }
@@ -942,6 +955,7 @@ class Receive extends Component {
           kd_brg: i.kd_brg,
           nm_brg: i.nm_brg,
           barcode: i.barcode,
+          index:1000000000000000,
         });
         brg.push({
           harga_beli: i.harga_beli,
@@ -1015,7 +1029,7 @@ class Receive extends Component {
 
   handleOnSelect = (item) => {
     // the item selected
-    this.setState({ anyCart: item.name });
+    this.setState({ anyCart: item.name});
     setTimeout(() => {
       this[`qty-${btoa(item.barcode)}`].focus();
       this.setState({anyCart:""})
@@ -1023,17 +1037,13 @@ class Receive extends Component {
   };
 
   formatResult = (item) => {
-    return item;
-    // return (<p dangerouslySetInnerHTML={{__html: '<strong>'+item+'</strong>'}}></p>); //To format result as html
+    // return item;
+    return (<p dangerouslySetInnerHTML={{__html: '<strong>'+item+'</strong>'}}></p>); //To format result as html
   };
 
   render() {
     if (this.state.isScroll === true) this.handleScroll();
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
+  
     // const tenant = atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01';
     let opSupplier = [];
     if (this.props.supplier !== []) {
@@ -1046,7 +1056,7 @@ class Receive extends Component {
       });
     }
     let subtotal = 0;
-
+   
     return (
       <Layout page="Receive Pembelian">
         <div className="card">
@@ -1080,15 +1090,17 @@ class Receive extends Component {
               <div className="card">
                 <div className="card-body">
                   <div className="chat-area">
-                    <div className="chat-header-text d-flex border-none mb-10">
-                      <div className="chat-about">
-                        <div className="chat-with font-13">Ambil Data</div>
-                      </div>
-                    </div>
                     <div className="chat-search">
                       <div className="row">
                         <div className="col-md-12">
                           <div className="form-group">
+                            <label className="text-muted">
+                              Ambil data pembelian {parseInt(this.state.ambil_data, 10) === 1
+                                ? "langsung."
+                                : parseInt(this.state.ambil_data, 10) === 2
+                                ? "dari PO."
+                                : "dari Pre-Receive."}
+                            </label>
                             <div className="input-group input-group-sm">
                               <select name="ambil_data" className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
                                 <option value={1} selected={parseInt(this.state.ambil_data, 10) === 1}>
@@ -1102,13 +1114,6 @@ class Receive extends Component {
                                 </option>
                               </select>
                             </div>
-                            <small id="passwordHelpBlock" className="form-text text-muted">
-                              {parseInt(this.state.ambil_data, 10) === 1
-                                ? "Pembelian langsung."
-                                : parseInt(this.state.ambil_data, 10) === 2
-                                ? "Ambil data pembelian dari PO."
-                                : "Ambil data pembelian dari Pre-Receive."}
-                            </small>
                           </div>
                         </div>
                         <div className="col-md-12" style={parseInt(this.state.ambil_data, 10) === 1 ? { display: "none" } : { display: "block" }}>
@@ -1123,21 +1128,11 @@ class Receive extends Component {
                             />
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-body">
-                  <div className="chat-area" style={{ zoom: "80%" }}>
-                    <div className="chat-header-text d-flex border-none mb-10">
-                      <div className="chat-about">
-                        <div className="chat-with font-18">Pilih Barang</div>
-                      </div>
-                    </div>
-                    <div className="chat-search">
-                      <div className="row">
                         <div className="col-md-12">
                           <div className="form-group">
+                            <label className="text-muted">
+                              Cari berdasarkan {parseInt(this.state.searchby, 10) === 1 ? "Kode Barang" : parseInt(this.state.searchby, 10) === 2 ? "Barcode" : "Deskripsi"}
+                            </label>
                             <div className="input-group input-group-sm">
                               <select name="searchby" className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
                                 <option value={1}>Kode Barang</option>
@@ -1145,9 +1140,6 @@ class Receive extends Component {
                                 <option value={3}>Deskripsi</option>
                               </select>
                             </div>
-                            <small id="passwordHelpBlock" className="form-text text-muted">
-                              Cari berdasarkan {parseInt(this.state.searchby, 10) === 1 ? "Kode Barang" : parseInt(this.state.searchby, 10) === 2 ? "Barcode" : "Deskripsi"}
-                            </small>
                           </div>
                         </div>
                         <div className="col-md-12">
@@ -1184,81 +1176,78 @@ class Receive extends Component {
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    {/*end chat-search*/}
-                    <div
-                      className="people-list"
-                      style={{
-                        height: "300px",
-                        maxHeight: "100%",
-                        overflowY: "scroll",
-                      }}
-                    >
-                      {!this.props.loadingbrg ? (
-                        <div id="chat_user_2">
-                          <ul className="chat-list list-unstyled">
-                            {this.props.barang && this.props.barang.length > 0 ? (
-                              this.props.barang.map((i, inx) => {
-                                return (
-                                  <abbr title={i.nm_brg} key={inx}>
-                                    <li
-                                      id={`item${inx}`}
-                                      className="clearfix"
-                                      key={inx}
-                                      onClick={(e) => {
-                                        this.HandleAddBrg(e, {
-                                          kd_brg: i.kd_brg,
-                                          barcode: i.barcode,
-                                          satuan: i.satuan,
-                                          diskon: 0,
-                                          diskon2: 0,
-                                          ppn: 0,
-                                          harga_beli: i.harga_beli,
-                                          qty: 1,
-                                          qty_bonus: 0,
-                                          stock: i.stock,
-                                          nm_brg: i.nm_brg,
-                                          tambahan: i.tambahan,
-                                        });
-                                      }}
-                                    >
-                                      <div className="about">
-                                        <div className="status titles">{i.nm_brg}</div>
-                                        <div className="subtitle">
-                                          {" "}
-                                          ({i.kd_brg}) {i.supplier}
-                                        </div>
+                        <div className="col-md-12">
+                          <div className="chat-area">
+                            <div className="people-list" style={{height: "300px",maxHeight: "100%", overflowY: "scroll"}}>
+                              {!this.props.loadingbrg ? (
+                                <div id="chat_user_2">
+                                  <ul className="chat-list list-unstyled">
+                                    {this.props.barang && this.props.barang.length > 0 ? (
+                                      this.props.barang.map((i, inx) => {
+                                        return (
+                                          <abbr title={i.nm_brg} key={inx}>
+                                            <li
+                                              id={`item${inx}`}
+                                              className="clearfix"
+                                              key={inx}
+                                              onClick={(e) => {
+                                                this.HandleAddBrg(e, {
+                                                  kd_brg: i.kd_brg,
+                                                  barcode: i.barcode,
+                                                  satuan: i.satuan,
+                                                  diskon: 0,
+                                                  diskon2: 0,
+                                                  ppn: 0,
+                                                  harga_beli: i.harga_beli,
+                                                  qty: 1,
+                                                  qty_bonus: 0,
+                                                  stock: i.stock,
+                                                  nm_brg: i.nm_brg,
+                                                  tambahan: i.tambahan,
+                                                });
+                                              }}
+                                            >
+                                              <div className="about">
+                                                <div className="status titles bold">{lengthBrg(i.nm_brg)}</div>
+                                                <div className="subtitle">
+                                                  {" "}
+                                                  ({i.kd_brg})
+                                                </div>
+                                              </div>
+                                            </li>
+                                          </abbr>
+                                        );
+                                      })
+                                    ) : (
+                                      <div
+                                        style={{
+                                          textAlign: "center",
+                                          fontSize: "11px",
+                                          fontStyle: "italic",
+                                        }}
+                                      >
+                                        Barang tidak ditemukan.
                                       </div>
-                                    </li>
-                                  </abbr>
-                                );
-                              })
-                            ) : (
-                              <div
-                                style={{
-                                  textAlign: "center",
-                                  fontSize: "11px",
-                                  fontStyle: "italic",
-                                }}
-                              >
-                                Barang tidak ditemukan.
-                              </div>
-                            )}
-                          </ul>
+                                    )}
+                                  </ul>
+                                </div>
+                              ) : (
+                                <Spinner />
+                              )}
+                            </div>
+                            <hr />
+                            <div className="form-group">
+                              <button className={"btn btn-primary"} style={{ width: "100%" }} onClick={this.handleLoadMore}>
+                                {this.props.loadingbrg ? "tunggu sebentar ..." : "tampilkan lebih banyak"}
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                      ) : (
-                        <Spinner />
-                      )}
-                    </div>
-                    <hr />
-                    <div className="form-group">
-                      <button className={"btn btn-primary"} style={{ width: "100%" }} onClick={this.handleLoadMore}>
-                        {this.props.loadingbrg ? "tunggu sebentar ..." : "tampilkan lebih banyak"}
-                      </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+                
               </div>
             </StickyBox>
             <div style={this.state.toggleSide ? { width: "100%", zoom: "85%" } : { width: "75%", zoom: "85%" }}>
@@ -1401,7 +1390,7 @@ class Receive extends Component {
                           maxResults={this.state.databrg.length}
                           inputSearchString={this.state.anyCart}
                           items={this.state.itemSearch}
-                          onSelect={this.handleOnSelect}
+                          onSelect={this.handleOnSelect.bind(this)}
                           onClear={() => {
                             this.setState({ anyCart: "" });
                           }}
@@ -1412,48 +1401,45 @@ class Receive extends Component {
                       </div>
                     </div>
                   </div>
-                  {/* <Select
-                    options={opSupplier}
-                    placeholder="Pilih Supplier"
-                    onChange={this.HandleChangeSupplier}
-                    value={opSupplier.find((op) => {
-                      return op.value === this.state.supplier;
-                    })}
-                  /> */}
                   <div style={{ overflow: "scroll", height: "400px" }}>
-                    <table className="table table-hover table-noborder">
+                    <table className="tableFixHead table table-hover table-noborder ">
                       <thead>
                         <tr>
-                          <th className="text-black middle nowrap">Barang</th>
-                          <th className="text-black middle nowrap">satuan</th>
-                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? <th className="text-black middle nowrap">harga beli</th> : ""}
-
-                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI
-                            ? (() => {
-                                let container = [];
-                                for (let x = 0; x < this.state.set_harga; x++) {
-                                  container.push(
-                                    <th key={x} className="text-black middle nowrap">
-                                      harga jual {x + 1}
-                                    </th>
-                                  );
-                                }
-                                return container;
-                              })()
-                            : ""}
-                          <th className="text-black middle nowrap">diskon</th>
-                          <th className="text-black middle nowrap">ppn</th>
-                          <th className="text-black middle nowrap">stock</th>
-                          <th className="text-black middle nowrap">qty</th>
-                          <th className="text-black middle nowrap">qty po</th>
-                          <th className="text-black middle nowrap">bonus</th>
-                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? <th className="text-black middle nowrap">Subtotal</th> : ""}
-                          <th className="text-black middle nowrap">#</th>
+                          <th rowSpan={2} className="text-black middle nowrap">Barang</th>
+                          <th rowSpan={2} className="text-black middle nowrap">satuan</th>
+                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && <th rowSpan={2} className="text-black middle nowrap">harga beli</th>}
+                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && 
+                           <th colSpan={this.state.set_harga} className="text-black middle nowrap text-center">
+                            Harga jual
+                          </th>}
+                          <th rowSpan={2} className="text-black middle nowrap">diskon</th>
+                          <th rowSpan={2} className="text-black middle nowrap">ppn</th>
+                          <th rowSpan={2} className="text-black middle nowrap">stock</th>
+                          <th rowSpan={2} className="text-black middle nowrap">qty</th>
+                          <th rowSpan={2} className="text-black middle nowrap">qty po</th>
+                          <th rowSpan={2} className="text-black middle nowrap">bonus</th>
+                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && <th rowSpan={2} className="text-black middle nowrap">Subtotal</th>}
+                          <th rowSpan={2} className="text-black middle nowrap">#</th>
+                        </tr>
+                        <tr>
+                          {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (() => {
+                              let container = [];
+                              for (let x = 0; x < this.state.set_harga; x++) {
+                                container.push(
+                                  <th key={x} className="text-black middle nowrap">
+                                    {this.props.auth.user.nama_harga[`harga${x+1}`]}
+                                  </th>
+                                );
+                              }
+                              return container;
+                            })()
+                          }
                         </tr>
                       </thead>
-
+                       
                       <tbody>
                         {this.state.databrg.map((item, index) => {
+                          console.log(this.props.auth.user);
                           let disc1 = 0;
                           let ppn = 0;
                           if (item.diskon !== 0) {
@@ -1465,16 +1451,13 @@ class Receive extends Component {
                           }
                           const subtotal_perrow = (parseFloat(item.harga_beli) - disc1 + ppn) * parseFloat(item.qty);
                           subtotal += subtotal_perrow;
-                          //
                           return (
-                            <tr key={index} style={{ backgroundColor: this.state.anyCart === item.kd_brg ? "#EEEEEE" : "" }}>
+                            <tr key={index}>
                               <td className="middle nowrap">
                                 {item.nm_brg}
-                                <div className="subtitle">{item.barcode}</div>
                               </td>
-
-                              <td style={columnStyle}>
-                                <select name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)} className="form-control in-table" style={{ width: "100px" }}>
+                              <td className="middle nowrap">
+                                <select disabled={item.tambahan.length <= 1 ? true : false} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)} className="form-control in-table" style={{ width: "100px" }}>
                                   {item.tambahan.map((i,b) => {
                                     return (
                                       <option key={b} value={i.satuan} selected={i.satuan === item.satuan}>
@@ -1484,9 +1467,8 @@ class Receive extends Component {
                                   })}
                                 </select>
                               </td>
-
-                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
-                                <td style={columnStyle}>
+                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (
+                                <td className="middle nowrap">
                                   <input
                                     style={{
                                       width: "100px",
@@ -1500,12 +1482,9 @@ class Receive extends Component {
                                     value={this.state.brgval[index].harga_beli}
                                   />
                                 </td>
-                              ) : (
-                                ""
                               )}
-
-                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
-                                <td style={columnStyle}>
+                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (
+                                <td className="middle nowrap">
                                   <input
                                     style={{
                                       width: "100px",
@@ -1519,12 +1498,10 @@ class Receive extends Component {
                                     value={toCurrency(this.state.brgval[index].harga)}
                                   />
                                 </td>
-                              ) : (
-                                ""
                               )}
-                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
-                                parseInt(this.state.set_harga, 10) >= 2 ? (
-                                  <td style={columnStyle}>
+                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (
+                                parseInt(this.state.set_harga, 10) >= 2&& (
+                                  <td className="middle nowrap">
                                     <input
                                       style={{
                                         width: "100px",
@@ -1538,15 +1515,11 @@ class Receive extends Component {
                                       value={toCurrency(this.state.brgval[index].harga2)}
                                     />
                                   </td>
-                                ) : (
-                                  ""
                                 )
-                              ) : (
-                                ""
-                              )}
-                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
-                                parseInt(this.state.set_harga, 10) >= 3 ? (
-                                  <td style={columnStyle}>
+                              ) }
+                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI&& (
+                                parseInt(this.state.set_harga, 10) >= 3 && (
+                                  <td className="middle nowrap">
                                     <input
                                       style={{
                                         width: "100px",
@@ -1560,15 +1533,10 @@ class Receive extends Component {
                                       value={toCurrency(this.state.brgval[index].harga3)}
                                     />
                                   </td>
-                                ) : (
-                                  ""
-                                )
-                              ) : (
-                                ""
-                              )}
-                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
-                                parseInt(this.state.set_harga, 10) === 4 ? (
-                                  <td style={columnStyle}>
+                                )) }
+                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI&& (
+                                parseInt(this.state.set_harga, 10) === 4 && (
+                                  <td className="middle nowrap">
                                     <input
                                       style={{
                                         width: "100px",
@@ -1582,14 +1550,9 @@ class Receive extends Component {
                                       value={toCurrency(this.state.brgval[index].harga4)}
                                     />
                                   </td>
-                                ) : (
-                                  ""
-                                )
-                              ) : (
-                                ""
-                              )}
+                                ))}
 
-                              <td style={columnStyle}>
+                              <td className="middle nowrap">
                                 <input
                                   style={{ width: "70px", textAlign: "right" }}
                                   className="form-control in-table"
@@ -1600,7 +1563,7 @@ class Receive extends Component {
                                   value={this.state.brgval[index].diskon}
                                 />
                               </td>
-                              <td style={columnStyle}>
+                              <td className="middle nowrap">
                                 <input
                                   style={{ width: "80px", textAlign: "right" }}
                                   className="form-control in-table"
@@ -1611,10 +1574,10 @@ class Receive extends Component {
                                   value={this.state.brgval[index].ppn}
                                 />
                               </td>
-                              <td style={columnStyle}>
+                              <td className="middle nowrap">
                                 <input style={{ width: "80px", textAlign: "right" }} readOnly type="text" className="form-control in-table" value={item.stock} />
                               </td>
-                              <td style={columnStyle}>
+                              <td className="middle nowrap">
                                 <input
                                   style={{ width: "80px", textAlign: "right" }}
                                   className="form-control in-table"
@@ -1627,7 +1590,7 @@ class Receive extends Component {
                                   value={this.state.brgval[index].qty}
                                 />
                               </td>
-                              <td style={columnStyle}>
+                              <td className="middle nowrap">
                                 <input
                                   style={{ width: "80px", textAlign: "right" }}
                                   className="form-control in-table"
@@ -1637,7 +1600,7 @@ class Receive extends Component {
                                   readOnly={true}
                                 />
                               </td>
-                              <td style={columnStyle}>
+                              <td className="middle nowrap">
                                 <input
                                   style={{ width: "80px", textAlign: "right" }}
                                   className="form-control in-table"
@@ -1648,8 +1611,8 @@ class Receive extends Component {
                                   value={this.state.brgval[index].qty_bonus}
                                 />
                               </td>
-                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI ? (
-                                <td style={columnStyle}>
+                              {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (
+                                <td className="middle nowrap">
                                   <input
                                     style={{
                                       width: "100px",
@@ -1661,8 +1624,6 @@ class Receive extends Component {
                                     value={toRp(subtotal_perrow)}
                                   />
                                 </td>
-                              ) : (
-                                ""
                               )}
                               <td className="middle nowrap">
                                 <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>

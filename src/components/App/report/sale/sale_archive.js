@@ -12,6 +12,7 @@ import ButtonActionCommon from "../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import { STATUS_ARSIP_PENJUALAN } from "../../../../helperStatus";
 import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
+import { linkReportArsipPenjualan } from "../../../../helperLink";
 class SaleArchive extends Component {
   constructor(props) {
     super(props);
@@ -203,7 +204,7 @@ class SaleArchive extends Component {
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.props.dispatch(FetchNotaReceipt(v.kd_trx));
-                              if (e === 2) this.props.history.push(`../print3ply/${v.kd_trx}`);
+                              if (e === 2) this.props.history.push(`${linkReportArsipPenjualan}/nota3ply/${v.kd_trx}`);
                               if (e === 3) this.handleDelete(v.kd_trx);
                             }}
                           />

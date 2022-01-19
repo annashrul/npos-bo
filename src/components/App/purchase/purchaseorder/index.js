@@ -46,7 +46,7 @@ class PurchaseOrder extends Component {
       scrollPage: 0,
       isScroll: false,
       toggleSide: false,
-      isShowHargaBeli: false,
+      isShowHargaBeli: true,
       error: {
         location: "",
         supplier: "",
@@ -853,11 +853,11 @@ class PurchaseOrder extends Component {
                                     id="exampleCheck1"
                                     value={this.state.isShowHargaBeli}
                                     onChange={(e) => {
-                                      this.setState({ isShowHargaBeli: e.target.checked });
+                                      this.setState({ isShowHargaBeli: !e.target.checked });
                                     }}
                                   />
                                   <label className="form-check-label" htmlFor="exampleCheck1">
-                                    &nbsp; Tampilkan harga beli di nota ?
+                                    &nbsp; Sembunyikan harga beli di nota ?
                                   </label>
                                 </div>
                               </div>

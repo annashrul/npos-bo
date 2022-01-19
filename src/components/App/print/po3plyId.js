@@ -5,6 +5,7 @@ import { toRp } from "helper";
 import Barcode from "react-barcode";
 import { poAmbilData } from "../../../redux/actions/purchase/purchase_order/po.action";
 import { toDate } from "../../../helper";
+import CompareLocationCommon from "../common/CompareLocationCommon"
 
 class Adjust3ply extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class Adjust3ply extends Component {
   render() {
     const { master, detail } = this.state.data;
 
-    console.log(master, detail);
+    console.log("this.state.data", this.state.data);
 
     return (
       <Layout>
@@ -77,7 +78,7 @@ class Adjust3ply extends Component {
                   <td width="2%" />
                   <td width="29%" />
                 </tr>
-            
+
                 <tr>
                   <td />
                   <td>Tanggal</td>
@@ -92,7 +93,9 @@ class Adjust3ply extends Component {
                   <th />
                   <td>Lokasi</td>
                   <td>:</td>
-                  <td>{master.lokasi}</td>
+                  <td>
+                    <CompareLocationCommon lokasi={master.lokasi} />
+                  </td>
                   <td />
                   <td>Jenis</td>
                   <td>:</td>
@@ -126,7 +129,7 @@ class Adjust3ply extends Component {
                     Satuan
                   </td>
                   <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
-                    Stock
+                    Qty
                   </td>
                   <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     Harga beli
@@ -155,14 +158,14 @@ class Adjust3ply extends Component {
                             {item.satuan}
                           </td>
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
-                            {item.stock}
+                            {item.jumlah_beli}
                           </td>
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
                             {toRp(item.harga_beli)}
                           </td>
                           {/* <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_jual)}</td> */}
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
-                            {toRp(item.harga_beli * item.stock)}
+                            {toRp(item.harga_beli * item.jumlah_beli)}
                           </td>
                         </tr>
                       );

@@ -149,10 +149,7 @@ export default class Print3ply extends Component {
                 <td style={{ borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", fontSize: "10pt !important" }} className="text-center">
                   Satuan
                 </td>
-                <td
-                  style={{ display: data.isShowHargaBeli === 1 ? "block" : "none", borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", fontSize: "10pt !important" }}
-                  className="text-center"
-                >
+                <td style={{ display: data.isShowHargaBeli !== 1 && "none", borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", fontSize: "10pt !important" }} className="text-center">
                   Harga Beli
                 </td>
                 <td style={{ borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", fontSize: "10pt !important" }} className="text-center">
@@ -164,10 +161,7 @@ export default class Print3ply extends Component {
                 <td style={{ borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", fontSize: "10pt !important" }} className="text-center">
                   QTY
                 </td>
-                <td
-                  style={{ display: data.isShowHargaBeli === 1 ? "block" : "none", borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "15px", fontSize: "10pt !important" }}
-                  className="text-center"
-                >
+                <td style={{ display: data.isShowHargaBeli === 1 ? "block" : "none", borderBottom: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "15px", fontSize: "10pt !important" }} className="text-center">
                   Subtotal
                 </td>
               </tr>
@@ -214,22 +208,28 @@ export default class Print3ply extends Component {
                     <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
                       {item.qty}
                     </td>
-                    <td style={{ display: data.isShowHargaBeli === 1 ? "block" : "none", border: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "15pt" }} className="text-right">
+                    <td style={{ display: data.isShowHargaBeli !== 1 && "none", border: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "15pt" }} className="text-right">
                       {toRp((parseInt(rmComma(item.harga_beli), 10) - disc2 + ppn) * parseFloat(item.qty))}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
-            <tfoot style={{ display: data.isShowHargaBeli === 1 ? "block" : "none" }}>
+            <tfoot style={{ display: data.isShowHargaBeli !== 1 && "none" }}>
               <tr>
-                <td style={{ borderTop: "", borderWidth: "thin", paddingLeft: "15pt" }} colSpan={7}>
+                <td colSpan={8} style={{ borderTop: "", borderWidth: "", paddingLeft: "25pt" }}>
+                  TOTAL
+                </td>
+                <td className="text-right" style={{ borderTop: "", borderWidth: "", paddingLeft: "5pt" }}>
+                  {toRp(data.sub_total)}
+                </td>
+                {/* <td style={{ borderTop: "", borderWidth: "thin", paddingLeft: "15pt" }} colSpan={7}>
                   TOTAL
                 </td>
                 <td style={{ borderTop: "", borderWidth: "thin" }} />
                 <td style={{ borderTop: "", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "15pt" }} className="text-right">
                   {toRp(data.sub_total)}
-                </td>
+                </td> */}
               </tr>
             </tfoot>
           </table>

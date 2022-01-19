@@ -12,6 +12,7 @@ import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
 import { rePrintFaktur } from "../../../../../redux/actions/purchase/receive/receive.action";
+import { linkReceivePembelian } from "../../../../../helperLink";
 
 class ReceiveReport extends Component {
   constructor(props) {
@@ -85,7 +86,7 @@ class ReceiveReport extends Component {
     setStorage("nama_penerima_edit", obj.nama_penerima);
     setStorage("nonota_edit", obj.nonota);
     setStorage("type_edit", obj.type);
-    this.props.history.push(`/receive/${obj.no_faktur_beli}`);
+    this.props.history.push(`${linkReceivePembelian}/${obj.no_faktur_beli}`);
   }
 
   handleModal(type, obj) {
@@ -178,7 +179,7 @@ class ReceiveReport extends Component {
                               if (e === 2) this.handleDelete(v.no_faktur_beli);
                               if (e === 3) this.handleEdit(v);
                               if (e === 4) this.handleRePrint(v.no_faktur_beli);
-                              if (e === 5) this.props.history.push(`../receive3plyId/${v.no_faktur_beli}`);
+                              if (e === 5) this.props.history.push(`/receive3plyId/${v.no_faktur_beli}`);
                             }}
                           />
                         </td>

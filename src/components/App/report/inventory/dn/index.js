@@ -10,6 +10,7 @@ import { statusDeliveryNote, STATUS_DELIVERY_NOTE } from "../../../../../helperS
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../../common/HeaderReportCommon";
+import CompareLocationCommon from "../../../common/CompareLocationCommon";
 
 class DnReport extends Component {
   constructor(props) {
@@ -111,14 +112,14 @@ class DnReport extends Component {
                             action={[{ label: "Detail" }, { label: "3ply" }]}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
-                              if (e === 1) this.props.history.push(`../dn3ply/${v.no_delivery_note}`);
+                              if (e === 1) this.props.history.push(`/dn3ply/${v.no_delivery_note}`);
                             }}
                           />
                         </td>
                         <td className="middle nowrap">{v.no_delivery_note}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(v.no_faktur_beli)}</td>
-                        <td className="middle nowrap">{v.kd_lokasi_1}</td>
-                        <td className="middle nowrap">{v.kd_lokasi_2}</td>
+                        <td className="middle nowrap"><CompareLocationCommon lokasi={v.kd_lokasi_1}/></td>
+                        <td className="middle nowrap"><CompareLocationCommon lokasi={v.kd_lokasi_2}/></td>
                         <td className="middle nowrap">{rmSpaceToStrip(v.keterangan)}</td>
                         <td className="middle nowrap">{statusDeliveryNote(v.status, true)}</td>
                         <td className="middle nowrap">{toDate(v.tanggal)}</td>

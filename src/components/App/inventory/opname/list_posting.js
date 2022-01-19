@@ -131,7 +131,7 @@ class ListPosting extends Component {
                           <td className="middle nowrap">{v.nm_brg}</td>
                           <td className="middle nowrap">{toDate(v.tgl)}</td>
                           <td className="middle nowrap">{v.kd_kasir}</td>
-                          <td className="middle nowrap">{v.lokasi}</td>
+                          <td className="middle nowrap">{v.lokasi_nama}</td>
                           <td className="middle nowrap text-right">{parseToRp(v.stock_terakhir)}</td>
                           <td className="middle nowrap text-right">{parseToRp(v.qty_fisik)}</td>
                           <td className="middle nowrap text-right">{parseToRp(parseFloat(v.qty_fisik) - parseFloat(v.stock_terakhir))}</td>
