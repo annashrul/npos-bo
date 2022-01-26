@@ -1454,7 +1454,7 @@ class Receive extends Component {
                           return (
                             <tr key={index}>
                               <td className="middle nowrap">
-                                {item.nm_brg}
+                                {item.nm_brg} <br/> {item.kd_brg}
                               </td>
                               <td className="middle nowrap">
                                 <select disabled={item.tambahan.length <= 1 ? true : false} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)} className="form-control in-table" style={{ width: "100px" }}>
