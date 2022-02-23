@@ -2,15 +2,13 @@ import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 import { deleteMeja, FetchMeja } from "redux/actions/masterdata/meja/meja.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import Paginationq from "helper";
 import FormMeja from "components/App/modals/masterdata/area/form_meja";
-import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
-import { generateNo } from "../../../../../helper";
+import HeaderGeneralCommon from "../../../common/HeaderGeneralCommon";
+import TableCommon from "../../../common/TableCommon";
 
 class ListMeja extends Component {
   constructor(props) {
     super(props);
-    this.handlesearch = this.handlesearch.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.state = {
       any: "",
@@ -19,7 +17,7 @@ class ListMeja extends Component {
     };
   }
 
-  handleGet(any, page) {
+  handleGet(any, page=1) {
     let where = `page=${page}`;
     if (any !== "") where += `&q=${any}`;
     this.setState({ where: where });
@@ -29,16 +27,8 @@ class ListMeja extends Component {
   handlePageChange(pageNumber) {
     this.handleGet(this.state.any, pageNumber);
   }
-  handlesearch(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    let any = data.get("any");
-    this.setState({ any: any });
-    this.handleGet(any, 1);
-  }
-  toggleModal(e, i) {
-    e.preventDefault();
+
+  toggleModal(i) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formMeja"));
@@ -60,104 +50,54 @@ class ListMeja extends Component {
       });
     }
   }
-  handleDelete(e, id) {
-    e.preventDefault();
-    this.props.dispatch(deleteMeja(id, this.state.where));
+  handleDelete(i) {
+    this.props.dispatch(deleteMeja(this.props.data.data[i].id_meja, this.state.where));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
+      const head = [
+          { label: "No", className: "text-center", width: "1%" },
+          { label: "#", className: "text-center", width: "1%" },
+          { label: "Area"},
+          { label: "Meja", width: "1%"  },
+          { label: "Kapasitas", width: "1%" },
+          { label: "Bentuk Meja", width: "1%" },
+          { label: "Tinggi", width: "1%" },
+          { label: "Lebar", width: "1%" },
+      ];
     return (
       <div>
-        <form onSubmit={this.handlesearch} noValidate>
-          <div className="row">
-            <div className="col-10 col-xs-10 col-md-3">
-              <div className="input-group input-group-sm">
-                <input
-                  type="search"
-                  name="any"
-                  className="form-control form-control-sm"
-                  placeholder="cari berdasarkan meja"
-                  value={this.state.any}
-                  onChange={(e) => {
-                    this.setState({ any: e.target.value });
-                  }}
-                />
-                <span className="input-group-append">
-                  <button type="submit" className="btn btn-primary">
-                    <i className="fa fa-search" />
-                  </button>
-                </span>
-              </div>
-            </div>
-            <div className="col-2 col-xs-2 col-md-9">
-              <div className="form-group text-right">
-                <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
-                  <i className="fa fa-plus" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div className="table-responsive" style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-noborder">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black text-center middle" width="1%">
-                  No
-                </th>
-                <th className="text-black text-center middle" width="1%">
-                  #
-                </th>
-                {/* <th className="text-black" className="middle">Area</th> */}
-                <th className="text-black middle">Area</th>
-                <th className="text-black middle" width="5%">
-                  Meja
-                </th>
-                <th className="text-black middle" width="5%">
-                  Kapasitas
-                </th>
-                <th className="text-black middle" width="20%">
-                  Bentuk Meja
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.map((v, i) => {
-                  return (
-                    <tr key={i}>
-                      <td className="midde text-center">{generateNo(i, current_page)}</td>
-                      <td className="middle">
-                        {/* Example split danger button */}
-                        <div className="btn-group">
-                          <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>Aksi</DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
-                              <DropdownItem onClick={(e) => this.handleDelete(e, v.id_meja)}>Delete</DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledButtonDropdown>
-                        </div>
-                      </td>
-                      {/* <td className="middle">{v.area}</td> */}
-                      <td className="middle">{v.nama_area}</td>
-                      <td className="middle">{v.nama_meja}</td>
-                      <td className="middle">{v.kapasitas}</td>
-                      <td className="middle">{v.bentuk}</td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={6}>No data</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
-        </div>
+        <HeaderGeneralCommon
+            callbackGet={(res) => {
+                this.setState({ any: res });
+                this.handleGet(res, 1);
+            }}
+            callbackAdd={() => this.toggleModal(null)}
+        />
+        <TableCommon
+            head={head}
+            meta={{
+                total: total,
+                current_page: current_page,
+                per_page: per_page,
+            }}
+            body={typeof data === "object" && data}
+            label={[
+                { label: "nama_area" },
+                { label: "nama_meja" },
+                { label: "kapasitas" },
+                { label: "bentuk" },
+                { label: "height" },
+                { label: "width" },
+            ]}
+            current_page={current_page}
+            action={[{ label: "Edit" }, { label: "Hapus" }]}
+            callback={(e, index) => {
+                if (e === 0) this.toggleModal(index);
+                if (e === 1) this.handleDelete(index);
+            }}
+            callbackPage={this.handlePageChange.bind(this)}
+        />
         {this.props.isOpen && <FormMeja token={this.props.token} detail={this.state.detail} area={this.props.area} />}
       </div>
     );

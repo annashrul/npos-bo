@@ -165,11 +165,7 @@ class FormMeja extends Component {
     return parseDataU;
   }
 
-  getFiles(files) {
-    this.setState({
-      gambar: files,
-    });
-  }
+
   render() {
     return (
       <WrapperModal
@@ -213,7 +209,7 @@ class FormMeja extends Component {
                   <input
                     type="number"
                     className="form-control"
-                    readOnly={this.props.detail === undefined ? false : true}
+                    readOnly={this.props.detail !== undefined}
                     name="jumlah"
                     value={this.state.jumlah}
                     onChange={this.handleChange}
@@ -278,18 +274,12 @@ class FormMeja extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mb-2 mr-2"
-                onClick={this.toggle}
-              >
-                Batal
-              </button>
-              <button type="submit" className="btn btn-primary mb-2 mr-2">
-                Simpan
-              </button>
-            </div>
+            <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.toggle}>
+              Batal
+            </button>
+            <button type="submit" className="btn btn-primary mb-2">
+              Simpan
+            </button>
           </ModalFooter>
         </form>
       </WrapperModal>
