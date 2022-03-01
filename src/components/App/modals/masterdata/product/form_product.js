@@ -745,22 +745,10 @@ class FormProduct extends Component {
                             lokasi: barang_hrg[x][0].lokasi,
                             isCheckedPCS: true,
                             hrgBeliPCS: barang_hrg[x][0].harga_beli,
-                            margin1PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin2PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin3PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin4PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin1PCS:param.dataEdit.kategori === "4" ? "0": ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin2PCS:param.dataEdit.kategori === "4" ? "0": ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin3PCS:param.dataEdit.kategori === "4" ? "0": ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin4PCS:param.dataEdit.kategori === "4" ? "0": ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
                             hrgJual1PCS: barang_hrg[x][0].harga,
                             hrgJual2PCS: barang_hrg[x][0].harga2,
                             hrgJual3PCS: barang_hrg[x][0].harga3,
@@ -801,7 +789,8 @@ class FormProduct extends Component {
                             serviceKARTON: barang_hrg[x][2].service,
                         },
                     ]);
-                } else if (barang_sku.length === 2) {
+                }
+                else if (barang_sku.length === 2) {
                     barangHrg.push([
                         {
                             nama_toko: barang_hrg[x][0].nama_toko,
@@ -848,29 +837,18 @@ class FormProduct extends Component {
                             servicePACK: barang_hrg[x][1].service,
                         },
                     ]);
-                } else {
+                }
+                else {
                     barangHrg.push([
                         {
                             nama_toko: barang_hrg[x][0].nama_toko,
                             lokasi: barang_hrg[x][0].lokasi,
                             isCheckedPCS: true,
                             hrgBeliPCS: barang_hrg[x][0].harga_beli,
-                            margin1PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin2PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin3PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin4PCS:
-                                param.dataEdit.kategori === "4"
-                                    ? "0"
-                                    : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin1PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin2PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin3PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                            margin4PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
                             hrgJual1PCS: barang_hrg[x][0].harga,
                             hrgJual2PCS: barang_hrg[x][0].harga2,
                             hrgJual3PCS: barang_hrg[x][0].harga3,
@@ -881,6 +859,8 @@ class FormProduct extends Component {
                     ]);
                 }
             }
+            console.log("barangHrg",barangHrg);
+
             this.setState({
                 kd_brg: param.dataEdit.kd_brg,
                 nm_brg: param.dataEdit.nm_brg,
@@ -2278,6 +2258,8 @@ class FormProduct extends Component {
         if (this.props.auth.user.is_resto === 1 && this.state.jenis === "5") {
             if (!this.handleEmptyOrUndefined("kcp", "printer", false)) return;
         }
+        // console.log("state",this.state.barangHarga);
+        // return;
 
         for (let sku = 0; sku < this.state.barangSku.length; sku++) {
             let stateSku = this.state.barangSku[sku];
@@ -2300,6 +2282,7 @@ class FormProduct extends Component {
             });
 
             barcode.push(stateSku.barcode);
+
             for (let brgHrg = 0; brgHrg < this.state.barangHarga.length; brgHrg++) {
                 let stateBrgHrg = this.state.barangHarga[brgHrg][sku];
                 let hrgbeli = `hrgBeli${satuan}`;
@@ -2318,9 +2301,10 @@ class FormProduct extends Component {
                     let valHrgJual = `hrgJual${setHrg + 1}${satuan}`;
                     let valMargin = `margin${setHrg + 1}${satuan}`;
 
+                    let postMargin=parseInt(rmComma(stateBrgHrg[valMargin]), 10) < 0 ? 0 : parseInt(rmComma(stateBrgHrg[valMargin]), 10);
                     if (this.state.jenis !== "4") {
-                        if (parseInt(rmComma(stateBrgHrg[valMargin]), 10) < 0) {
-                            handleError("margin");
+                        if (postMargin < 0) {
+                            handleError(`margin`);
                             return false;
                         }
                         if (stateBrgHrg[valHrgJual] === "") {
