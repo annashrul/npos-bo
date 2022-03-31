@@ -185,7 +185,7 @@ export const deleteProduct = (id) => {
 export const FetchBrg = (page = 1, by = "barcode", q = "", lokasi = null, supplier = null, db, perpage = "") => {
   return (dispatch) => {
     dispatch(setLoadingbrg(true));
-    let url = `barang/get?page=${page}`;
+    let url = `barang/get?isbo=true&page=${page}`;
     if (q !== "") url += `&q=${btoa(q)}&searchby=${by}`;
     if (lokasi !== null) url += `&lokasi=${lokasi}`;
     if (supplier !== null) url += `&supplier=${supplier}`;
@@ -435,8 +435,8 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
 };
 
 export const readProductTrx = (where = "", callback) => {
-  let url = `barang/get`;
-  if (where !== "") url += `?${where}`;
+  let url = `barang/get?isbo=true`;
+  if (where !== "") url += `&${where}`;
 
   return (dispatch) => {
     dispatch(setLoadingDataTrx(true));

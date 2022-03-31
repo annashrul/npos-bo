@@ -56,7 +56,7 @@ export const FetchCodeProduksi = (lokasi) => {
 
 export const FetchBrgProduksiBahan = (page = 1, by = "barcode", q = "", lokasi = null, db, perpage = "") => {
   return (dispatch) => {
-    let url = `barang/get?page=${page}&kategori=4`;
+    let url = `barang/get?isbo=true&page=${page}&kategori=4`;
     if (q !== "") url += `&q=${q}&searchby=${by}`;
     if (lokasi !== null) url += `&lokasi=${lokasi}`;
     if (perpage !== "") url += `&perpage=${perpage}`;
@@ -113,7 +113,7 @@ export const FetchBrgProduksiBahan = (page = 1, by = "barcode", q = "", lokasi =
 export const FetchBrgProduksiPaket = (page = 1, by = "barcode", q = "", lokasi = null) => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    let url = `barang/get?page=${page}&kategori=2`;
+    let url = `barang/get?isbo=true&page=${page}&kategori=2`;
     if (q !== "") url += `&q=${q}&searchby=${by}`;
     if (lokasi !== null) url += `&lokasi=${lokasi}`;
 
