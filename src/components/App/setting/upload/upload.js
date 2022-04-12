@@ -77,11 +77,9 @@ class Upload extends Component {
               <div className="user-important-data-info d-sm-flex align-items-center justify-content-between">
                 <ul className="downloads--data-btn d-flex align-items-center justify-content-between mb-3 mb-sm-0">
                   <li>
-                    <Link to="product" className="btn btn-link">
-                      <h5 className="mt-2">
-                        <i className="fa fa-chevron-left" /> Kembali
-                      </h5>
-                    </Link>
+                    <h5 className="mt-2 pointer" onClick={()=>window.history.back()}>
+                      <i className="fa fa-chevron-left" /> Kembali
+                    </h5>
                   </li>
                 </ul>
               </div>

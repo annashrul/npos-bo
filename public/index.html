@@ -30,7 +30,12 @@
   
 
     <style>
-
+      .noPadding{
+        padding: 0!important;
+      }
+      .noBorder{
+        border: transparent!important;
+      }
 
       /* ul.dropdown-menu {
         max-height: 500px;
@@ -78,7 +83,7 @@
       }
 
       .bold {
-        font-weight: bold;
+        font-weight: bold!important;
       }
 
       .dNone {
@@ -477,14 +482,14 @@
         padding-right: 10px !important;
         border: 1px solid hsl(0, 0%, 80%) !important;
       }
-      /* td.text-right,
-      th.text-right {
-        color: green !important;
-      } */
-      table.table-noborder > thead > tr > th {
-        color: #333333 !important;
-        font-weight: 500 !important;
+
+      table.table-noborder > thead > tr > th, table.table-noborder > tfoot > tr > th {
+        color: black !important;
+        font-weight: bold !important;
       }
+
+
+
 
       /* tr:nth-child(even) {
       background-color: rgba(0, 0, 0, .075);

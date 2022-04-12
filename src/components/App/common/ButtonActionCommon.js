@@ -12,7 +12,7 @@ class ButtonActionCommon extends Component {
   render() {
     return (
       <UncontrolledButtonDropdown direction="down">
-        <DropdownToggle caret></DropdownToggle>
+        <DropdownToggle caret/>
         <DropdownMenu positionFixed={true}>
           {this.props.action.map((res, index) => {
             return (

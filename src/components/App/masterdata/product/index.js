@@ -56,7 +56,7 @@ class Product extends Component {
         tabBody={[<ListProduct data={this.props.product} group={this.props.groupProduct} />, <ListPriceProduct data={this.props.priceProduct} />, <ListGroupProduct data={this.props.groupProduct} />]}
         otherWidget={
           <div className={`${!this.state.isShow && "none"}`}>
-            <Link to="upload" className="btn btn-outline-info">
+            <Link to="/upload" className="btn btn-outline-info">
               <i className="fa fa-upload"></i>&nbsp;IMPORT FROM CSV
             </Link>
           </div>

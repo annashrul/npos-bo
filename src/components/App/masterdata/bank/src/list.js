@@ -13,7 +13,8 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
-import Default from "assets/default.png";
+import Default from "assets/noimage.png";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
 
 class ListBank extends Component {
   constructor(props) {
@@ -49,21 +50,20 @@ class ListBank extends Component {
     this.props.dispatch(ModalType("formBank"));
     this.setState({ detail: {} });
   }
-  handleEdit(e, id, akun, debit, kredit, edc, foto, status, nama) {
-    e.preventDefault();
+  handleEdit(val) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formBank"));
     this.setState({
       detail: {
-        id: id,
-        akun: akun,
-        charge_debit: debit,
-        charge_kredit: kredit,
-        edc: edc,
-        foto: foto,
-        status: status,
-        nama: nama,
+        id: val.id,
+        akun: val.akun,
+        charge_debit: val.debit,
+        charge_kredit: val.kredit,
+        edc: val.edc,
+        foto: val.foto,
+        status: val.status,
+        nama: val.nama,
       },
     });
   }
@@ -78,9 +78,9 @@ class ListBank extends Component {
       <div>
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
-            <div className="col-10 col-xs-10 col-md-11">
+            <div className="col-6 col-xs-6 col-md-11">
               <div className="row">
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <div className="input-group input-group-sm">
                     <input
                       type="search"
@@ -101,7 +101,7 @@ class ListBank extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-4 col-xs-2 col-md-1 text-right">
+            <div className="col-6 col-xs-6 col-md-1 text-right">
               <div className="form-group">
                 <button
                   type="button"
@@ -119,86 +119,42 @@ class ListBank extends Component {
             typeof data === "object" ? (
               data.map((v, i) => {
                 return (
-                  <div className="col-xl-3 col-md-6 mb-4" key={i}>
+                  <div className="col-6 col-xs-6 col-md-3 mb-4" key={i}>
                     <div className="card">
                       <div className="social-widget">
-                        <div
-                          className={`ribbon ribbon-${
-                            v.status === "1" ? "success" : "danger"
-                          }`}
-                        >
+                        <div className={`ribbon ribbon-${v.status === "1" ? "success" : "danger"}`}>
                           {v.status === "1" ? "Aktif" : "Tidak aktif"}
                         </div>
-                        <div className="bg-light p-3 text-center text-white font-30">
+                        <div className="bg-light text-center text-white font-30">
                           <img
                             src={v.foto === null ? "error" : v.foto}
                             alt="netindo"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = `${Default}`;
-                            }}
-                            style={{ height: "120px" }}
+                            onError={(e) => {  e.target.onerror = null;e.target.src = `${Default}`;}}
+                            style={{width:"100%" }}
                           />
                         </div>
                         <div className="row">
                           <div className="col-8 text-left">
                             <div className="p-2">
-                              <p style={{ fontSize: "12px" }}>{v.akun}</p>
+                              <p style={{ fontSize: "14px"}}><b>{v.akun}</b></p>
                             </div>
                           </div>
                           <div className="col-4 text-center">
                             <div className="p-2">
-                              <div className="dashboard-dropdown">
-                                <div className="dropdown">
-                                  <UncontrolledButtonDropdown>
-                                    <DropdownToggle
-                                      caret
-                                      style={{
-                                        background: "transparent",
-                                        border: "none",
-                                      }}
-                                    >
-                                      <i className="zmdi zmdi-more-vert"></i>
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                      <DropdownItem
-                                        onClick={(e) =>
-                                          this.handleEdit(
-                                            e,
-                                            v.id,
-                                            v.akun,
-                                            v.charge_debit,
-                                            v.charge_kredit,
-                                            v.edc,
-                                            v.foto,
-                                            v.status,
-                                            v.nama
-                                          )
-                                        }
-                                      >
-                                        <i className="ti-pencil-alt"></i> Edit
-                                      </DropdownItem>
-                                      <DropdownItem
-                                        onClick={(e) =>
-                                          this.handleDelete(e, v.id)
-                                        }
-                                      >
-                                        <i className="ti-trash"></i> Delete
-                                      </DropdownItem>
-                                    </DropdownMenu>
-                                  </UncontrolledButtonDropdown>
-                                </div>
-                              </div>
+                              <ButtonActionCommon
+                                action={[{ label: "Edit"},{ label: "Hapus"}]}
+                                callback={(e) => {
+                                  if (e === 0) this.handleEdit(v);
+                                  if (e === 1) this.handleDelete(v.id);
+                                }}
+                              />
                             </div>
                           </div>
                         </div>
                         <div className="row">
                           <div className="col-12 text-left">
                             <div className="p-2">
-                              <table
-                                className="table"
-                                style={{ padding: 0, border: "none" }}
-                              >
+                              <table className="table" style={{ padding: 0, border: "none" }}>
                                 <thead>
                                   <tr>
                                     <th

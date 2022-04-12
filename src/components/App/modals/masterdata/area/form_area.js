@@ -10,7 +10,7 @@ import {
   updateArea,
 } from "redux/actions/masterdata/area/area.action";
 import LokasiCommon from "../../../common/LokasiCommon";
-import { handleError } from "../../../../../helper";
+import {handleError, isEmptyOrUndefined} from "../../../../../helper";
 
 class FormArea extends Component {
   constructor(props) {
@@ -46,10 +46,7 @@ class FormArea extends Component {
   getProps(props) {
     if (props.detail.id !== "") {
       this.setState({
-        location: {
-          value: props.detail.id_lokasi,
-          label: props.detail.lokasi,
-        },
+        location: props.detail.id_lokasi,
         nama: props.detail.nama,
         gambar: props.detail.gambar,
         id: props.detail.id,
@@ -74,20 +71,18 @@ class FormArea extends Component {
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
     parseData["nama"] = this.state.nama;
-    parseData["gambar"] =
-      this.state.gambar === undefined ? "-" : this.state.gambar.base64;
-    parseData["lokasi"] = this.state.location.value;
+    parseData["foto"] = this.state.gambar === undefined ? "-" : this.state.gambar.base64;
+    parseData["lokasi"] = this.state.location;
+    console.log(parseData)
     if (parseData["lokasi"] === undefined) {
       return handleError("lokasi");
     } else if (this.state.nama === undefined || this.state.nama === "") {
       return handleError("nama");
     } else {
-      if (this.props.detail === undefined) {
+      if (this.props.detail.id === '') {
         this.props.dispatch(createArea(parseData));
       } else {
-        this.props.dispatch(
-          updateArea(this.state.id, parseData, this.props.detail.where)
-        );
+        this.props.dispatch(updateArea(this.state.id, parseData, this.props.detail.where));
       }
     }
   }
@@ -108,17 +103,7 @@ class FormArea extends Component {
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
-            <div className="form-group">
-              <label>
-                Lokasi <span className="text-danger">*</span>
-              </label>
-              <LokasiCommon
-                callback={(val) => {
-                  this.setState({ location: val });
-                }}
-                dataEdit={this.state.location}
-              />
-            </div>
+
             <div className="form-group">
               <label>
                 Nama <span className="text-danger">*</span>
@@ -132,9 +117,18 @@ class FormArea extends Component {
               />
             </div>
             <div className="form-group">
+              <LokasiCommon
+                  isRequired={true}
+                  callback={(val) => {
+                      this.setState({ location: val.value });
+                  }}
+                  dataEdit={this.state.location}
+              />
+            </div>
+            <div className="form-group">
               <label htmlFor="inputState" className="col-form-label">
                 Foto{" "}
-                {this.props.dataCustomerEdit !== undefined ? (
+                {this.props.detail.id !== '' ? (
                   <small>(kosongkan bila tidak akan diubah)</small>
                 ) : (
                   ""

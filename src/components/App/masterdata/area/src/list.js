@@ -7,20 +7,15 @@ import {
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq from "helper";
 import FormArea from "components/App/modals/masterdata/area/form_area";
-import Swal from "sweetalert2";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import Default from "assets/default.png";
+import Default from "assets/noimage.png";
 import { clearAllMeja } from "../../../../../redux/actions/masterdata/meja/meja.action";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import HeaderGeneralCommon from "../../../common/HeaderGeneralCommon";
+import {swallOption} from "../../../../../helper";
 
 class ListArea extends Component {
   constructor(props) {
     super(props);
-    this.handlesearch = this.handlesearch.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.state = {
       any: "",
@@ -45,16 +40,8 @@ class ListArea extends Component {
   handlePageChange(pageNumber) {
     this.handleGet(this.state.any, pageNumber);
   }
-  handlesearch(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    let any = data.get("any");
-    this.setState({ any: any });
-    this.handleGet(any, 1);
-  }
-  toggleModal(e, i) {
-    e.preventDefault();
+
+  toggleModal(i) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formArea"));
@@ -73,24 +60,12 @@ class ListArea extends Component {
       });
     }
   }
-  handleDelete(e, id) {
+  handleDelete(id) {
     this.props.dispatch(deleteArea(id, this.state.where));
   }
-  handleClearAllMeja(e, id) {
-    e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Informasi !!",
-      text: "data yang akan dihapus adalah semua data meja di area ini",
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Oke",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(clearAllMeja(id));
-      }
+  handleClearAllMeja(res) {
+    swallOption(`data yang akan dihapus adalah semua data meja di area ${res.nama}`,()=>{
+        this.props.dispatch(clearAllMeja(res.id_area));
     });
   }
   render() {
@@ -99,92 +74,102 @@ class ListArea extends Component {
 
     return (
       <div>
-        <form onSubmit={this.handlesearch} noValidate>
-          <div className="row">
-            <div className="col-10 col-xs-10 col-md-3">
-              <div className="input-group input-group-sm">
-                <input
-                  type="search"
-                  name="any"
-                  className="form-control form-control-sm"
-                  placeholder="cari berdasarkan nama area"
-                  value={this.state.any}
-                  onChange={(e) => {
-                    this.setState({ any: e.target.value });
-                  }}
-                />
-                <span className="input-group-append">
-                  <button type="submit" className="btn btn-primary">
-                    <i className="fa fa-search" />
-                  </button>
-                </span>
-              </div>
-            </div>
-            <div className="col-2 col-xs-2 col-md-9">
-              <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-plus" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <HeaderGeneralCommon
+            callbackGet={(res) => {
+                this.setState({ any: res });
+                this.handleGet(res, 1);
+            }}
+            callbackAdd={() => this.toggleModal(null)}
+        />
+
         <div className="row">
           {typeof data === "object"
             ? data.map((v, i) => {
-                return (
-                  <div className="col-sm-6 col-xl-3" key={i}>
-                    <div className="single-gallery--item mb-50">
-                      <div className="gallery-thumb">
-                        <img
-                          src={v.gambar === null ? "error" : v.gambar}
-                          alt="netindo"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = `${getImg}`;
-                          }}
-                        />
-                      </div>
-                      <div className="gallery-text-area">
-                        <h6 className="text-white font-16 mb-0">
-                          Area : {v.nama}
-                        </h6>
-                        <p className="text-white mb-10">Lokasi : {v.lokasi}</p>
-                        <div className="btn-group">
-                          <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>Aksi</DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggleModal(e, i)}
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleDelete(e, v.id_area)}
-                              >
-                                Delete
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleClearAllMeja(e, v.id_area)
-                                }
-                              >
-                                Delete Meja
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledButtonDropdown>
+              return (
+                <div className="col-sm-6 col-xl-3" key={i}>
+                    <div className="card" style={{borderTop:"5px solid #283593"}}>
+                        <div className="card-body">
+                            <img
+                                style={{alignItems:"center"}}
+                                src={v.gambar === null ? "error" : v.gambar}
+                                alt="netindo"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = `${getImg}`;
+                                }}
+                            />
+
+                            <hr/>
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th className="noPadding noBorder bold">Nama Area</th>
+                                    <th className="noPadding noBorder bold">:</th>
+                                    <th className="noPadding noBorder bold">{v.nama}</th>
+                                    <th className="noPadding noBorder bold">
+                                        <ButtonActionCommon
+                                            action={[{label:"Edit"},{label:"Hapus Area"},{label:"Hapus Meja"}]}
+                                            callback={(e)=>{
+                                                if(e===0) this.toggleModal(i);
+                                                if(e===1) this.handleDelete(v.id_area);
+                                                if(e===2) this.handleClearAllMeja(v.id_area);
+                                            }}
+                                        />
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th className="noPadding noBorder bold">Lokasi</th>
+                                    <th className="noPadding noBorder bold">:</th>
+                                    <th className="noPadding noBorder bold">{v.lokasi}</th>
+                                </tr>
+                                </thead>
+                            </table>
+
                         </div>
-                      </div>
                     </div>
-                  </div>
-                );
-              })
-            : "No data."}
+                  {/*<div className="single-gallery--item mb-50" style={{backgroundColor:'transparent'}}>*/}
+                    {/*<div className="gallery-thumb">*/}
+                      {/*<img*/}
+                        {/*src={v.gambar === null ? "error" : v.gambar}*/}
+                        {/*alt="netindo"*/}
+                        {/*onError={(e) => {*/}
+                          {/*e.target.onerror = null;*/}
+                          {/*e.target.src = `${getImg}`;*/}
+                        {/*}}*/}
+                      {/*/>*/}
+                    {/*</div>*/}
+                    {/*<div className="gallery-text-area">*/}
+                      {/*<h6 className="text-white font-16 mb-0">*/}
+                        {/*Area : {v.nama}*/}
+                      {/*</h6>*/}
+                      {/*<p className="text-white mb-10">Lokasi : {v.lokasi}</p>*/}
+                      {/*<div className="btn-group">*/}
+                        {/*<UncontrolledButtonDropdown>*/}
+                          {/*<DropdownToggle caret>Aksi</DropdownToggle>*/}
+                          {/*<DropdownMenu>*/}
+                            {/*<DropdownItem*/}
+                              {/*onClick={(e) => {e.preventDefault();this.toggleModal(i)}}*/}
+                            {/*>*/}
+                              {/*Edit*/}
+                            {/*</DropdownItem>*/}
+                            {/*<DropdownItem*/}
+                              {/*onClick={(e) => {e.preventDefault();this.handleDelete(v.id_area)}}*/}
+                            {/*>*/}
+                              {/*Delete*/}
+                            {/*</DropdownItem>*/}
+                            {/*<DropdownItem*/}
+                              {/*onClick={(e) =>{e.preventDefault();this.handleClearAllMeja( v.id_area);}}*/}
+                            {/*>*/}
+                              {/*Delete Meja*/}
+                            {/*</DropdownItem>*/}
+                          {/*</DropdownMenu>*/}
+                        {/*</UncontrolledButtonDropdown>*/}
+                      {/*</div>*/}
+                    {/*</div>*/}
+                  {/*</div>*/}
+                </div>
+              );
+            }) : "No data."}
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
           <Paginationq

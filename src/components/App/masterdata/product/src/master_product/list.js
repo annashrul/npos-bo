@@ -498,7 +498,7 @@ class ListProduct extends Component {
         onKeyPress={(event) => {
           if (event.key === "Enter") this.handleEnter(`${name}`);
         }}
-        style={{ width: "-webkit-fill-available" }}
+        style={{ width: "-webkit-fill-available"}}
         type="search"
         className="nradius np form-control in-table nbt nbl nbr"
         placeholder={`semua ${name}`

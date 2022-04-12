@@ -5,6 +5,7 @@ import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import { generateNo } from "../../../../../helper";
+import HeaderGeneralCommon from "../../../common/HeaderGeneralCommon";
 
 class ListCash extends Component {
   constructor(props) {
@@ -17,6 +18,12 @@ class ListCash extends Component {
       any: "",
       detail: {},
     };
+  }
+  handleGet(any) {
+      this.props.search(any);
+
+      // this.setState({ where: where });
+      // this.props.dispatch(FetchCustomer(where));
   }
   handlePageChange(pageNumber) {
     this.props.pagin(pageNumber);
@@ -56,6 +63,10 @@ class ListCash extends Component {
 
     return (
       <div>
+        {/*<HeaderGeneralCommon*/}
+            {/*callbackGet={(res) => this.props.search(res)}*/}
+            {/*callbackAdd={() => this.toggleModal(null)}*/}
+        {/*/>*/}
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
