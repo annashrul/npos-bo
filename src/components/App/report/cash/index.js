@@ -8,7 +8,6 @@ import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import CashReportExcel from "components/App/modals/report/cash/form_cash_excel";
 import Updates from "components/App/modals/report/cash/update";
 import Otorisasi from "../../modals/otorisasi.modal";
-import Swal from "sweetalert2";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
@@ -160,7 +159,6 @@ class ReportCash extends Component {
         <HeaderReportCommon
           pathName="ReportKas"
           callbackWhere={(res) => {
-            console.log(res);
             this.handleService(res);
           }}
           callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}

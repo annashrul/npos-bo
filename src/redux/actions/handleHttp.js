@@ -9,6 +9,8 @@ import memoryDriver from "localforage-memoryStorageDriver";
 import { setup } from "axios-cache-adapter";
 import { useIndexedDB, initDB } from "react-indexed-db";
 
+const httpClient = axios.create();
+httpClient.defaults.timeout = 500;
 const strNetworkError = "a network error occurred.";
 const strServerError = "a server error occurred.";
 
@@ -45,7 +47,7 @@ export async function configure() {
     name: "my-cache",
   });
 
-  
+
 
   return setup({
     // baseURL: HEADERS.URL,
@@ -98,18 +100,19 @@ export const handleGet = (url, callback, isLoading = true,clearCache=false) => {
   //   });
 };
 
+
 export const handlePost = async (url, data, callback, title = "Silahkan tunggu.") => {
-  loading(true, title);
+  loading(title!=='kas', title);
   axios
-    .post(HEADERS.URL + url,{timeout: 1000 * 5}, data)
+    .post(HEADERS.URL + url, data)
     .then(function (response) {
-      console.log("response sukses",response);
       setTimeout(function () {
         loading(false);
         const datum = response.data;
         if (datum.status === "success") {
           callback(datum, datum.msg, true);
         } else {
+          swal(datum.msg);
           callback(datum, datum.msg, false);
         }
       }, 800);

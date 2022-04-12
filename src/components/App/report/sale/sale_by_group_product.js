@@ -89,6 +89,7 @@ class SaleByGroupProduct extends Component {
     return (
       <Layout page="Laporan penjualan by kelompok barang">
         <HeaderReportCommon
+            isPeriode={false}
           pathName="ReportSaleByGroupProduct"
           isLocation={true}
           isColumn={true}

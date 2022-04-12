@@ -687,6 +687,7 @@ class Receive extends Component {
     this.setState({
       isScroll: false,
     });
+
     const finaldt = {
       kd_brg: item.kd_brg,
       barcode: item.barcode,
@@ -719,7 +720,7 @@ class Receive extends Component {
         update(table, {
           id: res.id,
           qty: parseFloat(res.qty) + 1,
-          qty_po: parseFloat(res.qty) + 1,
+          qty_po: parseFloat(res.qty_po),
           kd_brg: res.kd_brg,
           barcode: res.barcode,
           satuan: res.satuan,
