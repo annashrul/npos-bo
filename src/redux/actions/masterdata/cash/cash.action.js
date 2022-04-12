@@ -149,15 +149,12 @@ export const FetchCashReport = (where = "") => {
         console.log(url);
         //
         handlePost(url, [], (res, msg, status) => {
-            console.log("status",status)
             if(status){
                 const data = res;
                 dispatch(setCashReport(data));
                 dispatch(successCashTrx(true));
             }
-            else{
-                swal(msg);
-            }
+
 
         },'kas');
     };

@@ -69,7 +69,7 @@ class SaleByGroupProduct extends Component {
     const endDate = periode.split("-")[1];
     const head = [
       { label: "No", className: "text-center", width: "1%" },
-      { label: "#", className: "text-center", width: "1%" },
+      // { label: "#", className: "text-center", width: "1%" },
       { label: "Kode", width: "1%"  },
       { label: "Nama" },
       { label: "Qty terjual", width: "1%"  },
@@ -108,23 +108,23 @@ class SaleByGroupProduct extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((val, key) => {
-                    totalQtyPerHalaman += parseFloat(rmToZero(val.qty));
-                    totalDiskonPerHalaman += parseFloat(rmToZero(val.diskon_item));
-                    totalNetSalesPerHalaman += parseFloat(rmToZero(val.net_sales));
-                    totalTaxPerHalaman += parseFloat(rmToZero(val.tax));
-                    totalServicePerHalaman += parseFloat(rmToZero(val.service));
-                    totalGrossSalesPerHalaman += parseFloat(rmToZero(val.gross));
+                    totalQtyPerHalaman += parseInt(val.qty);
+                    totalDiskonPerHalaman += parseInt(val.diskon_item);
+                    totalNetSalesPerHalaman += parseInt(val.net_sales);
+                    totalTaxPerHalaman += parseInt(val.tax);
+                    totalServicePerHalaman += parseInt(val.service);
+                    totalGrossSalesPerHalaman += parseInt(val.gross);
                     return (
                       <tr key={key}>
                         <td className="middle nowrap text-center">{generateNo(key, current_page)}</td>
-                        <td className="middle nowrap text-center">
-                          <ButtonActionCommon action={[{ label: "Detail" }]} callback={(e) => this.handleModal("detail", key)} />
-                        </td>
+                        {/*<td className="middle nowrap text-center">*/}
+                          {/*<ButtonActionCommon action={[{ label: "Detail" }]} callback={(e) => this.handleModal("detail", key)} />*/}
+                        {/*</td>*/}
                         <td className="middle nowrap">{rmSpaceToStrip(val.kel_brg)}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(val.kelompok)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.qty)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(val.gross)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.diskon_item)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(val.gross)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.tax)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.service)}</td>
                         <td className="middle nowrap text-right">{parseToRp(val.net_sales)}</td>
@@ -138,7 +138,7 @@ class SaleByGroupProduct extends Component {
           footer={[
             {
               data: [
-                { colSpan: 4, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 3, label: "Total perhalaman", className: "text-left" },
                 { colSpan: 1, label: parseToRp(totalQtyPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalDiskonPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalGrossSalesPerHalaman) },

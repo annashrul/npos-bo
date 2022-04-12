@@ -112,7 +112,6 @@ export const handlePost = async (url, data, callback, title = "Silahkan tunggu."
         if (datum.status === "success") {
           callback(datum, datum.msg, true);
         } else {
-          swal(datum.msg);
           callback(datum, datum.msg, false);
         }
       }, 800);

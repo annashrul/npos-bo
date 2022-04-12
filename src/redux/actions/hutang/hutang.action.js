@@ -99,6 +99,43 @@ export const FetchNotaHutang = (lokasi) => {
   };
 };
 
+export const FetchPdfHutang = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        Swal.fire({
+            title: "Silahkan tunggu.",
+            html: "Sedang memproses faktur..",
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            },
+            onClose: () => {},
+        });
+        axios
+            .get(HEADERS.URL + `hutang/cetak_nota/${nota}`)
+            .then(function (response) {
+                Swal.close();
+                const data = response.data;
+                if (data.status === "success") {
+                    // window.open(data.result.nota, '_blank');
+                    const win = window.open(data.result.nota, "_blank");
+                    if (win != null) {
+                        win.focus();
+                    }
+                } else {
+                    Swal.fire({
+                        title: "failed",
+                        type: "error",
+                        text: "Gagal mengambil faktur.",
+                    });
+                }
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+            });
+    };
+};
+
 export const storeHutang = (data, param) => {
   return (dispatch) => {
     dispatch(setLoadingPost(true));
@@ -107,13 +144,18 @@ export const storeHutang = (data, param) => {
       .post(url, data)
       .then(function (response) {
         // const data = (response.data);
+          console.log(response);
 
         dispatch(setLoadingPost(false));
         Swal.fire({
           allowOutsideClick: false,
           title: "Transaksi berhasil.",
           type: "info",
-          html: `Data telah disimpan!` + "<br><br>" + '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+          html:
+          `Data telah disimpan!` +
+          "<br><br>" +
+          '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+          '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
@@ -129,6 +171,13 @@ export const storeHutang = (data, param) => {
             win.focus();
           }
           return false;
+        });
+        document.getElementById("btnNotaPdf").addEventListener("click", () => {
+          dispatch(FetchPdfHutang(response.data.result.insertId));
+            // const win = window.open(`${HEADERS.URL}cetak_nota/${response.data.result.insertId}`, "_blank");
+            // if (win !== null) {
+            //     win.focus();
+            // }
         });
       })
       .catch(function (error) {
