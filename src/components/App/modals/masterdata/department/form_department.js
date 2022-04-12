@@ -69,6 +69,7 @@ class FormDepartment extends Component {
   }
 
   render() {
+    console.log("props",this.props.detail);
     return (
       <WrapperModal
         isOpen={this.props.isOpen && this.props.type === "formDepartment"}

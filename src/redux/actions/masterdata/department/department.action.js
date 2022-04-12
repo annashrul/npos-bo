@@ -27,6 +27,8 @@ export const FetchDepartment = (where = "", clearCache=false) => {
       url,
       (res) => {
         const data = res.data;
+        console.log("FetchDepartment",data);
+
         dispatch(setDepartment(data));
       },
       true,

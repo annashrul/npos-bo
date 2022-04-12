@@ -153,6 +153,7 @@ export const FetchCashReport = (where = "") => {
     });
   };
 };
+
 export const FetchCashReportExcel = (where = "", perpage = "") => {
   return (dispatch) => {
     let url = `pos/report?page=1&param=kas&isbo=true&perpage=${perpage}`;

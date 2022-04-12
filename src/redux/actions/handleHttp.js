@@ -100,10 +100,10 @@ export const handleGet = (url, callback, isLoading = true,clearCache=false) => {
 
 export const handlePost = async (url, data, callback, title = "Silahkan tunggu.") => {
   loading(true, title);
-  
   axios
-    .post(HEADERS.URL + url, data)
+    .post(HEADERS.URL + url,{timeout: 1000 * 5}, data)
     .then(function (response) {
+      console.log("response sukses",response);
       setTimeout(function () {
         loading(false);
         const datum = response.data;
@@ -115,10 +115,9 @@ export const handlePost = async (url, data, callback, title = "Silahkan tunggu."
       }, 800);
     })
     .catch(function (error) {
-      setTimeout(function () {
+        console.log("##############",error);
         loading(false);
         handleError(error);
-      }, 800);
     });
 };
 
