@@ -854,6 +854,7 @@ class Receive extends Component {
                     ppn: this.state.pajak,
                     ppn_harga: this.state.ppn_harga,
                     lokasi_beli: this.state.location,
+                    lokasi_harga: this.state.location,
                     userid: this.state.userid,
                     detail: detail,
                     lvl: this.props.auth.user.lvl,
@@ -865,7 +866,7 @@ class Receive extends Component {
                 parsedata["logo"] = this.props.auth.user.logo;
                 parsedata["user"] = this.props.auth.user.username;
                 parsedata["lokasi_beli"] = this.state.location_val;
-                parsedata["lokasi_harga"] = this.state.location_val;
+                // parsedata["lokasi_harga"] = this.state.location_val;
                 let store = atob(atob(Cookies.get("tnt=")));
                 console.log(store);
                 if(store === "kairo" || store === "npos"){
@@ -886,7 +887,8 @@ class Receive extends Component {
 
 
     handleStore(parsedata,location){
-        parsedata["lokasi_harga"] = location;
+        parsedata["detail"]["lokasi_harga"] = location;
+        console.log(parsedata)
         swallOption("Pastikan data anda sudah benar ",()=>{
             if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
                 this.props.dispatch(updateReceive(parsedata, this.props.match.params.slug));
