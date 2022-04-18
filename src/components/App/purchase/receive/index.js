@@ -865,6 +865,7 @@ class Receive extends Component {
                 parsedata["logo"] = this.props.auth.user.logo;
                 parsedata["user"] = this.props.auth.user.username;
                 parsedata["lokasi_beli"] = this.state.location_val;
+                parsedata["lokasi_harga"] = this.state.location_val;
                 let store = atob(atob(Cookies.get("tnt=")));
                 console.log(store);
                 if(store === "kairo" || store === "npos"){
@@ -874,22 +875,18 @@ class Receive extends Component {
                         this.handleStore(parsedata,dataAllLocatoin);
                     },()=>{
                         this.handleStore(parsedata,[this.state.location]);
-                    })
+                    },"","Tidak")
                 }
                 else{
                     this.handleStore(parsedata,[this.state.location]);
                 }
-
-
             }
         });
     }
 
 
     handleStore(parsedata,location){
-        parsedata["detail"]["lokasi_beli"] = location;
-        parsedata["lokasi_beli"] = location;
-        console.log(parsedata)
+        parsedata["lokasi_harga"] = location;
         swallOption("Pastikan data anda sudah benar ",()=>{
             if (this.props.match.params.slug !== undefined && this.props.match.params.slug !== null) {
                 this.props.dispatch(updateReceive(parsedata, this.props.match.params.slug));

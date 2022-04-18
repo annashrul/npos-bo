@@ -478,15 +478,17 @@ export const convertBase64 = (file) => {
   });
 };
 
-export const swallOption = (msg, callback, isCancel) => {
+export const swallOption = (msg, callback, isCancel,confirmButtonText='Oke',cancelButtonText='Batal') => {
+  if(confirmButtonText==='') confirmButtonText='oke';
+  if(cancelButtonText==='') cancelButtonText='Batal';
   Swal.fire({
     title: "Informasi !!!",
     html: `${msg}`,
     icon: "warning",
     allowOutsideClick: false,
     confirmButtonColor: "#3085d6",
-    confirmButtonText: `Oke`,
-    cancelButtonText: "Batal",
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: cancelButtonText,
     showCancelButton: true,
     cancelButtonColor: "#d33",
   }).then(async (result) => {
