@@ -26,6 +26,12 @@ export const DBConfig = {
         { name: "harga2", keypath: "harga2", options: { unique: false } },
         { name: "harga3", keypath: "harga3", options: { unique: false } },
         { name: "harga4", keypath: "harga4", options: { unique: false } },
+        { name: "harga5", keypath: "harga5", options: { unique: false } },
+        { name: "harga6", keypath: "harga6", options: { unique: false } },
+        { name: "harga7", keypath: "harga7", options: { unique: false } },
+        { name: "harga8", keypath: "harga8", options: { unique: false } },
+        { name: "harga9", keypath: "harga9", options: { unique: false } },
+        { name: "harga10", keypath: "harga10", options: { unique: false } },
         { name: "set_harga", keypath: "set_harga", options: { unique: false } },
         {
           name: "site_title",

@@ -439,7 +439,8 @@ class Sale extends Component {
       if (res.length === 0) {
         swal("Pilih barang untuk melanjutkan Penjualan.");
         callback(false);
-      } else {
+      }
+      else {
         let subtotal = 0;
         let detail = [];
         let hold = [];

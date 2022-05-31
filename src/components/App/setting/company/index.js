@@ -5,6 +5,9 @@ import {stringifyFormData} from "helper";
 import connect from "react-redux/es/connect/connect";
 import {FetchCompany, storeCompany} from "redux/actions/setting/company/company.action";
 import Preloader from "Preloader";
+import { store, get, update,cekData } from "components/model/app.model";
+import {handleError, ToastQ} from "../../../../helper";
+const table = "sess";
 
 class Company extends Component{
     constructor(props) {
@@ -22,6 +25,7 @@ class Company extends Component{
             nm_hrg2:"",
             nm_hrg3:"",
             nm_hrg4:"",
+            data_harga:[],
             selectedIndex : 0
 
         }
@@ -31,11 +35,21 @@ class Company extends Component{
 
     }
     handleChange = (event) => {
+
         this.setState({ [event.target.name]: event.target.value });
         if(event.target.name==='set_harga'){
-            this.setState({
-
-            })
+            let hrg=[];
+            let idxHarga=this.state.data_harga[event.target.value-1];
+            if(idxHarga===undefined){
+                this.state.data_harga.push({[`harga${event.target.value}`]:""})
+            }else{
+                for(let i=0;i<event.target.value;i++){
+                    hrg.push({[`harga${i+1}`] : this.state.data_harga[i][`harga${i+1}`]});
+                }
+                this.state.data_harga=hrg;
+            }
+            // console.log(this.state.data_harga[event.target.value-1]);
+            this.setState({})
         }
     }
     getLogo(files) {
@@ -79,6 +93,21 @@ class Company extends Component{
 
     componentWillReceiveProps(nextprops){
         this.getProps(nextprops);
+        const data = get(table);
+        data.then((res) => {
+            res.map((item,index) => {
+                this.setState({
+                    data_harga:item.nama_harga,
+                    set_harga:item.set_harga
+                });
+                return null;
+            });
+        });
+
+
+
+
+
         this.setState({
             title:nextprops.company.title,
             meta_key:nextprops.company.meta_key!==null?nextprops.company.meta_key:'-',
@@ -107,10 +136,28 @@ class Company extends Component{
         parseData['fav_icon']=this.state.fav_icon.substring(0,4)!=='http'?this.state.fav_icon:'-';
         parseData['splash']=this.state.splash.substring(0,4)!=='http'?this.state.splash:'-';
         parseData['set_harga'] = this.state.set_harga;
-        parseData['nm_hrg1'] = this.state.nm_hrg1;
-        parseData['nm_hrg2'] = this.state.nm_hrg2;
-        parseData['nm_hrg3'] = this.state.nm_hrg3;
-        parseData['nm_hrg4'] = this.state.nm_hrg4;
+        for(let i=0;i<this.state.set_harga;i++){
+            parseData[`nm_hrg${i+1}`] = this.state.data_harga[i]!==undefined?this.state.data_harga[i][`harga${i+1}`]:"";
+            if(parseData[`nm_hrg${i+1}`] === ""){
+                return handleError(`harga ${i+1}`);
+            }
+        }
+        const cek = get(table);
+        cek.then((res) => {
+            res.map((item,index) => {
+                let hrg=[];
+                this.state.data_harga.map((val,key)=>{
+                    hrg.push({[`harga${key+1}`] : val[`harga${key+1}`]});
+                });
+                Object.assign(item, {
+                    id: item.id,
+                    nama_harga:hrg,
+                    set_harga:hrg.length
+                });
+                update(table,item);
+                // return null;
+            });
+        });
         this.props.dispatch(storeCompany(parseData));
     }
     handleSelect = (e,index) => {
@@ -156,10 +203,13 @@ class Company extends Component{
                                                 </td>
                                                 <td style={columnStyle}>
                                                     <select name="set_harga" className="form-control" value={this.state.set_harga} defaultValue={this.state.set_harga} onChange={this.handleChange}>
-                                                        <option value={1}>1</option>
-                                                        <option value={2}>2</option>
-                                                        <option value={3}>3</option>
-                                                        <option value={4}>4</option>
+                                                        {(()=>{
+                                                            let container =[];
+                                                            for(let x=0; x<10; x++){
+                                                                container.push(<option key={x} value={x+1}>{x+1}</option>)
+                                                            }
+                                                            return container;
+                                                        })()}
                                                     </select>
                                                 </td>
                                             </tr>
@@ -174,7 +224,7 @@ class Company extends Component{
                                                     let container =[];
                                                     for(let x=0; x<this.state.set_harga; x++){
                                                         container.push(
-                                                            <td style={columnStyle}>NAMA HARGA {x+1}</td>
+                                                            <td key={x} style={columnStyle}>NAMA HARGA {x+1}</td>
                                                         )
                                                     }
                                                     return container;
@@ -182,18 +232,25 @@ class Company extends Component{
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                {(()=>{
-                                                    let container =[];
-                                                    for(let x=0; x<this.state.set_harga; x++){
-                                                        let nama = `nm_hrg${x+1}`;
-                                                        container.push(
-                                                            <td style={columnStyle}><input type="text" name={nama} className="form-control" value={`${this.state[nama]}`} onChange={this.handleChange}/></td>
-                                                        )
-                                                    }
-                                                    return container;
-                                                })()}
-                                            </tr>
+                                            {
+                                                this.state.data_harga.length>0&&<tr>
+                                                    {(()=>{
+                                                        let container =[];
+                                                        for(let x=0; x<this.state.set_harga; x++){
+                                                            let nama = this.state.data_harga[x]?this.state.data_harga[x][`harga${x+1}`]:"";
+                                                            container.push(
+                                                                <td style={columnStyle} key={x}>
+                                                                    <input type="text" name={nama} className="form-control" value={nama} onChange={(e)=>{
+                                                                        this.state.data_harga[x][`harga${x+1}`] = e.target.value;
+                                                                        this.setState({});
+                                                                    }}/>
+                                                                </td>
+                                                            )
+                                                        }
+                                                        return this.state.data_harga!==undefined&&container;
+                                                    })()}
+                                                </tr>
+                                            }
                                             </tbody>
                                         </table>
                                     </div>

@@ -26,6 +26,7 @@ class FormProduct extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            dataHarga:[],
             isModalFormGroupProduct: false,
             isModalFormPrinter: false,
             detail: {},
@@ -713,8 +714,14 @@ class FormProduct extends Component {
             setFocus(this, "kd_brg");
             return;
         }
+
         let propsUser=param.auth.user;
+        let hrg=propsUser.nama_harga;
+        hrg.map((val,key)=>{
+            Object.assign(val,{[`nominal${key+1}`]:0,[`margin${key+1}`]:0})
+        });
         this.setState({
+            dataHarga:hrg,
             nm_harga1: propsUser.nama_harga===undefined?propsUser.harga1:propsUser.nama_harga.harga1,
             nm_harga2: propsUser.nama_harga===undefined?propsUser.harga2:propsUser.nama_harga.harga2,
             nm_harga3: propsUser.nama_harga===undefined?propsUser.harga3:propsUser.nama_harga.harga3,
@@ -883,7 +890,8 @@ class FormProduct extends Component {
                 barangHarga: barangHrg,
                 swPrice: "0",
             });
-        } else {
+        }
+        else {
             if (!this.state.filled) {
                 const { data } = param.dataLocation;
                 this.setState({
@@ -1823,54 +1831,21 @@ class FormProduct extends Component {
                 });
             }
         }
-        if (column === "margin1") {
-            this.setState({
-                hrgjual1: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
-            });
-            hrg_jual_1_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
+
+        let valNominal = column.includes("nominal");
+        let valMargin = column.includes("margin");
+        const valHrgBeli=parseInt(rmComma(this.state.hrg_beli), 10);
+        if(valNominal){
+            let inputNominal=parseInt(rmComma(value), 10);
+            this.state.dataHarga[i][`nominal${i+1}`]=inputNominal;
+            this.state.dataHarga[i][`margin${i+1}`] = ((inputNominal - valHrgBeli) / valHrgBeli) * 100;
         }
-        if (column === "margin2") {
-            this.setState({
-                hrgjual2: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
-            });
-            hrg_jual_2_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
+        if(valMargin){
+            let inputMargin=parseInt(rmComma(value), 10);
+            this.state.dataHarga[i][`margin${i+1}`]=inputMargin;
+            this.state.dataHarga[i][`nominal${i+1}`] = valHrgBeli * (inputMargin / 100) + valHrgBeli;
         }
-        if (column === "margin3") {
-            this.setState({
-                hrgjual3: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
-            });
-            hrg_jual_3_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
-        }
-        if (column === "margin4") {
-            this.setState({
-                hrgjual4: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
-            });
-            hrg_jual_4_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
-        }
-        if (column === "hrgjual1") {
-            this.setState({
-                margin1: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
-            });
-            margin1_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
-        }
-        if (column === "hrgjual2") {
-            this.setState({
-                margin2: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
-            });
-            margin2_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
-        }
-        if (column === "hrgjual3") {
-            this.setState({
-                margin3: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
-            });
-            margin3_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
-        }
-        if (column === "hrgjual4") {
-            this.setState({
-                margin4: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
-            });
-            margin4_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
-        }
+
 
         let service_val = 0;
         if (column === "service") {
@@ -2359,7 +2334,6 @@ class FormProduct extends Component {
     mouseEnter() {
         this.setState({ display: "flex" });
     }
-
     mouseLeave() {
         this.setState({ display: "none" });
     }
@@ -2389,655 +2363,649 @@ class FormProduct extends Component {
 
         return (
             <div>
-              <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size={this.props.auth.user.is_resto !== 1 ? "lg" : "xl"}>
-                {this.state.isLoadingGenerateBarcode && <Preloader />}
-                <ModalHeader toggle={this.toggle}>{this.props.dataEdit === undefined ? "Tambah Barang" : "Ubah Barang"}</ModalHeader>
-                <form onSubmit={this.handleSubmit}>
-                  <ModalBody>
-                    <div className="row d-flex box-margin">
-                      <div className="col-md-5">
-                        <div
-                          className="border border-1 h-100 d-flex justify-content-center align-items-end"
-                          onMouseEnter={this.mouseEnter}
-                          onMouseLeave={this.mouseLeave}
-                          style={{
-                            backgroundImage: `url('${this.state.gambar}'),url('${this.state.gambar === "-" ? Default : this.state.gambar}')`,
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat",
-                            backgroundSize: "cover",
-                          }}
-                        >
-                          <label
-                            className="w-100 h-100 bg-light m-0 p-0 align-items-center justify-content-center"
-                            style={{display: this.state.display,cursor: "pointer",opacity: "0.7"}}
-                            htmlFor="fileUpload"
-                          >
-                            <p className="text-center">
-                              <i className="fa fa-cloud-upload font-40" />
-                              <br />
-                              Unggah Gambar
-                            </p>
-                          </label>
-                        </div>
-                        <input hidden id="fileUpload" type="file" accept="image/*" onChange={(e) => this.handleFileRead(e)} />
-                      </div>
-                      <div className="col-md-7">
-                        <div className="h-100">
-                          <div className="form-group">
-                            <div className="input-group">
-                              <input
-                                  ref={(input) => (this[`kd_brg`] = input)}
-                                  readOnly={this.props.dataEdit !== undefined}
-                                  type="text"
-                                  maxLength={20}
-                                  className="form-control"
-                                  name="kd_brg"
-                                  placeholder="Kode Barang"
-                                  value={this.state.kd_brg}
-                                  onChange={(e) => {
-                                      this.props.dataEdit === undefined && this.handleChange(e, null);
-                                  }}
-                                  onBlur={(e) => this.props.dataEdit === undefined && this.handleChange(e, null, "onBlur")}
-                              />
-                              <div className="input-group-append">
-                                {this.props.dataEdit === undefined ? (
-                                  this.state.kd_brg === "" ? (
-                                    <button className="btn btn-primary" name="generate" type="button" onClick={(e) => this.generateCode("generate")}>
-                                      <i onClick={(e) => this.generateCode("generate")} className="fa fa-refresh" />
-                                    </button>
-                                  ) : (
-                                    <button name="generate" className="btn btn-danger" type="button" onClick={(e) => this.generateCode("generate", "delete")}>
-                                      <i onClick={(e) => this.generateCode("generate", "delete")} className="fa fa-close" />
-                                    </button>
-                                  )
-                                ) : (
-                                  ""
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              ref={(input) => (this[`nm_brg`] = input)}
-                              className="form-control"
-                              placeholder="Nama Barang"
-                              name="nm_brg"
-                              value={this.state.nm_brg}
-                              onChange={(e) => this.handleChange(e, null)}
-                            />
-                          </div>
-                          {document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                ref={(input) => (this[`nama_singkat`] = input)}
-                                className="form-control"
-                                placeholder="Nama Singkat"
-                                name="nama_singkat"
-                                maxLength={20}
-                                value={this.state.nama_singkat}
-                                onChange={(e) => this.handleChange(e, null)}
-                              />
-                            </div>
-                          ) : (
-                              ""
-                          )}
-                          {document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
-                            <div className="row">
-                              <div className="col-md-7">
-                                <div className="form-group">
-                                  {select2Group(
-                                    this.state.rak_data.find((op) => {
-                                        return op.value === this.state.rak;
-                                    }),
-                                    (any, action) => this.handleRak(any, action),
-                                    this.state.rak_data,
-                                    (e) => this.toggleModal(e, "formRak"),
-                                    "rak"
-                                  )}
+                <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size={this.props.auth.user.is_resto !== 1 ? "lg" : "xl"}>
+                    {this.state.isLoadingGenerateBarcode && <Preloader />}
+                    <ModalHeader toggle={this.toggle}>{this.props.dataEdit === undefined ? "Tambah Barang" : "Ubah Barang"}</ModalHeader>
+                    <form onSubmit={this.handleSubmit}>
+                        <ModalBody>
+                            <div className="row d-flex box-margin">
+                                <div className="col-md-5">
+                                    <div
+                                        className="border border-1 h-100 d-flex justify-content-center align-items-end"
+                                        onMouseEnter={this.mouseEnter}
+                                        onMouseLeave={this.mouseLeave}
+                                        style={{
+                                            backgroundImage: `url('${this.state.gambar}'),url('${this.state.gambar === "-" ? Default : this.state.gambar}')`,
+                                            backgroundPosition: "center",
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundSize: "cover",
+                                        }}
+                                    >
+                                        <label
+                                            className="w-100 h-100 bg-light m-0 p-0 align-items-center justify-content-center"
+                                            style={{display: this.state.display,cursor: "pointer",opacity: "0.7"}}
+                                            htmlFor="fileUpload"
+                                        >
+                                            <p className="text-center">
+                                                <i className="fa fa-cloud-upload font-40" />
+                                                <br />
+                                                Unggah Gambar
+                                            </p>
+                                        </label>
+                                    </div>
+                                    <input hidden id="fileUpload" type="file" accept="image/*" onChange={(e) => this.handleFileRead(e)} />
                                 </div>
-                              </div>
-                              <div className="col-md-5">
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    ref={(input) => (this[`tag`] = input)}
-                                    className="form-control"
-                                    placeholder="Tag"
-                                    name="tag"
-                                    maxLength={3}
-                                    value={this.state.tag}
-                                    onChange={(e) => this.handleChange(e, null)}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          ) : (
-                            ""
-                          )}
+                                <div className="col-md-7">
+                                    <div className="h-100">
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <input
+                                                    ref={(input) => (this[`kd_brg`] = input)}
+                                                    readOnly={this.props.dataEdit !== undefined}
+                                                    type="text"
+                                                    maxLength={20}
+                                                    className="form-control"
+                                                    name="kd_brg"
+                                                    placeholder="Kode Barang"
+                                                    value={this.state.kd_brg}
+                                                    onChange={(e) => {
+                                                        this.props.dataEdit === undefined && this.handleChange(e, null);
+                                                    }}
+                                                    onBlur={(e) => this.props.dataEdit === undefined && this.handleChange(e, null, "onBlur")}
+                                                />
+                                                <div className="input-group-append">
+                                                    {this.props.dataEdit === undefined ? (
+                                                        this.state.kd_brg === "" ? (
+                                                            <button className="btn btn-primary" name="generate" type="button" onClick={(e) => this.generateCode("generate")}>
+                                                                <i onClick={(e) => this.generateCode("generate")} className="fa fa-refresh" />
+                                                            </button>
+                                                        ) : (
+                                                            <button name="generate" className="btn btn-danger" type="button" onClick={(e) => this.generateCode("generate", "delete")}>
+                                                                <i onClick={(e) => this.generateCode("generate", "delete")} className="fa fa-close" />
+                                                            </button>
+                                                        )
+                                                    ) : (
+                                                        ""
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
 
-                          <div className="form-group">
-                            {select2Group(
-                              this.state.kel_brg_data.find((op) => {return op.value === this.state.kel_brg;}),
-                              (any, action) => this.handleKelompokBarang(any, action),
-                              this.state.kel_brg_data,
-                              (e) => this.toggleModal(e, "formGroupProduct"),
-                              "kelompok barang"
-                            )}
-                          </div>
-                          <div className="form-group">
-                            {select2Group(
-                              this.state.group1_data.find((op) => {return op.value === this.state.group1;}),
-                              (any, action) => this.handleGroup1(any, action),
-                              this.state.group1_data,
-                              (e) => this.toggleModal(e, "formSupplier"),
-                              "supplier"
-                            )}
-                          </div>
-
-                          <div className="row no-gutters">
-                            <div className="col-md-4">
-                              <div className="new-checkbox">
-                                <label>Jenis Barang</label>
-                                <div className="d-flex align-items-center">
-                                  <label className="switch mr-2">
-                                    <input type="checkbox" checked={this.state.kategori === "1"} onChange={(e) => this.handleKateBrg(e)} />
-                                    <span className="slider round"/>
-                                  </label>
-                                  <label>{this.state.kategori === "1" ? "Dijual" : "Tidak dijual"}</label>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-7 offset-md-1">
-                              <div className="form-group">
-                                <label>Kategori Barang</label>
-                                <select name="jenis" id="jenis" className="form-control form-control-lg" value={this.state.jenis} onChange={(e) => this.handleChange(e, null)}>
-                                  <option value="1">Satuan</option>
-                                  <option value="2">Paket</option>
-                                  <option value="3">Servis</option>
-                                  <option value="0">Karton</option>
-                                  <option value="4">Bahan</option>
-                                  <option value="5">Menu paket</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                            {this.props.auth.user.is_resto === 1 && this.state.jenis === "5" && (
-                              <div className="form-group">
-                                {select2Group(
-                                  this.state.kcp_data.find((op) => {return op.value === this.state.kcp;}),
-                                  (any, action) => this.handleKcp(any, action),
-                                  this.state.kcp_data,
-                                  (e) => this.toggleModal(e, "formPrinter"),
-                                  "printer"
-                                )}
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row mt-2">
-                      <div className="col-md-12">
-                        <table className="table table-hover">
-                          <thead>
-                          <tr>
-                            <th style={{ whiteSpace: "no-wrap" }}>Barcode</th>
-                            <th style={{ whiteSpace: "no-wrap" }}>Satuan</th>
-                            <th style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",whiteSpace: "no-wrap"}}>
-                              Konversi Qty
-                            </th>
-                            <th style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",whiteSpace: "no-wrap"}}>
-                              Tampilkan di POS ?
-                            </th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          {(() => {
-                              let container = [];
-                              for (let x = 0; x < this.state.barangSku.length; x++) {
-                                  container.push(
-                                      <tr key={x}>
-                                        <td>
-                                          <div className="input-group">
+                                        <div className="form-group">
                                             <input
                                                 type="text"
+                                                ref={(input) => (this[`nm_brg`] = input)}
                                                 className="form-control"
-                                                placeholder="Input barcode"
-                                                name="barcode"
-                                                id={`${x === 0 ? "barcode1" : x === 1 ? "barcode2" : "barcode3"}`}
-                                                maxLength={20}
-                                                value={this.state.barangSku[x].barcode}
-                                                onChange={(e) => this.handleChange(e, x)}
-                                                onBlur={(e) => this.checkData(e, x)}
+                                                placeholder="Nama Barang"
+                                                name="nm_brg"
+                                                value={this.state.nm_brg}
+                                                onChange={(e) => this.handleChange(e, null)}
                                             />
-                                            <div
-                                                className="input-group-append pointer"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    this.generateBrcd(this.state.barangSku[x].barcode === "" ? "generate" : "", x);
-                                                }}
-                                                style={{ zIndex: 0 }}
-                                            >
-                                                {this.props.dataEdit === undefined ? (
-                                                    this.state.barangSku[x].barcode === "" ? (
-                                                        <button className="btn btn-primary">
-                                                          <i className="fa fa-refresh" />
-                                                        </button>
-                                                    ) : (
-                                                        <button className="btn btn-danger">
-                                                          <i className="fa fa-close" />
-                                                        </button>
-                                                    )
-                                                ) : (
-                                                    ""
-                                                )}
+                                        </div>
+                                        {document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
+                                            <div className="form-group">
+                                                <input
+                                                    type="text"
+                                                    ref={(input) => (this[`nama_singkat`] = input)}
+                                                    className="form-control"
+                                                    placeholder="Nama Singkat"
+                                                    name="nama_singkat"
+                                                    maxLength={20}
+                                                    value={this.state.nama_singkat}
+                                                    onChange={(e) => this.handleChange(e, null)}
+                                                />
                                             </div>
-                                          </div>
-                                        </td>
-                                        <td>
-                                          <input type="text" placeholder="ex. PCS" className="form-control" name="qty" value={this.state.barangSku[x].qty} onChange={(e) => this.handleChange(e, x)} />
-                                        </td>
-                                        <td style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none"}}>
-                                          <input
-                                              readOnly={x === 0}
-                                              type="text"
-                                              className="form-control"
-                                              name="konversi"
-                                              value={this.state.barangSku[x].konversi}
-                                              onChange={(e) => this.handleChange(e, x)}
-                                          />
-                                        </td>
-                                        <td style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none"}}>
-                                          <select name="satuan_jual" id="satuan_jual" className="form-control" value={this.state.barangSku[x].satuan_jual} onChange={(e) => this.handleChange(e, x)}>
-                                            <option value="">Pilih Opsi</option>
-                                            <option value="1">Tampilkan</option>
-                                            <option value="0">Sembunyikan</option>
-                                          </select>
-                                        </td>
-                                      </tr>
-                                  );
-                              }
-                              return container;
-                          })()}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className="row m-1 border border-1 rounded-lg bg-light px-0 py-3">
-                      <div className="col-md-12">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div className="new-checkbox">
-                            <div className="d-flex align-items-center">
-                              <label className="mb-0">{this.props.dataEdit === undefined ? "Set" : "Ubah"} Harga Semua Lokasi</label>
-                              <label className="switch ml-2 mb-0">
-                                <input type="checkbox" checked={this.state.swPrice === "1"} onChange={(e) => this.switchPrice(e)} />
-                                <span className="slider round"/>
-                              </label>
-                            </div>
-                          </div>
-                            {/* <p className="mb-0">Set Harga Semua Lokasi</p> */}
-                            {this.props.dataEdit === undefined ? (
-                                <button type="button" className="btn btn-info" onClick={(e) => this.toggleModal(e, "formProductPricing")}>
-                                  <i className="fa fa-pencil" /> Atur {this.state.summary ? "kembali" : ""} harga per lokasi
-                                </button>
-                            ) : (
-                                ""
-                            )}
-                        </div>
-                      </div>
-                      <div
-                          className="col-md-12"
-                          style={{
-                              display: this.state.swPrice === "1" ? "block" : "none",
-                          }}
-                      >
-                        <hr className="mt-2" />
-                        <div className="row">
-                            {/*ATUR SEMUA*/}
-                            {/*DIDIEU*/}
-                            {(() => {
-                                let container = [];
-                                for (let i = 0; i < this.state.barangSku.length; i++) {
-                                    let lbl = this.state.barangSku[i].qty;
-                                    let stateHargaBeli = i === 0 ? "hrg_beli" : i === 1 ? "hrg_beli_pack" : "hrg_beli_karton";
-                                    let stateService = i === 0 ? "service" : i === 1 ? "service_pack" : "service_karton";
-                                    let statePpn = i === 0 ? "ppn" : i === 1 ? "ppn_pack" : "ppn_karton";
-                                    let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
-
-                                    container.push(
-                                        <div className="col-md-12" key={i}>
-                                          <div className="row">
-                                            <div className="col-md-12">
-                                              <div className="row">
-                                                <div className={this.props.auth.user.is_resto !== 1 ? "col-md-12" : "col-md-8"}>
-                                                  <div className="row">
-                                                    <div className="col-md-4">
-                                                      <div className="form-group">
-                                                        <label>
-                                                          Harga Beli
-                                                        </label>
+                                        ) : (
+                                            ""
+                                        )}
+                                        {document.getElementById("tambahan_barang").value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
+                                            <div className="row">
+                                                <div className="col-md-7">
+                                                    <div className="form-group">
+                                                        {select2Group(
+                                                            this.state.rak_data.find((op) => {
+                                                                return op.value === this.state.rak;
+                                                            }),
+                                                            (any, action) => this.handleRak(any, action),
+                                                            this.state.rak_data,
+                                                            (e) => this.toggleModal(e, "formRak"),
+                                                            "rak"
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-5">
+                                                    <div className="form-group">
                                                         <input
                                                             type="text"
-                                                            placeholder={`hrg beli ${lbl}`}
-                                                            className={`form-control`}
-                                                            name={stateHargaBeli}
-                                                            value={toCurrency(this.state[stateHargaBeli])}
-                                                            onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
+                                                            ref={(input) => (this[`tag`] = input)}
+                                                            className="form-control"
+                                                            placeholder="Tag"
+                                                            name="tag"
+                                                            maxLength={3}
+                                                            value={this.state.tag}
+                                                            onChange={(e) => this.handleChange(e, null)}
                                                         />
-                                                      </div>
                                                     </div>
-                                                    <div className="col-md-4">
-                                                        {(() => {
-                                                            let containers = [];
-                                                            for (let z = 0; z < this.state.set_harga; z++) {
-                                                                let stateMargin = i === 0 ? `margin${z + 1}` : i === 1 ? `margin${z + 1}_pack` : `margin${z + 1}_karton`;
-                                                                let place = `nm_harga${z + 1}`;
-                                                                containers.push(
-                                                                    <div className="form-group" key={z}>
-                                                                      <label>
-                                                                        Margin
-                                                                          {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}
-                                                                      </label>
-                                                                      <div className="input-group">
-                                                                        <input
-                                                                            readOnly={this.state.jenis === "4"}
-                                                                            type="text"
-                                                                            placeholder={`margin ${z + 1} ${lbl}`}
-                                                                            className="form-control"
-                                                                            name={stateMargin}
-                                                                            value={this.state[stateMargin]}
-                                                                            onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
-                                                                        />
-                                                                        <div className="input-group-append">
-                                                                          <span className="input-group-text">%</span>
-                                                                        </div>
-                                                                      </div>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return containers;
-                                                        })()}
-                                                    </div>
-                                                    <div className="col-md-4">
-                                                        {(() => {
-                                                            let containers = [];
-                                                            for (let z = 0; z < this.state.set_harga; z++) {
-                                                                console.log(this.props.auth);
-                                                                let place = `nm_harga${z + 1}`;
-                                                                let stateHargaJual = i === 0 ? `hrgjual${z + 1}` : i === 1 ? `hrgjual${z + 1}_pack` : `hrgjual${z + 1}_karton`;
-                                                                containers.push(
-                                                                    <div className="form-group" key={z}>
-                                                                      <label>
-                                                                        Harga Jual
-                                                                          {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}
-                                                                      </label>
-                                                                      <input
-                                                                          readOnly={this.state.jenis === "4"}
-                                                                          type="text"
-                                                                          placeholder={`hrg jual ${this.state[place]} ${lbl}`}
-                                                                          className="form-control"
-                                                                          name={stateHargaJual}
-                                                                          value={toCurrency(this.state[stateHargaJual])}
-                                                                          onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
-                                                                      />
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return containers;
-                                                        })()}
-                                                    </div>
-                                                  </div>
                                                 </div>
-                                                  {/*service,ppn,stock min,stock max */}
-                                                <div className={this.props.auth.user.is_resto !== 1 ? "d-none" : "col-md-4"}>
-                                                  <div className="row">
-                                                    <div className="col-md-6">
-                                                      <div className="form-group">
-                                                        <label>Service</label>
-                                                        <div className="input-group">
-                                                          <input
-                                                              readOnly={this.state.jenis === "4"}
-                                                              type="text"
-                                                              placeholder={`service ${lbl}`}
-                                                              className="form-control"
-                                                              name={stateService}
-                                                              value={this.state[stateService]}
-                                                              onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
-                                                          />
-                                                          <div className="input-group-append">
-                                                            <span className="input-group-text">%</span>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                      <div className="form-group">
-                                                        <label>PPN</label>
-                                                        <div className="input-group">
-                                                          <input
-                                                              readOnly={this.state.jenis === "4"}
-                                                              type="text"
-                                                              placeholder={`ppn ${lbl}`}
-                                                              className="form-control"
-                                                              name={statePpn}
-                                                              value={this.state[statePpn]}
-                                                              onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
-                                                          />
-                                                          <div className="input-group-append">
-                                                            <span className="input-group-text">%</span>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
                                             </div>
-                                          </div>
+                                        ) : (
+                                            ""
+                                        )}
+
+                                        <div className="form-group">
+                                            {select2Group(
+                                                this.state.kel_brg_data.find((op) => {return op.value === this.state.kel_brg;}),
+                                                (any, action) => this.handleKelompokBarang(any, action),
+                                                this.state.kel_brg_data,
+                                                (e) => this.toggleModal(e, "formGroupProduct"),
+                                                "kelompok barang"
+                                            )}
                                         </div>
-                                    );
-                                }
-                                return container;
-                            })()}
-                            {/*END ATUR SEMUA*/}
-                          <strong className="text-secondary ml-3">
-                            <i>Note : </i>Harga untuk setiap lokasi otomatis akan sama dengan yang telah di input pada kolom-kolom tersebut.
-                          </strong>
-                        </div>
-                      </div>
+                                        <div className="form-group">
+                                            {select2Group(
+                                                this.state.group1_data.find((op) => {return op.value === this.state.group1;}),
+                                                (any, action) => this.handleGroup1(any, action),
+                                                this.state.group1_data,
+                                                (e) => this.toggleModal(e, "formSupplier"),
+                                                "supplier"
+                                            )}
+                                        </div>
 
-                      <div className="col-md-12 mt-3" style={{ display: this.state.summary ? "block" : "none" }}>
-                        <h4>
-                          <strong>Harga per lokasi</strong>
-                        </h4>
-                        <div className="row" style={{ height: "200px", overflow: "auto" }}>
-                            {this.state.barangHarga.map((v, i) => {
-                                return (
-                                    <div className="col-md-12" key={i}>
-                                      <div className={`border border-1 mx-0 p-2 rounded-lg mb-2 ${i % 2 === 0 ? "bg-light" : ""}`}>
-                                          {(() => {
-                                              let containers = [];
-                                              for (let x = 0; x < this.state.barangSku.length; x++) {
-                                                  let satuan = "",
-                                                      checked;
-                                                  let lbl = this.state.barangSku[x].qty;
-                                                  let isReadonly = "isReadonly";
-                                                  let hargaBeli,
-                                                      nameHargaBeli = "hrgBeli";
-                                                  let service,
-                                                      serviceName = "service";
-                                                  let ppn,
-                                                      ppnName = "ppn";
-                                                  if (x === 0) {
-                                                      satuan = "Pcs";
-                                                      checked = v[x].isCheckedPCS;
-                                                      hargaBeli = v[x].hrgBeliPCS;
-                                                      nameHargaBeli += `PCS`;
-                                                      isReadonly += ``;
-                                                      service = v[x].servicePCS;
-                                                      ppn = v[x].ppnPCS;
-                                                      serviceName += "PCS";
-                                                      ppnName += "PCS";
-                                                  }
-                                                  if (x === 1) {
-                                                      satuan = "Pack";
-                                                      checked = v[x].isCheckedPACK;
-                                                      hargaBeli = v[x].hrgBeliPACK;
-                                                      nameHargaBeli += `PACK`;
-                                                      isReadonly += `Pack`;
-                                                      service = v[x].servicePACK;
-                                                      ppn = v[x].ppnPACK;
-                                                      serviceName += "PACK";
-                                                      ppnName += "PACK";
-                                                  }
-                                                  if (x === 2) {
-                                                      satuan = "Karton";
-                                                      checked = v[x].isCheckedKARTON;
-                                                      hargaBeli = v[x].hrgBeliKARTON;
-                                                      nameHargaBeli += `KARTON`;
-                                                      isReadonly += `Karton`;
-                                                      service = v[x].serviceKARTON;
-                                                      ppn = v[x].ppnKARTON;
-                                                      serviceName += "KARTON";
-                                                      ppnName += "KARTON";
-                                                  }
-                                                  containers.push(
-                                                      <div className="row" key={x}>
-                                                        <div className="col-md-12">
-                                                          <div className="mb-1">
-                                                            <div className="d-flex align-items-center">
-                                                              <label className="mb-0">
-                                                                  {v[x].nama_toko}
-                                                              </label>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                        <div className="col-md-12">
-                                                          <div className="row">
-                                                            <div className={this.props.auth.user.is_resto !== 1 ? "col-md-12" : "col-md-8"}>
-                                                              <div className="row">
-                                                                <div className="col-md-4">
-                                                                  <div className="">
-                                                                    <label>
-                                                                      Harga Beli : <strong>{toCurrency(hargaBeli)}</strong>
-                                                                    </label>
-                                                                  </div>
-                                                                </div>
-                                                                <div className="col-md-4">
-                                                                    {(() => {
-                                                                        let container = [];
-                                                                        for (let z = 0; z < this.state.set_harga; z++) {
-                                                                            let marginName = x === 0 ? `margin${z + 1}PCS` : x === 1 ? `margin${z + 1}PACK` : `margin${z + 1}KARTON`;
-                                                                            let place = `nm_harga${z + 1}`;
-                                                                            let marginValue = v[x][marginName];
-                                                                            container.push(
-                                                                                <div className="" key={z}>
-                                                                                  <label>
-                                                                                    Margin {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""} : <strong>{marginValue}%</strong>
-                                                                                  </label>
-                                                                                </div>
-                                                                            );
-                                                                        }
-                                                                        return container;
-                                                                    })()}
-                                                                </div>
-                                                                <div className="col-md-4">
-                                                                    {(() => {
-                                                                        let container = [];
-                                                                        for (let z = 0; z < this.state.set_harga; z++) {
-                                                                            let place = `nm_harga${z + 1}`;
-                                                                            let hrgName = `hrgJual${z + 1}${satuan !== undefined ? satuan.toUpperCase() : ""}`;
-                                                                            let hrg = `hrgJual${z + 1}${satuan !== undefined ? satuan.toUpperCase() : ""}`;
-                                                                            let hrgValue = v[x][hrg];
-                                                                            container.push(
-                                                                                <div className="" key={z}>
-                                                                                  <label>
-                                                                                    Harga Jual
-                                                                                      {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""} : <strong>{toCurrency(hrgValue)}</strong>
-                                                                                  </label>
-                                                                                </div>
-                                                                            );
-                                                                        }
-                                                                        return container;
-                                                                    })()}
-                                                                </div>
-                                                              </div>
-                                                            </div>
-                                                              {/*service,ppn,stock min,stock max */}
-                                                            <div className={this.props.auth.user.is_resto !== 1 ? "d-none" : "col-md-4"}>
-                                                              <div className="row">
-                                                                <div className="col-md-6">
-                                                                  <div className="form-group">
-                                                                    <label>
-                                                                      Service : <strong>{service}%</strong>
-                                                                    </label>
-                                                                  </div>
-                                                                </div>
-                                                                <div className="col-md-6">
-                                                                  <div className="form-group">
-                                                                    <label>
-                                                                      PPN : <strong>{ppn}%</strong>
-                                                                    </label>
-                                                                  </div>
-                                                                </div>
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                  );
-                                              }
-                                              return containers;
-                                          })()}
-
-                                          {/* <hr /> */}
-                                      </div>
+                                        <div className="row no-gutters">
+                                            <div className="col-md-4">
+                                                <div className="new-checkbox">
+                                                    <label>Jenis Barang</label>
+                                                    <div className="d-flex align-items-center">
+                                                        <label className="switch mr-2">
+                                                            <input type="checkbox" checked={this.state.kategori === "1"} onChange={(e) => this.handleKateBrg(e)} />
+                                                            <span className="slider round"/>
+                                                        </label>
+                                                        <label>{this.state.kategori === "1" ? "Dijual" : "Tidak dijual"}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-7 offset-md-1">
+                                                <div className="form-group">
+                                                    <label>Kategori Barang</label>
+                                                    <select name="jenis" id="jenis" className="form-control form-control-lg" value={this.state.jenis} onChange={(e) => this.handleChange(e, null)}>
+                                                        <option value="1">Satuan</option>
+                                                        <option value="2">Paket</option>
+                                                        <option value="3">Servis</option>
+                                                        <option value="0">Karton</option>
+                                                        <option value="4">Bahan</option>
+                                                        <option value="5">Menu paket</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {this.props.auth.user.is_resto === 1 && this.state.jenis === "5" && (
+                                            <div className="form-group">
+                                                {select2Group(
+                                                    this.state.kcp_data.find((op) => {return op.value === this.state.kcp;}),
+                                                    (any, action) => this.handleKcp(any, action),
+                                                    this.state.kcp_data,
+                                                    (e) => this.toggleModal(e, "formPrinter"),
+                                                    "printer"
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
-                                );
-                            })}
-                            {/*END DYNAMIC  */}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div className="mt-2" style={{ textAlign: "right" }}>
-                          <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
-                            <i className="ti-close" /> Batal
-                          </button>
+                                </div>
+                            </div>
+                            <div className="row mt-2">
+                                <div className="col-md-12">
+                                    <table className="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th style={{ whiteSpace: "no-wrap" }}>Barcode</th>
+                                            <th style={{ whiteSpace: "no-wrap" }}>Satuan</th>
+                                            <th style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",whiteSpace: "no-wrap"}}>
+                                                Konversi Qty
+                                            </th>
+                                            <th style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",whiteSpace: "no-wrap"}}>
+                                                Tampilkan di POS ?
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {(() => {
+                                            let container = [];
+                                            for (let x = 0; x < this.state.barangSku.length; x++) {
+                                                container.push(
+                                                    <tr key={x}>
+                                                        <td>
+                                                            <div className="input-group">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    placeholder="Input barcode"
+                                                                    name="barcode"
+                                                                    id={`${x === 0 ? "barcode1" : x === 1 ? "barcode2" : "barcode3"}`}
+                                                                    maxLength={20}
+                                                                    value={this.state.barangSku[x].barcode}
+                                                                    onChange={(e) => this.handleChange(e, x)}
+                                                                    onBlur={(e) => this.checkData(e, x)}
+                                                                />
+                                                                <div
+                                                                    className="input-group-append pointer"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        this.generateBrcd(this.state.barangSku[x].barcode === "" ? "generate" : "", x);
+                                                                    }}
+                                                                    style={{ zIndex: 0 }}
+                                                                >
+                                                                    {this.props.dataEdit === undefined ? (
+                                                                        this.state.barangSku[x].barcode === "" ? (
+                                                                            <button className="btn btn-primary">
+                                                                                <i className="fa fa-refresh" />
+                                                                            </button>
+                                                                        ) : (
+                                                                            <button className="btn btn-danger">
+                                                                                <i className="fa fa-close" />
+                                                                            </button>
+                                                                        )
+                                                                    ) : (
+                                                                        ""
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" placeholder="ex. PCS" className="form-control" name="qty" value={this.state.barangSku[x].qty} onChange={(e) => this.handleChange(e, x)} />
+                                                        </td>
+                                                        <td style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none"}}>
+                                                            <input
+                                                                readOnly={x === 0}
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="konversi"
+                                                                value={this.state.barangSku[x].konversi}
+                                                                onChange={(e) => this.handleChange(e, x)}
+                                                            />
+                                                        </td>
+                                                        <td style={{display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none"}}>
+                                                            <select name="satuan_jual" id="satuan_jual" className="form-control" value={this.state.barangSku[x].satuan_jual} onChange={(e) => this.handleChange(e, x)}>
+                                                                <option value="">Pilih Opsi</option>
+                                                                <option value="1">Tampilkan</option>
+                                                                <option value="0">Sembunyikan</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
+                                            return container;
+                                        })()}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div className="row m-1 border border-1 rounded-lg bg-light px-0 py-3">
+                                <div className="col-md-12">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="new-checkbox">
+                                            <div className="d-flex align-items-center">
+                                                <label className="mb-0">{this.props.dataEdit === undefined ? "Set" : "Ubah"} Harga Semua Lokasi</label>
+                                                <label className="switch ml-2 mb-0">
+                                                    <input type="checkbox" checked={this.state.swPrice === "1"} onChange={(e) => this.switchPrice(e)} />
+                                                    <span className="slider round"/>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {/* <p className="mb-0">Set Harga Semua Lokasi</p> */}
+                                        {this.props.dataEdit === undefined ? (
+                                            <button type="button" className="btn btn-info" onClick={(e) => this.toggleModal(e, "formProductPricing")}>
+                                                <i className="fa fa-pencil" /> Atur {this.state.summary ? "kembali" : ""} harga per lokasi
+                                            </button>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </div>
+                                </div>
+                                <div
+                                    className="col-md-12"
+                                    style={{
+                                        display: this.state.swPrice === "1" ? "block" : "none",
+                                    }}
+                                >
+                                    <hr className="mt-2" />
+                                    <div className="row">
+                                        {/*ATUR SEMUA*/}
+                                        {/*DIDIEU*/}
+                                        {(() => {
+                                            let container = [];
+                                            for (let i = 0; i < this.state.barangSku.length; i++) {
+                                                let lbl = this.state.barangSku[i].qty;
+                                                let stateHargaBeli = i === 0 ? "hrg_beli" : i === 1 ? "hrg_beli_pack" : "hrg_beli_karton";
+                                                let stateService = i === 0 ? "service" : i === 1 ? "service_pack" : "service_karton";
+                                                let statePpn = i === 0 ? "ppn" : i === 1 ? "ppn_pack" : "ppn_karton";
+                                                let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
 
-                            {this.state.swPrice === "1" ? (
-                                <button type="submit" className="btn btn-primary mr-1">
-                                  <i className="ti-save" /> Simpan
-                                </button>
-                            ) : (
-                                <button type="submit" className="btn btn-primary mr-1" disabled={this.props.dataEdit === undefined && this.state.summary === false}>
-                                  <i className="ti-save" /> Simpan
-                                </button>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                  </ModalBody>
-                </form>
-              </WrapperModal>
-              <FormRak fastAdd={true} detail={this.state.detail} />
-              <FormSupplier fastAdd={true} detail={this.state.detail} />
+                                                container.push(
+                                                    <div className="col-md-12" key={i}>
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <div className="row">
+                                                                    <div className={this.props.auth.user.is_resto !== 1 ? "col-md-12" : "col-md-8"}>
+                                                                        <div className="row">
+                                                                            <div className="col-md-4">
+                                                                                <div className="form-group">
+                                                                                    <label>
+                                                                                        Harga Beli
+                                                                                    </label>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        placeholder={`hrg beli ${lbl}`}
+                                                                                        className={`form-control`}
+                                                                                        name={stateHargaBeli}
+                                                                                        value={toCurrency(this.state[stateHargaBeli])}
+                                                                                        onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="col-md-4">
+                                                                                {(() => {
+                                                                                    let containers = [];
+                                                                                    for (let z = 0; z < this.state.dataHarga.length; z++) {
+                                                                                        let stateMargin = i === 0 ? `margin${z + 1}` : i === 1 ? `margin${z + 1}_pack` : `margin${z + 1}_karton`;
+                                                                                        containers.push(
+                                                                                            <div className="form-group" key={z}>
+                                                                                                <label>
+                                                                                                    Margin {this.state.dataHarga[z][`harga${z+1}`]}
+                                                                                                </label>
+                                                                                                <div className="input-group">
+                                                                                                    <input
+                                                                                                        readOnly={this.state.jenis === "4"}
+                                                                                                        type="text"
+                                                                                                        placeholder={`margin ${this.state.dataHarga[z][`harga${z+1}`]}`}
+                                                                                                        className="form-control"
+                                                                                                        name={[`margin${z+1}`]}
+                                                                                                        value={this.state.dataHarga[z][`margin${z+1}`]}
+                                                                                                        onChange={(e) => this.handleChangeMore(e, z, satuan.toUpperCase())}
+                                                                                                    />
+                                                                                                    <div className="input-group-append">
+                                                                                                        <span className="input-group-text">%</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        );
+                                                                                    }
+                                                                                    return containers;
+                                                                                })()}
+                                                                            </div>
+                                                                            <div className="col-md-4">
+                                                                                {(() => {
+                                                                                    let containers = [];
+                                                                                    for (let z = 0; z < this.state.dataHarga.length; z++) {
+                                                                                        containers.push(
+                                                                                            <div className="form-group" key={z}>
+                                                                                                <label>
+                                                                                                    Harga Jual {this.state.dataHarga[z][`harga${z+1}`]}
+                                                                                                </label>
+                                                                                                <input
+                                                                                                    readOnly={this.state.jenis === "4"}
+                                                                                                    type="text"
+                                                                                                    placeholder={`hrg jual ${this.state.dataHarga[z][`harga${z+1}`]}`}
+                                                                                                    className="form-control"
+                                                                                                    name={[`nominal${z+1}`]}
+                                                                                                    value={toCurrency(this.state.dataHarga[z][`nominal${z+1}`])}
+                                                                                                    onChange={(e) => this.handleChangeMore(e, z, satuan.toUpperCase())}
+                                                                                                />
+                                                                                            </div>
+                                                                                        );
+                                                                                    }
+                                                                                    return containers;
+                                                                                })()}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {/*service,ppn,stock min,stock max */}
+                                                                    <div className={this.props.auth.user.is_resto !== 1 ? "d-none" : "col-md-4"}>
+                                                                        <div className="row">
+                                                                            <div className="col-md-6">
+                                                                                <div className="form-group">
+                                                                                    <label>Service</label>
+                                                                                    <div className="input-group">
+                                                                                        <input
+                                                                                            readOnly={this.state.jenis === "4"}
+                                                                                            type="text"
+                                                                                            placeholder={`service ${lbl}`}
+                                                                                            className="form-control"
+                                                                                            name={stateService}
+                                                                                            value={this.state[stateService]}
+                                                                                            onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
+                                                                                        />
+                                                                                        <div className="input-group-append">
+                                                                                            <span className="input-group-text">%</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="col-md-6">
+                                                                                <div className="form-group">
+                                                                                    <label>PPN</label>
+                                                                                    <div className="input-group">
+                                                                                        <input
+                                                                                            readOnly={this.state.jenis === "4"}
+                                                                                            type="text"
+                                                                                            placeholder={`ppn ${lbl}`}
+                                                                                            className="form-control"
+                                                                                            name={statePpn}
+                                                                                            value={this.state[statePpn]}
+                                                                                            onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
+                                                                                        />
+                                                                                        <div className="input-group-append">
+                                                                                            <span className="input-group-text">%</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                            return container;
+                                        })()}
+                                        {/*END ATUR SEMUA*/}
+                                        <strong className="text-secondary ml-3">
+                                            <i>Note : </i>Harga untuk setiap lokasi otomatis akan sama dengan yang telah di input pada kolom-kolom tersebut.
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-12 mt-3" style={{ display: this.state.summary ? "block" : "none" }}>
+                                    <h4>
+                                        <strong>Harga per lokasi</strong>
+                                    </h4>
+                                    <div className="row" style={{ height: "200px", overflow: "auto" }}>
+                                        {this.state.barangHarga.map((v, i) => {
+                                            return (
+                                                <div className="col-md-12" key={i}>
+                                                    <div className={`border border-1 mx-0 p-2 rounded-lg mb-2 ${i % 2 === 0 ? "bg-light" : ""}`}>
+                                                        {(() => {
+                                                            let containers = [];
+                                                            for (let x = 0; x < this.state.barangSku.length; x++) {
+                                                                let satuan = "",
+                                                                    checked;
+                                                                let lbl = this.state.barangSku[x].qty;
+                                                                let isReadonly = "isReadonly";
+                                                                let hargaBeli,
+                                                                    nameHargaBeli = "hrgBeli";
+                                                                let service,
+                                                                    serviceName = "service";
+                                                                let ppn,
+                                                                    ppnName = "ppn";
+                                                                if (x === 0) {
+                                                                    satuan = "Pcs";
+                                                                    checked = v[x].isCheckedPCS;
+                                                                    hargaBeli = v[x].hrgBeliPCS;
+                                                                    nameHargaBeli += `PCS`;
+                                                                    isReadonly += ``;
+                                                                    service = v[x].servicePCS;
+                                                                    ppn = v[x].ppnPCS;
+                                                                    serviceName += "PCS";
+                                                                    ppnName += "PCS";
+                                                                }
+                                                                if (x === 1) {
+                                                                    satuan = "Pack";
+                                                                    checked = v[x].isCheckedPACK;
+                                                                    hargaBeli = v[x].hrgBeliPACK;
+                                                                    nameHargaBeli += `PACK`;
+                                                                    isReadonly += `Pack`;
+                                                                    service = v[x].servicePACK;
+                                                                    ppn = v[x].ppnPACK;
+                                                                    serviceName += "PACK";
+                                                                    ppnName += "PACK";
+                                                                }
+                                                                if (x === 2) {
+                                                                    satuan = "Karton";
+                                                                    checked = v[x].isCheckedKARTON;
+                                                                    hargaBeli = v[x].hrgBeliKARTON;
+                                                                    nameHargaBeli += `KARTON`;
+                                                                    isReadonly += `Karton`;
+                                                                    service = v[x].serviceKARTON;
+                                                                    ppn = v[x].ppnKARTON;
+                                                                    serviceName += "KARTON";
+                                                                    ppnName += "KARTON";
+                                                                }
+                                                                containers.push(
+                                                                    <div className="row" key={x}>
+                                                                        <div className="col-md-12">
+                                                                            <div className="mb-1">
+                                                                                <div className="d-flex align-items-center">
+                                                                                    <label className="mb-0">
+                                                                                        {v[x].nama_toko}
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-md-12">
+                                                                            <div className="row">
+                                                                                <div className={this.props.auth.user.is_resto !== 1 ? "col-md-12" : "col-md-8"}>
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-4">
+                                                                                            <div className="">
+                                                                                                <label>
+                                                                                                    Harga Beli : <strong>{toCurrency(hargaBeli)}</strong>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div className="col-md-4">
+                                                                                            {(() => {
+                                                                                                let container = [];
+                                                                                                for (let z = 0; z < this.state.set_harga; z++) {
+                                                                                                    let marginName = x === 0 ? `margin${z + 1}PCS` : x === 1 ? `margin${z + 1}PACK` : `margin${z + 1}KARTON`;
+                                                                                                    let place = `nm_harga${z + 1}`;
+                                                                                                    let marginValue = v[x][marginName];
+                                                                                                    container.push(
+                                                                                                        <div className="" key={z}>
+                                                                                                            <label>
+                                                                                                                Margin {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""} : <strong>{marginValue}%</strong>
+                                                                                                            </label>
+                                                                                                        </div>
+                                                                                                    );
+                                                                                                }
+                                                                                                return container;
+                                                                                            })()}
+                                                                                        </div>
+                                                                                        <div className="col-md-4">
+                                                                                            {(() => {
+                                                                                                let container = [];
+                                                                                                for (let z = 0; z < this.state.set_harga; z++) {
+                                                                                                    let place = `nm_harga${z + 1}`;
+                                                                                                    let hrgName = `hrgJual${z + 1}${satuan !== undefined ? satuan.toUpperCase() : ""}`;
+                                                                                                    let hrg = `hrgJual${z + 1}${satuan !== undefined ? satuan.toUpperCase() : ""}`;
+                                                                                                    let hrgValue = v[x][hrg];
+                                                                                                    container.push(
+                                                                                                        <div className="" key={z}>
+                                                                                                            <label>
+                                                                                                                Harga Jual
+                                                                                                                {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""} : <strong>{toCurrency(hrgValue)}</strong>
+                                                                                                            </label>
+                                                                                                        </div>
+                                                                                                    );
+                                                                                                }
+                                                                                                return container;
+                                                                                            })()}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                {/*service,ppn,stock min,stock max */}
+                                                                                <div className={this.props.auth.user.is_resto !== 1 ? "d-none" : "col-md-4"}>
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-6">
+                                                                                            <div className="form-group">
+                                                                                                <label>
+                                                                                                    Service : <strong>{service}%</strong>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div className="col-md-6">
+                                                                                            <div className="form-group">
+                                                                                                <label>
+                                                                                                    PPN : <strong>{ppn}%</strong>
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return containers;
+                                                        })()}
+
+                                                        {/* <hr /> */}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                        {/*END DYNAMIC  */}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="mt-2" style={{ textAlign: "right" }}>
+                                        <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
+                                            <i className="ti-close" /> Batal
+                                        </button>
+
+                                        {this.state.swPrice === "1" ? (
+                                            <button type="submit" className="btn btn-primary mr-1">
+                                                <i className="ti-save" /> Simpan
+                                            </button>
+                                        ) : (
+                                            <button type="submit" className="btn btn-primary mr-1" disabled={this.props.dataEdit === undefined && this.state.summary === false}>
+                                                <i className="ti-save" /> Simpan
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </ModalBody>
+                    </form>
+                </WrapperModal>
+                <FormRak fastAdd={true} detail={this.state.detail} />
+                <FormSupplier fastAdd={true} detail={this.state.detail} />
                 {this.state.isModalFormGroupProduct && this.props.isOpen ? <FormGroupProduct detail={this.state.detail} group2={this.props.group2} fastAdd={true} /> : null}
-              <FormProductPricing
-                  allState={this.state}
-                  handler={this.handler}
-                  onHandleChangeChildSku_={this.onHandleChangeChildSku}
-                  data={this.props.data}
-                  dataLocation={this.props.dataLocation}
-                  dataSupplier={this.props.dataSupplier}
-                  dataSubDept={this.props.dataSubDept}
-                  dataEdit={this.props.dataEdit}
-                  productCode={this.props.productCode}
-              />
-              {this.props.auth.user.is_resto === 1 && <FormPrinter detail={{ id_printer: "" }} fastAdd={true} />}
+                <FormProductPricing
+                    allState={this.state}
+                    handler={this.handler}
+                    onHandleChangeChildSku_={this.onHandleChangeChildSku}
+                    data={this.props.data}
+                    dataLocation={this.props.dataLocation}
+                    dataSupplier={this.props.dataSupplier}
+                    dataSubDept={this.props.dataSubDept}
+                    dataEdit={this.props.dataEdit}
+                    productCode={this.props.productCode}
+                />
+                {this.props.auth.user.is_resto === 1 && <FormPrinter detail={{ id_printer: "" }} fastAdd={true} />}
             </div>
         );
     }
