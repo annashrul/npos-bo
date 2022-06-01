@@ -96,6 +96,17 @@ class FormProduct extends Component{
     }
     async fetchData(data) {
         const url = HEADERS.URL + `site/cekdata`;
+        // const headers = {
+        //     Authorization: atob(Cookies.get("datum_exp")),
+        //     username: atob(Cookies.get("tnt=")),
+        //     password: HEADERS.PASSWORD,
+        //     "Content-Type": `application/json`,
+        // };
+        // const requestOptions = {
+        //     method: "POST",
+        //     headers: headers,
+        //     body: data,
+        // };
         return await axios
             .post(url, data)
             .then(function (response) {
@@ -127,7 +138,6 @@ class FormProduct extends Component{
         });
         this.setState({barangSku})
     }
-
     handleDataSku(value,brcd){
         let barcode=brcd,satuan ="",barangSku=[],state=this.state;
         let index = value==="0"?3:(value==="2"?2:1);
@@ -186,40 +196,23 @@ class FormProduct extends Component{
     }
     genBrcd(val) {
         this.setState({ isLoadingGenerateBarcode: true });
-        const headers = {
-            Authorization: atob(Cookies.get("datum_exp")),
-            username: atob(Cookies.get("tnt=")),
-            password: HEADERS.PASSWORD,
-            "Content-Type": `application/json`,
-        };
-        const requestOptions = {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify({
+        if (!tenantBool) {
+            const data = this.fetchData({
                 kolom: "barcode",
                 table: "barang_sku",
                 value: val,
-            }),
-        };
+            });
+            data.then((res) => {
+                this.setState({ isLoadingGenerateBarcode: false });
+                if(res.result===1){
+                    Swal.fire("Informasi", "Barcode " + val + " sudah digunakan!");
+                    return 0;
+                }
+                else{
+                    this.handleDataSku(this.state.jenis,val);
+                }
+            });
 
-        if (!tenantBool) {
-            return fetch(HEADERS.URL + `site/cekdata`, requestOptions)
-                .then((res) => res.json())
-                .then(
-                    (data) => {
-                        this.setState({ isLoadingGenerateBarcode: false });
-                        if (data.result === 0) {
-                            return val;
-                        } else {
-                            Swal.fire("Informasi", "Barcode " + val + " sudah digunakan!");
-                            return 0;
-                        }
-                    },
-                    (error) => {
-                        this.setState({ isLoadingGenerateBarcode: false });
-                        Swal.fire("Peringatan", "Terjadi kesalahan, coba kembali.");
-                    }
-                );
         } else {
             this.setState({ isLoadingGenerateBarcode: false });
             return val;
@@ -228,8 +221,11 @@ class FormProduct extends Component{
     async generateBrcd(e, idx) {
         let state=this.state;
         if (e === "generate") {
-            let genCode = state.kd_brg!==""&& await this.genBrcd(state.kd_brg);
-            this.handleDataSku(state.jenis,genCode);
+            let genCode = "";
+            if(state.kd_brg!==""){
+                await this.genBrcd(state.kd_brg);
+            }
+
         }
         else {
             if (idx !== null) {
