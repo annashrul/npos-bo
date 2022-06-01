@@ -378,7 +378,7 @@ export const ToastQ = Swal.mixin({
   toast: true,
   position: "top-end",
   showConfirmButton: false,
-  timer: 1000,
+  timer: 3000,
   timerProgressBar: true,
   onOpen: (toast) => {
     toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -403,16 +403,14 @@ export const statusQ = (lbl, txt) => {
   }
 };
 
-export const getMargin = (field1, field2, name = "") => {
-  field1 = parseInt(rmComma(rmToZero(field1)));
-  field2 = parseInt(rmComma(rmToZero(field2)));
-  if (name === "margin") {
-    //jika yang diinput margin
-    return field1 * (field2 / 100) + field1;
-  } else {
-    //jika yang diinput selain margin
-    return ((field1 - field2) / field2) * 100;
-  }
+export const getMargin = (input, field, name = "") => {
+    input = parseInt(rmComma(input),10);
+    field = parseInt(rmComma(field),10);
+    if (name === "margin") {
+        return ((input - field) / field) * 100;
+    } else {
+      return field * (input / 100) + field;
+    }
 };
 
 export const kassa = (param = "") => {
