@@ -11,11 +11,13 @@ import Select from "react-select";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { withRouter } from "react-router-dom";
-import { handleError, isEmptyOrUndefined, swal, swallOption, toRp } from "../../../../helper";
+import {handleError, isEmptyOrUndefined, swal, swallOption, toCurrency, toRp} from "../../../../helper";
 import Spinner from "Spinner";
 import { FetchAlokasiData } from "../../../../redux/actions/inventory/alokasi.action";
 import TableCommon from "../../common/TableCommon";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
+import Cookies from "js-cookie";
+
 const table = "alokasi";
 const Toast = Swal.mixin({
   toast: true,
@@ -445,7 +447,39 @@ class Alokasi extends Component {
     let brgval = [...this.state.brgval];
     brgval[i] = { ...brgval[i], [column]: val };
     this.setState({ brgval });
+    console.log("asd",datas);
+    if(column==="harga"){
+        const cek = cekData("barcode", barcode, table);
+        cek.then((res) => {
+            if (res === undefined) {
+                Toast.fire({
+                    icon: "error",
+                    title: `not found.`,
+                });
+            } else {
 
+                let final = {
+                    id: res.id,
+                    kd_brg: res.kd_brg,
+                    nm_brg: res.nm_brg,
+                    barcode: res.barcode,
+                    satuan: res.satuan,
+                    harga_beli: res.harga_beli,
+                    hrg_jual: val,
+                    stock: res.stock,
+                    qty: 1,
+                    tambahan: res.tambahan,
+                };
+                update(table, final);
+                Toast.fire({
+                    icon: "success",
+                    title: `${column} has been changed.`,
+                });
+            }
+            this.getData();
+            return null;
+        });
+    }
     if (column === "satuan") {
       const cek = cekData("barcode", barcode, table);
       cek.then((res) => {
@@ -514,6 +548,7 @@ class Alokasi extends Component {
   }
 
   HandleAddBrg(e, item) {
+    console.log(item);
     e.preventDefault();
     this.setState({
       isScroll: false,
@@ -677,6 +712,7 @@ class Alokasi extends Component {
       let err = [];
       res.map((i) => {
         brg.push({
+
           qty: i.qty,
           satuan: i.satuan,
         });
@@ -1077,7 +1113,33 @@ class Alokasi extends Component {
                             </select>
                           </td>
                           <td className="middle nowrap text-right">{toRp(item.harga_beli)}</td>
-                          <td className="middle nowrap text-right">{toRp(item.hrg_jual)}</td>
+                          <td className="middle nowrap text-right">
+                              {
+                                  atob(atob(Cookies.get("tnt="))) === "depo-beku" || atob(atob(Cookies.get("tnt="))) === "npos"?(
+                                      <select
+                                          className="form-control in-table"
+                                          style={{ width: "100px" }}
+                                          name="harga"
+                                          onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}
+                                      >
+                                          {(() => {
+                                              let container = [];
+                                              for (let k = 0; k < 4; k++) {
+                                                  container.push(
+                                                      <option value={item.tambahan[0][k===0?`harga`:`harga${k+1}`]} selected={item.tambahan[0][k===0?`harga`:`harga${k+1}`] === item.hrg_jual}>
+                                                          {item.tambahan[0][k===0?`harga`:`harga${k+1}`]}
+                                                      </option>
+                                                  );
+                                              }
+                                              return container;
+                                          })()}
+
+
+                                      </select>
+                                  ):<td className="middle nowrap text-right">{toRp(item.hrg_jual)}</td>
+                              }
+
+                          </td>
                           <td className="middle nowrap text-right">{item.stock}</td>
                           <td className="middle nowrap">
                             <input
