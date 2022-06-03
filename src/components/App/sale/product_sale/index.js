@@ -882,6 +882,7 @@ class Sale extends Component {
                                     className="clearfix"
                                     key={inx}
                                     onClick={(e) => {
+
                                       // let field = this.handleField(i);
                                       this.HandleAddBrg(e, i, inx);
                                     }}
@@ -997,6 +998,7 @@ class Sale extends Component {
                                         onChange={(e) => this.HandleChangeInputValue(e, index)}
                                       />
                                     ) : (
+
                                       <select
                                         className="form-control in-table"
                                         style={{ width: "100px" }}
