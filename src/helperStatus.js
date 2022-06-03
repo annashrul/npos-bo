@@ -1,5 +1,17 @@
 import { statusQ } from "./helper";
 
+
+
+
+export const DATA_KATEGORI_BARANG = [
+    {value:"1",label:"Satuan"},
+    {value:"2",label:"Paket"},
+    {value:"3",label:"Service"},
+    {value:"0",label:"Karton"},
+    {value:"4",label:"Bahan"},
+    {value:"5",label:"Menu Paket"},
+];
+
 export const STATUS_GENERAL = [
   { value: "", label: "Semua" },
   { value: "1", label: "Aktif", color: "primary" },

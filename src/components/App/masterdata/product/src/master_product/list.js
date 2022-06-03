@@ -39,6 +39,8 @@ import FormProductExport from "../../../../modals/masterdata/product/form_produc
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
+import FormProductPricings from "../../../../modals/masterdata/product/form_product_pricing_";
+import FormProducts from "../../../../modals/masterdata/product/form_product_";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
 import {
     dateRange,
@@ -815,7 +817,7 @@ class ListProduct extends Component {
                 />
               </div>
                 {this.state.isModalForm ? (
-                    <FormProduct
+                    <FormProducts
                         detail={{ kel_brg: "" }}
                         data={this.props.groupProduct}
                         dataLocation={this.props.location}
@@ -826,7 +828,7 @@ class ListProduct extends Component {
                     />
                 ) : null}
                 {this.state.isModalFormPer ? (
-                    <FormProductPricing
+                    <FormProductPricings
                         // allState={this.state}
                         data={this.props.groupProduct}
                         dataLocation={this.props.location}

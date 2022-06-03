@@ -406,6 +406,7 @@ export const statusQ = (lbl, txt) => {
 export const getMargin = (input, field, name = "") => {
     input = parseInt(rmComma(input),10);
     field = parseInt(rmComma(field),10);
+    console.log(field)
     if (name === "margin") {
         return ((input - field) / field) * 100;
     } else {

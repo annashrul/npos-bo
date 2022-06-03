@@ -38,17 +38,23 @@ class Company extends Component{
 
         this.setState({ [event.target.name]: event.target.value });
         if(event.target.name==='set_harga'){
-            let hrg=[];
-            let idxHarga=this.state.data_harga[event.target.value-1];
-            if(idxHarga===undefined){
-                this.state.data_harga.push({[`harga${event.target.value}`]:""})
-            }else{
-                for(let i=0;i<event.target.value;i++){
-                    hrg.push({[`harga${i+1}`] : this.state.data_harga[i][`harga${i+1}`]});
-                }
-                this.state.data_harga=hrg;
+
+            // let hrg=[];
+            // let idxHarga=this.state.data_harga[event.target.value-1];
+            console.log(this.state.data_harga);
+            let data_harga=this.state.data_harga;
+            let val = event.target.value;
+            if(parseInt(val,10) > data_harga.length){
+                data_harga.push({[`harga${val}`] : ""});
             }
-            // console.log(this.state.data_harga[event.target.value-1]);
+            // if(idxHarga===undefined){
+            //     this.state.data_harga.push({[`harga${event.target.value}`]:""})
+            // }else{
+            //     for(let i=0;i<event.target.value;i++){
+            //         hrg.push({[`harga${i+1}`] : this.state.data_harga[i][`harga${i+1}`]});
+            //     }
+            //     this.state.data_harga=hrg;
+            // }
             this.setState({})
         }
     }
@@ -154,8 +160,9 @@ class Company extends Component{
                     nama_harga:hrg,
                     set_harga:hrg.length
                 });
+                console.log(hrg);
                 update(table,item);
-                // return null;
+                return null;
             });
         });
         this.props.dispatch(storeCompany(parseData));
