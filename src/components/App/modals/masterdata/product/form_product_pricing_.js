@@ -666,7 +666,6 @@ class FormProductPricings extends Component {
             }
         }
         let propsUser=param.auth.user;
-        console.log(propsUser.nama_harga)
         this.setState({
             dataHarga:propsUser.nama_harga,
             nm_harga1: propsUser.nama_harga===undefined?propsUser[0].harga1:propsUser.nama_harga[0].harga1,
@@ -795,7 +794,8 @@ class FormProductPricings extends Component {
                             serviceKARTON: barang_hrg[x][2].service,
                         },
                     ]);
-                } else if (barang_sku.length === 2) {
+                }
+                else if (barang_sku.length === 2) {
                     barangHrg.push([
                         {
                             nama_toko: barang_hrg[x][0].nama_toko,
@@ -861,39 +861,31 @@ class FormProductPricings extends Component {
                             servicePACK: barang_hrg[x][1].service,
                         },
                     ]);
-                } else {
-                    barangHrg.push([
-                        {
-                            nama_toko: barang_hrg[x][0].nama_toko,
-                            lokasi: barang_hrg[x][0].lokasi,
-                            isCheckedPCS: true,
-                            hrgBeliPCS: barang_hrg[x][0].harga_beli,
-                            margin1PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin2PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin3PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin4PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin5PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga5), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin6PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga6), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin7PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga7), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin8PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga8), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin9PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga9), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
-                            margin10PCS: param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga10), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
+                }
+                else {
+                    const objBrgHrg={
+                        nama_toko: barang_hrg[x][0].nama_toko,
+                        lokasi: barang_hrg[x][0].lokasi,
+                        isCheckedPCS: true,
+                        hrgBeliPCS: barang_hrg[x][0].harga_beli,
+                    };
+                    for(let key=0;key<propsUser.set_harga;key++){
+                        if(key===0){
+                            const getMargin=barang_hrg[x][0][`harga`]==="0"?0:param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100
+                            Object.assign(objBrgHrg,{
+                                [`margin1PCS`] : getMargin,
+                                [`hrgJual${key+1}PCS`]: barang_hrg[x][0][`harga`]
+                            });
 
-                            hrgJual1PCS: barang_hrg[x][0].harga,
-                            hrgJual2PCS: barang_hrg[x][0].harga2,
-                            hrgJual3PCS: barang_hrg[x][0].harga3,
-                            hrgJual4PCS: barang_hrg[x][0].harga4,
-                            hrgJual5PCS: barang_hrg[x][0].harga5,
-                            hrgJual6PCS: barang_hrg[x][0].harga6,
-                            hrgJual7PCS: barang_hrg[x][0].harga7,
-                            hrgJual8PCS: barang_hrg[x][0].harga8,
-                            hrgJual9PCS: barang_hrg[x][0].harga9,
-                            hrgJual10PCS: barang_hrg[x][0].harga10,
-
-                            ppnPCS: barang_hrg[x][0].ppn,
-                            servicePCS: barang_hrg[x][0].service,
-                        },
-                    ]);
+                        }else{
+                            const getMargin=barang_hrg[x][0][`harga${key+1}`]==="0"?0:param.dataEdit.kategori === "4"? "0": ((parseInt(rmComma(barang_hrg[x][0][`harga${key+1}`]), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100
+                            Object.assign(objBrgHrg,{
+                                [`margin${key+1}PCS`] : getMargin,
+                                [`hrgJual${key+1}PCS`]: barang_hrg[x][0][`harga${key+1}`]
+                            });
+                        }
+                    }
+                    barangHrg.push([objBrgHrg]);
                 }
             }
             this.setState({
@@ -930,6 +922,20 @@ class FormProductPricings extends Component {
                             KARTON: false,
                             hrg_beli: "0",
                         });
+                        // const arrBrgHrg=[
+                        //     {nama_toko: v.nama_toko,lokasi: v.kode},
+                        //     {nama_toko: v.nama_toko,lokasi: v.kode},
+                        //     {nama_toko: v.nama_toko,lokasi: v.kode}
+                        // ];
+                        // let objectSatuan={ nama_toko: v.nama_toko,lokasi: v.kode};
+                        // const dataJenis=["PCS","PACK","KARTON"];
+                        // const objBrgHrg={
+                        // };
+                        // arrBrgHrg.map((row,key)=>{
+                        //
+                        //     console.log(row);
+                        // })
+
                         brgHrg.push([
                             {
                                 nama_toko: v.nama_toko,
@@ -1021,6 +1027,7 @@ class FormProductPricings extends Component {
                                 serviceKARTON: "0",
                             },
                         ]);
+                        // console.log(arrBrgHrg);
                         return null;
                     });
                     this.setState({
@@ -2844,11 +2851,14 @@ class FormProductPricings extends Component {
 
         parseData["barang_sku"] = barangSku;
         parseData["barang_harga"] = barangHarga;
+        console.log(parseData);
         if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
             if (this.props.allState === undefined) {
                 let newParseData = {};
                 newParseData["barang_harga"] = parseData.barang_harga;
-                this.props.dispatch(updateProduct(this.state.kd_brg, newParseData));
+                this.props.dispatch(updateProduct(this.state.kd_brg, newParseData,(status)=>{
+
+                }));
             }
             this.clearState();
         } else {

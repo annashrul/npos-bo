@@ -3000,6 +3000,7 @@ class FormProducts extends Component {
         }
         parseData["barang_sku"] = barangSku;
         parseData["barang_harga"] = barangHarga;
+        console.log(parseData);
         if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
             this.props.dispatch(
                 updateProduct(this.state.kd_brg, parseData, (status) => {

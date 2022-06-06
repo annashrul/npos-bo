@@ -35,11 +35,28 @@ class NilaiPersediaanReport extends Component {
     let total_nilai_persediaan_harga2 = 0;
     let total_nilai_persediaan_harga3 = 0;
     let total_nilai_persediaan_harga4 = 0;
+    let total_nilai_persediaan_harga5 = 0;
+    let total_nilai_persediaan_harga6 = 0;
+    let total_nilai_persediaan_harga7 = 0;
+    let total_nilai_persediaan_harga8 = 0;
+    let total_nilai_persediaan_harga9 = 0;
+    let total_nilai_persediaan_harga10 = 0;
+
+
+
     let total_nilai_persediaan_total_harga_1 = 0;
     let total_nilai_persediaan_total_harga_2 = 0;
     let total_nilai_persediaan_total_harga_3 = 0;
     let total_nilai_persediaan_total_harga_4 = 0;
+    let total_nilai_persediaan_total_harga_5 = 0;
+    let total_nilai_persediaan_total_harga_6 = 0;
+    let total_nilai_persediaan_total_harga_7 = 0;
+    let total_nilai_persediaan_total_harga_8 = 0;
+    let total_nilai_persediaan_total_harga_9 = 0;
+    let total_nilai_persediaan_total_harga_10 = 0;
     let total_nilai_persediaan_total_harga_beli = 0;
+
+    let totalNilaiPersediaanHarga;
 
     const { bukaHarga } = this.state;
     const propsUser = this.props.auth.user;
@@ -64,13 +81,15 @@ class NilaiPersediaanReport extends Component {
     let rowSpan = [];
 
     if (setHarga > 1 && propsUser.nama_harga !== undefined) {
-      for (let i = 0; i < setHarga; i++) bukaHarga && rowSpan.push({ label: propsUser.nama_harga[`harga${i + 1}`] });
-      // for (let i = 0; i < setHarga; i++) bukaHarga && rowSpan.push({ label: propsUser.nama_harga[`harga${i + 1}`] });
+      for (let i = 0; i < setHarga; i++) {
+        bukaHarga && rowSpan.push({ label: propsUser.nama_harga[i][i===0?"harga":`harga${i + 1}`] });
+      }
     }
 
     let bukaSetHarga = [];
     for (let i = 0; i < setHarga; i++) {
       bukaSetHarga.push(i);
+      // console.log(totalNilaiPersediaanHarga[i+1])
     }
 
     return (
@@ -130,17 +149,6 @@ class NilaiPersediaanReport extends Component {
                       })()}
                       <td className="text-center middle nowrap">{v.stock}</td>
                       <td className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>{parseToRp(v.total_harga_beli)}</td>
-                      {/* {(() => {
-                        let tds = [];
-                        for (let i = 0; i < setHarga; i++) {
-                          tds.push(
-                            <td key={i} className={`text-right middle nowrap ${bukaHarga ? "" : "dNone"}`}>
-                              {parseToRp(v["total_harga_" + i + 1])}
-                            </td>
-                          );
-                        }
-                        return tds;
-                      })()} */}
                     </tr>
                   );
                 })
@@ -179,6 +187,36 @@ class NilaiPersediaanReport extends Component {
                   label: parseToRp(total_nilai_persediaan_harga4),
                   className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
                 },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_nilai_persediaan_harga5),
+                      className: `text-right ${bukaSetHarga[4] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_nilai_persediaan_harga6),
+                      className: `text-right ${bukaSetHarga[5] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_nilai_persediaan_harga7),
+                      className: `text-right ${bukaSetHarga[6] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_nilai_persediaan_harga8),
+                      className: `text-right ${bukaSetHarga[7] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_nilai_persediaan_harga9),
+                      className: `text-right ${bukaSetHarga[8] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_nilai_persediaan_harga10),
+                      className: `text-right ${bukaSetHarga[9] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
                 {
                   colSpan: 1,
                   label: parseInt(totalNilaiPersediaanStockPerHalaman),
@@ -245,6 +283,36 @@ class NilaiPersediaanReport extends Component {
                   label: parseToRp(total_persediaan === undefined ? 0 : total_persediaan.harga4),
                   className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
                 },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(0),
+                      className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(0),
+                      className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(0),
+                      className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(0),
+                      className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(total_persediaan === undefined ? 0 : total_persediaan.harga9),
+                      className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
+                  {
+                      colSpan: 1,
+                      label: parseToRp(0),
+                      className: `text-right ${bukaSetHarga[3] !== undefined && bukaHarga ? "" : "dNone"}`,
+                  },
                 {
                   colSpan: 1,
                   label: parseInt(total_persediaan === undefined ? 0 : total_persediaan.stock),

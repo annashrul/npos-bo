@@ -1102,7 +1102,7 @@ class Alokasi extends Component {
                                           {item.barcode}
                                       </td>
                                       <td className="middle nowrap">
-                                        <select disabled={item.tambahan.length <= 1 ? true : false} className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                                        <select disabled={item.tambahan.length <= 1} className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
                                             {item.tambahan.map((i) => {
                                                 return (
                                                     <option value={i.satuan} selected={i.satuan === item.satuan}>

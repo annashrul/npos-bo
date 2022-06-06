@@ -58,18 +58,13 @@ class ListPriceProduct extends Component {
       { label: "nm_brg" },
       { label: "nama_toko" },
       { label: "harga_beli", className: "text-right", isCurrency: true },
-      { label: "harga", className: "text-right", isCurrency: true },
     ];
-
-    if(setHarga > 1){
       head.push({colSpan: setHarga, label: "Harga jual"});
-      for(let i=0;i<setHarga;i++)colSpan.push({label: this.props.auth.user.nama_harga[`harga${i+1}`]});
-      result.push({ label: "harga2", className: "text-right", isCurrency: true });
-      setHarga>2&&result.push({ label: "harga3", className: "text-right", isCurrency: true });
-      setHarga>3&&result.push({ label: "harga4", className: "text-right", isCurrency: true });
-    }else{
-      head.push({rowSpan: 2,label: "Harga jual"})
-    }
+      for(let i=0;i<setHarga;i++){
+          colSpan.push({label: this.props.auth.user.nama_harga[i][`harga${i+1}`]});
+          result.push({ label: [i===0?"harga":`harga${i+1}`], className: "text-right", isCurrency: true })
+      }
+
     head.push({ width: "1%", rowSpan: "2", label: "Ppn (%)"})
     head.push({ width: "1%", rowSpan: "2", label: "Servis (%)"});
     result.push( { label: "ppn", className: "text-right", isCurrency: true })

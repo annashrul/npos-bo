@@ -520,6 +520,56 @@ class Receive extends Component {
                 });
             } else {
                 let final = {};
+                if(column.includes("harga_jual")){
+                    let splitHarga=column.split("#");
+                    let keyHrg=parseInt(splitHarga[1],10);
+                    console.log(keyHrg);
+                    let dataTambahan={
+                        barcode: res.tambahan[0].barcode,
+                        harga_beli: res.tambahan[0].harga_beli,
+                        kd_brg: res.tambahan[0].kd_brg,
+                        lokasi:res.tambahan[0].lokasi,
+                        ppn: res.tambahan[0].ppn,
+                        qty_konversi: res.tambahan[0].qty_konversi,
+                        satuan: res.tambahan[0].satuan,
+                        satuan_jual: res.tambahan[0].satuan_jual,
+                        service: res.tambahan[0].service,
+                        stock: res.tambahan[0].stock,
+                    };
+                    let nameHrg=keyHrg===0?"harga":`harga${keyHrg+1}`;
+                    this.props.auth.user.nama_harga.map((row,key)=>{
+                        Object.assign(dataTambahan,{[key===0?'harga':`harga${key+1}`] : key===0?res.tambahan[0]['harga']:res.tambahan[0][`harga${key+1}`]});
+                    });
+                    dataTambahan[nameHrg] = parseInt(rmComma(val),10);
+                    const dataUpdate={
+                        barcode: res.barcode,
+                        diskon: res.diskon,
+                        diskon2: res.diskon2,
+                        diskon3: res.diskon3,
+                        diskon4: res.diskon4,
+                        harga: res.harga,
+                        harga2: res.harga2,
+                        harga3: res.harga3,
+                        harga4: res.harga4,
+                        harga_beli: res.harga_beli,
+                        id: res.id,
+                        kd_brg: res.kd_brg,
+                        nm_brg: res.nm_brg,
+                        ppn:res.ppn,
+                        qty: res.qty,
+                        qty_bonus: res.qty_bonus,
+                        qty_po: res.qty_po,
+                        satuan: res.satuan,
+                        stock: res.stock,
+                        tambahan:[dataTambahan]
+                    };
+                    update(table, dataUpdate);
+                    this.getData();
+                    return;
+                    // console.log(dataUpdate);
+
+
+                }
                 if (column === "ppn_nominal") {
                     Object.keys(res).forEach((k, i) => {
                         if (k !== "ppn") {
@@ -575,6 +625,7 @@ class Receive extends Component {
         const val = e.target.value;
         let brgval = [...this.state.brgval];
         let values = val;
+
         if (column === "ppn" || column === "diskon") {
             if (val < 0 || val === "") values = 0;
             else if (parseFloat(val) > 100) {
@@ -587,8 +638,19 @@ class Receive extends Component {
             if (val === "") values = 0;
             else values = val;
         }
+        else if(column.includes("harga_jual")){
+            let splitHarga=column.split("#");
+            let keyHrg=parseInt(splitHarga[1],10);
+            let hargaKey=keyHrg===0?"harga":`harga${keyHrg+1}`;
+            console.log(keyHrg);
+            this.state.brgval[i].tambahan[0][hargaKey]=values;
+            // this.state.brgval[i].tambahan[0][hargaKey] = values;
+
+        }
+
         brgval[i] = { ...brgval[i], [column]: values };
         this.setState({ brgval });
+
 
         if (column === "satuan") {
             const cek = cekData("barcode", barcode, table);
@@ -641,6 +703,9 @@ class Receive extends Component {
             });
         }
     }
+
+
+
 
     HandleFocusInputReset(e, i) {
         const column = e.target.name;
@@ -797,7 +862,6 @@ class Receive extends Component {
                     }
                     const subtotal_perrow = (parseFloat(item.harga_beli) - disc1 + ppn) * parseFloat(item.qty);
                     subtotal += subtotal_perrow;
-
                     let harga_ = 0;
                     let harga_2 = 0;
                     let harga_3 = 0;
@@ -817,7 +881,7 @@ class Receive extends Component {
                         harga_4 = rmComma(item.harga4);
                     }
 
-                    detail.push({
+                    const dataDetailUpdate={
                         kd_brg: item.kd_brg,
                         barcode: item.barcode,
                         satuan: item.satuan,
@@ -825,18 +889,16 @@ class Receive extends Component {
                         diskon2: item.diskon2,
                         diskon3: item.diskon3,
                         diskon4: item.diskon4,
-
-                        harga_jual: harga_,
-                        harga_jual2: harga_2,
-                        harga_jual3: harga_3,
-                        harga_jual4: harga_4,
-
                         ppn: item.ppn,
                         harga_beli: item.harga_beli,
                         qty: item.qty,
                         qty_po: item.qty_po,
                         qty_bonus: item.qty_bonus,
+                    };
+                    this.props.auth.user.nama_harga.map((row,key)=>{
+                        Object.assign(dataDetailUpdate,{[key===0?'harga':`harga${key+1}`] : item.tambahan[0][key===0?'harga':`harga${key+1}`]})
                     });
+                    detail.push(dataDetailUpdate);
                     return null;
                 });
                 let data_final = {
@@ -868,7 +930,6 @@ class Receive extends Component {
                 parsedata["lokasi_beli"] = this.state.location_val;
                 // parsedata["lokasi_harga"] = this.state.location_val;
                 let store = atob(atob(Cookies.get("tnt=")));
-                console.log(store);
                 if(store === "kairo" || store === "npos"){
                     swallOption("Apakah anda akan mengubah harga beli untuk semua lokasi ?",()=>{
                         let dataAllLocatoin=[];
@@ -1450,18 +1511,27 @@ class Receive extends Component {
                                                 <th rowSpan={2} className="text-black middle nowrap">#</th>
                                             </tr>
                                             <tr>
-                                                {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (() => {
-                                                    let container = [];
-                                                    for (let x = 0; x < this.state.set_harga; x++) {
-                                                        container.push(
-                                                            <th key={x} className="text-black middle nowrap">
-                                                                {this.props.auth.user.nama_harga[`harga${x+1}`]}
+                                                {
+                                                    (this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") && this.props.auth.user.nama_harga.map((row,idx)=>{
+                                                        return(
+                                                            <th key={idx} className="text-black middle nowrap">
+                                                                {row[`harga${idx+1}`]}
                                                             </th>
                                                         );
-                                                    }
-                                                    return container;
-                                                })()
+                                                    })
                                                 }
+                                                {/*{(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") && (() => {*/}
+                                                    {/*let container = [];*/}
+                                                    {/*for (let x = 0; x < this.state.set_harga; x++) {*/}
+                                                        {/*container.push(*/}
+                                                            {/*<th key={x} className="text-black middle nowrap">*/}
+                                                                {/*{this.props.auth.user.nama_harga[`harga${x+1}`]}*/}
+                                                            {/*</th>*/}
+                                                        {/*);*/}
+                                                    {/*}*/}
+                                                    {/*return container;*/}
+                                                {/*})()*/}
+                                                {/*}*/}
                                             </tr>
                                             </thead>
 
@@ -1484,7 +1554,7 @@ class Receive extends Component {
                                                             {item.nm_brg} <br/>{item.kd_brg}
                                                         </td>
                                                         <td className="middle nowrap">
-                                                            <select disabled={item.tambahan.length <= 1 ? true : false} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)} className="form-control in-table" style={{ width: "100px" }}>
+                                                            <select disabled={item.tambahan.length <= 1} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)} className="form-control in-table" style={{ width: "100px" }}>
                                                                 {item.tambahan.map((i,b) => {
                                                                     return (
                                                                         <option key={b} value={i.satuan} selected={i.satuan === item.satuan}>
@@ -1510,74 +1580,94 @@ class Receive extends Component {
                                                                 />
                                                             </td>
                                                         )}
-                                                        {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (
-                                                            <td className="middle nowrap">
-                                                                <input
-                                                                    style={{
-                                                                        width: "100px",
-                                                                        textAlign: "right",
-                                                                    }}
-                                                                    className="form-control in-table"
-                                                                    type="text"
-                                                                    name="harga"
-                                                                    onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                    onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                    value={toCurrency(this.state.brgval[index].harga)}
-                                                                />
-                                                            </td>
-                                                        )}
-                                                        {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (
-                                                            parseInt(this.state.set_harga, 10) >= 2&& (
-                                                                <td className="middle nowrap">
-                                                                    <input
-                                                                        style={{
-                                                                            width: "100px",
-                                                                            textAlign: "right",
-                                                                        }}
-                                                                        className="form-control in-table"
-                                                                        type="text"
-                                                                        name="harga2"
-                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                        value={toCurrency(this.state.brgval[index].harga2)}
-                                                                    />
-                                                                </td>
-                                                            )
-                                                        ) }
-                                                        {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI&& (
-                                                            parseInt(this.state.set_harga, 10) >= 3 && (
-                                                                <td className="middle nowrap">
-                                                                    <input
-                                                                        style={{
-                                                                            width: "100px",
-                                                                            textAlign: "right",
-                                                                        }}
-                                                                        className="form-control in-table"
-                                                                        type="text"
-                                                                        name="harga3"
-                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                        value={toCurrency(this.state.brgval[index].harga3)}
-                                                                    />
-                                                                </td>
-                                                            )) }
-                                                        {this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI&& (
-                                                            parseInt(this.state.set_harga, 10) === 4 && (
-                                                                <td className="middle nowrap">
-                                                                    <input
-                                                                        style={{
-                                                                            width: "100px",
-                                                                            textAlign: "right",
-                                                                        }}
-                                                                        className="form-control in-table"
-                                                                        type="text"
-                                                                        name="harga4"
-                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                        value={toCurrency(this.state.brgval[index].harga4)}
-                                                                    />
-                                                                </td>
-                                                            ))}
+                                                        {/*{this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (*/}
+                                                            {/*<td className="middle nowrap">*/}
+                                                                {/*<input*/}
+                                                                    {/*style={{*/}
+                                                                        {/*width: "100px",*/}
+                                                                        {/*textAlign: "right",*/}
+                                                                    {/*}}*/}
+                                                                    {/*className="form-control in-table"*/}
+                                                                    {/*type="text"*/}
+                                                                    {/*name="harga"*/}
+                                                                    {/*onBlur={(e) => this.HandleChangeInput(e, item.barcode)}*/}
+                                                                    {/*onChange={(e) => this.HandleChangeInputValue(e, index)}*/}
+                                                                    {/*value={toCurrency(this.state.brgval[index].harga)}*/}
+                                                                {/*/>*/}
+                                                            {/*</td>*/}
+                                                        {/*)}*/}
+                                                        {
+                                                            this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && this.props.auth.user.nama_harga.map((row,idx)=>{
+                                                                return(
+                                                                    <td className="middle nowrap" key={idx}>
+                                                                        <input
+                                                                            style={{
+                                                                                width: "100px",
+                                                                                textAlign: "right",
+                                                                            }}
+                                                                            className="form-control in-table"
+                                                                            type="text"
+                                                                            name={`harga_jual#${idx}`}
+                                                                            onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                            onChange={(e) => this.HandleChangeInputValue(e, index,item.barcode, item.tambahan)}
+                                                                            value={toCurrency(this.state.brgval[index].tambahan[0][idx===0?"harga":`harga${idx+1}`])}
+                                                                        />
+                                                                    </td>
+                                                                );
+                                                            })
+                                                        }
+                                                        {/*{this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (*/}
+                                                            {/*parseInt(this.state.set_harga, 10) >= 2&& (*/}
+                                                                {/*<td className="middle nowrap">*/}
+                                                                    {/*<input*/}
+                                                                        {/*style={{*/}
+                                                                            {/*width: "100px",*/}
+                                                                            {/*textAlign: "right",*/}
+                                                                        {/*}}*/}
+                                                                        {/*className="form-control in-table"*/}
+                                                                        {/*type="text"*/}
+                                                                        {/*name="harga2"*/}
+                                                                        {/*onBlur={(e) => this.HandleChangeInput(e, item.barcode)}*/}
+                                                                        {/*onChange={(e) => this.HandleChangeInputValue(e, index)}*/}
+                                                                        {/*value={toCurrency(this.state.brgval[index].harga2)}*/}
+                                                                    {/*/>*/}
+                                                                {/*</td>*/}
+                                                            {/*)*/}
+                                                        {/*) }*/}
+                                                        {/*{this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI&& (*/}
+                                                            {/*parseInt(this.state.set_harga, 10) >= 3 && (*/}
+                                                                {/*<td className="middle nowrap">*/}
+                                                                    {/*<input*/}
+                                                                        {/*style={{*/}
+                                                                            {/*width: "100px",*/}
+                                                                            {/*textAlign: "right",*/}
+                                                                        {/*}}*/}
+                                                                        {/*className="form-control in-table"*/}
+                                                                        {/*type="text"*/}
+                                                                        {/*name="harga3"*/}
+                                                                        {/*onBlur={(e) => this.HandleChangeInput(e, item.barcode)}*/}
+                                                                        {/*onChange={(e) => this.HandleChangeInputValue(e, index)}*/}
+                                                                        {/*value={toCurrency(this.state.brgval[index].harga3)}*/}
+                                                                    {/*/>*/}
+                                                                {/*</td>*/}
+                                                            {/*)) }*/}
+                                                        {/*{this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI&& (*/}
+                                                            {/*parseInt(this.state.set_harga, 10) === 4 && (*/}
+                                                                {/*<td className="middle nowrap">*/}
+                                                                    {/*<input*/}
+                                                                        {/*style={{*/}
+                                                                            {/*width: "100px",*/}
+                                                                            {/*textAlign: "right",*/}
+                                                                        {/*}}*/}
+                                                                        {/*className="form-control in-table"*/}
+                                                                        {/*type="text"*/}
+                                                                        {/*name="harga4"*/}
+                                                                        {/*onBlur={(e) => this.HandleChangeInput(e, item.barcode)}*/}
+                                                                        {/*onChange={(e) => this.HandleChangeInputValue(e, index)}*/}
+                                                                        {/*value={toCurrency(this.state.brgval[index].harga4)}*/}
+                                                                    {/*/>*/}
+                                                                {/*</td>*/}
+                                                            {/*))}*/}
 
                                                         <td className="middle nowrap">
                                                             <input
