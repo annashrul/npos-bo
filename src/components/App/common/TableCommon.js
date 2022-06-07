@@ -6,7 +6,7 @@ import ButtonActionCommon from "./ButtonActionCommon";
 class TableCommon extends Component {
   checkTypeLabel(res, val) {
     if (val.isStatus) return statusGeneral(res, true);
-    if (val.isCurrency) return res!==undefined?parseToRp(res):"-";
+    if (val.isCurrency) return parseToRp(res!==undefined?res:0);
     if (val.isImage) return isImage(res);
     if (val.isSubstring) return rmSpaceToStrip(res).length>30?`${res}`.substr(0, 30) + " ..":"-"
     if (val.date) return toDate(res);
