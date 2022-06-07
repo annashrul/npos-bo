@@ -35,7 +35,7 @@ export const updatePriceProduct = (id, data, where) => {
     handlePut(`barangHarga/${id}`, data, (data, msg, status) => {
       swal(msg);
       if (status) {
-        dispatch(ModalToggle(true));
+        dispatch(ModalToggle(false));
         dispatch(FetchPriceProduct(where));
       }
     });

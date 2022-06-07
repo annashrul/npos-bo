@@ -113,24 +113,7 @@ class NilaiPersediaanReport extends Component {
                   callbackPage={this.handlePageChange.bind(this)}
                   renderRow={
                       typeof data === "object" ? data.map((v, i) => {
-                                colPerHalaman.map((row,idx)=>{
-                                    if(row.label==="beli"){
-                                        row.label=0+float(v.hrg_beli);
-                                    }
-                                    else if(row.colSpan!==6){
-                                        let keyHrg=idx===0?'harga':`harga${idx+1}`;
-                                        let valHrg=v[keyHrg]===undefined?0:parseInt(v[keyHrg],10);
-                                        row.label=row.label+valHrg;
-                                    }
-                                });
 
-
-
-
-                                setTimeout(()=>{
-                                    console.log(colPerHalaman)
-
-                                },300)
 
                               const nilai_persediaan_stock = float(v.stock);
                               const nilai_persediaan_hrg_beli = float(v.hrg_beli);

@@ -755,7 +755,6 @@ class FormProduct extends Component{
                 </WrapperModal>
                 {this.state.isModalFormRak&&this.props.isOpen?<FormRak fastAdd={true} detail={this.state.detail} />:null}
                 {this.state.isModalFormSupplier&&this.props.isOpen?<FormSupplier fastAdd={true} detail={this.state.detail} />:null}
-
                 {this.state.isModalFormGroupProduct && this.props.isOpen ? <FormGroupProduct detail={this.state.detail} group2={this.props.group2} fastAdd={true} /> : null}
                 {this.state.isModalFormSupplier&&this.props.isOpen?<FormProductPricing
                     allState={this.state}

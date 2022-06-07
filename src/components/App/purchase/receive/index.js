@@ -1608,7 +1608,7 @@ class Receive extends Component {
                                                             {/*</td>*/}
                                                         {/*)}*/}
 
-                                                        {(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") (() => {
+                                                        {(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object")&& (() => {
                                                             let wrapperCol = [];
                                                             for (let idx = 0; idx < this.props.auth.user.set_harga; idx++) {
                                                                 wrapperCol.push(
