@@ -1511,15 +1511,26 @@ class Receive extends Component {
                                                 <th rowSpan={2} className="text-black middle nowrap">#</th>
                                             </tr>
                                             <tr>
-                                                {
-                                                    (this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") && this.props.auth.user.nama_harga.map((row,idx)=>{
-                                                        return(
+                                                {(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") && (() => {
+                                                    let wrapperCol = [];
+                                                    for (let idx = 0; idx < this.props.auth.user.set_harga; idx++) {
+                                                        wrapperCol.push(
                                                             <th key={idx} className="text-black middle nowrap">
-                                                                {row[`harga${idx+1}`]}
+                                                                {this.props.auth.user.nama_harga[idx][`harga${idx+1}`]}
                                                             </th>
                                                         );
-                                                    })
-                                                }
+                                                    }
+                                                    return wrapperCol;
+                                                })()}
+                                                {/*{*/}
+                                                    {/*(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") && this.props.auth.user.nama_harga.map((row,idx)=>{*/}
+                                                        {/*return(*/}
+                                                            {/*<th key={idx} className="text-black middle nowrap">*/}
+                                                                {/*{row[`harga${idx+1}`]}*/}
+                                                            {/*</th>*/}
+                                                        {/*);*/}
+                                                    {/*})*/}
+                                                {/*}*/}
                                                 {/*{(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") && (() => {*/}
                                                     {/*let container = [];*/}
                                                     {/*for (let x = 0; x < this.state.set_harga; x++) {*/}
@@ -1596,9 +1607,11 @@ class Receive extends Component {
                                                                 {/*/>*/}
                                                             {/*</td>*/}
                                                         {/*)}*/}
-                                                        {
-                                                            this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && this.props.auth.user.nama_harga.map((row,idx)=>{
-                                                                return(
+
+                                                        {(this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && typeof this.props.auth.user.nama_harga==="object") (() => {
+                                                            let wrapperCol = [];
+                                                            for (let idx = 0; idx < this.props.auth.user.set_harga; idx++) {
+                                                                wrapperCol.push(
                                                                     <td className="middle nowrap" key={idx}>
                                                                         <input
                                                                             style={{
@@ -1614,8 +1627,30 @@ class Receive extends Component {
                                                                         />
                                                                     </td>
                                                                 );
-                                                            })
-                                                        }
+                                                            }
+                                                            return wrapperCol;
+                                                        })()}
+
+                                                        {/*{*/}
+                                                            {/*this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && this.props.auth.user.nama_harga.map((row,idx)=>{*/}
+                                                                {/*return(*/}
+                                                                    {/*<td className="middle nowrap" key={idx}>*/}
+                                                                        {/*<input*/}
+                                                                            {/*style={{*/}
+                                                                                {/*width: "100px",*/}
+                                                                                {/*textAlign: "right",*/}
+                                                                            {/*}}*/}
+                                                                            {/*className="form-control in-table"*/}
+                                                                            {/*type="text"*/}
+                                                                            {/*name={`harga_jual#${idx}`}*/}
+                                                                            {/*onBlur={(e) => this.HandleChangeInput(e, item.barcode)}*/}
+                                                                            {/*onChange={(e) => this.HandleChangeInputValue(e, index,item.barcode, item.tambahan)}*/}
+                                                                            {/*value={toCurrency(this.state.brgval[index].tambahan[0][idx===0?"harga":`harga${idx+1}`])}*/}
+                                                                        {/*/>*/}
+                                                                    {/*</td>*/}
+                                                                {/*);*/}
+                                                            {/*})*/}
+                                                        {/*}*/}
                                                         {/*{this.props.auth.user.lvl !== CONFIG_HIDE.HIDE_HRG_BELI && (*/}
                                                             {/*parseInt(this.state.set_harga, 10) >= 2&& (*/}
                                                                 {/*<td className="middle nowrap">*/}
