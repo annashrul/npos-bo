@@ -839,9 +839,10 @@ class Receive extends Component {
             handleError("nota supplier", "telah digunakan");
             return;
         }
+        
 
-
-
+        let namaHarga=this.props.auth.user.nama_harga;
+        console.log("namaHarga",namaHarga)
 
         const data = get(table);
         data.then((res) => {
@@ -895,9 +896,16 @@ class Receive extends Component {
                         qty_po: item.qty_po,
                         qty_bonus: item.qty_bonus,
                     };
-                    this.props.auth.user.nama_harga.map((row,key)=>{
-                        Object.assign(dataDetailUpdate,{[key===0?'harga':`harga${key+1}`] : item.tambahan[0][key===0?'harga':`harga${key+1}`]})
-                    });
+                    for(let keyHrg=0;keyHrg<namaHarga.length;keyHrg++){
+                        Object.assign(dataDetailUpdate,{
+                            [keyHrg===0?'harga':`harga${keyHrg+1}`] : item.tambahan[0][keyHrg===0?'harga':`harga${keyHrg+1}`]
+                        })
+                    }
+                    // namaHarga.map((row,key)=>{
+                    //     Object.assign(dataDetailUpdate,{
+                    //         [key===0?'harga':`harga${key+1}`] : item.tambahan[0][key===0?'harga':`harga${key+1}`]
+                    //     })
+                    // });
                     detail.push(dataDetailUpdate);
                     return null;
                 });
@@ -928,7 +936,7 @@ class Receive extends Component {
                 parsedata["logo"] = this.props.auth.user.logo;
                 parsedata["user"] = this.props.auth.user.username;
                 parsedata["lokasi_beli"] = this.state.location_val;
-                // parsedata["lokasi_harga"] = this.state.location_val;
+                parsedata["lokasi_harga"] = this.state.location_val;
                 let store = atob(atob(Cookies.get("tnt=")));
                 if(store === "kairo" || store === "npos"){
                     swallOption("Apakah anda akan mengubah harga beli untuk semua lokasi ?",()=>{
@@ -1792,7 +1800,7 @@ class Receive extends Component {
                                     <div className="row">
                                         <div className="col-md-2">
                                             <ButtonTrxCommon
-                                                disabled={this.state.databrg.length < 1}
+                                                disabled={false}
                                                 callback={(e, res) => {
                                                     if (res === "simpan") this.HandleSubmit(e);
                                                     if (res === "batal") this.HandleReset(e);
