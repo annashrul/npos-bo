@@ -37,7 +37,6 @@ import TransaksiExpedisi from "../inventory/expedisi";
 import TransaksiApprovalMutasiJualBeli from "../inventory/mutasi_jual_beli/approval_mutasi_jual_beli";
 import TransaksiBayarMutasiJualBeli from "../inventory/mutasi_jual_beli/bayar_mutasi_jual_beli";
 
-
 import TransaksiPurchaseOrder from "../purchase/purchaseorder";
 import TransaksiReceive from "../purchase/receive";
 import TransaksiReturTanpaNota from "../purchase/retur";
@@ -99,7 +98,75 @@ import Po3ply from "../print/po3ply";
 import Receive3plyId from "../print/receive3plyId";
 import priceTagPrint from "../print/priceTag";
 import SaleByGroupProduct from "../report/sale/sale_by_group_product";
-import { linkAdjustment, linkAlokasi, linkAlokasiEdit, linkApprovalMutasi, linkArea, linkBank, linkBarang, linkCetakBarcode, linkCustomer, linkDeliveryNote, linkDepartment, linkKas, linkMeja, linkMutasiJualBeliApproval, linkMutasiJualBeliBayar, linkOpnameApproval, linkOpnameTransaksi, linkPaket, linkPembayaranHutang, linkPembayaranPiutang, linkPengaturanLokasi, linkPengaturanPengguna, linkPengaturanUmum, linkPengirimanExpedisi, linkPengirimanPacking, linkPrinter, linkProduksi, linkPromo, linkPurchaseOrder, linkRak, linkReceivePembelian, linkReportAdjustment, linkReportAlokasi, linkReportAlokasi3ply, linkReportAlokasiTransaksi, linkReportArsipPenjualan, linkReportArsipPenjualanByBarang, linkReportArsipPenjualanByCustomer, linkReportArsipPenjualanByKelompokBarang, linkReportArsipPenjualanBySales, linkReportArsipReturPenjualan, linkReportClosing, linkReportDeliveryNote, linkReportExpedisi, linkReportHutang, linkReportKas, linkReportLabaRugi, linkReportLogAktifitas, linkReportLogTransaksi, linkReportMutasi, linkReportNilaiPersediaan, linkReportOmsetPenjualan, linkReportOmsetPenjualanByPeriode, linkReportOpname, linkReportPacking, linkReportPembelianBySupplier, linkReportPiutang, linkReportProduksi, linkReportPurchaseOrder, linkReportReceive, linkReportReturPembelian, linkReportStock, linkReturTanpaNota, linkSales, linkSupplier, linkTransaksiBarang, linkTransaksiKas } from "../../../helperLink";
+import {
+  linkAdjustment,
+  linkAlokasi,
+  linkAlokasiEdit,
+  linkApprovalMutasi,
+  linkArea,
+  linkBank,
+  linkBarang,
+  linkCetakBarcode,
+  linkCustomer,
+  linkDeliveryNote,
+  linkDepartment,
+  linkKas,
+  linkMeja,
+  linkMutasiJualBeliApproval,
+  linkMutasiJualBeliBayar,
+  linkOpnameApproval,
+  linkOpnameTransaksi,
+  linkPaket,
+  linkPembayaranHutang,
+  linkPembayaranPiutang,
+  linkPengaturanLokasi,
+  linkPengaturanPengguna,
+  linkPengaturanUmum,
+  linkPengirimanExpedisi,
+  linkPengirimanPacking,
+  linkPrinter,
+  linkProduksi,
+  linkPromo,
+  linkPurchaseOrder,
+  linkRak,
+  linkReceivePembelian,
+  linkReportAdjustment,
+  linkReportAlokasi,
+  linkReportAlokasi3ply,
+  linkReportAlokasiTransaksi,
+  linkReportArsipPenjualan,
+  linkReportArsipPenjualanByBarang,
+  linkReportArsipPenjualanByCustomer,
+  linkReportArsipPenjualanByKelompokBarang,
+  linkReportArsipPenjualanBySales,
+  linkReportArsipReturPenjualan,
+  linkReportClosing,
+  linkReportDeliveryNote,
+  linkReportExpedisi,
+  linkReportHutang,
+  linkReportKas,
+  linkReportLabaRugi,
+  linkReportLogAktifitas,
+  linkReportLogTransaksi,
+  linkReportMutasi,
+  linkReportNilaiPersediaan,
+  linkReportOmsetPenjualan,
+  linkReportOmsetPenjualanByPeriode,
+  linkReportOpname,
+  linkReportPacking,
+  linkReportPembelianBySupplier,
+  linkReportPiutang,
+  linkReportProduksi,
+  linkReportPurchaseOrder,
+  linkReportReceive,
+  linkReportReturPembelian,
+  linkReportStock,
+  linkReturTanpaNota,
+  linkSales,
+  linkSupplier,
+  linkTransaksiBarang,
+  linkTransaksiKas,
+} from "../../../helperLink";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
@@ -107,19 +174,49 @@ const Routes = (
     <Switch>
       <Route path="/login" exact strict component={Login} />
       <Route path="/config" exact strict component={GlobalSetting} />
-      <Route path={`${linkReportArsipPenjualan}/nota3ply/:id`} exact strict component={Print3ply} />
+      <Route
+        path={`${linkReportArsipPenjualan}/nota3ply/:id`}
+        exact
+        strict
+        component={Print3ply}
+      />
       <Route path="/adjust3ply/:id" exact strict component={Adjust3ply} />
       <Route path="/dn3ply/:id" exact strict component={Dn3ply} />
       <Route path="/po3plyId/:id" exact strict component={Po3plyId} />
-      <Route path="/pembelian3plyId/:id" exact strict component={Pembelian3plyId} />
-      <Route path={`${linkReportAlokasi3ply}:id`} exact strict component={Alokasi3ply} />
+      <Route
+        path="/pembelian3plyId/:id"
+        exact
+        strict
+        component={Pembelian3plyId}
+      />
+      <Route
+        path={`${linkReportAlokasi3ply}:id`}
+        exact
+        strict
+        component={Alokasi3ply}
+      />
       <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
       <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
       <Route path="/receive3plyId/:id" exact strict component={Receive3plyId} />
       <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
-      <Route path="/bayar_hutang3ply/:id" exact strict component={BayarHutang3ply} />
-      <Route path="/bayar_piutang3ply/:id" exact strict component={BayarPiutang3ply} />
-      <Route path="/bayar_mutasi3ply" exact strict component={BayarMutasi3ply} />
+      <Route
+        path="/bayar_hutang3ply/:id"
+        exact
+        strict
+        component={BayarHutang3ply}
+      />
+      <Route
+        path="/bayar_piutang3ply/:id"
+        exact
+        strict
+        component={BayarPiutang3ply}
+      />
+      <Route
+        path="/bayar_mutasi3ply"
+        exact
+        strict
+        component={BayarMutasi3ply}
+      />
       <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
       <Route path="/retur3ply" exact strict component={Retur3ply} />
       <Route path="/po3ply" exact strict component={Po3ply} />
@@ -130,15 +227,40 @@ const Routes = (
       {/* DASHBOARD SECTION END */}
 
       {/* MASTERDATA SECTION START */}
-      <PrivateRoute path={`${linkBarang}`} exact strict component={MasterdataBarang} />
-      <PrivateRoute path={linkDepartment} exact strict component={MasterdataDepartment} />
-      <PrivateRoute path={linkSupplier} exact strict component={MasterdataSupplier} />
-      <PrivateRoute path={linkCustomer} exact strict component={MasterdataCustomer} />
+      <PrivateRoute
+        path={`${linkBarang}`}
+        exact
+        strict
+        component={MasterdataBarang}
+      />
+      <PrivateRoute
+        path={linkDepartment}
+        exact
+        strict
+        component={MasterdataDepartment}
+      />
+      <PrivateRoute
+        path={linkSupplier}
+        exact
+        strict
+        component={MasterdataSupplier}
+      />
+      <PrivateRoute
+        path={linkCustomer}
+        exact
+        strict
+        component={MasterdataCustomer}
+      />
       <PrivateRoute path={linkKas} exact strict component={MasterdataKas} />
       <PrivateRoute path={linkSales} exact strict component={MasterdataSales} />
       <PrivateRoute path={linkBank} exact strict component={MasterdataBank} />
       <PrivateRoute path={linkPromo} exact strict component={MasterdataPromo} />
-      <PrivateRoute path={linkPrinter} exact strict component={MasterdataPrinter} />
+      <PrivateRoute
+        path={linkPrinter}
+        exact
+        strict
+        component={MasterdataPrinter}
+      />
       <PrivateRoute path={linkPaket} exact strict component={MasterdataPaket} />
       <PrivateRoute path={linkRak} exact strict component={MasterdataRak} />
       <PrivateRoute path={linkArea} exact strict component={MasterdataArea} />
@@ -146,29 +268,103 @@ const Routes = (
       {/* MASTERDATA SECTION END */}
 
       {/* PRODUCTION SECTION START */}
-      <PrivateRoute path={linkProduksi} exact strict component={TransaksiProduksi} />
+      <PrivateRoute
+        path={linkProduksi}
+        exact
+        strict
+        component={TransaksiProduksi}
+      />
       {/* PRODUCTION SECTION END */}
 
       {/* INVENTORY SECTION START */}
-      <PrivateRoute path={linkAdjustment} exact strict component={TransaksiAdjustment} />
-      <PrivateRoute path={linkOpnameTransaksi} exact strict component={TransaksiOpname} />
-      <PrivateRoute path={linkOpnameApproval} exact strict component={TransaksiApprovalOpname} />
-      <PrivateRoute path={linkApprovalMutasi} exact strict component={TransaksiApprovalMutasi} />
-      <PrivateRoute path={linkDeliveryNote} exact strict component={TransaksiDeliveyNote} />
-      <PrivateRoute path={linkAlokasi} exact strict component={TransaksiAlokasi} />
-      <PrivateRoute path={linkPengirimanPacking} exact strict component={TransaksiPacking} />
-      <PrivateRoute path={linkPengirimanExpedisi} exact strict component={TransaksiExpedisi} />
-      <PrivateRoute path={linkMutasiJualBeliApproval} exact strict component={TransaksiApprovalMutasiJualBeli} />
-      <PrivateRoute path={linkMutasiJualBeliBayar} exact strict component={TransaksiBayarMutasiJualBeli} />
-      <PrivateRoute path={`${linkAlokasi}/:id`} exact strict component={TransaksiAlokasi} />
+      <PrivateRoute
+        path={linkAdjustment}
+        exact
+        strict
+        component={TransaksiAdjustment}
+      />
+      <PrivateRoute
+        path={linkOpnameTransaksi}
+        exact
+        strict
+        component={TransaksiOpname}
+      />
+      <PrivateRoute
+        path={linkOpnameApproval}
+        exact
+        strict
+        component={TransaksiApprovalOpname}
+      />
+      <PrivateRoute
+        path={linkApprovalMutasi}
+        exact
+        strict
+        component={TransaksiApprovalMutasi}
+      />
+      <PrivateRoute
+        path={linkDeliveryNote}
+        exact
+        strict
+        component={TransaksiDeliveyNote}
+      />
+      <PrivateRoute
+        path={linkAlokasi}
+        exact
+        strict
+        component={TransaksiAlokasi}
+      />
+      <PrivateRoute
+        path={linkPengirimanPacking}
+        exact
+        strict
+        component={TransaksiPacking}
+      />
+      <PrivateRoute
+        path={linkPengirimanExpedisi}
+        exact
+        strict
+        component={TransaksiExpedisi}
+      />
+      <PrivateRoute
+        path={linkMutasiJualBeliApproval}
+        exact
+        strict
+        component={TransaksiApprovalMutasiJualBeli}
+      />
+      <PrivateRoute
+        path={linkMutasiJualBeliBayar}
+        exact
+        strict
+        component={TransaksiBayarMutasiJualBeli}
+      />
+      <PrivateRoute
+        path={`${linkAlokasi}/:id`}
+        exact
+        strict
+        component={TransaksiAlokasi}
+      />
 
-     
       {/* INVENTORY SECTION END */}
 
       {/* PEMBELIAN SECTION START */}
-      <PrivateRoute path={linkReceivePembelian} exact strict component={TransaksiReceive} />
-      <PrivateRoute path={linkPurchaseOrder} exact strict component={TransaksiPurchaseOrder} />
-      <PrivateRoute path={linkReturTanpaNota} exact strict component={TransaksiReturTanpaNota} />
+      <PrivateRoute
+        path={linkReceivePembelian}
+        exact
+        strict
+        component={TransaksiReceive}
+      />
+      <PrivateRoute
+        path={linkPurchaseOrder}
+        exact
+        strict
+        component={TransaksiPurchaseOrder}
+      />
+      <PrivateRoute
+        path={linkReturTanpaNota}
+        exact
+        strict
+        component={TransaksiReturTanpaNota}
+      />
       {/* PEMBELIAN SECTION END */}
 
       {/* TRANSAKSI SECTION START */}
@@ -177,59 +373,238 @@ const Routes = (
       {/* TRANSAKSI SECTION END */}
 
       {/* PEMBAYARAN SECTION START */}
-      <PrivateRoute path={linkPembayaranHutang} exact strict component={BayarHutang} />
-      <PrivateRoute path={linkPembayaranPiutang} exact strict component={BayarPiutang} />
+      <PrivateRoute
+        path={linkPembayaranHutang}
+        exact
+        strict
+        component={BayarHutang}
+      />
+      <PrivateRoute
+        path={linkPembayaranPiutang}
+        exact
+        strict
+        component={BayarPiutang}
+      />
       {/* PEMBAYARAN SECTION END */}
 
       {/* REPORT SECTION START */}
       <PrivateRoute path={linkReportClosing} exact strict component={Closing} />
       <PrivateRoute path={linkReportKas} exact strict component={ReportCash} />
-      <PrivateRoute path={linkReportLabaRugi} exact strict component={ReportLabaRugi} />
-      <PrivateRoute path={linkReportProduksi} exact strict component={ProductionReport} />
+      <PrivateRoute
+        path={linkReportLabaRugi}
+        exact
+        strict
+        component={ReportLabaRugi}
+      />
+      <PrivateRoute
+        path={linkReportProduksi}
+        exact
+        strict
+        component={ProductionReport}
+      />
 
-      <PrivateRoute path={linkReportArsipPenjualan} exact strict component={SaleArchive} />
-      <PrivateRoute path={linkReportArsipReturPenjualan} exact strict component={SaleReturReport} />
-      <PrivateRoute path={linkReportArsipPenjualanByCustomer} exact strict component={SaleByCustArchive} />
-      <PrivateRoute path={linkReportArsipPenjualanBySales} exact strict component={SaleBySalesArchive} />
-      <PrivateRoute path={linkReportArsipPenjualanByBarang} exact strict component={SaleByProductArchive} />
-      <PrivateRoute path={linkReportArsipPenjualanByKelompokBarang} exact strict component={SaleByGroupProduct} />
-      <PrivateRoute path={linkReportOmsetPenjualan} exact strict component={SaleOmsetArchive} />
-      <PrivateRoute path={linkReportOmsetPenjualanByPeriode} exact strict component={SaleOmsetPeriodeArchive} />
+      <PrivateRoute
+        path={linkReportArsipPenjualan}
+        exact
+        strict
+        component={SaleArchive}
+      />
+      <PrivateRoute
+        path={linkReportArsipReturPenjualan}
+        exact
+        strict
+        component={SaleReturReport}
+      />
+      <PrivateRoute
+        path={linkReportArsipPenjualanByCustomer}
+        exact
+        strict
+        component={SaleByCustArchive}
+      />
+      <PrivateRoute
+        path={linkReportArsipPenjualanBySales}
+        exact
+        strict
+        component={SaleBySalesArchive}
+      />
+      <PrivateRoute
+        path={linkReportArsipPenjualanByBarang}
+        exact
+        strict
+        component={SaleByProductArchive}
+      />
+      <PrivateRoute
+        path={linkReportArsipPenjualanByKelompokBarang}
+        exact
+        strict
+        component={SaleByGroupProduct}
+      />
+      <PrivateRoute
+        path={linkReportOmsetPenjualan}
+        exact
+        strict
+        component={SaleOmsetArchive}
+      />
+      <PrivateRoute
+        path={linkReportOmsetPenjualanByPeriode}
+        exact
+        strict
+        component={SaleOmsetPeriodeArchive}
+      />
 
-      <PrivateRoute path={linkReportStock} exact strict component={InventoryReport} />
-      <PrivateRoute path={linkReportNilaiPersediaan} exact strict component={NilaiPersediaanReport} />
-      <PrivateRoute path={linkReportAdjustment} exact strict component={AdjustmentReport} />
-      <PrivateRoute path={linkReportAlokasi} exact strict component={AlokasiReport} />
-      <PrivateRoute path={linkReportDeliveryNote} exact strict component={DnReport} />
-      <PrivateRoute path={linkReportOpname} exact strict component={OpnameReport} />
-      <PrivateRoute path={linkReportMutasi} exact strict component={MutationReport} />
-      <PrivateRoute path={linkReportAlokasiTransaksi} exact strict component={TransactionReport} />
-      <PrivateRoute path={linkReportPacking} exact strict component={PackingReport} />
-      <PrivateRoute path={linkReportExpedisi} exact strict component={ExpedisiReport} />
+      <PrivateRoute
+        path={linkReportStock}
+        exact
+        strict
+        component={InventoryReport}
+      />
+      <PrivateRoute
+        path={linkReportNilaiPersediaan}
+        exact
+        strict
+        component={NilaiPersediaanReport}
+      />
+      <PrivateRoute
+        path={linkReportAdjustment}
+        exact
+        strict
+        component={AdjustmentReport}
+      />
+      <PrivateRoute
+        path={linkReportAlokasi}
+        exact
+        strict
+        component={AlokasiReport}
+      />
+      <PrivateRoute
+        path={linkReportDeliveryNote}
+        exact
+        strict
+        component={DnReport}
+      />
+      <PrivateRoute
+        path={linkReportOpname}
+        exact
+        strict
+        component={OpnameReport}
+      />
+      <PrivateRoute
+        path={linkReportMutasi}
+        exact
+        strict
+        component={MutationReport}
+      />
+      <PrivateRoute
+        path={linkReportAlokasiTransaksi}
+        exact
+        strict
+        component={TransactionReport}
+      />
+      <PrivateRoute
+        path={linkReportPacking}
+        exact
+        strict
+        component={PackingReport}
+      />
+      <PrivateRoute
+        path={linkReportExpedisi}
+        exact
+        strict
+        component={ExpedisiReport}
+      />
 
-      <PrivateRoute path={linkReportPurchaseOrder} exact strict component={PoReport} />
-      <PrivateRoute path={linkReportReceive} exact strict component={ReceiveReport} />
-      <PrivateRoute path={linkReportPembelianBySupplier} exact strict component={PurchaseBySupplierReport} />
-      <PrivateRoute path={linkReportReturPembelian} exact strict component={ReturPembelianReport} />
-    
-     
-      <PrivateRoute path={linkReportHutang} exact strict component={HutangReport} />
-      <PrivateRoute path={linkReportPiutang} exact strict component={PiutangReport} />
-     
-     
-      <PrivateRoute path={linkReportLogTransaksi} exact strict component={LogTrxReport} />
-      <PrivateRoute path={linkReportLogAktifitas} exact strict component={LogActReport} />
+      <PrivateRoute
+        path={linkReportPurchaseOrder}
+        exact
+        strict
+        component={PoReport}
+      />
+      <PrivateRoute
+        path={linkReportReceive}
+        exact
+        strict
+        component={ReceiveReport}
+      />
+      <PrivateRoute
+        path={linkReportPembelianBySupplier}
+        exact
+        strict
+        component={PurchaseBySupplierReport}
+      />
+      <PrivateRoute
+        path={linkReportReturPembelian}
+        exact
+        strict
+        component={ReturPembelianReport}
+      />
+
+      <PrivateRoute
+        path={linkReportHutang}
+        exact
+        strict
+        component={HutangReport}
+      />
+      <PrivateRoute
+        path={linkReportPiutang}
+        exact
+        strict
+        component={PiutangReport}
+      />
+
+      <PrivateRoute
+        path={linkReportLogTransaksi}
+        exact
+        strict
+        component={LogTrxReport}
+      />
+      <PrivateRoute
+        path={linkReportLogAktifitas}
+        exact
+        strict
+        component={LogActReport}
+      />
       {/* REPORT SECTION END */}
 
       {/* SETTINGS SECTION START */}
-      <PrivateRoute path={linkPengaturanUmum} exact strict component={PengaturanUmum} />
-      <PrivateRoute path={linkPengaturanPengguna} exact strict component={PengaturanPengguna} />
-      <PrivateRoute path={linkPengaturanLokasi} exact strict component={PengaturanLokasi} />
+      <PrivateRoute
+        path={linkPengaturanUmum}
+        exact
+        strict
+        component={PengaturanUmum}
+      />
+      <PrivateRoute
+        path={linkPengaturanPengguna}
+        exact
+        strict
+        component={PengaturanPengguna}
+      />
+      <PrivateRoute
+        path={linkPengaturanLokasi}
+        exact
+        strict
+        component={PengaturanLokasi}
+      />
       {/* SETTINGS SECTION END */}
 
       {/* OTHERS SECTION START */}
-      <PrivateRoute path={linkCetakBarcode} exact strict component={CetakBarcode} />
-      <PrivateRoute path={`${linkReceivePembelian}/:slug`} exact strict component={TransaksiReceive} />
+      <PrivateRoute
+        path={linkCetakBarcode}
+        exact
+        strict
+        component={CetakBarcode}
+      />
+      <PrivateRoute
+        path={`${linkReceivePembelian}/:slug`}
+        exact
+        strict
+        component={TransaksiReceive}
+      />
+      <PrivateRoute
+        path={`${linkTransaksiBarang}/:slug`}
+        exact
+        strict
+        component={Sale}
+      />
       <PrivateRoute path="/upload" exact strict component={Upload} />
       {/* OTHERS SECTION END */}
       <Route component={NotFound} />

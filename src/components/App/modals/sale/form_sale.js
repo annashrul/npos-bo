@@ -4,7 +4,10 @@ import { ModalBody, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
-import { storeSale } from "../../../../redux/actions/sale/sale.action";
+import {
+  storeSale,
+  storeSaleEdit,
+} from "../../../../redux/actions/sale/sale.action";
 import { toCurrency, rmComma } from "helper";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
@@ -120,18 +123,18 @@ class FormSale extends Component {
     event.preventDefault();
     let col = event.target.name;
     let val = event.target.value;
-    this.setState({ [col]: val});
+    this.setState({ [col]: val });
     if (col === "tunai") {
       let tunai = val;
       if (tunai < 0) {
         tunai = 0;
       }
 
-      if(this.state.jenis_trx==="Gabungan"){
-        console.log(this.state.gt,val)
+      if (this.state.jenis_trx === "Gabungan") {
+        console.log(this.state.gt, val);
         this.setState({
-          jml_kartu:this.state.gt -  parseInt(rmComma(tunai), 10)
-        })
+          jml_kartu: this.state.gt - parseInt(rmComma(tunai), 10),
+        });
       }
       this.setState({
         change: parseInt(rmComma(tunai), 10) - this.state.gt,
@@ -186,6 +189,8 @@ class FormSale extends Component {
 
     let propsMaster = this.props.master;
     let field = {};
+    console.log(propsMaster);
+
     field["master"] = {
       cetak_nota: true,
       tempo: propsMaster.tempo,
@@ -227,8 +232,8 @@ class FormSale extends Component {
     let parsedata = field;
     let bank = this.state.bank.split("-");
     let jenisTransaksi = this.state.jenis_trx;
-    let nominalTunai=parseInt(rmComma(this.state.tunai));
-    let nominalTransfer=parseInt(rmComma(this.state.jml_kartu));
+    let nominalTunai = parseInt(rmComma(this.state.tunai));
+    let nominalTransfer = parseInt(rmComma(this.state.jml_kartu));
     let totalBayar = this.state.gt;
 
     if (jenisTransaksi.toLowerCase() === "kredit") {
@@ -245,13 +250,18 @@ class FormSale extends Component {
         let newparse = {};
         newparse["parsedata"] = parsedata;
 
-        this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
+        this.props.dispatch(
+          storeSale(newparse, (arr) => this.props.history.push(arr))
+        );
         this.resetState();
       }
     } else {
       if (jenisTransaksi === "Tunai") {
         if (nominalTunai < totalBayar) {
-          handleError("", "Jumlah uang tidak boleh kurang dari total pembayaran");
+          handleError(
+            "",
+            "Jumlah uang tidak boleh kurang dari total pembayaran"
+          );
           return;
         }
       }
@@ -261,7 +271,10 @@ class FormSale extends Component {
           return false;
         }
         if (nominalTransfer < totalBayar) {
-          handleError("", "Jumlah uang tidak boleh kurang dari total pembayaran");
+          handleError(
+            "",
+            "Jumlah uang tidak boleh kurang dari total pembayaran"
+          );
           return false;
         }
       }
@@ -272,12 +285,14 @@ class FormSale extends Component {
           handleError("", "silahkan pilih bank tujuan");
           return false;
         }
-        
+
         if (jumlah > parseInt(rmComma(totalBayar))) {
-          handleError("", "uang tunai dan uang transfer tidak boleh lebih dari total pembayaran");
+          handleError(
+            "",
+            "uang tunai dan uang transfer tidak boleh lebih dari total pembayaran"
+          );
           return false;
         }
-
       }
 
       // parsedata["master"] = propsMaster;
@@ -309,7 +324,14 @@ class FormSale extends Component {
         parsedata["master"]["kartu"] = bank[0];
       }
       newparse["parsedata"] = parsedata;
-      this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
+      if (propsMaster.idLog !== undefined) {
+        this.props.dispatch(storeSaleEdit(newparse));
+      } else {
+        this.props.dispatch(
+          storeSale(newparse, (arr) => this.props.history.push(arr))
+        );
+      }
+
       this.resetState();
     }
   }
@@ -360,8 +382,15 @@ class FormSale extends Component {
           }}
         />
 
-        <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSale"} size="md">
-          <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Pembayaran" : "#" + this.props.master.kode_trx}</ModalHeader>
+        <WrapperModal
+          isOpen={this.props.isOpen && this.props.type === "formSale"}
+          size="md"
+        >
+          <ModalHeader toggle={this.toggle}>
+            {this.props.detail === undefined
+              ? "Pembayaran"
+              : "#" + this.props.master.kode_trx}
+          </ModalHeader>
           <ModalBody>
             <form onSubmit={this.handleSubmit}>
               <div className="row">
@@ -378,7 +407,8 @@ class FormSale extends Component {
                     callback={(res) => this.handleSelect(res)}
                   />
 
-                  {this.state.jenis_trx === "Gabungan" && this.isTunai("Uang tunai", "tunai")}
+                  {this.state.jenis_trx === "Gabungan" &&
+                    this.isTunai("Uang tunai", "tunai")}
                   {(() => {
                     let label = "",
                       name = "";
@@ -386,8 +416,14 @@ class FormSale extends Component {
                     if (jenis_trx === "Kredit") {
                       label = "Jumlah DP";
                       name = "tunai";
-                    } else if (jenis_trx === "Transfer" || jenis_trx === "Gabungan") {
-                      label = jenis_trx === "Gabungan" ? "Uang transfer" : "Jumlah Uang";
+                    } else if (
+                      jenis_trx === "Transfer" ||
+                      jenis_trx === "Gabungan"
+                    ) {
+                      label =
+                        jenis_trx === "Gabungan"
+                          ? "Uang transfer"
+                          : "Jumlah Uang";
                       name = "jml_kartu";
                     } else {
                       label = "Jumlah Uang";
@@ -405,12 +441,22 @@ class FormSale extends Component {
                     <input
                       type="date"
                       name={"tanggal_tempo"}
-                      min={moment(new Date()).add(1, "days").format("yyyy-MM-DD")}
+                      min={moment(new Date())
+                        .add(1, "days")
+                        .format("yyyy-MM-DD")}
                       className="form-control"
                       value={this.state.tanggal_tempo}
                       onChange={this.handleChange}
                     />
-                    <div className="invalid-feedback" style={this.state.error.tanggal_tempo !== "" || this.state.error.tanggal_tempo !== "0" ? { display: "block" } : { display: "none" }}>
+                    <div
+                      className="invalid-feedback"
+                      style={
+                        this.state.error.tanggal_tempo !== "" ||
+                        this.state.error.tanggal_tempo !== "0"
+                          ? { display: "block" }
+                          : { display: "none" }
+                      }
+                    >
                       {this.state.error.tanggal_tempo}
                     </div>
                   </div>
@@ -418,7 +464,13 @@ class FormSale extends Component {
                   {this.state.isTransfer === true ? (
                     <div className="form-group">
                       <label htmlFor="">BANK</label>
-                      <select name="bank" id="bank" className="form-control" value={this.state.bank} onChange={this.handleChange}>
+                      <select
+                        name="bank"
+                        id="bank"
+                        className="form-control"
+                        value={this.state.bank}
+                        onChange={this.handleChange}
+                      >
                         {typeof data === "object"
                           ? data.map((v, i) => {
                               return (
@@ -437,12 +489,33 @@ class FormSale extends Component {
                   <div
                     className="form-group"
                     style={{
-                      display: this.state.jenis_trx === "Gabungan" || this.state.jenis_trx === "Kredit" || this.state.jenis_trx === "Transfer" ? "none" : "block",
+                      display:
+                        this.state.jenis_trx === "Gabungan" ||
+                        this.state.jenis_trx === "Kredit" ||
+                        this.state.jenis_trx === "Transfer"
+                          ? "none"
+                          : "block",
                     }}
                   >
                     <label htmlFor="">Kembalian</label>
-                    <input readOnly type="text" name="change" id="change" className="form-control" value={toCurrency(this.state.change)} onChange={this.handleChange} />
-                    <div className="invalid-feedback text-left" style={parseInt(this.state.change, 10) < 0 && this.state.jenis_trx !== "Gabungan" ? { display: "block" } : { display: "none" }}>
+                    <input
+                      readOnly
+                      type="text"
+                      name="change"
+                      id="change"
+                      className="form-control"
+                      value={toCurrency(this.state.change)}
+                      onChange={this.handleChange}
+                    />
+                    <div
+                      className="invalid-feedback text-left"
+                      style={
+                        parseInt(this.state.change, 10) < 0 &&
+                        this.state.jenis_trx !== "Gabungan"
+                          ? { display: "block" }
+                          : { display: "none" }
+                      }
+                    >
                       Kembalian Masih (Minus)
                     </div>
                   </div>
@@ -450,12 +523,22 @@ class FormSale extends Component {
               </div>
               <div className="row">
                 <div className="col-md-9">
-                  <button className="btn btn-info btn-block text-left" onClick={(event) => this.handleSetTunai(event)} data-toggle="tooltip" title="Masukan total ke jumlah uang.">
+                  <button
+                    className="btn btn-info btn-block text-left"
+                    onClick={(event) => this.handleSetTunai(event)}
+                    data-toggle="tooltip"
+                    title="Masukan total ke jumlah uang."
+                  >
                     TOTAL = <b>{toCurrency(this.state.gt)}</b>
                   </button>
                 </div>
                 <div className="col-md-3">
-                  <button style={{ float: "right" }} type="submit" className="btn btn-primary" disabled={this.props.isLoadingSale}>
+                  <button
+                    style={{ float: "right" }}
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={this.props.isLoadingSale}
+                  >
                     Bayar
                   </button>
                 </div>

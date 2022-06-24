@@ -4,9 +4,27 @@ import connect from "react-redux/es/connect/connect";
 import { FetchReport } from "redux/actions/purchase/receive/receive.action";
 import DetailReceiveReport from "../../../modals/report/purchase/receive/detail_receive_report";
 import ReceiveReportExcel from "../../../modals/report/purchase/receive/form_receive_excel";
-import { deleteReceiveReport, FetchReceiveData, FetchReportExcel, FetchReportDetail } from "redux/actions/purchase/receive/receive.action";
+import {
+  deleteReceiveReport,
+  FetchReceiveData,
+  FetchReportExcel,
+  FetchReportDetail,
+} from "redux/actions/purchase/receive/receive.action";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
-import { CURRENT_DATE, DEFAULT_WHERE, float, generateNo, getFetchWhere, getPeriode, getStorage, isEmptyOrUndefined, noData, parseToRp, setStorage, toDate } from "../../../../../helper";
+import {
+  CURRENT_DATE,
+  DEFAULT_WHERE,
+  float,
+  generateNo,
+  getFetchWhere,
+  getPeriode,
+  getStorage,
+  isEmptyOrUndefined,
+  noData,
+  parseToRp,
+  setStorage,
+  toDate,
+} from "../../../../../helper";
 import { STATUS_ARSIP_PENJUALAN } from "../../../../../helperStatus";
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
@@ -75,7 +93,9 @@ class ReceiveReport extends Component {
     this.props.dispatch(rePrintFaktur(id));
   }
   handleDelete(kode) {
-    this.props.dispatch(deleteReceiveReport({ id: kode, where: this.state.where_data }));
+    this.props.dispatch(
+      deleteReceiveReport({ id: kode, where: this.state.where_data })
+    );
   }
 
   handleEdit(obj) {
@@ -112,7 +132,17 @@ class ReceiveReport extends Component {
 
   render() {
     const { total, last_page, per_page, current_page, data } = this.props.data;
-    const { detail, dateFrom, dateTo, location, column_data, type_data, isModalDetail, isModalExport, isModalForm } = this.state;
+    const {
+      detail,
+      dateFrom,
+      dateTo,
+      location,
+      column_data,
+      type_data,
+      isModalDetail,
+      isModalExport,
+      isModalForm,
+    } = this.state;
     let totalDiskonPerHalaman = 0;
     let totalPpnPerHalaman = 0;
     let totalSisaPembayaranPerHalaman = 0;
@@ -149,19 +179,31 @@ class ReceiveReport extends Component {
           otherName="Jenis"
           otherState="type"
           callbackWhere={(res) => this.handleService(res)}
-          callbackExcel={() => this.handleModal("excel", { total: last_page * per_page })}
+          callbackExcel={() =>
+            this.handleModal("excel", { total: last_page * per_page })
+          }
           excelData={this.props.download}
         />
         <TableCommon
           head={head}
-          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
           renderRow={
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let sisa = `${v.pelunasan}`.toUpperCase() === "LUNAS" ? parseToRp(0) : parseToRp(parseFloat(v.total_beli) - parseFloat(v.jumlah_bayar));
+                    let sisa =
+                      `${v.pelunasan}`.toUpperCase() === "LUNAS"
+                        ? parseToRp(0)
+                        : parseToRp(
+                            parseFloat(v.total_beli) -
+                              parseFloat(v.jumlah_bayar)
+                          );
                     totalDiskonPerHalaman += float(v.disc);
                     totalPpnPerHalaman += float(v.ppn);
                     totalSisaPembayaranPerHalaman += float(sisa);
@@ -169,17 +211,29 @@ class ReceiveReport extends Component {
                     totalJumlahBeliPerHalaman += parseInt(v.total_beli, 10);
                     return (
                       <tr key={i}>
-                        <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
+                        <td className="text-center middle nowrap">
+                          {generateNo(i, current_page)}
+                        </td>
                         <td className="text-center middle nowrap">
                           <ButtonActionCommon
-                            action={[{ label: "Detail" }, { label: "Retur" }, { label: "Hapus" }, { label: "Edit" }, { label: "Nota" }, { label: "3ply" }]}
+                            action={[
+                              { label: "Detail" },
+                              { label: "Retur" },
+                              { label: "Hapus" },
+                              { label: "Edit" },
+                              { label: "Nota" },
+                              { label: "3ply" },
+                            ]}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleModal("retur", v);
                               if (e === 2) this.handleDelete(v.no_faktur_beli);
                               if (e === 3) this.handleEdit(v);
                               if (e === 4) this.handleRePrint(v.no_faktur_beli);
-                              if (e === 5) this.props.history.push(`/receive3plyId/${v.no_faktur_beli}`);
+                              if (e === 5)
+                                this.props.history.push(
+                                  `/receive3plyId/${v.no_faktur_beli}`
+                                );
                             }}
                           />
                         </td>
@@ -188,15 +242,25 @@ class ReceiveReport extends Component {
                         <td className="middle nowrap">{v.nama_penerima}</td>
                         <td className="middle nowrap">{v.type}</td>
                         <td className="middle nowrap">{v.pelunasan}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.disc)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.ppn)}</td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.disc)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.ppn)}
+                        </td>
                         <td className="middle nowrap">{v.supplier}</td>
                         <td className="middle nowrap">{v.operator}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
-                        <td className="middle nowrap text-right">{v.jumlah_pembayaran}</td>
+                        <td className="middle nowrap text-right">
+                          {v.jumlah_pembayaran}
+                        </td>
                         <td className="middle nowrap text-right">{sisa}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.qty_beli)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.total_beli)}</td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.qty_beli)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.total_beli)}
+                        </td>
                       </tr>
                     );
                   })
@@ -206,7 +270,11 @@ class ReceiveReport extends Component {
           footer={[
             {
               data: [
-                { colSpan: 7, label: "Total perhalaman", className: "text-left" },
+                {
+                  colSpan: 7,
+                  label: "Total perhalaman",
+                  className: "text-left",
+                },
                 { colSpan: 1, label: parseToRp(totalDiskonPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalPpnPerHalaman) },
                 { colSpan: 4, label: "" },
@@ -218,9 +286,25 @@ class ReceiveReport extends Component {
           ]}
         />
 
-        {this.props.isOpen && isModalDetail ? <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail} where={this.state.where_data} /> : null}
-        {this.props.isOpen && isModalForm ? <FormReturReceive history={this.props.history} dataRetur={this.props.dataRetur} /> : null}
-        {this.props.isOpen && isModalExport ? <ReceiveReportExcel startDate={dateFrom} endDate={dateTo} location={location} /> : null}
+        {this.props.isOpen && isModalDetail ? (
+          <DetailReceiveReport
+            receiveReportDetail={this.props.receiveReportDetail}
+            where={this.state.where_data}
+          />
+        ) : null}
+        {this.props.isOpen && isModalForm ? (
+          <FormReturReceive
+            history={this.props.history}
+            dataRetur={this.props.dataRetur}
+          />
+        ) : null}
+        {this.props.isOpen && isModalExport ? (
+          <ReceiveReportExcel
+            startDate={dateFrom}
+            endDate={dateTo}
+            location={location}
+          />
+        ) : null}
       </Layout>
     );
   }

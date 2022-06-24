@@ -1,18 +1,40 @@
 import React, { Component } from "react";
+import Cookies from "js-cookie";
 
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import { FetchReportSale, deleteReportSale, FetchReportDetailSale, FetchReportSaleExcel, FetchNotaReceipt } from "redux/actions/sale/sale.action";
+import {
+  FetchReportSale,
+  deleteReportSale,
+  FetchReportDetailSale,
+  FetchReportSaleExcel,
+  FetchNotaReceipt,
+  setSaleReportData,
+} from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import Otorisasi from "../../modals/otorisasi.modal";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
-import { CapitalizeEachWord, generateNo, getFetchWhere, getPeriode, noData, parseToRp, swallOption, toDate, float } from "../../../../helper";
+import {
+  CapitalizeEachWord,
+  generateNo,
+  getFetchWhere,
+  getPeriode,
+  noData,
+  parseToRp,
+  swallOption,
+  toDate,
+  float,
+  setStorage,
+} from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import { STATUS_ARSIP_PENJUALAN } from "../../../../helperStatus";
 import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
-import { linkReportArsipPenjualan } from "../../../../helperLink";
+import {
+  linkReportArsipPenjualan,
+  linkTransaksiBarang,
+} from "../../../../helperLink";
 class SaleArchive extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +54,8 @@ class SaleArchive extends Component {
       totalExcel: 0,
       detail: {},
       periode: "",
+      otorisasiType: "edit",
+      objEdit: {},
     };
     this.handleDelete = this.handleDelete.bind(this);
     this.handleModal = this.handleModal.bind(this);
@@ -40,7 +64,21 @@ class SaleArchive extends Component {
   }
 
   onDone(id, id_trx) {
-    this.props.dispatch(deleteReportSale({ id: id, id_trx: id_trx, where: this.state.where_data }));
+    if (this.state.otorisasiType === "edit") {
+      this.props.history.push(`${linkTransaksiBarang}/${id_trx}`);
+      this.setState({ isModalOtorisasi: false });
+      const bool = false;
+      this.props.dispatch(ModalToggle(bool));
+    } else {
+      this.props.dispatch(
+        deleteReportSale({
+          id: id,
+          id_trx: id_trx,
+          where: this.state.where_data,
+        })
+      );
+    }
+
     this.setState({
       id_trx: "",
     });
@@ -89,6 +127,7 @@ class SaleArchive extends Component {
 
   handleDelete(id) {
     this.setState({
+      otorisasiType: "delete",
       id_trx: id,
     });
     swallOption("Data yang telah dihapus tidak bisa dikembalikan.", () => {
@@ -96,13 +135,49 @@ class SaleArchive extends Component {
       this.handleFetchModal("modalOtorisasi");
     });
   }
+  handleEdit(obj) {
+    this.setState({
+      id_trx: obj.kd_trx,
+      objEdit: obj,
+    });
+
+    swallOption("Anda Yakin Akan Mengubah Data Penjualan Ini.", () => {
+      this.setState({ isModalOtorisasi: true });
+      this.handleFetchModal("modalOtorisasi");
+    });
+
+    // setStorage("kode_edit", obj.no_faktur_beli);
+    // setStorage("lokasi_edit", obj.lokasi);
+    // setStorage("catatan_edit", "-");
+    // setStorage("kode_supplier_edit", obj.kode_supplier);
+    // setStorage("nama_penerima_edit", obj.nama_penerima);
+    // setStorage("nonota_edit", obj.nonota);
+    // setStorage("type_edit", obj.type);
+    // this.props.history.push(`${linkTransaksiBarang}/${obj.kd_trx}`);
+  }
 
   render() {
     const startDate = this.state.periode.split("-")[0];
     const endDate = this.state.periode.split("-")[1];
     console.log(startDate);
-    const { total, last_page, per_page, current_page, data } = this.props.saleReport;
-    const { omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit, hpp, total_tunai_all } = this.props.totalPenjualan;
+    const { total, last_page, per_page, current_page, data } =
+      this.props.saleReport;
+    const {
+      omset,
+      dis_item,
+      dis_persen,
+      dis_rp,
+      kas_lain,
+      gt,
+      bayar,
+      jml_kartu,
+      charge,
+      change,
+      rounding,
+      profit,
+      hpp,
+      total_tunai_all,
+    } = this.props.totalPenjualan;
 
     let totalOmsetPerHalaman = 0;
     let totalProfitPerHalaman = 0;
@@ -149,7 +224,11 @@ class SaleArchive extends Component {
       { rowSpan: "2", label: "Bank" },
       { rowSpan: "2", label: "Keterangan" },
     ];
-    const rowSpan = [{ label: "Item" }, { label: "Total (rp)" }, { label: "Total (%)" }];
+    const rowSpan = [
+      { label: "Item" },
+      { label: "Total (rp)" },
+      { label: "Total (%)" },
+    ];
     return (
       <Layout page="Laporan Arsip Penjualan">
         <HeaderReportCommon
@@ -163,7 +242,9 @@ class SaleArchive extends Component {
           isStatus={true}
           statusData={STATUS_ARSIP_PENJUALAN}
           callbackWhere={(res) => this.handleService(res)}
-          callbackExcel={() => this.handleModal("formSaleExcel", { total: last_page * per_page })}
+          callbackExcel={() =>
+            this.handleModal("formSaleExcel", { total: last_page * per_page })
+          }
           excelData={this.props.download}
         />
 
@@ -192,49 +273,120 @@ class SaleArchive extends Component {
                     totalBayarPerHalaman += float(v.bayar);
                     totalJumlahKartuPerHalaman += float(v.jml_kartu);
                     totalChargePerHalaman += float(v.charge);
-                    totalChangePerHalaman += float(String(v.jenis_trx).toLowerCase() === "non tunai" ? 0 : v.change);
+                    totalChangePerHalaman += float(
+                      String(v.jenis_trx).toLowerCase() === "non tunai"
+                        ? 0
+                        : v.change
+                    );
                     totalRoundingPerHalaman += float(v.rounding);
-                    totalTunaiPerHalaman += v.jenis_trx === "Non Tunai" ? 0 : float(v.bayar) - float(v.change);
+                    totalTunaiPerHalaman +=
+                      v.jenis_trx === "Non Tunai"
+                        ? 0
+                        : float(v.bayar) - float(v.change);
+                    let btnAction = [
+                      { label: "Detail" },
+                      { label: "Nota" },
+                      { label: "3ply" },
+                      { label: "Hapus" },
+                    ];
+                    if (atob(atob(Cookies.get("tnt="))) === "rb") {
+                      btnAction.push({ label: "Edit" });
+                    }
                     return (
                       <tr key={i}>
-                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
+                          {generateNo(i, current_page)}
+                        </td>
+                        <td className="middle nowrap text-center">
+                          {/* atob(atob(Cookies.get("tnt="))) !== "nov-jkt" */}
                           <ButtonActionCommon
-                            action={[{ label: "Detail" }, { label: "Nota" }, { label: "3ply" }, { label: "Hapus" }]}
+                            action={btnAction}
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
-                              if (e === 1) this.props.dispatch(FetchNotaReceipt(v.kd_trx));
-                              if (e === 2) this.props.history.push(`${linkReportArsipPenjualan}/nota3ply/${v.kd_trx}`);
+                              if (e === 1)
+                                this.props.dispatch(FetchNotaReceipt(v.kd_trx));
+                              if (e === 2)
+                                this.props.history.push(
+                                  `${linkReportArsipPenjualan}/nota3ply/${v.kd_trx}`
+                                );
                               if (e === 3) this.handleDelete(v.kd_trx);
+                              if (e === 4) this.handleEdit(v);
                             }}
                           />
                         </td>
                         <td className="middle nowrap">{v.kd_trx}</td>
                         <td className="middle nowrap">{toDate(v.tgl)}</td>
-                        <td className="middle nowrap">{toDate(v.jam, "/", true)}</td>
+                        <td className="middle nowrap">
+                          {toDate(v.jam, "/", true)}
+                        </td>
                         <td className="middle nowrap">{v.lokasi}</td>
-                        <td className="middle nowrap">{CapitalizeEachWord(v.status)}</td>
+                        <td className="middle nowrap">
+                          {CapitalizeEachWord(v.status)}
+                        </td>
                         <td className="middle nowrap">{v.jenis_trx}</td>
                         <td className="middle nowrap">{v.customer}</td>
                         <td className="middle nowrap">{v.nama}</td>
                         <td className="middle nowrap">{v.sales}</td>
-                        <td className="middle nowrap">{v.jenis_trx === "Kredit" ? toDate(v.tempo) : "-"}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.omset)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.diskon_item)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.dis_rp)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.dis_persen)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(float(v.hrg_jual) * (float(v.tax) / 100))}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.hrg_jual)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.profit)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.kas_lain)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.gt)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.bayar)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(String(v.jenis_trx).toLowerCase() === "non tunai" ? 0 : v.change)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(float(v.bayar) - (String(v.jenis_trx).toLowerCase() === "non tunai" ? 0 : float(v.change)))}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.rounding)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.jml_kartu)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.charge)}</td>
+                        <td className="middle nowrap">
+                          {v.jenis_trx === "Kredit" ? toDate(v.tempo) : "-"}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.omset)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.diskon_item)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.dis_rp)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.dis_persen)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(float(v.hrg_jual) * (float(v.tax) / 100))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.hrg_beli)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.hrg_jual)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.profit)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.kas_lain)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.gt)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.bayar)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(
+                            String(v.jenis_trx).toLowerCase() === "non tunai"
+                              ? 0
+                              : v.change
+                          )}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(
+                            float(v.bayar) -
+                              (String(v.jenis_trx).toLowerCase() === "non tunai"
+                                ? 0
+                                : float(v.change))
+                          )}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.rounding)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.jml_kartu)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.charge)}
+                        </td>
                         <td className="middle nowrap">{v.kartu}</td>
                         <td className="middle nowrap">{v.ket_kas_lain}</td>
                       </tr>
@@ -246,7 +398,11 @@ class SaleArchive extends Component {
           footer={[
             {
               data: [
-                { colSpan: 12, label: "Total perhalaman", className: "text-left" },
+                {
+                  colSpan: 12,
+                  label: "Total perhalaman",
+                  className: "text-left",
+                },
                 { colSpan: 1, label: parseToRp(totalOmsetPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalDiskonItemPerHalaman) },
                 { colSpan: 1, label: parseToRp(totalDiskonRpPerHalaman) },
@@ -295,15 +451,26 @@ class SaleArchive extends Component {
           ]}
         />
 
-        {this.props.isOpen && this.state.isModalDetail ? <DetailSaleReport detailSale={this.props.detailSale} detail={this.state.detail} /> : null}
+        {this.props.isOpen && this.state.isModalDetail ? (
+          <DetailSaleReport
+            detailSale={this.props.detailSale}
+            detail={this.state.detail}
+          />
+        ) : null}
         {this.props.isOpen && this.state.isModalExcel ? (
-          <SaleReportExcel startDate={startDate} endDate={endDate} totalPenjualan={this.props.totalPenjualan} totalPenjualanExcel={this.props.totalPenjualanExcel} totalRow={this.state.totalExcel} />
+          <SaleReportExcel
+            startDate={startDate}
+            endDate={endDate}
+            totalPenjualan={this.props.totalPenjualan}
+            totalPenjualanExcel={this.props.totalPenjualanExcel}
+            totalRow={this.state.totalExcel}
+          />
         ) : null}
         {this.props.isOpen && this.state.isModalOtorisasi ? (
           <Otorisasi
             datum={{
               module: "arsip penjualan",
-              aksi: "delete",
+              aksi: this.state.otorisasiType,
               id_trx: this.state.id_trx,
             }}
             onDone={this.onDone}

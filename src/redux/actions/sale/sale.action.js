@@ -2,11 +2,21 @@ import { SALE, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy, del } from "components/model/app.model";
-import { handleDelete, handleGet, handleGetExport, handlePost } from "../handleHttp";
+import {
+  handleDelete,
+  handleGet,
+  handleGetExport,
+  handlePost,
+} from "../handleHttp";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import { isEmptyOrUndefined, ToastQ } from "../../../helper";
+import {
+  isEmptyOrUndefined,
+  ToastQ,
+  getStorage,
+  rmStorage,
+} from "../../../helper";
 import { ModalType } from "../modal.action";
 import moment from "moment";
 import Cookies from "js-cookie";
@@ -95,6 +105,19 @@ export function setSaleReturReport(data = []) {
 export function setSaleReturReportExcel(data = []) {
   return { type: SALE.SUCCESS_SALE_RETUR_EXCEL, data };
 }
+export function setSaleEdit(data = []) {
+  return { type: SALE.EDIT_TRX, data };
+}
+
+export const getEditTrx = (val, callback) => {
+  return (dispatch) => {
+    handleGet(`report/penjualan/ambil_data/${val}`, (res) => {
+      console.log("edit action", res.data);
+      dispatch(setSaleEdit(res.data));
+      callback(res.data.result);
+    });
+  };
+};
 
 export const FetchNotaSale = (lokasi) => {
   return (dispatch) => {
@@ -151,10 +174,8 @@ export const FetchNotaReceipt = (kd_trx) => {
 };
 export const storeSale = (data, param) => {
   return (dispatch) => {
-    console.log(data);
     let master = data.parsedata.master;
     dispatch(setLoading(true));
-
     Swal.fire({
       allowOutsideClick: false,
       title: "Please Wait.",
@@ -164,8 +185,7 @@ export const storeSale = (data, param) => {
       },
       onClose: () => {},
     });
-    // const rawdata=data;
-    const url = HEADERS.URL + `pos/checkout`;
+    let url = HEADERS.URL + `pos/checkout`;
     axios
       .post(url, data.parsedata)
       .then(function (response) {
@@ -186,7 +206,10 @@ export const storeSale = (data, param) => {
               '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
               '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
               '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning" ' +
-              (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ? 'style="visibility:hidden' : "") +
+              (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" ||
+              atob(atob(Cookies.get("tnt="))) !== "nov-bdg"
+                ? 'style="visibility:hidden'
+                : "") +
               ">Re-Print</button>",
 
             showCancelButton: true,
@@ -203,29 +226,40 @@ export const storeSale = (data, param) => {
           const elReprint = document.getElementById("btnReprint");
           if (elReprint) {
             elReprint.addEventListener("click", () => {
-              handlePost("pos/reprint/" + btoa(datum.result.kode), [], (res, msg, status) => {
-                ToastQ.fire({
-                  icon: "success",
-                  title: msg,
-                });
-                goSwal();
-              });
+              handlePost(
+                "pos/reprint/" + btoa(datum.result.kode),
+                [],
+                (res, msg, status) => {
+                  ToastQ.fire({
+                    icon: "success",
+                    title: msg,
+                  });
+                  goSwal();
+                }
+              );
             });
           }
-          document.getElementById("btnNotaPdf").addEventListener("click", () => {
-            const win = window.open(datum.result.nota, "_blank");
-            if (win != null) {
-              win.focus();
-            }
-          });
-          document.getElementById("btnNota3ply").addEventListener("click", () => {
-            // `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`;
-            const win = window.open(`${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`, "_blank");
-            if (win != null) {
-              win.focus();
-            }
-            return false;
-          });
+          document
+            .getElementById("btnNotaPdf")
+            .addEventListener("click", () => {
+              const win = window.open(datum.result.nota, "_blank");
+              if (win != null) {
+                win.focus();
+              }
+            });
+          document
+            .getElementById("btnNota3ply")
+            .addEventListener("click", () => {
+              // `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`;
+              const win = window.open(
+                `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`,
+                "_blank"
+              );
+              if (win != null) {
+                win.focus();
+              }
+              return false;
+            });
         };
         goSwal();
 
@@ -239,7 +273,124 @@ export const storeSale = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text: error.response === undefined ? "error!" : error.response.data.msg,
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
+        });
+
+        if (error.response) {
+        }
+      });
+  };
+};
+
+export const storeSaleEdit = (data) => {
+  return (dispatch) => {
+    let master = data.parsedata.master;
+    console.log("body", data.parsedata);
+    dispatch(setLoading(true));
+    Swal.fire({
+      allowOutsideClick: false,
+      title: "Please Wait.",
+      html: "Sending request..",
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      onClose: () => {},
+    });
+    let url = `${HEADERS.URL}pos/update_penjualan/${btoa(
+      `${getStorage("idLogEdit")}|${master.kode_trx}`
+    )}`;
+
+    axios
+      .put(url, data.parsedata)
+      .then(function (response) {
+        Swal.close();
+        const datum = response.data;
+        destroy("sale");
+        rmStorage("idLogEdit");
+        if (master.id_hold !== "") {
+          del("hold", master.id_hold);
+          localStorage.removeItem("objectHoldBill");
+        }
+        const goSwal = () => {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Transaksi berhasil.",
+            type: "info",
+            html:
+              "<br>" +
+              '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
+              '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
+              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning" ' +
+              (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" ||
+              atob(atob(Cookies.get("tnt="))) !== "nov-bdg"
+                ? 'style="visibility:hidden'
+                : "") +
+              ">Re-Print</button>",
+
+            showCancelButton: true,
+            cancelButtonText: "Selesai",
+            showConfirmButton: false,
+          }).then((result) => {
+            if (result.dismiss === "cancel") {
+              dispatch(ModalToggle(false));
+              dispatch(FetchNotaSale(datum.result.lokasi));
+              dispatch(FetchCustomerAll(datum.result.lokasi));
+              dispatch(FetchSalesAll(datum.result.lokasi));
+            }
+          });
+          const elReprint = document.getElementById("btnReprint");
+          if (elReprint) {
+            elReprint.addEventListener("click", () => {
+              handlePost(
+                "pos/reprint/" + btoa(datum.result.kode),
+                [],
+                (res, msg, status) => {
+                  ToastQ.fire({
+                    icon: "success",
+                    title: msg,
+                  });
+                  goSwal();
+                }
+              );
+            });
+          }
+          document
+            .getElementById("btnNotaPdf")
+            .addEventListener("click", () => {
+              const win = window.open(datum.result.nota, "_blank");
+              if (win != null) {
+                win.focus();
+              }
+            });
+          document
+            .getElementById("btnNota3ply")
+            .addEventListener("click", () => {
+              // `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`;
+              const win = window.open(
+                `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`,
+                "_blank"
+              );
+              if (win != null) {
+                win.focus();
+              }
+              return false;
+            });
+        };
+        goSwal();
+
+        dispatch(setLoading(false));
+      })
+      .catch(function (error) {
+        console.log(error);
+        Swal.close();
+
+        Swal.fire({
+          allowOutsideClick: false,
+          title: "Failed",
+          type: "error",
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -284,7 +435,12 @@ export const FetchReportSaleExcel = (where = "", perpage = "") => {
   };
 };
 
-export const FetchReportDetailSale = (kd_trx, where = "", isModal = false) => {
+export const FetchReportDetailSale = (
+  kd_trx,
+  where = "",
+  isModal = false,
+  callback
+) => {
   return (dispatch) => {
     let url = `report/arsip_penjualan/${kd_trx}`;
     if (where !== "") url += `?${where}`;
@@ -293,6 +449,9 @@ export const FetchReportDetailSale = (kd_trx, where = "", isModal = false) => {
       (res) => {
         const data = res.data;
         dispatch(setSaleReportData(data));
+        if (callback !== undefined) {
+          callback();
+        }
         if (isModal) {
           dispatch(ModalToggle(true));
           dispatch(ModalType("detailSaleReport"));
@@ -303,7 +462,11 @@ export const FetchReportDetailSale = (kd_trx, where = "", isModal = false) => {
   };
 };
 
-export const FetchReportDetailPiutangTrx = (kd_trx, where = "", isModal = false) => {
+export const FetchReportDetailPiutangTrx = (
+  kd_trx,
+  where = "",
+  isModal = false
+) => {
   return (dispatch) => {
     let url = `report/arsip_penjualan/${kd_trx}`;
     if (where !== "") url += `?${where}`;
@@ -345,9 +508,19 @@ export const deleteReportSale = (datum) => {
         const data = response.data;
 
         if (data.status === "success") {
-          Swal.fire({ allowOutsideClick: false, title: "Success", type: "success", text: data.msg });
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Success",
+            type: "success",
+            text: data.msg,
+          });
         } else {
-          Swal.fire({ allowOutsideClick: false, title: "failed", type: "error", text: data.msg });
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "failed",
+            type: "error",
+            text: data.msg,
+          });
         }
         dispatch(setLoadingReport(false));
         dispatch(FetchReportSale(datum.where));
@@ -356,7 +529,13 @@ export const deleteReportSale = (datum) => {
         Swal.close();
         dispatch(setLoadingReport(false));
 
-        Swal.fire({ allowOutsideClick: false, title: "failed", type: "error", text: error.response === undefined ? "error!" : error.response.data.msg });
+        Swal.fire({
+          allowOutsideClick: false,
+          title: "failed",
+          type: "error",
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
+        });
         if (error.response) {
         }
       });

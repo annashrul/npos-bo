@@ -5,7 +5,7 @@ import WrapperModal from "./_wrapper.modal";
 import { ModalToggle } from "../../../redux/actions/modal.action";
 import Keamanan from "assets/keamanan.png";
 import { checkOtorisasi, setOtorisasiId } from "redux/actions/authActions";
-import { isEmptyOrUndefined } from "../../../helper";
+import { isEmptyOrUndefined, setStorage } from "../../../helper";
 
 class ModalPin extends Component {
   constructor(props) {
@@ -34,7 +34,6 @@ class ModalPin extends Component {
       });
     }
   }
-
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.datum) {
@@ -76,7 +75,9 @@ class ModalPin extends Component {
         },
         (status, data) => {
           if (status) {
+            console.log();
             this.props.onDone(data.result.id_log, this.props.datum.id_trx);
+            setStorage("idLogEdit", data.result.id_log);
             this.setState({
               prevIdLog: data.result.id_log,
               id_log: data.result.id_log,

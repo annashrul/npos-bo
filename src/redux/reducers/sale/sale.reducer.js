@@ -7,6 +7,7 @@ const initialState = {
   isLoadingReport: false,
   data: [],
   dataDetail: [],
+  dataEdit: [],
   msg: "",
   status: "",
   code: "-",
@@ -54,6 +55,10 @@ export const saleReducer = (state = initialState, action) => {
     case SALE.LOADING:
       return Object.assign({}, state, {
         percent: action.load,
+      });
+    case SALE.EDIT_TRX:
+      return Object.assign({}, state, {
+        dataEdit: action.data.result,
       });
     case SALE.REPORT_DETAIL_SUCCESS:
       return Object.assign({}, state, {
