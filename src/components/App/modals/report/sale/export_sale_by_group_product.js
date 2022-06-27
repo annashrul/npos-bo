@@ -13,30 +13,71 @@ class ExportSaleByGroupProduct extends Component {
   }
 
   handleHeader() {
-    return ["NO", "KODE", "NAMA", "QTY TERJUAL", "DISKON ITEM", "NET SALES", "TAX","SERVICE", "GROSS SALES"];
+    return [
+      "NO",
+      "KODE",
+      "NAMA",
+      "QTY TERJUAL",
+      "DISKON ITEM",
+      "NET SALES",
+      "TAX",
+      "SERVICE",
+      "GROSS SALES",
+    ];
   }
 
   handleContent(cek = "excel") {
     let props = [];
     let data = this.props.dataExport.data;
+    let totalQty = 0;
+    let totalDiskon = 0;
+    let totalGross = 0;
+    let totalTax = 0;
+    let totalService = 0;
+    let totalNetSales = 0;
     if (data !== undefined) {
       if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
+          totalQty = totalQty + parseInt(data[i].qty, 10);
+          totalDiskon = totalDiskon + parseInt(data[i].diskon_item, 10);
+          totalGross = totalGross + parseInt(data[i].gross, 10);
+          totalTax = totalTax + parseInt(data[i].tax, 10);
+          totalService = totalService + parseInt(data[i].service, 10);
+          totalNetSales = totalNetSales + parseInt(data[i].net_sales, 10);
           props.push([
             i + 1,
             data[i].kel_brg,
             data[i].kelompok,
             parseInt(data[i].qty, 10),
-            parseInt(data[i].gross, 10),
             parseInt(data[i].diskon_item, 10),
+            parseInt(data[i].gross, 10),
             parseInt(data[i].tax, 10),
             parseInt(data[i].service, 10),
-            parseInt(data[i].net_sales, 10)
+            parseInt(data[i].net_sales, 10),
           ]);
           cek === "excel" && props[i].shift();
         }
       }
     }
+    let header = this.handleHeader();
+    toExcel(
+      "LAPORAN PENJUALAN BY KELOMPOK BARANG",
+      `${this.props.startDate} - ${this.props.endDate}`,
+      header,
+      props,
+      [
+        "TOTAL",
+        "",
+        "",
+        totalQty,
+        totalDiskon,
+        totalGross,
+        totalTax,
+        totalService,
+        totalNetSales,
+      ],
+      EXTENSION.XLXS
+    );
     return props;
   }
 
@@ -56,16 +97,29 @@ class ExportSaleByGroupProduct extends Component {
     this.props.dispatch(ModalToggle(false));
   }
   printExcel() {
-    let content = this.handleContent();
-    let header = this.handleHeader();
-    header.shift();
-    toExcel("LAPORAN PENJUALAN BY KELOMPOK BARANG", `${this.props.startDate} - ${this.props.endDate}`, header, content, [], EXTENSION.XLXS);
+    this.handleContent();
+    // let header = this.handleHeader();
+    // header.shift();
+    // toExcel(
+    //   "LAPORAN PENJUALAN BY KELOMPOK BARANG",
+    //   `${this.props.startDate} - ${this.props.endDate}`,
+    //   header,
+    //   content,
+    //   [],
+    //   EXTENSION.XLXS
+    // );
     this.props.dispatch(ModalToggle(false));
   }
   render() {
     return (
       <div>
-        <ExportCommon modalType="modalSaleByGroupProductExport" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />
+        <ExportCommon
+          modalType="modalSaleByGroupProductExport"
+          isPdf={true}
+          callbackPdf={() => this.printPdf()}
+          isExcel={true}
+          callbackExcel={() => this.printExcel()}
+        />
       </div>
     );
   }

@@ -3,7 +3,13 @@ import { ModalBody, ModalHeader } from "reactstrap";
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle } from "redux/actions/modal.action";
-import { getMargin, noData, parseToRp, toRp } from "../../../../../helper";
+import {
+  getMargin,
+  isEmptyOrUndefined,
+  noData,
+  parseToRp,
+  toRp,
+} from "../../../../../helper";
 import HeaderDetailCommon from "../../../common/HeaderDetailCommon";
 import TableCommon from "../../../common/TableCommon";
 class DetailProduct extends Component {
@@ -27,24 +33,37 @@ class DetailProduct extends Component {
       { rowSpan: 2, label: "Servis" },
       { rowSpan: 2, label: "Harga beli" },
     ];
-    const rowSpan = [];
-    let setHarga=this.props.auth.user.set_harga;
-    if(setHarga > 1){
-      head.push({colSpan: setHarga, label: "Harga jual"});
-      head.push({colSpan: setHarga, label: "Margin"});
-      for(let i=0;i<setHarga;i++){
-        rowSpan.push({label: this.props.auth.user.nama_harga[`harga${i+1}`]});
+
+    const rowSpans = [];
+    let setHarga = this.props.auth.user.set_harga;
+
+    if (setHarga > 1) {
+      head.push({ colSpan: setHarga, label: "Harga jual" });
+      head.push({ colSpan: setHarga, label: "Margin" });
+      for (let i = 0; i < setHarga; i++) {
+        rowSpans.push({
+          label: this.props.auth.user.nama_harga[i][`harga${i + 1}`],
+        });
       }
-      for(let i=0;i<setHarga;i++){
-        rowSpan.push({label: this.props.auth.user.nama_harga[`harga${i+1}`]});
+
+      for (let i = 0; i < setHarga; i++) {
+        rowSpans.push({
+          label: this.props.auth.user.nama_harga[i][`harga${i + 1}`],
+        });
       }
-    }else{
-      head.push({rowSpan: 2,label: "Harga jual"})
-      head.push({rowSpan: 2,label: "Margin"})
+    } else {
+      head.push({ rowSpan: 2, label: "Harga jual" });
+      head.push({ rowSpan: 2, label: "Margin" });
     }
-    
+
+    // console.log(head);
+    // console.log(rowSpans);
+
     return (
-      <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduct"} size="lg">
+      <WrapperModal
+        isOpen={this.props.isOpen && this.props.type === "detailProduct"}
+        size="lg"
+      >
         <ModalHeader toggle={this.toggle}>Detail Barang</ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
@@ -53,7 +72,10 @@ class DetailProduct extends Component {
               { title: "Kode", desc: master.kd_brg },
               { title: "Supplier", desc: master.supplier },
               { title: "Nama", desc: master.nm_brg },
-              { title: "Jenis", desc: master.jenis === "0" ? "TIDAK DIJUAL" : "DIJUAL" },
+              {
+                title: "Jenis",
+                desc: master.jenis === "0" ? "TIDAK DIJUAL" : "DIJUAL",
+              },
               { title: "Kategori", desc: master.kategori },
               { title: "dept", desc: master.dept },
               { title: "Kelompok", desc: master.kel_brg },
@@ -62,27 +84,65 @@ class DetailProduct extends Component {
           />
           <TableCommon
             head={head}
-            rowSpan={rowSpan}
+            rowSpan={rowSpans}
             renderRow={
               typeof this.props.dataDetail.tambahan === "object"
                 ? this.props.dataDetail.tambahan.map((v, i) => {
+                    // let price = "";
+                    // console.log(v.harga);
+                    // for (let x = 0; x < setHarga; x++) {
+                    //   let valPrice = v[x === 0 ? `harga` : `harga${x + 1}`];
+                    //   price = (
+                    //     <td className="middle nowrap text-right">
+                    //       {parseToRp(valPrice !== undefined ? valPrice : 0)}
+                    //     </td>
+                    //   );
+                    // }
+
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{i + 1}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.barcode}</td>
                         <td className="middle nowrap">{v.satuan}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.ppn)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.service)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.harga_beli)}</td>
-                        <td className="middle nowrap text-right">{parseToRp(v.harga)}</td>
-                        {setHarga>1&&<td className="middle nowrap text-right">{parseToRp(v.harga2)}</td>}
-                        {setHarga>2&&<td className="middle nowrap text-right">{parseToRp(v.harga3)}</td>}
-                        {setHarga>3&&<td className="middle nowrap text-right">{parseToRp(v.harga4)}</td>}
-                        <td className="middle nowrap text-right">{parseToRp(v.harga !== "0" ? getMargin(v.harga, v.harga_beli) : "0")}</td>
-                        {setHarga>1&&<td className="middle nowrap text-right">{parseToRp(v.harga2 !== "0" ? getMargin(v.harga2, v.harga_beli) : "0")}</td>}
-                        {setHarga>2&&<td className="middle nowrap text-right">{parseToRp(v.harga3 !== "0" ? getMargin(v.harga3, v.harga_beli) : "0")}</td>}
-                        {setHarga>3&&<td className="middle nowrap text-right">{parseToRp(v.harga4 !== "0" ? getMargin(v.harga4, v.harga_beli) : "0")}</td>}
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.ppn)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.service)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.harga_beli)}
+                        </td>
+                        {(() => {
+                          let container = [];
+                          for (let x = 0; x < setHarga; x++) {
+                            container.push(
+                              <td className="middle nowrap text-right" key={x}>
+                                {parseToRp(
+                                  x === 0 ? v.harga : v[`harga${x + 1}`]
+                                )}
+                              </td>
+                            );
+                          }
+                          return container;
+                        })()}
+                        {(() => {
+                          let container = [];
+                          for (let x = 0; x < setHarga; x++) {
+                            let valMargin =
+                              x === 0 ? v.harga : v[`harga${x + 1}`];
+                            container.push(
+                              <td className="middle nowrap text-right" key={x}>
+                                {valMargin !== "0"
+                                  ? getMargin(valMargin, v.harga_beli, "margin")
+                                  : 0}{" "}
+                                %
+                              </td>
+                            );
+                          }
+                          return container;
+                        })()}
                       </tr>
                     );
                   })
@@ -100,7 +160,6 @@ const mapStateToProps = (state) => {
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
     auth: state.auth,
-
   };
 };
 // const mapDispatch
