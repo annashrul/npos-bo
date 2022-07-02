@@ -289,7 +289,10 @@ class SaleArchive extends Component {
                       { label: "3ply" },
                       { label: "Hapus" },
                     ];
-                    if (atob(atob(Cookies.get("tnt="))) === "rb") {
+                    if (
+                      atob(atob(Cookies.get("tnt="))) === "rb" ||
+                      atob(atob(Cookies.get("tnt="))) === "npos"
+                    ) {
                       btnAction.push({ label: "Edit" });
                     }
                     return (
