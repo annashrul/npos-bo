@@ -1,10 +1,20 @@
 import React, { Component } from "react";
-import { store, get, update, destroy, cekData, del } from "components/model/app.model";
+import {
+  store,
+  get,
+  update,
+  destroy,
+  cekData,
+  del,
+} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import { FetchBrg, readProductTrx } from "../../../../redux/actions/masterdata/product/product.action";
+import {
+  FetchBrg,
+  readProductTrx,
+} from "../../../../redux/actions/masterdata/product/product.action";
 import moment from "moment";
 import { storeOpname } from "../../../../redux/actions/inventory/opname.action";
 import StickyBox from "react-sticky-box";
@@ -14,9 +24,25 @@ import { storeAdjusment } from "redux/actions/adjustment/adjustment.action";
 import TransaksiWrapper from "../../common/TransaksiWrapper";
 import LokasiCommon from "../../common/LokasiCommon";
 import TableCommon from "../../common/TableCommon";
-import { float, getStorage, handleError, isEmptyOrUndefined, noData, rmComma, rmStorage, setFocus, setStorage, swallOption, toCurrency } from "../../../../helper";
+import {
+  float,
+  getStorage,
+  handleError,
+  isEmptyOrUndefined,
+  noData,
+  rmComma,
+  rmStorage,
+  setFocus,
+  setStorage,
+  swallOption,
+  toCurrency,
+} from "../../../../helper";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
-import { actionDataCommon, getDataCommon, handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
+import {
+  actionDataCommon,
+  getDataCommon,
+  handleInputOnBlurCommon,
+} from "../../common/FlowTrxCommon";
 
 const table = "opname";
 const locationStorage = "locationTrxOpname";
@@ -116,9 +142,13 @@ class TrxOpname extends Component {
         return;
       }
     }
-    handleInputOnBlurCommon(e, { id: this.state.brgval[i].barcode, table: table, where: "barcode" }, () => {
-      this.getData();
-    });
+    handleInputOnBlurCommon(
+      e,
+      { id: this.state.brgval[i].barcode, table: table, where: "barcode" },
+      () => {
+        this.getData();
+      }
+    );
   }
   HandleFocusInputReset(e, i) {
     let col = e.target.name;
@@ -159,7 +189,11 @@ class TrxOpname extends Component {
     if (data.status === "kurang") {
       saldo_stock = parseInt(data.stock, 10) - parseInt(val, 10);
     }
-    if (data.status === "tambah" || data.status === "" || data.status === undefined) {
+    if (
+      data.status === "tambah" ||
+      data.status === "" ||
+      data.status === undefined
+    ) {
       saldo_stock = parseInt(data.stock, 10) + parseInt(val, 10);
     }
     return saldo_stock;
@@ -216,10 +250,15 @@ class TrxOpname extends Component {
       { rowSpan: 2, label: "Barang" },
       { rowSpan: 2, label: "Satuan", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
+      { rowSpan: 2, label: "Harga jual", width: "1%" },
       { colSpan: 2, label: "Stok", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
     ];
     const rowSpan = [{ label: "Sistem" }, { label: "Fisik" }];
+    let totalHargaJual = 0;
+    let totalQtySistem = 0;
+    let totalHargaBeli = 0;
+
     return (
       <TransaksiWrapper
         perpage={float(getStorage(perpageStorage))}
@@ -248,14 +287,23 @@ class TrxOpname extends Component {
         callbackAdd={(res) => {
           this.HandleAdd(res);
         }}
-        data={this.props.dataTrx.data !== undefined && this.props.dataTrx.data.length > 0 ? this.props.dataTrx.data : []}
+        data={
+          this.props.dataTrx.data !== undefined &&
+          this.props.dataTrx.data.length > 0
+            ? this.props.dataTrx.data
+            : []
+        }
         renderRow={
           <div style={{ width: !toggleSide ? "70%" : "100%" }}>
             <div className="card">
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-4">
-                    <LokasiCommon callback={(val) => this.HandleChangeSelect(val, "lokasi")} dataEdit={location.value} isRequired={true} />
+                    <LokasiCommon
+                      callback={(val) => this.HandleChangeSelect(val, "lokasi")}
+                      dataEdit={location.value}
+                      isRequired={true}
+                    />
                   </div>
                 </div>
                 <TableCommon
@@ -264,37 +312,78 @@ class TrxOpname extends Component {
                   renderRow={
                     databrg.length > 0
                       ? databrg.map((item, index) => {
+                          totalHargaJual =
+                            totalHargaJual + parseInt(item.hrg_jual);
+                          totalQtySistem =
+                            totalQtySistem + parseInt(item.stock, 10);
+                          totalHargaBeli =
+                            totalHargaBeli + parseInt(item.harga_beli, 10);
                           return (
                             <tr key={index}>
                               <td className="middle nowrap">
                                 {item.nm_brg}
-                                <div className="subtitle">
-                                  {item.barcode}
-                                </div>
+                                <div className="subtitle">{item.barcode}</div>
                               </td>
                               <td className="middle nowrap">
-                                <select value={item.satuan} className="form-control in-table" name="satuan" style={{ width: "100px" }} disabled={item.tambahan.length <= 1 ? true : false} onChange={(e) => this.HandleOnChange(e, index, item.tambahan)}>
+                                <select
+                                  value={item.satuan}
+                                  className="form-control in-table"
+                                  name="satuan"
+                                  style={{ width: "100px" }}
+                                  disabled={
+                                    item.tambahan.length <= 1 ? true : false
+                                  }
+                                  onChange={(e) =>
+                                    this.HandleOnChange(e, index, item.tambahan)
+                                  }
+                                >
                                   {item.tambahan.map((i, key) => {
                                     return (
-                                      <option key={key} value={i.satuan} selected={i.satuan === item.satuan}>
+                                      <option
+                                        key={key}
+                                        value={i.satuan}
+                                        selected={i.satuan === item.satuan}
+                                      >
                                         {i.satuan}
                                       </option>
                                     );
                                   })}
                                 </select>
                               </td>
-                              <td className="middle nowrap">
-                                <input style={{ width: "100px" }} disabled={true} type="text" name="saldo_stock" value={toCurrency(item.harga_beli)} className="form-control in-table text-right" />
+                              <td className="middle nowrap text-right">
+                                {toCurrency(item.harga_beli)}
                               </td>
-                              <td className="middle nowrap">
-                                <input style={{ width: "100px" }} disabled={true} type="text" name="stock" value={toCurrency(parseInt(item.stock, 10))} className="form-control in-table text-right" />
+                              <td className="middle nowrap text-right">
+                                {toCurrency(item.hrg_jual)}
+                              </td>
+                              <td className="middle nowrap text-right">
+                                {toCurrency(parseInt(item.stock, 10))}
                               </td>
 
                               <td className="middle nowrap">
-                                <input style={{ width: "100px" }} type="text" name="qty" ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)} onFocus={(e) => this.HandleFocusInputReset(e, index)} onBlur={(e) => this.HandleOnBlur(e, index)} onChange={(e) => this.HandleOnChange(e, index)} value={toCurrency(brgval[index].qty)} className="form-control in-table text-right" />
+                                <input
+                                  style={{ width: "100px" }}
+                                  type="text"
+                                  name="qty"
+                                  ref={(input) =>
+                                    (this[`qty-${btoa(item.barcode)}`] = input)
+                                  }
+                                  onFocus={(e) =>
+                                    this.HandleFocusInputReset(e, index)
+                                  }
+                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleOnChange(e, index)
+                                  }
+                                  value={toCurrency(brgval[index].qty)}
+                                  className="form-control in-table text-right"
+                                />
                               </td>
                               <td className="middle nowrap">
-                                <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
+                                <button
+                                  className="btn btn-primary btn-sm"
+                                  onClick={(e) => this.HandleRemove(e, item.id)}
+                                >
                                   <i className="fa fa-trash" />
                                 </button>
                               </td>
@@ -303,6 +392,21 @@ class TrxOpname extends Component {
                         })
                       : noData(head.length)
                   }
+                  footer={[
+                    {
+                      data: [
+                        {
+                          colSpan: 2,
+                          label: "Total perhalaman",
+                          className: "text-left",
+                        },
+                        { colSpan: 1, label: toCurrency(totalHargaBeli) },
+                        { colSpan: 1, label: toCurrency(totalHargaJual) },
+                        { colSpan: 1, label: toCurrency(totalQtySistem) },
+                        { colSpan: 2, label: "" },
+                      ],
+                    },
+                  ]}
                 />
               </div>
               <div className="card-header">
