@@ -1,0 +1,152 @@
+@media print { @page {size: auto !important} }
+body {
+    background-color:#FFFFFF !important;
+}
+#print_3ply{
+    zoom:100% !important;
+    font-family: 'Josefin Sans', sans-serif;
+}
+#non-printable {
+    height: auto;
+    padding: 0;
+    background-color: #F4F4F6;
+    margin: 0;
+    display: block;
+    min-height: 1px;
+    display: flex;
+    justify-content: space-between;
+
+}
+.block-left,
+.block-print,
+.block-options,
+.block-right {
+    width: auto;
+    padding: 20px;
+    background-color: #f4f4f6;
+}
+
+
+.img_head {
+    height: 2.5cm;
+}
+
+.h1 {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+    color: black;
+    border: transparent;
+    padding-bottom: 3px;
+}
+
+.h2 {
+    font-size: 10px;
+    font-weight: normal;
+    text-align: left;
+    color: black;
+    border: transparent;
+    padding-bottom: 3px;
+}
+
+.h3 {
+    font-size: 10px;
+    font-weight: normal;
+    text-align: left;
+    color: black;
+    padding-bottom: 3px;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+}
+
+.judul {
+    width: 7cm;
+    font-size: 20px !important;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    border: transparent;
+}
+
+.tebal {
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.center {
+    text-align: center;
+}
+
+.tengah {
+    font-size: 8px;
+    text-align: center;
+    padding: 1mm 1mm 1mm 1mm;
+}
+
+.atas {
+    padding-top: 20px;
+}
+
+.kiri {
+    text-align: left;
+}
+
+.kanan {
+    text-align: right;
+}
+
+.isi {
+    padding: 1mm 1mm 1mm 1mm;
+}
+
+/* th,
+td { */
+#print_3ply th,
+#print_3ply td {
+    font-size: 18px!important;
+    font-weight: lighter!important;
+    font-family: 'system-ui'!important;
+    color:black;
+
+
+}
+
+.borderTB {
+    border-bottom-color: transparent;
+    border-top-color: transparent;
+}
+
+.borderLR {
+    border-left-color: transparent;
+    border-right-color: transparent;
+}
+
+.alamat {
+    font-size: 8px;
+    vertical-align: top;
+    width: 3cm;
+    table-layout: fixed
+}
+
+.container_terbilang {
+    position: fixed;
+    margin-top: 0.2cm;
+    width: 100%;
+}
+
+.terbilang {
+    padding: 5px;
+    border: dotted;
+    border-color: black;
+    width: 55.4%;
+}
+
+.detail>thead>tr>th {
+    font-size: 8px;
+}
+
+.foot {
+    text-align: left;
+}
+
