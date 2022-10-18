@@ -1,11 +1,13 @@
-### React app boilerplate with redux, jwt authentication, react router 4, private route  setup, sass css preprocessor and organized code structure for starting a react application.
-
-### To run this Project properly. Please follow below requirement.
-
-**Running Phase:** <br/>
-Step 1: Install node package manager.<br/>
-Step 2: Change base url from src/index.js file. <br/>
-Step 3: type command (npm run dev or yarn run dev)
-
-
-
+1. tambah kolom ukuran di form barang. 1 barang boleh mempunyai beberapa ukuran
+2. limit barang dinamis
+3. transaksi penjualan input manual
+4. masuk ke data kas hanya nominal
+5. jenis kas langsung kas masuk semua
+6. buat table arus kas (in,out,saldo,keterangan)
+7. yang masuk arus kas (penjualan,pembelian,bayar hutang&piutang)
+8. laporan arus kas disatuin dengan laporan kas yang sudah ada (pake tab)
+9. tambah metode pembayaran kas
+10. generate kode kas dari db
+11. scan resi crud // febi
+12. report resi integrasi rajaongkir // febi
+13. notif (pembelian,penjualan)
