@@ -30,6 +30,7 @@ import Cookies from "js-cookie";
 import FormPrinter from "../printer/form_printer";
 import Preloader from "Preloader";
 import FormRak from "../rak/form_rak";
+import FormUkuran from "./form_ukuran";
 
 const tenantBool =
   Cookies.get("tnt=") !== undefined
@@ -353,6 +354,7 @@ class FormProducts extends Component {
       swPrice: "1",
       summary: false,
       isLoadingGenerateBarcode: false,
+      dataUkuran: [],
     };
     this.handleKelompokBarang = this.handleKelompokBarang.bind(this);
     this.handleKcp = this.handleKcp.bind(this);
@@ -4333,7 +4335,15 @@ class FormProducts extends Component {
     }
     parseData["barang_sku"] = barangSku;
     parseData["barang_harga"] = barangHarga;
-    console.log(parseData);
+    let newDataUkuran = [];
+    const dataUkuran = this.state.dataUkuran;
+    dataUkuran.map((row) => {
+      newDataUkuran.push({
+        kd_brg: this.state.kd_brg,
+        nama: row,
+      });
+    });
+    parseData["barang_ukuran"] = newDataUkuran;
     if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
       this.props.dispatch(
         updateProduct(this.state.kd_brg, parseData, (status) => {
@@ -4389,6 +4399,7 @@ class FormProducts extends Component {
         }
       }
     }
+    console.log("data edits", this.props.dataEdit);
 
     return (
       <div>
@@ -4649,6 +4660,14 @@ class FormProducts extends Component {
                   </div>
                 </div>
               </div>
+
+              <FormUkuran
+                callback={(e) => {
+                  this.setState({ dataUkuran: e });
+                }}
+                defaultValue={this.props.dataEdit.barang_ukuran}
+              />
+
               <div className="row mt-2">
                 <div className="col-md-12">
                   <table className="table table-hover">
