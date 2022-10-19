@@ -59,6 +59,7 @@ import ProductionReport from "../report/inventory/production";
 import LogTrxReport from "../report/log/log_trx";
 import LogActReport from "../report/log/log_act";
 import Closing from "../report/closing";
+
 import SaleArchive from "../report/sale/sale_archive";
 import SaleByCustArchive from "../report/sale/sale_by_cust_archive";
 import SaleByProductArchive from "../report/sale/sale_by_product_archive";
@@ -69,6 +70,7 @@ import CreateSO from "../sale/sales_order/create";
 import ApproveSO from "../sale/sales_order/approve";
 import Sale from "../sale/product_sale";
 import CashTrx from "../sale/cash_trx";
+import TransaksiManual from "../sale/penjualan_manual";
 import ReportCash from "../report/cash";
 import ReportLabaRugi from "../report/laba_rugi";
 import HutangReport from "../report/hutang";
@@ -170,6 +172,7 @@ import {
   linkTransaksiBarang,
   linkTransaksiKas,
   linkTransaksiSalesOrder,
+  linkTransaksiManual,
 } from "../../../helperLink";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
@@ -386,6 +389,12 @@ const Routes = (
       />
       <PrivateRoute path={linkTransaksiBarang} exact strict component={Sale} />
       <PrivateRoute path={linkTransaksiKas} exact strict component={CashTrx} />
+      <PrivateRoute
+        path={linkTransaksiManual}
+        exact
+        strict
+        component={TransaksiManual}
+      />
       {/* TRANSAKSI SECTION END */}
 
       {/* PEMBAYARAN SECTION START */}
