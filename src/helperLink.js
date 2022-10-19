@@ -39,6 +39,8 @@ export const linkTransaksiSalesOrder = "/transaksi/sales-order/create";
 export const linkTransaksiApprovalSalesOrder = "/transaksi/sales-order/approve";
 export const linkTransaksiBarang = "/transaksi/barang";
 export const linkTransaksiKas = "/transaksi/kas";
+export const linkScanResi = "/transaksi/resi";
+
 
 // ###################################### DAFTAR LINK MENU PEMBAYARAN ############################//
 export const linkPembayaranHutang = "/pembayaran/hutang";
