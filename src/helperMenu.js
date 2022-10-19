@@ -55,7 +55,7 @@ export const menuTransaksi = [
   { id: 43, value: "0", isChecked: false, label: "Approval SO" },
   { id: 40, value: "0", isChecked: false, label: "Penjualan Barang" },
   { id: 41, value: "0", isChecked: false, label: "Transaksi Kas" },
-  { id: 44, value: "0", isChecked: false, label: "" },
+  { id: 44, value: "0", isChecked: false, label: "Transaksi Manual" },
   { id: 45, value: "0", isChecked: false, label: "" },
   { id: 46, value: "0", isChecked: false, label: "" },
   { id: 47, value: "0", isChecked: false, label: "" },

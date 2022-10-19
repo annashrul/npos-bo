@@ -73,6 +73,7 @@ import {
   linkTransaksiBarang,
   linkTransaksiKas,
   linkTransaksiSalesOrder,
+  linkTransaksiManual,
 } from "../../../helperLink";
 class SideMenu extends Component {
   constructor(props) {
@@ -144,6 +145,7 @@ class SideMenu extends Component {
       approve_so: "",
       penjualan_barang: "",
       cash_trx: "",
+      penjualan_manual: "",
       //PEMBAYARAN
       modul_pembayaran: false,
       hutang: "",
@@ -499,6 +501,7 @@ class SideMenu extends Component {
       let akses = param.auth.user.access;
       if (akses !== undefined && akses !== null) {
         // SETTING
+        console.log("akses", akses);
         let pengaturan_umum =
           akses[0]["value"] !== null ? akses[0]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let pengguna = akses[1]["value"] !== null ? akses[1]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
@@ -545,6 +548,8 @@ class SideMenu extends Component {
         let penjualan_barang =
           akses[52]["value"] !== null ? akses[52]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let cash_trx = akses[53]["value"] !== null ? akses[53]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let penjualan_manual =
+          akses[54]["value"] !== null ? akses[54]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //PEMBAYARAN
         let hutang = akses[60]["value"] !== null ? akses[60]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let piutang = akses[61]["value"] !== null ? akses[61]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
@@ -666,7 +671,8 @@ class SideMenu extends Component {
           create_so !== "0" ||
           approve_so !== "0" ||
           penjualan_barang !== "0" ||
-          cash_trx !== "0"
+          cash_trx !== "0" ||
+          penjualan_manual !== "0"
         ) {
           this.setState({ modul_penjualan: true });
         }
@@ -784,6 +790,7 @@ class SideMenu extends Component {
           approve_so: approve_so,
           penjualan_barang: penjualan_barang,
           cash_trx: cash_trx,
+          penjualan_manual: penjualan_manual,
           //PEMBAYARAN
           hutang: hutang,
           piutang: piutang,
@@ -910,7 +917,8 @@ class SideMenu extends Component {
       path === linkTransaksiSalesOrder ||
       path === linkTransaksiApprovalSalesOrder ||
       path === linkTransaksiBarang ||
-      path === linkTransaksiKas
+      path === linkTransaksiKas ||
+      path === linkTransaksiManual
     ) {
       this.setState({
         isSale: true,
@@ -1716,7 +1724,8 @@ class SideMenu extends Component {
               path === linkTransaksiSalesOrder ||
               path === linkTransaksiApprovalSalesOrder ||
               path === linkTransaksiBarang ||
-              path === linkTransaksiKas
+              path === linkTransaksiKas ||
+              path === linkTransaksiManual
                 ? " active menu-open"
                 : "")
             }
@@ -1734,6 +1743,20 @@ class SideMenu extends Component {
               className={"treeview-menu"}
               style={{ display: this.state.isSale === true ? "block" : "none" }}
             >
+              <li
+                className={path === linkTransaksiManual ? "active" : ""}
+                style={
+                  this.state.penjualan_manual === "0"
+                    ? { display: "none" }
+                    : { display: "block" }
+                }
+              >
+                <Link to={linkTransaksiManual} style={{ width: "fit-content" }}>
+                  {" "}
+                  <i className="fa fa-shopping-bag" />
+                  Penjualan Manual
+                </Link>
+              </li>
               <li
                 className={path === linkTransaksiSalesOrder ? "active" : ""}
                 style={
