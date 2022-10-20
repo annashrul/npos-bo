@@ -6,7 +6,7 @@ import Spinner from "Spinner";
 import gambar_scan from './../../../../assets/gambar_scan.png';
 
 
-class ApproveSO extends Component {
+class ScanResi extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +22,7 @@ class ApproveSO extends Component {
 
     render() {
         return (
-            <Layout page="Transaksi Approval Sales Order">
+            <Layout page="Buat Scan Resi">
                 <div className="card-header d-flex justify-content-between">
                     <h4>Scan Resi
                     </h4>
@@ -101,4 +101,4 @@ const mapStateToPropsCreateItem = (state) => {
     };
 };
 
-export default connect(mapStateToPropsCreateItem)(ApproveSO);
+export default connect(mapStateToPropsCreateItem)(ScanResi);

@@ -68,7 +68,8 @@ import SaleOmsetArchive from "../report/sale/sale_omset_archive";
 import SaleOmsetPeriodeArchive from "../report/sale/sale_omset_periode_archive";
 import CreateSO from "../sale/sales_order/create";
 import ApproveSO from "../sale/sales_order/approve";
-import ScanResi from "../sale/scan_resi/";
+import ScanResi from "../sale/scan_resi/create";
+import ScanResiLaporan from "../sale/scan_resi/report";
 import Sale from "../sale/product_sale";
 import CashTrx from "../sale/cash_trx";
 import TransaksiManual from "../sale/penjualan_manual";
@@ -83,7 +84,6 @@ import BayarPiutang from "../piutang/bayar_piutang";
 import CetakBarcode from "../cetak_barcode";
 import NotFound from "../common/notfound";
 import SaleReturReport from "../report/sale/sale_retur_archive";
-
 import GlobalSetting from "../setting/global_setting/global_setting";
 import Upload from "../setting/upload/upload";
 import Print3ply from "../print/penjualan3ply";
@@ -175,6 +175,7 @@ import {
   linkTransaksiSalesOrder,
   linkTransaksiManual,
   linkScanResi,
+  linkScanResiLaporan,
 } from "../../../helperLink";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
@@ -396,7 +397,20 @@ const Routes = (
         component={TransaksiManual}
       />
 
-      <PrivateRoute path={linkScanResi} exact strict component={ScanResi} />
+      <PrivateRoute
+        path={linkScanResi}
+        exact
+        strict
+        component={ScanResi}
+      />
+
+      <PrivateRoute
+        path={linkScanResiLaporan}
+        exact
+        strict
+        component={ScanResiLaporan}
+      />
+
       {/* TRANSAKSI SECTION END */}
       {/* PEMBAYARAN SECTION START */}
       <PrivateRoute

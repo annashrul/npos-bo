@@ -40,7 +40,10 @@ export const linkTransaksiApprovalSalesOrder = "/transaksi/sales-order/approve";
 export const linkTransaksiBarang = "/transaksi/barang";
 export const linkTransaksiKas = "/transaksi/kas";
 export const linkTransaksiManual = "/transaksi/manual";
-export const linkScanResi = "/transaksi/resi";
+
+// ###################################### DAFTAR LINK MENU SCAN RESI ############################//
+export const linkScanResi = "/resi/create";
+export const linkScanResiLaporan = "/resi/report";
 
 // ###################################### DAFTAR LINK MENU PEMBAYARAN ############################//
 export const linkPembayaranHutang = "/pembayaran/hutang";

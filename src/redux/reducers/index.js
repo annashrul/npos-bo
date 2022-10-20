@@ -55,8 +55,11 @@ import { saleBySalesReducer } from "./sale/sale_by_sales.reducer";
 import { saleOmsetReducer } from "./sale/sale_omset.reducer";
 import { saleOmsetPeriodeReducer } from "./sale/sale_omset_periode.reducer";
 import { printerReducer } from "./masterdata/printer/printer.reducer";
+import { scanResiReducer } from "./sale/scan_resi.reducer";
+import { scanResiLaporanReducer } from "./sale/scan_resi_laporan.reducer";
 
 export default combineReducers({
+
   modalReducer,
   modalTypeReducer,
   dashboardReducer,
@@ -112,6 +115,8 @@ export default combineReducers({
   printerReducer,
   nilai_persediaanReportReducer,
   rakReducer,
+  scanResiReducer,
+  scanResiLaporanReducer,
 
   auth: authReducer,
   errors: errorsReducer,
