@@ -43,11 +43,13 @@ export const handleError = (err) => {
 export async function configure() {
   await localforage.defineDriver(memoryDriver);
   const forageStore = localforage.createInstance({
-    driver: [localforage.INDEXEDDB, localforage.LOCALSTORAGE, memoryDriver._driver],
+    driver: [
+      localforage.INDEXEDDB,
+      localforage.LOCALSTORAGE,
+      memoryDriver._driver,
+    ],
     name: "my-cache",
   });
-
-
 
   return setup({
     // baseURL: HEADERS.URL,
@@ -72,13 +74,18 @@ export async function configure() {
   });
 }
 
-
-
-export const handleGet = (url, callback, isLoading = true,clearCache=false) => {
+export const handleGet = (
+  url,
+  callback,
+  isLoading = true,
+  clearCache = false
+) => {
   if (isLoading) Nprogress.start();
   configure()
     .then(async (api) => {
-      const response = await api.get(HEADERS.URL + url, { clearCacheEntry: true });
+      const response = await api.get(HEADERS.URL + url, {
+        clearCacheEntry: true,
+      });
       const data = response;
       callback(data);
       if (isLoading) Nprogress.done();
@@ -100,30 +107,56 @@ export const handleGet = (url, callback, isLoading = true,clearCache=false) => {
   //   });
 };
 
-
-export const handlePost = async (url, data, callback, title = "Silahkan tunggu.") => {
-  loading(title!=='kas', title);
+export const handlePostAndGet = async (url, callback) => {
+  Nprogress.start();
   axios
-    .post(HEADERS.URL + url, data)
+    .post(HEADERS.URL + url, [])
     .then(function (response) {
-      setTimeout(function () {
-        loading(false);
-        const datum = response.data;
-        if (datum.status === "success") {
-          callback(datum, datum.msg, true);
-        } else {
-          callback(datum, datum.msg, false);
-        }
-      }, 800);
+      const datum = response.data;
+      if (datum.status === "success") {
+        callback(datum, datum.msg, true);
+      } else {
+        callback(datum, datum.msg, false);
+      }
+      Nprogress.done();
     })
     .catch(function (error) {
-        console.log("##############",error);
-        loading(false);
-        handleError(error);
+      Nprogress.done();
+      handleError(error);
     });
 };
 
-export const handlePut = async (url, data, callback, title = "Silahkan tunggu.") => {
+export const handlePost = async (
+  url,
+  data,
+  callback,
+  title = "Silahkan tunggu."
+) => {
+  loading(title);
+  axios
+    .post(HEADERS.URL + url, data)
+    .then(function (response) {
+      loading(false);
+      const datum = response.data;
+      if (datum.status === "success") {
+        callback(datum, datum.msg, true);
+      } else {
+        callback(datum, datum.msg, false);
+      }
+    })
+    .catch(function (error) {
+      console.log("##############", error);
+      loading(false);
+      handleError(error);
+    });
+};
+
+export const handlePut = async (
+  url,
+  data,
+  callback,
+  title = "Silahkan tunggu."
+) => {
   loading(true, title);
   axios
     .put(HEADERS.URL + url, data)
@@ -146,7 +179,11 @@ export const handlePut = async (url, data, callback, title = "Silahkan tunggu.")
     });
 };
 
-export const handleDelete = async (url, callback, title = "Silahkan tunggu.") => {
+export const handleDelete = async (
+  url,
+  callback,
+  title = "Silahkan tunggu."
+) => {
   swallOption("Anda yakin akan menghapus data ini ?", async () => {
     loading(true, title);
     axios
@@ -179,18 +216,23 @@ export const handleGetExport = (url, callback, download) => {
     .then(async (api) => {
       const response = await api.get(HEADERS.URL + url, {
         onDownloadProgress: (progressEvent) => {
-          let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          let percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           Nprogress.set(percentCompleted / 100);
           download(percentCompleted);
         },
       });
-     if (response.data.result.data !== undefined && response.data.result.data.length > 0) {
-       callback(response);
-     } else {
-       swal("Data tidak tersedia");
-     }
-     Nprogress.done();
-     download(0);
+      if (
+        response.data.result.data !== undefined &&
+        response.data.result.data.length > 0
+      ) {
+        callback(response);
+      } else {
+        swal("Data tidak tersedia");
+      }
+      Nprogress.done();
+      download(0);
     })
     .catch(function (error) {
       Nprogress.done();

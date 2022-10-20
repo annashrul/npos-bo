@@ -120,8 +120,9 @@ class ReportTransactionCash extends Component {
         newWhere += `&type_kas=${getType}`;
       }
       Object.assign(state, { where_data: where });
-      this.setState(state);
-      this.props.dispatch(FetchCashReport(where + newWhere));
+      this.setState(state, () => {
+        this.props.dispatch(FetchCashReport(where + newWhere));
+      });
     }
   }
 
