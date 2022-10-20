@@ -88,6 +88,8 @@ const mapStateToProps = (state) => {
     type: state.modalTypeReducer,
   };
 };
-export default withRouter(connect(mapStateToProps)(DownloadNotaPdf));
+export default connect(mapStateToProps)(DownloadNotaPdf);
+
+// export default withRouter(connect(mapStateToProps)(DownloadNotaPdf));
 
 // export default DownloadNotaPdf;

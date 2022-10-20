@@ -3,7 +3,7 @@ import WrapperModal from "components/App/modals/_wrapper.modal";
 import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
-import { ModalToggle } from "../../../../redux/actions/modal.action";
+import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
 import {
   handleError,
   isEmptyOrUndefined,
@@ -11,6 +11,8 @@ import {
   toRp,
 } from "../../../../helper";
 import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
+import { createManualSaleAction } from "../../../../redux/actions/sale/sale_manual.action";
+import DownloadNotaPdf from "./download_pdf";
 
 class ConfirmPenjualanManual extends Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class ConfirmPenjualanManual extends Component {
       jumlah_uang: 0,
       kembalian: 0,
       bank: "",
+      isDownload: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -86,11 +89,23 @@ class ConfirmPenjualanManual extends Component {
       }
     }
     Object.assign(this.props.master, { tipe, bank, kembalian });
-    console.log(this.props);
+    this.props.dispatch(
+      createManualSaleAction(
+        {
+          master: this.props.master,
+          detail: this.props.detail,
+        },
+        () => {
+          this.props.dispatch(ModalToggle(true));
+          this.props.dispatch(ModalType("downloadNotaPdf"));
+          this.setState({ isDownload: true });
+        }
+      )
+    );
   }
 
   render() {
-    const { tipe, kembalian, jumlah_uang, bank } = this.state;
+    const { isDownload, tipe, kembalian, jumlah_uang, bank } = this.state;
     const { master, detail } = this.props;
     console.log(this.props);
     return (
@@ -176,13 +191,13 @@ class ConfirmPenjualanManual extends Component {
                   onClick={(event) => {
                     this.setState({
                       kembalian: 0,
-                      jumlah_uang: this.props.master.total,
+                      jumlah_uang: master.total,
                     });
                   }}
                   data-toggle="tooltip"
                   title="Masukan total ke jumlah uang."
                 >
-                  TOTAL = <b>{toRp(this.props.master.total)}</b>
+                  TOTAL = <b>{toRp(master.total)}</b>
                 </button>
               </div>
               <div className="col-md-3">
@@ -199,6 +214,9 @@ class ConfirmPenjualanManual extends Component {
             </div>
           </ModalBody>
         </WrapperModal>
+        {isDownload && this.props.isOpen ? (
+          <DownloadNotaPdf master={master} detail={detail} />
+        ) : null}
       </div>
     );
   }
@@ -211,6 +229,7 @@ const mapStateToProps = (state) => {
     type: state.modalTypeReducer,
   };
 };
-export default withRouter(connect(mapStateToProps)(ConfirmPenjualanManual));
+export default connect(mapStateToProps)(ConfirmPenjualanManual);
+// export default withRouter(connect(mapStateToProps)(ConfirmPenjualanManual));
 
 // export default ConfirmPenjualanManual;

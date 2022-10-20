@@ -11,8 +11,6 @@ import {
 } from "../../../../helper";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import moment from "moment";
-import { createManualSaleAction } from "../../../../redux/actions/sale/sale_manual.action";
-import DownloadNotaPdf from "./download_pdf";
 import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
 import ConfirmPenjualanManual from "./confirm_penjualan_manual";
 class PenjualanManual extends Component {
@@ -101,25 +99,25 @@ class PenjualanManual extends Component {
     for (let i = 0; i < masterState.length; i++) {
       const col = masterState[i];
       const val = this.state[col];
-      // if (!isEmptyOrUndefined(val)) {
-      //   handleError(col.replaceAll("_", " "));
-      //   setTimeout(() => this[col].focus(), 500);
-      //   return;
-      // }
+      if (!isEmptyOrUndefined(val)) {
+        handleError(col.replaceAll("_", " "));
+        setTimeout(() => this[col].focus(), 500);
+        return;
+      }
       Object.assign(parsedata["master"], { [col]: val });
     }
 
     for (let i = 0; i < data.length; i++) {
       total = total + Number(data[i].qty) * Number(data[i].harga);
-      // const keys = Object.keys(data[i]);
-      // for (let x = 0; x < keys.length; x++) {
-      //   if (!isEmptyOrUndefined(data[i][keys[x]])) {
-      //     handleError(keys[x]);
-      //     setTimeout(() => this[`${keys[x]}-${btoa(data[i].no)}`].focus(), 500);
-      //     return;
-      //   }
-      // }
-      // delete data[i].no;
+      const keys = Object.keys(data[i]);
+      for (let x = 0; x < keys.length; x++) {
+        if (!isEmptyOrUndefined(data[i][keys[x]])) {
+          handleError(keys[x]);
+          setTimeout(() => this[`${keys[x]}-${btoa(data[i].no)}`].focus(), 500);
+          return;
+        }
+      }
+      delete data[i].no;
     }
     Object.assign(parsedata["master"], { total });
     parsedata["detail"] = data;
@@ -129,14 +127,6 @@ class PenjualanManual extends Component {
         this.setState({ isConfirm: true, total });
         this.props.dispatch(ModalToggle(true));
         this.props.dispatch(ModalType("confirmPenjualanManual"));
-        // this.props.dispatch(
-        //   createManualSaleAction(parsedata, () => {
-        //     const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
-        // this.props.dispatch(ModalType("downloadNotaPdf"));
-        //     this.setState({ isDownload: true });
-        //   })
-        // );
       },
       () => {
         console.log("cancel");
@@ -147,7 +137,6 @@ class PenjualanManual extends Component {
   render() {
     const {
       isConfirm,
-      isDownload,
       createdAt,
       catatan,
       data,
@@ -477,7 +466,7 @@ class PenjualanManual extends Component {
             detail={data}
           />
         ) : null}
-        {isDownload && this.props.isOpen ? (
+        {/* {isDownload && this.props.isOpen ? (
           <DownloadNotaPdf
             master={{
               createdAt,
@@ -492,7 +481,7 @@ class PenjualanManual extends Component {
             }}
             detail={data}
           />
-        ) : null}
+        ) : null} */}
       </Layout>
     );
   }
