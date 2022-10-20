@@ -48,7 +48,15 @@ export const MODALS = {
   IS_MODAL_OPEN: "IS_MODAL_OPEN",
   MODAL_TYPE: "MODAL_TYPE",
 };
-
+/****************
+      PENJUALAN_MANUAL
+*****************/
+export const PENJUALAN_MANUAL = {
+  CREATE: "CREATE",
+  LOADING_CREATE: "LOADING_CREATE",
+  GET: "GET",
+  LOADING_GET: "LOADING_GET",
+};
 /****************
       AUTH
 *****************/
@@ -308,7 +316,7 @@ export const ADJUSTMENT = {
 /****************
  SCAN RESI
  *****************/
- export const SCAN_RESI = {
+export const SCAN_RESI = {
   DOWNLOAD: "SET_SCAN_RESI_DOWNLOAD",
   LOADING: "SET_SCAN_RESI_LOADING",
   SUCCESS: "SET_OSCAN_RESI_SUCCESS",

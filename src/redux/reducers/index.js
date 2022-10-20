@@ -32,6 +32,7 @@ import { returReducer } from "./purchase/retur/retur.reducer";
 import { siteReducer } from "./site.reducer";
 import { dnReducer } from "./inventory/delivery_note/dn.reducer";
 import { alokasiReducer } from "./inventory/alokasi/alokasi.reducer";
+import { saleManualReducer } from "./sale/sale_manual.reducer";
 import { saleReducer } from "./sale/sale.reducer";
 import { salesOrderReducer } from "./sale/sales_order.reducer";
 import { saleByGroupProductReducer } from "./sale/sale_by_group_product.reducer";
@@ -87,6 +88,7 @@ export default combineReducers({
   siteReducer,
   dnReducer,
   alokasiReducer,
+  saleManualReducer,
   saleReducer,
   salesOrderReducer,
   saleByGroupProductReducer,
