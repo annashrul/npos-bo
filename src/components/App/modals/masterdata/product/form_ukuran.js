@@ -20,7 +20,11 @@ class FormUkuran extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.defaultValue !== undefined && this.state.isAdd) {
+    if (
+      nextProps.defaultValue !== undefined &&
+      nextProps.defaultValue.length > 0 &&
+      this.state.isAdd
+    ) {
       this.setState({ dataUkuran: nextProps.defaultValue }, () => {
         this.setState({ isAdd: false });
       });

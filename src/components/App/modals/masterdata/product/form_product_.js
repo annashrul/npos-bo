@@ -4665,7 +4665,11 @@ class FormProducts extends Component {
                 callback={(e) => {
                   this.setState({ dataUkuran: e });
                 }}
-                defaultValue={this.props.dataEdit.barang_ukuran}
+                defaultValue={
+                  this.props.dataEdit !== undefined
+                    ? this.props.dataEdit.barang_ukuran
+                    : []
+                }
               />
 
               <div className="row mt-2">

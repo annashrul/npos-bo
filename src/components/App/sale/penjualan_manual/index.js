@@ -7,23 +7,49 @@ import {
   isEmptyOrUndefined,
   rmComma,
   setFocus,
+  swallOption,
   ToastQ,
   toRp,
 } from "../../../../helper";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import { key } from "localforage";
+import moment from "moment";
+import { createManualSaleAction } from "../../../../redux/actions/sale/sale_manual.action";
+import ReactPDF, {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  PDFViewer,
+  PDFDownloadLink,
+} from "@react-pdf/renderer";
+import { MyDocument } from "./nota";
+import DownloadNotaPdf from "./download_pdf";
+import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
+// Create styles
+
 class PenjualanManual extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      createdAt: moment(new Date()).format("YYYY-MM-DD"),
+      catatan: "-",
+      nama_penerima: "",
+      no_telepon_penerima: "",
+      alamat_penerima: "",
+      nama_pengirim: "",
+      no_telepon_pengirim: "",
+      alamat_pengirim: "",
+      isDownload: false,
       data: [
         {
-          no: Math.random(10000),
           sku: "",
           nama: "",
           motif: "",
           qty: "",
           harga: "",
+          no: Math.random(10000000),
         },
       ],
     };
@@ -36,24 +62,28 @@ class PenjualanManual extends Component {
   handleChange(e, i) {
     const col = e.target.name;
     let val = e.target.value;
-    let data = this.state.data;
-    if (col === "harga") {
-      val = rmComma(val);
+    if (i !== null) {
+      let data = this.state.data;
+      if (col === "harga") {
+        val = rmComma(val);
+      }
+      data[i][col] = val;
+      this.setState({ data });
+    } else {
+      this.setState({ [col]: val });
     }
-    data[i][col] = val;
-    this.setState({ data });
   }
 
   handleAction(e, i, param = "+") {
     let data = this.state.data;
     if (param === "+") {
       data.push({
-        no: Math.random(10000),
         sku: "",
         nama: "",
         motif: "",
         qty: "",
         harga: "",
+        no: Math.random(10000000),
       });
     } else {
       const newData = data.filter((res, key) => res.no !== data[i].no);
@@ -64,23 +94,75 @@ class PenjualanManual extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    let data = this.state.data;
+    const masterState = [
+      "createdAt",
+      "catatan",
+      "nama_penerima",
+      "no_telepon_penerima",
+      "alamat_penerima",
+      "nama_pengirim",
+      "no_telepon_pengirim",
+      "alamat_pengirim",
+    ];
+    const data = this.state.data;
+    let parsedata = {};
+    parsedata["master"] = {};
+    parsedata["detail"] = [];
+
+    for (let i = 0; i < masterState.length; i++) {
+      const col = masterState[i];
+      const val = this.state[col];
+      if (!isEmptyOrUndefined(val)) {
+        handleError(col.replaceAll("_", " "));
+        setTimeout(() => this[col].focus(), 500);
+        return;
+      }
+      Object.assign(parsedata["master"], { [col]: val });
+    }
 
     for (let i = 0; i < data.length; i++) {
       const keys = Object.keys(data[i]);
       for (let x = 0; x < keys.length; x++) {
-        if (data[i][keys[x]] === "") {
+        if (!isEmptyOrUndefined(data[i][keys[x]])) {
           handleError(keys[x]);
           setTimeout(() => this[`${keys[x]}-${btoa(data[i].no)}`].focus(), 500);
           return;
         }
       }
+      delete data[i].no;
     }
-
-    console.log(this.state.data);
+    parsedata["detail"] = data;
+    swallOption(
+      "Anda yakin akan melanjutkan transaksi ini ?",
+      () => {
+        this.props.dispatch(
+          createManualSaleAction(parsedata, () => {
+            const bool = !this.props.isOpen;
+            this.props.dispatch(ModalToggle(bool));
+            this.props.dispatch(ModalType("downloadNotaPdf"));
+            this.setState({ isDownload: true });
+          })
+        );
+      },
+      () => {
+        console.log("cancel");
+      }
+    );
   }
   handleReset(e) {}
   render() {
+    const {
+      isDownload,
+      createdAt,
+      catatan,
+      data,
+      nama_penerima,
+      no_telepon_penerima,
+      alamat_penerima,
+      nama_pengirim,
+      no_telepon_pengirim,
+      alamat_pengirim,
+    } = this.state;
     const head = [
       { label: "No", width: "1%" },
       { label: "SKU", width: "1%" },
@@ -93,28 +175,147 @@ class PenjualanManual extends Component {
     ];
     let totalJumlah = 0;
     let totalQty = 0;
+
     return (
       <Layout page="Transaksi Manual">
         <div className="card">
-          <div
-            className="card-header"
-            style={{ justifyContent: "space-between", display: "flex" }}
-          >
+          <div className="card-header d-flex justify-content-between">
             <h4>Transaksi Manual</h4>
-            <div className="row">
-              <div className="col-md-6">
-                <input className="form-control" type="date" />
-              </div>
-              <div className="col-md-6">
-                <input className="form-control" type="date" />
-              </div>
+
+            <div
+              className="d-flex justify-content-between"
+              style={{ width: "50%" }}
+            >
+              <input
+                type="date"
+                name={"createdAt"}
+                className={"form-control nbt nbr nbl bt"}
+                value={createdAt}
+                onChange={(e) => this.handleChange(e, null)}
+                ref={(input) => (this[`createdAt`] = input)}
+              />
+              <input
+                placeholder="Tambahkan catatan disini ...."
+                type="text"
+                style={{ height: "39px" }}
+                className="form-control nbt nbr nbl bt"
+                value={catatan}
+                onChange={(e) => this.handleChange(e, null)}
+                name="catatan"
+                ref={(input) => (this[`catatan`] = input)}
+              />
             </div>
           </div>
           <div className="card-body">
+            <div className="row">
+              <div className="col-md-12 d-flex justify-content-between">
+                <div className="form-group">
+                  <label className="bold">Penerima</label>
+                  <div className="d-flex">
+                    <input
+                      placeholder="nama"
+                      type="text"
+                      className="form-control"
+                      value={nama_penerima}
+                      onChange={(e) => this.handleChange(e, null)}
+                      name="nama_penerima"
+                      style={{
+                        borderRight: "0px",
+                        borderTopRightRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                      }}
+                      ref={(input) => (this[`nama_penerima`] = input)}
+                    />
+                    <input
+                      placeholder="no telepon"
+                      type="text"
+                      className="form-control"
+                      value={no_telepon_penerima}
+                      onChange={(e) => this.handleChange(e, null)}
+                      name="no_telepon_penerima"
+                      style={{
+                        borderRight: "0px",
+                        borderTopRightRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                        borderLeft: "0px",
+                        borderTopLeftRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                      }}
+                      ref={(input) => (this[`no_telepon_penerima`] = input)}
+                    />
+                    <input
+                      placeholder="alamat"
+                      type="text"
+                      className="form-control"
+                      value={alamat_penerima}
+                      onChange={(e) => this.handleChange(e, null)}
+                      name="alamat_penerima"
+                      style={{
+                        borderLeft: "0px",
+                        borderTopLeftRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                      }}
+                      ref={(input) => (this[`alamat_penerima`] = input)}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="bold">Pengirim</label>
+                  <div className="d-flex">
+                    <input
+                      placeholder="nama"
+                      type="text"
+                      className="form-control"
+                      value={nama_pengirim}
+                      onChange={(e) => this.handleChange(e, null)}
+                      name="nama_pengirim"
+                      style={{
+                        borderRight: "0px",
+                        borderTopRightRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                      }}
+                      ref={(input) => (this[`nama_pengirim`] = input)}
+                    />
+                    <input
+                      placeholder="no telepon"
+                      type="text"
+                      className="form-control"
+                      value={no_telepon_pengirim}
+                      onChange={(e) => this.handleChange(e, null)}
+                      name="no_telepon_pengirim"
+                      style={{
+                        borderRight: "0px",
+                        borderTopRightRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                        borderLeft: "0px",
+                        borderTopLeftRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                      }}
+                      ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                    />
+                    <input
+                      placeholder="alamat"
+                      type="text"
+                      className="form-control"
+                      value={alamat_pengirim}
+                      onChange={(e) => this.handleChange(e, null)}
+                      name="alamat_pengirim"
+                      style={{
+                        borderLeft: "0px",
+                        borderTopLeftRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                      }}
+                      ref={(input) => (this[`alamat_pengirim`] = input)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <TableCommon
               head={head}
-              renderRow={this.state.data.map((res, i) => {
-                console.log(this.state.data.length);
+              renderRow={data.map((res, i) => {
+                console.log(data.length);
                 totalJumlah = totalJumlah + Number(res.qty) * Number(res.harga);
                 totalQty = totalQty + Number(res.qty);
                 return (
@@ -264,17 +465,29 @@ class PenjualanManual extends Component {
             </div>
           </div>
         </div>
+        {isDownload && this.props.isOpen ? (
+          <DownloadNotaPdf
+            master={{
+              createdAt,
+              catatan,
+              nama_penerima,
+              alamat_penerima,
+              no_telepon_penerima,
+              nama_pengirim,
+              alamat_pengirim,
+              no_telepon_pengirim,
+            }}
+            detail={data}
+          />
+        ) : null}
       </Layout>
     );
   }
 }
 const mapStateToPropsCreateItem = (state) => {
   return {
-    barang: state.productReducer.result_brg,
-    loadingbrg: state.productReducer.isLoadingBrg,
-    code: state.salesOrderReducer.code,
-    customer: state.customerReducer.all,
-    paginBrg: state.productReducer.pagin_brg,
+    isOpen: state.modalReducer,
+    loadingCreate: state.saleManualReducer.loadingCreate,
     auth: state.auth,
   };
 };

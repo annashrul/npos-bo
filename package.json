@@ -3,7 +3,7 @@
   "version": "4.1.0",
   "private": true,
   "dependencies": {
-    "@react-pdf/renderer": "^2.0.15",
+    "@react-pdf/renderer": "^2.3.0",
     "@types/reactstrap": "^8.5.0",
     "apexcharts": "^3.20.0",
     "axios": "^0.18.0",

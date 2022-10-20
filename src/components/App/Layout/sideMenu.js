@@ -74,6 +74,8 @@ import {
   linkTransaksiKas,
   linkTransaksiSalesOrder,
   linkTransaksiManual,
+  linkScanResi,
+
 } from "../../../helperLink";
 class SideMenu extends Component {
   constructor(props) {
@@ -918,7 +920,8 @@ class SideMenu extends Component {
       path === linkTransaksiApprovalSalesOrder ||
       path === linkTransaksiBarang ||
       path === linkTransaksiKas ||
-      path === linkTransaksiManual
+      path === linkTransaksiManual ||
+      path === linkScanResi
     ) {
       this.setState({
         isSale: true,
@@ -1725,7 +1728,8 @@ class SideMenu extends Component {
               path === linkTransaksiApprovalSalesOrder ||
               path === linkTransaksiBarang ||
               path === linkTransaksiKas ||
-              path === linkTransaksiManual
+              path === linkTransaksiManual ||
+              path === linkScanResi
                 ? " active menu-open"
                 : "")
             }
@@ -1819,6 +1823,20 @@ class SideMenu extends Component {
                   {" "}
                   <i className="fa fa-archive" />
                   Transaksi Kas
+                </Link>
+              </li>
+              <li
+                className={path === { linkScanResi } ? "active" : ""}
+                style={
+                  this.state.cash_trx === "0"
+                    ? { display: "none" }
+                    : { display: "block" }
+                }
+              >
+                <Link to={linkScanResi} style={{ width: "fit-content" }}>
+                  {" "}
+                  <i className="fa fa-qrcode" />
+                  Scan Resi
                 </Link>
               </li>
             </ul>
