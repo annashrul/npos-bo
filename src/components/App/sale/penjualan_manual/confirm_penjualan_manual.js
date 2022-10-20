@@ -23,6 +23,7 @@ class ConfirmPenjualanManual extends Component {
       kembalian: 0,
       bank: "",
       isDownload: false,
+      kd_trx: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -95,17 +96,23 @@ class ConfirmPenjualanManual extends Component {
           master: this.props.master,
           detail: this.props.detail,
         },
-        () => {
-          this.props.dispatch(ModalToggle(true));
-          this.props.dispatch(ModalType("downloadNotaPdf"));
-          this.setState({ isDownload: true });
+        (res) => {
+          console.log(res);
+          this.setState({ kd_trx: res.result, isDownload: true }, () => {
+            this.props.dispatch(ModalToggle(true));
+            this.props.dispatch(ModalType("downloadNotaPdf"));
+            // setTimeout(() => this.props.callback(), 5000);
+          });
+          // this.setState({ isDownload: true });
+          // this.props.callback();
         }
       )
     );
   }
 
   render() {
-    const { isDownload, tipe, kembalian, jumlah_uang, bank } = this.state;
+    const { isDownload, tipe, kembalian, jumlah_uang, bank, kd_trx } =
+      this.state;
     const { master, detail } = this.props;
     console.log(this.props);
     return (
@@ -215,7 +222,14 @@ class ConfirmPenjualanManual extends Component {
           </ModalBody>
         </WrapperModal>
         {isDownload && this.props.isOpen ? (
-          <DownloadNotaPdf master={master} detail={detail} />
+          <DownloadNotaPdf
+            master={master}
+            detail={detail}
+            kdTrx={kd_trx}
+            callbackDownload={() => {
+              this.props.callback();
+            }}
+          />
         ) : null}
       </div>
     );

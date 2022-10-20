@@ -11,3 +11,4 @@
 11. scan resi crud // febi
 12. report resi integrasi rajaongkir // febi
 13. notif (pembelian,penjualan)
+14. tambah menu edit di laporan penjualan 

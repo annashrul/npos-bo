@@ -43,6 +43,7 @@ class PenjualanManual extends Component {
     this.handleAction = this.handleAction.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.clearState = this.clearState.bind(this);
   }
 
   handleChange(e, i) {
@@ -124,9 +125,10 @@ class PenjualanManual extends Component {
     swallOption(
       "Anda yakin akan melanjutkan transaksi ini ?",
       () => {
-        this.setState({ isConfirm: true, total });
-        this.props.dispatch(ModalToggle(true));
-        this.props.dispatch(ModalType("confirmPenjualanManual"));
+        this.setState({ isConfirm: true, total }, () => {
+          this.props.dispatch(ModalToggle(true));
+          this.props.dispatch(ModalType("confirmPenjualanManual"));
+        });
       },
       () => {
         console.log("cancel");
@@ -134,6 +136,30 @@ class PenjualanManual extends Component {
     );
   }
   handleReset(e) {}
+
+  clearState() {
+    this.setState({
+      createdAt: moment(new Date()).format("YYYY-MM-DD"),
+      catatan: "-",
+      nama_penerima: "",
+      no_telepon_penerima: "",
+      alamat_penerima: "",
+      nama_pengirim: "",
+      no_telepon_pengirim: "",
+      alamat_pengirim: "",
+      total: 0,
+      data: [
+        {
+          sku: "",
+          nama: "",
+          motif: "",
+          qty: "",
+          harga: "",
+          no: Math.random(10000000),
+        },
+      ],
+    });
+  }
   render() {
     const {
       isConfirm,
@@ -464,24 +490,11 @@ class PenjualanManual extends Component {
               total,
             }}
             detail={data}
+            callback={() => {
+              this.clearState();
+            }}
           />
         ) : null}
-        {/* {isDownload && this.props.isOpen ? (
-          <DownloadNotaPdf
-            master={{
-              createdAt,
-              catatan,
-              nama_penerima,
-              alamat_penerima,
-              no_telepon_penerima,
-              nama_pengirim,
-              alamat_pengirim,
-              no_telepon_pengirim,
-              total,
-            }}
-            detail={data}
-          />
-        ) : null} */}
       </Layout>
     );
   }

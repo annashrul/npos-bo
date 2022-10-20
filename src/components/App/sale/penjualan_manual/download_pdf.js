@@ -15,6 +15,7 @@ import ReactPDF, {
 } from "@react-pdf/renderer";
 import MyDocument from "./nota";
 import { ModalToggle } from "../../../../redux/actions/modal.action";
+import moment from "moment";
 const styles = StyleSheet.create({
   page: {
     fontSize: 11,
@@ -32,6 +33,7 @@ class DownloadNotaPdf extends Component {
           <ModalHeader
             toggle={(e) => {
               this.props.dispatch(ModalToggle(false));
+              this.props.callbackDownload();
             }}
           >
             Transaksi berhasil dilakukan
@@ -54,7 +56,7 @@ class DownloadNotaPdf extends Component {
                   detail={this.props.detail}
                 />
               }
-              fileName="somename.pdf"
+              fileName={`${this.props.kdTrx}.pdf`}
             >
               {
                 ({ blob, url, loading, error }) => {
@@ -62,11 +64,10 @@ class DownloadNotaPdf extends Component {
                   return (
                     <p
                       onClick={(e) => {
-                        // e.preventDefault();
                         setTimeout(() => {
                           this.props.dispatch(ModalToggle(false));
-                        }, 5000);
-                        // this.props.dispatch(ModalToggle(false));
+                          this.props.callbackDownload();
+                        }, 500);
                       }}
                     >
                       Download nota
