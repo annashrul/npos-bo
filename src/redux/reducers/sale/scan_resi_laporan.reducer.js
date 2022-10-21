@@ -1,16 +1,38 @@
-import { SCAN_RESI } from "../../actions/_constants";
+import { SCAN_RESI_REPORT } from "../../actions/_constants";
 
 const initialState = {
-  code: "-",
+  download: 0,
+  data: [],
+  msg: "",
+  status: "",
+  dataExport: [],
+  detail:[]
+
 };
 
 export const scanResiLaporanReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SCAN_RESI.GET_SO_CODE:
-      return Object.assign({}, state, {
-        code: action.data.result,
-      });
-    default:
-      return state;
+      case SCAN_RESI_REPORT.SUCCESS:
+          return Object.assign({}, state, {
+              status: action.data.status,
+              msg: action.data.msg,
+              data: action.data.result,
+          });
+      case SCAN_RESI_REPORT.DETAIL:
+          return Object.assign({}, state, {
+              status: action.data.status,
+              msg: action.data.msg,
+              detail: action.data.result,
+          });
+      case SCAN_RESI_REPORT.EXPORT:
+          return Object.assign({}, state, {
+              dataExport: action.data.result,
+          });
+      case SCAN_RESI_REPORT.DOWNLOAD:
+          return Object.assign({}, state, {
+              download: action.load,
+          });
+      default:
+          return state;
   }
 };

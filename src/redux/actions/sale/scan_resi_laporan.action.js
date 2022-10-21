@@ -1,125 +1,66 @@
-import { SCAN_RESI, HEADERS } from "../../_constants";
+import { SCAN_RESI_REPORT, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleDelete, handleGet, handleGetExport } from "../../handleHttp";
-import { ModalToggle, ModalType } from "../../modal.action";
+import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
 
-export function setLoading(load) {
+export function setSuccess(data = []) {
   return {
-    type: SCAN_RESI.LOADING,
-    load,
-  };
-}
-export function setLoadingDetail(load) {
-  return {
-    type: SCAN_RESI.LOADING_DETAIL,
-    load,
-  };
-}
-export function setScanResi(data = []) {
-  return {
-    type: SCAN_RESI.SUCCESS,
-    data,
+      type: SCAN_RESI_REPORT.SUCCESS,
+      data,
   };
 }
 
-export function setScanResiData(data = []) {
+export function setExport(data = []) {
   return {
-    type: SCAN_RESI.PO_DATA,
-    data,
+      type: SCAN_RESI_REPORT.EXPORT,
+      data,
+  };
+}
+export function setDetail(data = []) {
+  return {
+      type: SCAN_RESI_REPORT.DETAIL,
+      data,
   };
 }
 
-export function setCode(data = []) {
+export function setDownload(load) {
   return {
-    type: PO.SUCCESS_CODE,
-    data,
+      type: SCAN_RESI_REPORT.DOWNLOAD,
+      load,
   };
 }
-export function setNewest(dataNew = []) {
-  return {
-    type: PO.SUCCESS_NEWEST,
-    dataNew,
-  };
-}
-
-export function setPOFailed(data = []) {
-  return {
-    type: PO.FAILED,
-    data,
-  };
-}
-
-export function setPoReport(data = []) {
-  return { type: PO.SUCCESS, data };
-}
-export function setPoReportExcel(data = []) {
-  return { type: PO.SUCCESS_EXCEL, data };
-}
-export function setPBSupplierReport(data = []) {
-  return { type: PO.SUCCESS_BY_SUPPLIER, data };
-}
-export function setPBSupplierReportExcel(data = []) {
-  return { type: PO.SUCCESS_BY_SUPPLIER_EXCEL, data };
-}
-export function setPoReportDetail(data = []) {
-  return { type: PO.PO_REPORT_DETAIL, data };
-}
-
-export const FetchPoReport = (where = "") => {
+export const FetchScanResiReport = (where="") => {
   return (dispatch) => {
-    let url = "purchaseorder/report?status=0";
-    if (where !== "") url += `&${where}`;
-    handleGet(
-      url,
-      (res) => {
-        let data = res.data;
-        dispatch(setPoReport(data));
-      },
-      true
-    );
-  };
-};
-
-export const FetchPoData = (nota) => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setPoData(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
+      let url = `scanresi/report`;
+      if(where!=="")url+=`?${where}`;
+      handleGet(url, (res) => {
+          let data = res.data;
+          dispatch(setSuccess(data));
       });
   };
 };
 
-export const FetchNota = (lokasi) => {
+export const FetchReportDetailScanResi = (kelBrg='',where="",isModal=true) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `purchaseorder/getcode?prefix=PO&lokasi=${lokasi}`)
-      .then(function (response) {
-        const data = response.data;
-        console.log("po code", data);
+      let url = `scanresi/detail`;
+      if(where!=="")url+=`?${where}`;
+      handleGet(url, (res) => {
+          if(isModal){
+              dispatch(ModalType("detailSaleByGroupProductReport"));
+              dispatch(ModalToggle(true));
+          }
 
-        dispatch(setCode(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
+          let data = res.data;
+          dispatch(setDetail(data));
       });
   };
 };
 
-export const StoreScanResi = (data, param) => {
+export const FetchScanResiExport = (data, param) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
+    // dispatch(setLoading(true));
     Swal.fire({
       allowOutsideClick: false,
       title: "Please Wait.",
@@ -130,7 +71,7 @@ export const StoreScanResi = (data, param) => {
       onClose: () => {},
     });
     let rawdata = data;
-    const url = HEADERS.URL + `purchaseorder`;
+    const url = HEADERS.URL + `scanresi`;
     axios
       .post(url, data.detail)
       .then(function (response) {
@@ -177,7 +118,7 @@ export const StoreScanResi = (data, param) => {
           Swal.closeModal();
           return false;
         });
-        dispatch(setLoading(false));
+        // dispatch(setLoading(false));
       })
       .catch(function (error) {
         Swal.close();
@@ -195,156 +136,11 @@ export const StoreScanResi = (data, param) => {
   };
 };
 
-export const fetchPoReport = (where = "") => {
-  return (dispatch) => {
-    let url = `purchaseorder/report?perpage=${HEADERS.PERPAGE}`;
-    if (where !== "") {
-      url += `&${where}`;
-    }
-    handleGet(url, (res) => dispatch(setPoReport(res.data)), true);
-  };
-};
-
-export const fetchPoReportExcel = (where = "", perpage = 99999) => {
-  return (dispatch) => {
-    let url = `purchaseorder/report?perpage=${perpage}`;
-    if (where !== "") url += `&${where}`;
-    handleGetExport(
-      url,
-      (res) => {
-        dispatch(setPoReportExcel(res.data));
-        dispatch(ModalToggle(true));
-      },
-      (percent) => dispatch(setLoading(percent))
-      // (percent) => callback(percent)
-    );
-  };
-};
-
-export const poReportDetail = (code, where = "", isModal = false) => {
-  return (dispatch) => {
-    let url = `purchaseorder/report/${code}?perpage=${HEADERS.PERPAGE}`;
-    if (where !== "") url += `&${where}`;
-    handleGet(
-      url,
-      (res) => {
-        dispatch(setPoReportDetail(res.data));
-        if (isModal) dispatch(ModalToggle(true));
-      },
-      true
-    );
-  };
-};
-
-export const poAmbilData = (code) => {
-  return (dispatch) => {
-    let url = `purchaseorder/ambil_data/${code}`;
-    handleGet(
-      url,
-      (res) => {
-        dispatch(setPoReportDetail(res.data));
-      },
-      true
-    );
-  };
-};
-
-export const FetchPurchaseBySupplierReport = (where = "") => {
-  return (dispatch) => {
-    let url = `report/pembelian/by_supplier?perpage=${HEADERS.PERPAGE}`;
-    if (where !== "") url += `&${where}`;
-    handleGet(url, (res) => dispatch(setPBSupplierReport(res.data)), true);
-  };
-};
-
-export const FetchPurchaseBySupplierReportExcel = (
-  where = "",
-  perpage = 99999
-) => {
-  return (dispatch) => {
-    let url = `report/pembelian/by_supplier?perpage=${perpage}`;
-    if (where !== "") url += `&${where}`;
-    handleGetExport(
-      url,
-      (res) => {
-        dispatch(setPBSupplierReportExcel(res.data));
-        dispatch(ModalToggle(true));
-        dispatch(ModalType("formPurchaseBySupplierExcel"));
-      },
-      (res) => dispatch(setDownloadPoSupplier(res))
-      // (percent) => callback(percent)
-    );
-    // handleGet(
-    //   url,
-    //   (res) => {
-    // dispatch(setPBSupplierReportExcel(res.data));
-    // dispatch(ModalToggle(true));
-    // dispatch(ModalType("formPurchaseBySupplierExcel"));
-    //   },
-    //   true
-    // );
-  };
-};
-
-export const rePrintFakturPo = (id) => {
-  return (dispatch) => {
-    Swal.fire({
-      title: "Silahkan tunggu.",
-      html: "Sedang memproses faktur..",
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      onClose: () => {},
-    });
-    let url = `purchaseorder/reprint/${btoa(id)}`;
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        Swal.close();
-        const data = response.data;
-        if (data.status === "success") {
-          console.log(data);
-          window.open(data.result.nota, "_blank");
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Transaksi berhasil.",
-            type: "info",
-            html:
-              `Disimpan dengan nota: ${id}` +
-              "<br><br>" +
-              '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ',
-            showCancelButton: true,
-            showConfirmButton: false,
-          }).then((result) => {
-            if (result.dismiss === "cancel") {
-              Swal.close();
-            }
-          });
-          document
-            .getElementById("btnNotaPdf")
-            .addEventListener("click", () => {
-              dispatch(rePrintFakturPo(id));
-            });
-        } else {
-          Swal.fire({
-            title: "failed",
-            type: "error",
-            text: "Gagal mengambil faktur.",
-          });
-        }
-      })
-      .catch(function (error) {
-        Swal.close();
-      });
-  };
-};
-
-export const deleteReportPo = (kdTrx) => {
-  return (dispatch) => {
-    handleDelete(`purchaseorder/${kdTrx}`, () => {
-      dispatch(fetchPoReport("page=1"));
-    });
-    // handleDelete()
-  };
-};
+// export const deleteReportPo = (kdTrx) => {
+//   return (dispatch) => {
+//     handleDelete(`purchaseorder/${kdTrx}`, () => {
+//       dispatch(fetchPoReport("page=1"));
+//     });
+//     // handleDelete()
+//   };
+// };
