@@ -42,12 +42,11 @@ export const createManualSaleAction = (data, callback) => {
   return (dispatch) => {
     dispatch(setLoadingCreate(true));
     handlePost("pos/penjualan_manual", data, (res, msg, isTrue) => {
-      console.log(res);
       dispatch(setLoadingCreate(false));
       // dispatch(ModalToggle(true));
       // dispatch(ModalType("downloadNotaPdf"));
       // swal("data berhasil disimpan");
-      callback();
+      callback(res);
     });
     // handleGet(`so/code?lokasi=${btoa(val)}`, (res) => {
     //   console.log("sales order", res);

@@ -32,6 +32,7 @@ import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
 import CompareLocationCommon from "../../common/CompareLocationCommon";
+import { getKartuKasAction } from "../../../../redux/actions/masterdata/cash/cash.action";
 
 const kassStorage = "kassaReportKas";
 const typeStorage = "typeReportKas";
@@ -40,67 +41,12 @@ class LaporanArusKas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      where_data: "",
-      type_data: [
-        { value: "", label: "Semua Tipe" },
-        { value: "masuk", label: "Kas Masuk" },
-        { value: "keluar", label: "Kas Keluar" },
-      ],
-      type: "",
-      kassa_data: kassa(),
-      kassa: "",
-      id_trx: "",
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
-      isModalExport: false,
-      isModalUpdate: false,
-      isModalOtorisasi: false,
     };
-    this.handleUpdate = this.handleUpdate.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.onDone = this.onDone.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
     this.handleService = this.handleService.bind(this);
-    this.handleModal = this.handleModal.bind(this);
-  }
-  componentWillUnmount() {
-    this.setState({
-      isModalExport: false,
-      isModalUpdate: false,
-      isModalOtorisasi: false,
-    });
-  }
-  onDone(id, id_trx) {
-    this.props.dispatch(deleteCashTransaksi(id, id_trx));
-    setTimeout(() => {
-      this.checkingParameter(1);
-    }, 1500);
-    this.setState({
-      id_trx: "",
-    });
   }
 
-  componentDidMount() {
-    console.log("storage", getStorage("locationStorageReportKas"));
-  }
-
-  handleUpdate(data) {
-    Object.assign(data, { where: this.state.where_data });
-    this.setState({ isModalUpdate: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(setUpdate(data));
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formUpdateKasTrx"));
-  }
-  handleDelete(id) {
-    this.setState({ id_trx: id });
-    swallOption("Data yang dihapus tidak akan bisa dikembalikan", () => {
-      this.setState({ isModalOtorisasi: true });
-      const bool = !this.props.isOpen;
-      this.props.dispatch(ModalToggle(bool));
-      this.props.dispatch(ModalType("modalOtorisasi"));
-    });
-  }
   handlePageChange(pageNumber) {
     this.handleService(this.state.where_data, pageNumber);
   }
@@ -108,114 +54,45 @@ class LaporanArusKas extends Component {
     if (res !== undefined) {
       let where = getFetchWhere(res, page);
       let state = {};
-      let newWhere = "";
-      let getKassa = getStorage(kassStorage);
-      let getType = getStorage(typeStorage);
-      if (isEmptyOrUndefined(getKassa)) {
-        Object.assign(state, { kassa: getKassa });
-        newWhere += `&kassa=${getKassa}`;
-      }
-      if (isEmptyOrUndefined(getType)) {
-        Object.assign(state, { type: getType });
-        newWhere += `&type_kas=${getType}`;
-      }
       Object.assign(state, { where_data: where });
       this.setState(state);
-      this.props.dispatch(FetchCashReport(where + newWhere));
+      this.props.dispatch(getKartuKasAction(where));
     }
   }
 
-  handleSelect(state, res) {
-    let where = this.state.where_data;
-    this.setState({ [state]: res.value });
-    if (state === "kassa") {
-      setStorage(kassStorage, res.value);
-    }
-    if (state === "type") {
-      setStorage(typeStorage, res.value);
-    }
-
-    this.handleService(where);
-  }
-
-  handleModal(type, obj) {
-    if (type === "excel") {
-      let whereState = this.state.where_data;
-      let where = getFetchWhere(whereState);
-      let periode = getPeriode(where.split("&"));
-      let getDate = periode.split("-");
-      console.log(getDate[1]);
-      let setState = {
-        isModalExport: true,
-        startDate: getDate[0],
-        endDate: getDate[1],
-      };
-      const { kassa, type } = this.state;
-      if (isEmptyOrUndefined(kassa)) {
-        where += `&kassa=${kassa}`;
-      }
-      if (isEmptyOrUndefined(type)) {
-        where += `&type_kas=${type}`;
-      }
-      this.setState(setState);
-      this.props.dispatch(ModalType("formCashExcel"));
-      this.props.dispatch(FetchCashReportExcel(where, obj.total));
-    }
-  }
   render() {
-    const { last_page, total, per_page, current_page, total_kas, data } =
-      this.props.cashReport;
+    const { total, per_page, current_page, data, totalData } =
+      this.props.dataKartuKas;
     let total_perpage = 0;
     const head = [
-      { label: "No", className: "text-center", width: "1%" },
-      { label: "#", className: "text-center", width: "1%" },
-      { label: "Kode transaksi", width: "1%" },
-      { label: "Tipe", width: "1%" },
-      { label: "Jenis", width: "1%" },
-      { label: "Lokasi", width: "1%" },
-      { label: "Kasir", width: "1%" },
-      { label: "Jumlah", width: "1%" },
-      { label: "Keterangan" },
-      { label: "Tanggal", width: "1%" },
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "Kode", width: "1%" },
+      { colSpan: 3, label: "Saldo", width: "1%" },
+      { rowSpan: 2, label: "Keterangan" },
+      { rowSpan: 2, label: "Tanggal", width: "1%" },
     ];
+
+    const rowSpan = [
+      { label: "Masuk" },
+      { label: "Keluar" },
+      { label: "Total" },
+    ];
+    let saldo = 0;
+    let totalSaldo = 0;
+    let totalMasuk = 0;
+    let totalKeluar = 0;
     return (
       <div>
         <HeaderReportCommon
-          pathName="ReportKas"
+          pathName="ReportArusKas"
           callbackWhere={(res) => {
             this.handleService(res);
           }}
-          callbackExcel={() =>
-            this.handleModal("excel", { total: last_page * per_page })
-          }
-          excelData={this.props.isLoading}
-          isLocation={true}
-          renderRow={
-            <div className="col-md-4">
-              <div className="row">
-                <div className="col-6 col-xs-6 col-md-6">
-                  <SelectCommon
-                    label="kassa"
-                    options={this.state.kassa_data}
-                    callback={(res) => this.handleSelect("kassa", res)}
-                    dataEdit={this.state.kassa}
-                  />
-                </div>
-                <div className="col-6 col-xs-6 col-md-6">
-                  <SelectCommon
-                    label="tipe"
-                    options={this.state.type_data}
-                    callback={(res) => this.handleSelect("type", res)}
-                    dataEdit={this.state.type}
-                  />
-                </div>
-              </div>
-            </div>
-          }
         />
 
         <TableCommon
           head={head}
+          rowSpan={rowSpan}
           meta={{
             total: total,
             current_page: current_page,
@@ -227,83 +104,82 @@ class LaporanArusKas extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    total_perpage += float(v.jumlah);
+                    console.log(i, data.length);
+                    saldo += Number(v.masuk) - Number(v.keluar);
+                    totalMasuk += Number(v.masuk);
+                    totalKeluar += Number(v.keluar);
+                    totalSaldo = saldo;
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">
                           {generateNo(i, current_page)}
                         </td>
-                        <td className="middle nowrap text-center">
-                          <ButtonActionCommon
-                            action={[{ label: "Edit" }, { label: "Hapis" }]}
-                            callback={(e) => {
-                              if (e === 1) {
-                                this.handleDelete(v.kd_trx);
-                              }
-                              if (e === 0) {
-                                this.handleUpdate({
-                                  kd_trx: v.kd_trx,
-                                  jumlah: v.jumlah,
-                                  keterangan: v.keterangan,
-                                  tgl: v.tgl,
-                                });
-                              }
-                            }}
-                          />
-                        </td>
-                        <td className="middle nowrap">{v.kd_trx}</td>
-                        <td className="middle nowrap">{v.type}</td>
-                        <td className="middle nowrap">{v.jenis}</td>
-                        <td className="middle nowrap">
-                          <CompareLocationCommon lokasi={v.lokasi} /> &nbsp;(
-                          {v.kassa})
-                        </td>
-                        <td className="middle nowrap">{v.kasir}</td>
+                        <td className="middle nowrap">{v.kd_kas}</td>
                         <td className="middle nowrap text-right">
-                          {parseToRp(v.jumlah)}
+                          {parseToRp(v.masuk)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.keluar)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(saldo)}
                         </td>
                         <td className="middle nowrap">{v.keterangan}</td>
-                        <td className="middle nowrap">{toDate(v.tgl)}</td>
+                        <td className="middle nowrap">
+                          {moment(v.created_at).format("LLLL")}
+                        </td>
                       </tr>
                     );
                   })
-                : noData(head.length)
-              : noData(head.length)
+                : noData(head.length + rowSpan.length)
+              : noData(head.length + rowSpan.length)
           }
           footer={[
             {
               data: [
                 {
-                  colSpan: 7,
+                  colSpan: 2,
                   label: "Total perhalaman",
                   className: "text-left",
                 },
-                { colSpan: 1, label: parseToRp(total_perpage) },
+                { colSpan: 1, label: parseToRp(totalMasuk) },
+                { colSpan: 1, label: parseToRp(totalKeluar) },
+                { colSpan: 1, label: parseToRp(totalSaldo) },
+                { colSpan: 2, label: "" },
+              ],
+            },
+            {
+              data: [
+                {
+                  colSpan: 2,
+                  label: "Total keseluruhan",
+                  className: "text-left",
+                },
+                {
+                  colSpan: 1,
+                  label: parseToRp(
+                    totalData && data.length > 0 ? totalData.masuk : 0
+                  ),
+                },
+                {
+                  colSpan: 1,
+                  label: parseToRp(
+                    totalData && data.length > 0 ? totalData.keluar : 0
+                  ),
+                },
+                {
+                  colSpan: 1,
+                  label: parseToRp(
+                    totalData && data.length > 0
+                      ? Number(totalData.masuk) - Number(totalData.keluar)
+                      : 0
+                  ),
+                },
                 { colSpan: 2, label: "" },
               ],
             },
           ]}
         />
-        {this.props.isOpen && this.state.isModalExport ? (
-          <CashReportExcel
-            tipe={this.state.type}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            kassa={this.state.kassa}
-          />
-        ) : null}
-
-        {this.props.isOpen && this.state.isModalUpdate ? <Updates /> : null}
-        {this.props.isOpen && this.state.isModalOtorisasi ? (
-          <Otorisasi
-            datum={{
-              module: "transaksi kas",
-              aksi: "delete",
-              id_trx: this.state.id_trx,
-            }}
-            onDone={this.onDone}
-          />
-        ) : null}
       </div>
     );
   }
@@ -311,9 +187,7 @@ class LaporanArusKas extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    cashReport: state.cashReducer.dataReport,
-    cashReportExcel: state.cashReducer.dataExcel,
-    isLoadingReport: state.cashReducer.isLoadingReport,
+    dataKartuKas: state.cashReducer.dataKartuKas,
     auth: state.auth,
     isOpen: state.modalReducer,
   };

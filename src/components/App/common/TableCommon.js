@@ -65,7 +65,7 @@ class TableCommon extends Component {
                   {props.rowSpan.map((res, index) => {
                     return (
                       <th
-                        className={`text-black middle nowrap ${
+                        className={`middle nowrap ${
                           res.className ? res.className : ""
                         }`}
                         key={index}
