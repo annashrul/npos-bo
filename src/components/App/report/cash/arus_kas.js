@@ -105,10 +105,10 @@ class LaporanArusKas extends Component {
               ? data.length > 0
                 ? data.map((v, i) => {
                     console.log(i, data.length);
-                    saldo += Number(v.masuk) - Number(v.keluar);
+                    // saldo += Number(v.masuk) - Number(v.keluar);
                     totalMasuk += Number(v.masuk);
                     totalKeluar += Number(v.keluar);
-                    totalSaldo = saldo;
+                    totalSaldo += Number(v.saldo);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">
@@ -116,13 +116,13 @@ class LaporanArusKas extends Component {
                         </td>
                         <td className="middle nowrap">{v.kd_kas}</td>
                         <td className="middle nowrap text-right">
-                          {parseToRp(v.masuk)}
+                          {parseToRp(Number(v.masuk))}
                         </td>
                         <td className="middle nowrap text-right">
-                          {parseToRp(v.keluar)}
+                          {parseToRp(Number(v.keluar))}
                         </td>
                         <td className="middle nowrap text-right">
-                          {parseToRp(saldo)}
+                          {parseToRp(Number(v.saldo))}
                         </td>
                         <td className="middle nowrap">{v.keterangan}</td>
                         <td className="middle nowrap">
@@ -135,19 +135,19 @@ class LaporanArusKas extends Component {
               : noData(head.length + rowSpan.length)
           }
           footer={[
-            {
-              data: [
-                {
-                  colSpan: 2,
-                  label: "Total perhalaman",
-                  className: "text-left",
-                },
-                { colSpan: 1, label: parseToRp(totalMasuk) },
-                { colSpan: 1, label: parseToRp(totalKeluar) },
-                { colSpan: 1, label: parseToRp(totalSaldo) },
-                { colSpan: 2, label: "" },
-              ],
-            },
+            // {
+            //   data: [
+            //     {
+            //       colSpan: 2,
+            //       label: "Total perhalaman",
+            //       className: "text-left",
+            //     },
+            //     { colSpan: 1, label: parseToRp(totalMasuk) },
+            //     { colSpan: 1, label: parseToRp(totalKeluar) },
+            //     { colSpan: 1, label: parseToRp(totalSaldo) },
+            //     { colSpan: 2, label: "" },
+            //   ],
+            // },
             {
               data: [
                 {
