@@ -58,24 +58,21 @@ class DownloadNotaPdf extends Component {
               }
               fileName={`${this.props.kdTrx}.pdf`}
             >
-              {
-                ({ blob, url, loading, error }) => {
-                  console.log("loading", loading);
-                  return (
-                    <p
-                      onClick={(e) => {
-                        setTimeout(() => {
-                          this.props.dispatch(ModalToggle(false));
-                          this.props.callbackDownload();
-                        }, 500);
-                      }}
-                    >
-                      Download nota
-                    </p>
-                  );
-                }
-                // loading ? "Loading document..." : "download nota"
-              }
+              {({ blob, url, loading, error }) => {
+                console.log("loading", loading);
+                return (
+                  <p
+                    onClick={(e) => {
+                      setTimeout(() => {
+                        this.props.dispatch(ModalToggle(false));
+                        this.props.callbackDownload();
+                      }, 500);
+                    }}
+                  >
+                    Download nota
+                  </p>
+                );
+              }}
             </PDFDownloadLink>
           </ModalBody>
         </WrapperModal>

@@ -24,6 +24,7 @@ import {
 import moment from "moment";
 import DetailSaleReportManual from "../../modals/report/sale/detail_sale_report_manual";
 import { withRouter } from "react-router-dom";
+import DownloadNotaPdf from "../../sale/penjualan_manual/download_pdf";
 
 class SaleArchiveManual extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class SaleArchiveManual extends Component {
       ],
       isModalDetail: false,
       isModalOtorisasi: false,
+      isModalRePrint: false,
       detail: {},
       periode: "",
       kd_trx: "",
@@ -63,9 +65,9 @@ class SaleArchiveManual extends Component {
 
   componentWillUnmount() {
     this.setState({
-      //   isModalDetail: false,
-      //   isModalExcel: false,
-      //   isModalOtorisasi: false,
+      isModalDetail: false,
+      isModalExcel: false,
+      isModalOtorisasi: false,
     });
   }
 
@@ -90,16 +92,18 @@ class SaleArchiveManual extends Component {
     let whereState = this.state.where_data;
     let where = getFetchWhere(whereState);
     let state = { where_data: where };
-    if (page === "detail") {
-      Object.assign(state, { isModalDetail: true, detail: param });
-      this.props.dispatch(
-        getManualSaleDetailReportAction(`kd_trx=${param.kd_trx}`)
-      );
-    } else {
-      Object.assign(state, { isModalExcel: true, totalExcel: param.total });
-      this.props.dispatch(FetchReportSaleExcel(where, param.total));
+    if (page === "reprint") {
+      this.setState({ isModalRePrint: true, detail: param }, () => {
+        this.handleFetchModal("downloadNotaPdf");
+      });
+      return;
     }
-
+    if (page === "detail") {
+      this.setState({ isModalDetail: true, detail: param }, () => {
+        this.handleFetchModal("detailSaleReportManual");
+      });
+      return;
+    }
     this.setState(state);
   }
 
@@ -118,19 +122,7 @@ class SaleArchiveManual extends Component {
       );
     });
   }
-  //   andleEdit(obj) {
-  //     setStorage("kode_edit", obj.no_faktur_beli);
-  //     setStorage("lokasi_edit", obj.lokasi);
-  //     setStorage("catatan_edit", "-");
-  //     setStorage("kode_supplier_edit", obj.kode_supplier);
-  //     setStorage("nama_penerima_edit", obj.nama_penerima);
-  //     setStorage("nonota_edit", obj.nonota);
-  //     setStorage("type_edit", obj.type);
-  //     this.props.history.push(`${linkReceivePembelian}/${obj.no_faktur_beli}`);
-  //   }
-
   handleEdit(obj) {
-    // this.props.history.push(`${linkTransaksiManual}/${obj.kd_trx}`);
     setStorage("masterTrxManual", JSON.stringify(obj));
     this.setState({
       otorisasiType: "edit",
@@ -142,19 +134,11 @@ class SaleArchiveManual extends Component {
       this.setState({ isModalOtorisasi: true });
       this.handleFetchModal("modalOtorisasi");
     });
-
-    // setStorage("kode_edit", obj.no_faktur_beli);
-    // setStorage("lokasi_edit", obj.lokasi);
-    // setStorage("catatan_edit", "-");
-    // setStorage("kode_supplier_edit", obj.kode_supplier);
-    // setStorage("nama_penerima_edit", obj.nama_penerima);
-    // setStorage("nonota_edit", obj.nonota);
-    // setStorage("type_edit", obj.type);
-    // this.props.history.push(`${linkTransaksiBarang}/${obj.kd_trx}`);
   }
 
   render() {
     const {
+      isModalRePrint,
       type_data,
       isModalDetail,
       detail,
@@ -162,6 +146,7 @@ class SaleArchiveManual extends Component {
       otorisasiType,
       isModalOtorisasi,
     } = this.state;
+
     const { total, last_page, per_page, current_page, data, totalData } =
       this.props.data;
 
@@ -224,6 +209,7 @@ class SaleArchiveManual extends Component {
                     let btnAction = [
                       { label: "Detail" },
                       { label: "Edit" },
+                      { label: "Re-print" },
                       { label: "Hapus" },
                     ];
                     totalPerHalaman += Number(v.gt);
@@ -238,13 +224,8 @@ class SaleArchiveManual extends Component {
                             callback={(e) => {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleEdit(v);
-                              //   if (e === 1) this.handleEdit(v); // window.location.href = `${linkTransaksiManual}/${v.kd_trx}`;
-
-                              //   if (e === 2)
-                              //     this.props.history.push(
-                              //       `${linkReportArsipPenjualan}/nota3ply/${v.kd_trx}`
-                              //     );
-                              if (e === 2) this.handleDelete(v);
+                              if (e === 2) this.handleModal("reprint", v);
+                              if (e === 3) this.handleDelete(v);
                               //   if (e === 4) this.handleEdit(v);
                             }}
                           />
@@ -328,6 +309,16 @@ class SaleArchiveManual extends Component {
               id_trx: kd_trx,
             }}
             onDone={this.onDone}
+          />
+        ) : null}
+        {isModalRePrint && this.props.isOpen ? (
+          <DownloadNotaPdf
+            master={detail}
+            detail={detail.detail}
+            kdTrx={kd_trx}
+            callbackDownload={() => {
+              //   this.props.callback();
+            }}
           />
         ) : null}
       </div>

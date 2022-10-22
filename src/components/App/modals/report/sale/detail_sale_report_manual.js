@@ -24,12 +24,6 @@ class DetailSaleReportManual extends Component {
     this.props.dispatch(ModalToggle(bool));
   }
 
-  handlePageChange(e) {
-    console.log(e);
-    let where = `kd_trx=${this.props.detail.kd_trx}&page=${e}`;
-    this.props.dispatch(getManualSaleDetailReportAction(where, false));
-  }
-
   render() {
     const head = [
       { label: "No", className: "text-center", width: "1%" },
@@ -43,8 +37,7 @@ class DetailSaleReportManual extends Component {
 
     let totalSubTotalPerHalaman = 0;
     let totalQtyPerHalaman = 0;
-    const { detail, data } = this.props;
-    const { total, last_page, per_page, current_page } = data;
+    const { detail } = this.props;
     return (
       <WrapperModal
         isOpen={
@@ -82,39 +75,29 @@ class DetailSaleReportManual extends Component {
           />
           <TableCommon
             head={head}
-            meta={{
-              total: total,
-              current_page: current_page,
-              per_page: per_page,
-            }}
-            current_page={current_page}
-            callbackPage={this.handlePageChange.bind(this)}
             renderRow={
-              typeof data.data === "object"
-                ? data.data.length > 0
-                  ? data.data.map((v, i) => {
-                      totalSubTotalPerHalaman +=
-                        Number(v.harga) * Number(v.qty);
-                      totalQtyPerHalaman += parseFloat(v.qty);
-                      return (
-                        <tr key={i}>
-                          <td className="middle nowrap text-center">{i + 1}</td>
-                          <td className="middle nowrap">{v.nama}</td>
-                          <td className="middle nowrap">{v.sku}</td>
-                          <td className="middle nowrap">{v.motif}</td>
-                          <td className="middle nowrap text-right">
-                            {parseToRp(v.harga)}
-                          </td>
-                          <td className="middle nowrap text-right">
-                            {parseToRp(v.qty)}
-                          </td>
-                          <td className="middle nowrap text-right">
-                            {parseToRp(Number(v.harga) * Number(v.qty))}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : noData(head.length)
+              typeof detail.detail === "object" && detail.detail.length > 0
+                ? detail.detail.map((v, i) => {
+                    totalSubTotalPerHalaman += Number(v.harga) * Number(v.qty);
+                    totalQtyPerHalaman += parseFloat(v.qty);
+                    return (
+                      <tr key={i}>
+                        <td className="middle nowrap text-center">{i + 1}</td>
+                        <td className="middle nowrap">{v.nama}</td>
+                        <td className="middle nowrap">{v.sku}</td>
+                        <td className="middle nowrap">{v.motif}</td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.harga)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(v.qty)}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(Number(v.harga) * Number(v.qty))}
+                        </td>
+                      </tr>
+                    );
+                  })
                 : noData(head.length)
             }
             footer={[

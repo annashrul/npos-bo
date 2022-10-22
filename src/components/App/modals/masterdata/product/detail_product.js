@@ -51,7 +51,7 @@ class DetailProduct extends Component {
     }
 
     // console.log(head);
-    // console.log(rowSpans);
+    console.log(this.props);
 
     return (
       <WrapperModal
@@ -74,6 +74,10 @@ class DetailProduct extends Component {
               { title: "dept", desc: master.dept },
               { title: "Kelompok", desc: master.kel_brg },
               { title: "Sub dept", desc: master.subdept },
+              {
+                title: "Warna",
+                desc: this.props.dataDetail ? this.props.dataDetail.ukuran : "",
+              },
             ]}
           />
           <TableCommon

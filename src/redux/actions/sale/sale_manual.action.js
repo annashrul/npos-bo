@@ -103,12 +103,3 @@ export const getManualSaleDetailReportAction = (
     });
   };
 };
-
-// export const getManualSaleReportDetailAction = (data, callback) => {
-//   return (dispatch) => {
-//     handlePost("pos/laporan_penjualan_manual", data, (res, msg, isTrue) => {
-//       dispatch(setDataReport(res));
-//       callback(res);
-//     });
-//   };
-// };
