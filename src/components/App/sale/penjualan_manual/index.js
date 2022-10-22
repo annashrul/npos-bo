@@ -3,9 +3,12 @@ import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import TableCommon from "../../common/TableCommon";
 import {
+  getStorage,
   handleError,
   isEmptyOrUndefined,
   rmComma,
+  rmStorage,
+  setStorage,
   swallOption,
   toRp,
 } from "../../../../helper";
@@ -13,6 +16,10 @@ import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import moment from "moment";
 import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
 import ConfirmPenjualanManual from "./confirm_penjualan_manual";
+import { getManualSaleDetailReportAction } from "../../../../redux/actions/sale/sale_manual.action";
+import { withRouter } from "react-router-dom";
+import { linkTransaksiManual } from "../../../../helperLink";
+
 class PenjualanManual extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +51,62 @@ class PenjualanManual extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.clearState = this.clearState.bind(this);
+  }
+
+  getProps(props) {
+    if (isEmptyOrUndefined(props.match.params.slug)) {
+      props.dispatch(
+        getManualSaleDetailReportAction(
+          `kd_trx=${atob(props.match.params.slug)}&perpage=999`,
+          false,
+          (res) => {
+            setStorage("isEditTrxManual", true);
+            var retrievedObject = localStorage.getItem("masterTrxManual");
+            retrievedObject = JSON.parse(retrievedObject);
+            const arrPenerima = retrievedObject.penerima.split("|");
+            const arrPengirim = retrievedObject.pengirim.split("|");
+            console.log(retrievedObject);
+            const newData = [];
+            res.result.data.map((row, key) => {
+              newData.push({
+                sku: row.sku,
+                nama: row.nama,
+                motif: row.motif,
+                qty: row.qty,
+                harga: row.harga,
+                no: Math.random(10000000),
+              });
+            });
+
+            this.setState({
+              data: newData,
+              catatan: retrievedObject.catatan,
+              nama_penerima: arrPenerima[0],
+              no_telepon_penerima: arrPenerima[1],
+              alamat_penerima: arrPenerima[2],
+              nama_pengirim: arrPengirim[0],
+              no_telepon_pengirim: arrPengirim[1],
+              alamat_pengirim: arrPengirim[2],
+            });
+          }
+        )
+      );
+    } else {
+      rmStorage("isEditTrxManual");
+    }
+  }
+
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // this.getProps(nextProps);
+    // console.log("nextProps", nextProps);
   }
 
   handleChange(e, i) {
@@ -186,6 +249,8 @@ class PenjualanManual extends Component {
     ];
     let totalJumlah = 0;
     let totalQty = 0;
+
+    console.log("##################", data);
 
     return (
       <Layout page="Transaksi Manual">
@@ -492,6 +557,10 @@ class PenjualanManual extends Component {
             detail={data}
             callback={() => {
               this.clearState();
+              if (isEmptyOrUndefined(this.props.match.params.slug)) {
+                this.props.history.push(`${linkTransaksiManual}`);
+                rmStorage("isEditTrxManual");
+              }
             }}
           />
         ) : null}
@@ -506,4 +575,5 @@ const mapStateToPropsCreateItem = (state) => {
     auth: state.auth,
   };
 };
-export default connect(mapStateToPropsCreateItem)(PenjualanManual);
+export default withRouter(connect(mapStateToPropsCreateItem)(PenjualanManual));
+// export default connect(mapStateToPropsCreateItem)(PenjualanManual);

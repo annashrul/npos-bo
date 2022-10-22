@@ -5,9 +5,11 @@ import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
 import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
 import {
+  getStorage,
   handleError,
   isEmptyOrUndefined,
   rmComma,
+  rmStorage,
   toRp,
 } from "../../../../helper";
 import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
@@ -70,7 +72,8 @@ class ConfirmPenjualanManual extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    let total = this.props.master.total;
+    const props = this.props;
+    let total = props.master.total;
     let { kembalian, jumlah_uang, bank, tipe } = this.state;
     if (Number(jumlah_uang) < 1) {
       handleError("Jumlah uang");
@@ -89,22 +92,32 @@ class ConfirmPenjualanManual extends Component {
         return;
       }
     }
-    Object.assign(this.props.master, { tipe, bank, kembalian });
-    this.props.dispatch(
+    Object.assign(props.master, {
+      tipe,
+      bank,
+      kembalian,
+    });
+    const isEdit = getStorage("isEditTrxManual");
+    if (isEdit === "true") {
+      var retrievedObject = localStorage.getItem("masterTrxManual");
+      retrievedObject = JSON.parse(retrievedObject);
+      Object.assign(props.master, {
+        isEdit: true,
+        kdOldTrx: retrievedObject.kd_trx,
+      });
+    }
+
+    props.dispatch(
       createManualSaleAction(
         {
-          master: this.props.master,
-          detail: this.props.detail,
+          master: props.master,
+          detail: props.detail,
         },
         (res) => {
-          console.log(res);
           this.setState({ kd_trx: res.result, isDownload: true }, () => {
-            this.props.dispatch(ModalToggle(true));
-            this.props.dispatch(ModalType("downloadNotaPdf"));
-            // setTimeout(() => this.props.callback(), 5000);
+            props.dispatch(ModalToggle(true));
+            props.dispatch(ModalType("downloadNotaPdf"));
           });
-          // this.setState({ isDownload: true });
-          // this.props.callback();
         }
       )
     );
@@ -114,7 +127,6 @@ class ConfirmPenjualanManual extends Component {
     const { isDownload, tipe, kembalian, jumlah_uang, bank, kd_trx } =
       this.state;
     const { master, detail } = this.props;
-    console.log(this.props);
     return (
       <div>
         <WrapperModal

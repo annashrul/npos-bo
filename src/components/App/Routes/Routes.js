@@ -377,6 +377,12 @@ const Routes = (
 
       {/* TRANSAKSI SECTION START */}
       <PrivateRoute
+        path={`${linkTransaksiManual}`}
+        exact
+        strict
+        component={TransaksiManual}
+      />
+      <PrivateRoute
         path={linkTransaksiSalesOrder}
         exact
         strict
@@ -390,25 +396,20 @@ const Routes = (
       />
       <PrivateRoute path={linkTransaksiBarang} exact strict component={Sale} />
       <PrivateRoute path={linkTransaksiKas} exact strict component={CashTrx} />
-      <PrivateRoute
-        path={linkTransaksiManual}
-        exact
-        strict
-        component={TransaksiManual}
-      />
 
-      <PrivateRoute
-        path={linkScanResi}
-        exact
-        strict
-        component={ScanResi}
-      />
+      <PrivateRoute path={linkScanResi} exact strict component={ScanResi} />
 
       <PrivateRoute
         path={linkScanResiLaporan}
         exact
         strict
         component={ScanResiLaporan}
+      />
+      <PrivateRoute
+        path={`${linkTransaksiManual}/:slug`}
+        exact
+        strict
+        component={TransaksiManual}
       />
 
       {/* TRANSAKSI SECTION END */}
@@ -645,6 +646,13 @@ const Routes = (
         strict
         component={Sale}
       />
+      <PrivateRoute
+        path={`${linkTransaksiManual}/:slug`}
+        exact
+        strict
+        component={TransaksiManual}
+      />
+
       <PrivateRoute path="/upload" exact strict component={Upload} />
       {/* OTHERS SECTION END */}
       <Route component={NotFound} />

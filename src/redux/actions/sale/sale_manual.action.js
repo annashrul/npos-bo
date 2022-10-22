@@ -60,11 +60,46 @@ export const createManualSaleAction = (data, callback) => {
   };
 };
 
-export const getManualSaleReportAction = (data, callback) => {
+export const getManualSaleReportAction = (where = "") => {
   return (dispatch) => {
-    handlePost("pos/laporan_penjualan_manual", data, (res, msg, isTrue) => {
-      dispatch(setDataReport(res));
-      callback(res);
+    let url = "pos/laporan_penjualan_manual";
+    if (where !== "") {
+      url += `?${where}`;
+    }
+    handleGet(url, (res) => {
+      dispatch(setDataReport(res.data));
+    });
+  };
+};
+
+export const deleteManualSaleAction = (kdTrx, gt) => {
+  return (dispatch) => {
+    let url = `pos/laporan_penjualan_manual/${btoa(kdTrx)}/${btoa(gt)}`;
+    handleDelete(url, () => {
+      dispatch(getManualSaleReportAction("page=1"));
+    });
+  };
+};
+
+export const getManualSaleDetailReportAction = (
+  where,
+  isModal = true,
+  callback = null
+) => {
+  return (dispatch) => {
+    let url = `pos/detail/laporan_penjualan_manual`;
+    if (where !== "") {
+      url += `?${where}`;
+    }
+    handleGet(url, (res) => {
+      console.log("detail", res.data);
+      dispatch(setDataDetailReport(res.data));
+      if (isModal) {
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailSaleReportManual"));
+      } else {
+        callback(res.data);
+      }
     });
   };
 };
