@@ -6,14 +6,23 @@ import Spinner from "Spinner";
 import gambar_scan from './../../../../assets/gambar_scan.png';
 
 
-class ApproveSO extends Component {
+class ScanResi extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            no_resi:"",
+            any: "",
+            tgl: "",
+            catatan: "",
+            perpage: 5,
+            scrollPage: 0,
+            isScroll: false,
+          };
     }
 
     render() {
         return (
-            <Layout page="Transaksi Approval Sales Order">
+            <Layout page="Buat Scan Resi">
                 <div className="card-header d-flex justify-content-between">
                     <h4>Scan Resi
                     </h4>
@@ -23,9 +32,9 @@ class ApproveSO extends Component {
                     >
                         <input
                             type="date"
-                            // name={"createdAt"}
+                            // name={"tgl"}
                             className={"form-control nbt nbr nbl bt"}
-                            // value={createdAt}
+                            // value={tgl}
                             onChange={this.handleChange}
                         />
                         <input
@@ -33,7 +42,7 @@ class ApproveSO extends Component {
                             type="text"
                             style={{ height: "39px" }}
                             className="form-control nbt nbr nbl bt"
-                            // value={note}
+                            // value={catatan}
                             onChange={this.handleChange}
                         // name="note"
                         />
@@ -92,4 +101,4 @@ const mapStateToPropsCreateItem = (state) => {
     };
 };
 
-export default connect(mapStateToPropsCreateItem)(ApproveSO);
+export default connect(mapStateToPropsCreateItem)(ScanResi);
