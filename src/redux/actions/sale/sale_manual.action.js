@@ -19,6 +19,18 @@ import {
 import { ModalType } from "../modal.action";
 import Cookies from "js-cookie";
 
+export function setDataReport(data = []) {
+  return {
+    type: PENJUALAN_MANUAL.GET_REPORT,
+    data,
+  };
+}
+export function setDataDetailReport(data = []) {
+  return {
+    type: PENJUALAN_MANUAL.GET_DETAIL_REPORT,
+    data,
+  };
+}
 export function setData(data = []) {
   return {
     type: PENJUALAN_MANUAL.GET,
@@ -43,14 +55,25 @@ export const createManualSaleAction = (data, callback) => {
     dispatch(setLoadingCreate(true));
     handlePost("pos/penjualan_manual", data, (res, msg, isTrue) => {
       dispatch(setLoadingCreate(false));
-      // dispatch(ModalToggle(true));
-      // dispatch(ModalType("downloadNotaPdf"));
-      // swal("data berhasil disimpan");
       callback(res);
     });
-    // handleGet(`so/code?lokasi=${btoa(val)}`, (res) => {
-    //   console.log("sales order", res);
-    //   dispatch(setSoCode(res.data));
-    // });
   };
 };
+
+export const getManualSaleReportAction = (data, callback) => {
+  return (dispatch) => {
+    handlePost("pos/laporan_penjualan_manual", data, (res, msg, isTrue) => {
+      dispatch(setDataReport(res));
+      callback(res);
+    });
+  };
+};
+
+// export const getManualSaleReportDetailAction = (data, callback) => {
+//   return (dispatch) => {
+//     handlePost("pos/laporan_penjualan_manual", data, (res, msg, isTrue) => {
+//       dispatch(setDataReport(res));
+//       callback(res);
+//     });
+//   };
+// };

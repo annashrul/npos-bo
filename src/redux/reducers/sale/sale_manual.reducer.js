@@ -4,10 +4,20 @@ const initialState = {
   loadingCreate: false,
   loadingGet: true,
   dataGet: [],
+  dataGetReport: [],
+  dataGetDetailReport: [],
 };
 
 export const saleManualReducer = (state = initialState, action) => {
   switch (action.type) {
+    case PENJUALAN_MANUAL.GET_REPORT:
+      return Object.assign({}, state, {
+        dataGetReport: action.data.result,
+      });
+    case PENJUALAN_MANUAL.GET_DETAIL_REPORT:
+      return Object.assign({}, state, {
+        dataGetDetailReport: action.data.result,
+      });
     case PENJUALAN_MANUAL.GET:
       return Object.assign({}, state, {
         dataGet: action.data.result,
