@@ -11,8 +11,8 @@ import { useIndexedDB, initDB } from "react-indexed-db";
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 500;
-const strNetworkError = "a network error occurred.";
-const strServerError = "a server error occurred.";
+const strNetworkError = "Terjadi kesalahan jaringan";
+const strServerError = "Terjadi kesalahan server";
 
 export const loading = (isStatus = true, title = "Silahkan tunggu.") => {
   Swal.fire({

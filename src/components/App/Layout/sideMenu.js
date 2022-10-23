@@ -75,8 +75,7 @@ import {
   linkTransaksiSalesOrder,
   linkTransaksiManual,
   linkScanResi,
-  linkScanResiLaporan
-
+  linkScanResiLaporan,
 } from "../../../helperLink";
 class SideMenu extends Component {
   constructor(props) {
@@ -99,7 +98,7 @@ class SideMenu extends Component {
       isTrxPengiriman: false,
       isProduction: false,
       isPaid: false,
-      isResi:false,
+      isResi: false,
       isArea: false,
       pageMenu: "",
       dataUser: [],
@@ -517,7 +516,6 @@ class SideMenu extends Component {
       let akses = param.auth.user.access;
       if (akses !== undefined && akses !== null) {
         // SETTING
-        console.log("akses", akses);
         let pengaturan_umum =
           akses[0]["value"] !== null ? akses[0]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let pengguna = akses[1]["value"] !== null ? akses[1]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
@@ -571,7 +569,8 @@ class SideMenu extends Component {
         let piutang = akses[61]["value"] !== null ? akses[61]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //SCAN RESI
         let scan_resi = akses[60]["value"] !== null ? akses[60]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
-        let laporan_scan_resi = akses[61]["value"] !== null ? akses[61]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let laporan_scan_resi =
+          akses[61]["value"] !== null ? akses[61]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //REPORT
         let r_closing = akses[70]["value"] !== null ? akses[70]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_kas = akses[71]["value"] !== null ? akses[71]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
@@ -1032,15 +1031,11 @@ class SideMenu extends Component {
       this.setState({
         isProduction: true,
       });
-    } else if (
-      path === linkScanResi ||
-      path === linkScanResiLaporan
-    ) {
+    } else if (path === linkScanResi || path === linkScanResiLaporan) {
       this.setState({
         isResi: true,
       });
-    }
-    else if (
+    } else if (
       path === linkPembayaranHutang ||
       path === linkPembayaranPiutang
     ) {
@@ -1109,7 +1104,7 @@ class SideMenu extends Component {
       modul_report_pembayaran,
       modul_report_log,
       modul_cetak_barcode,
-      modul_scan_resi
+      modul_scan_resi,
     } = this.state;
     return (
       <nav>
@@ -1129,16 +1124,16 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isMasterdata === true ||
-                path === linkDepartment ||
-                path === linkSupplier ||
-                path === linkSales ||
-                path === linkKas ||
-                path === linkCustomer ||
-                path === linkBarang ||
-                path === linkPromo ||
-                path === linkBank ||
-                path === linkPrinter ||
-                path === linkPaket
+              path === linkDepartment ||
+              path === linkSupplier ||
+              path === linkSales ||
+              path === linkKas ||
+              path === linkCustomer ||
+              path === linkBarang ||
+              path === linkPromo ||
+              path === linkBank ||
+              path === linkPrinter ||
+              path === linkPaket
                 ? " active menu-open"
                 : "")
             }
@@ -1317,8 +1312,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isArea === true ||
-                    path === linkArea ||
-                    path === linkMeja
+                  path === linkArea ||
+                  path === linkMeja
                     ? " active menu-open"
                     : "")
                 }
@@ -1394,15 +1389,15 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isInventory === true ||
-                this.state.isTrxMutasi ||
-                path === linkDeliveryNote ||
-                path === linkAlokasi ||
-                path === linkAdjustment ||
-                path === linkApprovalMutasi ||
-                path === linkOpnameTransaksi ||
-                path === linkOpnameApproval ||
-                path === linkPengirimanPacking ||
-                path === linkPengirimanExpedisi
+              this.state.isTrxMutasi ||
+              path === linkDeliveryNote ||
+              path === linkAlokasi ||
+              path === linkAdjustment ||
+              path === linkApprovalMutasi ||
+              path === linkOpnameTransaksi ||
+              path === linkOpnameApproval ||
+              path === linkPengirimanPacking ||
+              path === linkPengirimanExpedisi
                 ? " active menu-open"
                 : "")
             }
@@ -1482,8 +1477,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isTrxOpname === true ||
-                    path === linkOpnameTransaksi ||
-                    path === linkOpnameApproval
+                  path === linkOpnameTransaksi ||
+                  path === linkOpnameApproval
                     ? " active menu-open"
                     : "")
                 }
@@ -1543,8 +1538,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isTrxPengiriman === true ||
-                    path === linkPengirimanPacking ||
-                    path === linkPengirimanExpedisi
+                  path === linkPengirimanPacking ||
+                  path === linkPengirimanExpedisi
                     ? " active menu-open"
                     : "")
                 }
@@ -1608,8 +1603,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isTrxMutasi === true ||
-                    path === linkMutasiJualBeliApproval ||
-                    path === linkMutasiJualBeliBayar
+                  path === linkMutasiJualBeliApproval ||
+                  path === linkMutasiJualBeliBayar
                     ? " active menu-open"
                     : "")
                 }
@@ -1677,9 +1672,9 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isReceive === true ||
-                path === linkReceivePembelian ||
-                path === linkPurchaseOrder ||
-                path === linkReturTanpaNota
+              path === linkReceivePembelian ||
+              path === linkPurchaseOrder ||
+              path === linkReturTanpaNota
                 ? " active menu-open"
                 : "")
             }
@@ -1753,12 +1748,12 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isSale === true ||
-                path === linkTransaksiSalesOrder ||
-                path === linkTransaksiApprovalSalesOrder ||
-                path === linkTransaksiBarang ||
-                path === linkTransaksiKas ||
-                path === linkTransaksiManual ||
-                path === linkScanResi
+              path === linkTransaksiSalesOrder ||
+              path === linkTransaksiApprovalSalesOrder ||
+              path === linkTransaksiBarang ||
+              path === linkTransaksiKas ||
+              path === linkTransaksiManual ||
+              path === linkScanResi
                 ? " active menu-open"
                 : "")
             }
@@ -1863,8 +1858,8 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isPaid === true ||
-                path === linkPembayaranHutang ||
-                path === linkPembayaranPiutang
+              path === linkPembayaranHutang ||
+              path === linkPembayaranPiutang
                 ? " active menu-open"
                 : "")
             }
@@ -1925,8 +1920,8 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isResi === true ||
-                path === linkScanResi ||
-                path === linkScanResiLaporan
+              path === linkScanResi ||
+              path === linkScanResiLaporan
                 ? " active menu-open"
                 : "")
             }
@@ -1955,7 +1950,7 @@ class SideMenu extends Component {
                 <Link to={linkScanResi} style={{ width: "fit-content" }}>
                   {" "}
                   <i className="fa fa-edit" />
-                  Scan 
+                  Scan
                 </Link>
               </li>
               <li
@@ -1981,13 +1976,13 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isReport === true ||
-                this.state.isReportInventory === true ||
-                this.state.isReportPembelian === true ||
-                this.state.isReportPenjualan === true ||
-                this.state.isReportPembayaran === true ||
-                this.state.isReportLog === true ||
-                path === linkReportKas ||
-                path === linkReportClosing
+              this.state.isReportInventory === true ||
+              this.state.isReportPembelian === true ||
+              this.state.isReportPenjualan === true ||
+              this.state.isReportPembayaran === true ||
+              this.state.isReportLog === true ||
+              path === linkReportKas ||
+              path === linkReportClosing
                 ? " active menu-open"
                 : "")
             }
@@ -2004,8 +1999,8 @@ class SideMenu extends Component {
               style={{
                 display:
                   this.state.isReport === true ||
-                    this.state.isReportInventory === true ||
-                    this.state.isReportPembelian === true
+                  this.state.isReportInventory === true ||
+                  this.state.isReportPembelian === true
                     ? "block"
                     : "none",
               }}
@@ -2072,14 +2067,14 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPenjualan === true ||
-                    path === linkReportArsipPenjualan ||
-                    path === linkReportArsipReturPenjualan ||
-                    path === linkReportArsipPenjualanByCustomer ||
-                    path === linkReportArsipPenjualanBySales ||
-                    path === linkReportOmsetPenjualan ||
-                    path === linkReportOmsetPenjualanByPeriode ||
-                    path === linkReportArsipPenjualanByBarang ||
-                    path === linkReportArsipPenjualanByKelompokBarang
+                  path === linkReportArsipPenjualan ||
+                  path === linkReportArsipReturPenjualan ||
+                  path === linkReportArsipPenjualanByCustomer ||
+                  path === linkReportArsipPenjualanBySales ||
+                  path === linkReportOmsetPenjualan ||
+                  path === linkReportOmsetPenjualanByPeriode ||
+                  path === linkReportArsipPenjualanByBarang ||
+                  path === linkReportArsipPenjualanByKelompokBarang
                     ? " active menu-open"
                     : "")
                 }
@@ -2209,8 +2204,9 @@ class SideMenu extends Component {
                     </Link>
                   </li>
                   <li
-                    className={`${path === linkReportOmsetPenjualanByPeriode ? "active" : ""
-                      }`}
+                    className={`${
+                      path === linkReportOmsetPenjualanByPeriode ? "active" : ""
+                    }`}
                     style={{
                       display:
                         this.state.r_sale_omset_periode === "0"
@@ -2226,10 +2222,11 @@ class SideMenu extends Component {
                     </Link>
                   </li>
                   <li
-                    className={`${path === linkReportArsipPenjualanByKelompokBarang
+                    className={`${
+                      path === linkReportArsipPenjualanByKelompokBarang
                         ? "active"
                         : ""
-                      }`}
+                    }`}
                     style={{
                       display:
                         this.state.r_penjualan_by_kel_barang === "0"
@@ -2253,16 +2250,16 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportInventory === true ||
-                    path === linkReportStock ||
-                    path === linkReportNilaiPersediaan ||
-                    path === linkReportAdjustment ||
-                    path === linkReportAlokasi ||
-                    path === linkReportOpname ||
-                    path === linkReportPacking ||
-                    path === linkReportExpedisi ||
-                    path === linkReportMutasi ||
-                    path === linkReportAlokasiTransaksi ||
-                    path === linkReportDeliveryNote
+                  path === linkReportStock ||
+                  path === linkReportNilaiPersediaan ||
+                  path === linkReportAdjustment ||
+                  path === linkReportAlokasi ||
+                  path === linkReportOpname ||
+                  path === linkReportPacking ||
+                  path === linkReportExpedisi ||
+                  path === linkReportMutasi ||
+                  path === linkReportAlokasiTransaksi ||
+                  path === linkReportDeliveryNote
                     ? " active menu-open"
                     : "")
                 }
@@ -2466,10 +2463,10 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPembelian === true ||
-                    path === linkReportPurchaseOrder ||
-                    path === linkReportReceive ||
-                    path === linkReportPembelianBySupplier ||
-                    path === linkReportReturPembelian
+                  path === linkReportPurchaseOrder ||
+                  path === linkReportReceive ||
+                  path === linkReportPembelianBySupplier ||
+                  path === linkReportReturPembelian
                     ? " active menu-open"
                     : "")
                 }
@@ -2566,8 +2563,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPembayaran === true ||
-                    path === linkReportHutang ||
-                    path === linkReportPiutang
+                  path === linkReportHutang ||
+                  path === linkReportPiutang
                     ? " active menu-open"
                     : "")
                 }
@@ -2634,8 +2631,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportLog === true ||
-                    path === linkReportLogTransaksi ||
-                    path === linkReportLogAktifitas
+                  path === linkReportLogTransaksi ||
+                  path === linkReportLogAktifitas
                     ? " active menu-open"
                     : "")
                 }
@@ -2718,9 +2715,9 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isSetting === true ||
-                path === linkPengaturanPengguna ||
-                path === linkPengaturanLokasi ||
-                path === linkPengaturanUmum
+              path === linkPengaturanPengguna ||
+              path === linkPengaturanLokasi ||
+              path === linkPengaturanUmum
                 ? " active menu-open"
                 : "")
             }

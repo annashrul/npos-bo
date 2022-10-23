@@ -155,7 +155,8 @@ class SaleArchiveManual extends Component {
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "Kode transaksi" },
       { rowSpan: "2", label: "Tanggal" },
-      { rowSpan: "2", label: "Jumlah" },
+      { rowSpan: "2", label: "Total Transaksi" },
+      { rowSpan: "2", label: "Total Bayar" },
       { colSpan: "3", label: "Penerima" },
       { colSpan: "3", label: "Pengirim" },
       { rowSpan: "2", label: "Jenis" },
@@ -171,6 +172,7 @@ class SaleArchiveManual extends Component {
       { label: "Alamat" },
     ];
     let totalPerHalaman = 0;
+    let totalTrxPerHalaman = 0;
     return (
       <div>
         <HeaderReportCommon
@@ -213,6 +215,7 @@ class SaleArchiveManual extends Component {
                       { label: "Hapus" },
                     ];
                     totalPerHalaman += Number(v.gt);
+                    totalTrxPerHalaman += Number(v.total_trx);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">
@@ -230,9 +233,13 @@ class SaleArchiveManual extends Component {
                             }}
                           />
                         </td>
+
                         <td className="middle nowrap">{v.kd_trx}</td>
                         <td className="middle nowrap">
                           {moment(v.created_at).format("LLL")}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {parseToRp(Number(v.total_trx))}
                         </td>
                         <td className="middle nowrap text-right">
                           Rp. {parseToRp(Number(v.gt))},-
@@ -265,6 +272,11 @@ class SaleArchiveManual extends Component {
                 },
                 {
                   colSpan: 1,
+                  label: parseToRp(totalTrxPerHalaman),
+                  className: "text-right",
+                },
+                {
+                  colSpan: 1,
                   label: `Rp. ${parseToRp(totalPerHalaman)},-`,
                   className: "text-right",
                 },
@@ -278,8 +290,20 @@ class SaleArchiveManual extends Component {
             {
               data: [
                 {
-                  colSpan: 4,
+                  colSpan: 2,
                   label: "Total keseluruhan",
+                  className: "text-left",
+                },
+                {
+                  colSpan: 1,
+                  label: parseToRp(
+                    isEmptyOrUndefined(totalData) ? totalData.total : 0
+                  ),
+                  className: "text-right",
+                },
+                {
+                  colSpan: 2,
+                  label: "",
                   className: "text-left",
                 },
                 {

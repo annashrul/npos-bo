@@ -5,6 +5,7 @@ import { destroy } from "components/model/app.model";
 import { handleDelete, handleGet, handleGetExport } from "../../handleHttp";
 import { ModalToggle, ModalType } from "../../modal.action";
 import { linkReceivePembelian } from "../../../../helperLink";
+import { handleNotifAction } from "../../site.action";
 export function setDownload(load) {
   return {
     type: RECEIVE.DOWNLOAD,
@@ -94,6 +95,7 @@ export const storeReceive = (data, param) => {
     axios
       .post(url, data.detail)
       .then(function (response) {
+        dispatch(handleNotifAction(true));
         Swal.close();
         const data = response.data;
         Swal.fire({

@@ -2,13 +2,17 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
-import { setEcaps } from "redux/actions/site.action";
+import {
+  setEcaps,
+  handleNotifAction,
+  handleUpdateNotifAction,
+} from "redux/actions/site.action";
 import { setMobileEcaps } from "redux/actions/site.action";
 import { Link } from "react-router-dom";
 import isMobile from "react-device-detect";
 import moment from "moment";
 import Swal from "sweetalert2";
-import { toRp } from "../../../helper";
+import { noData, toDate, toRp } from "../../../helper";
 import { HEADERS } from "redux/actions/_constants";
 import {
   UncontrolledButtonDropdown,
@@ -26,6 +30,8 @@ class Header extends Component {
     this.handleMobileEcaps = this.handleMobileEcaps.bind(this);
     this.handleToggleMobileNav = this.handleToggleMobileNav.bind(this);
     this.handleNotif = this.handleNotif.bind(this);
+    this.handleNotifUpdate = this.handleNotifUpdate.bind(this);
+    this.handleToggleNotif = this.handleToggleNotif.bind(this);
     this.state = {
       toggleMobileNav: false,
       isShowNotif: false,
@@ -34,8 +40,32 @@ class Header extends Component {
       server_price: "",
       acc_name: "",
       acc_number: "",
+      isToggleNotif: false,
+      isFirstShow: false,
     };
   }
+
+  handleToggleNotif = (e) => {
+    console.log("handleToggleNotif");
+    e.preventDefault();
+    e.isPropagationStopped();
+    if (!this.state.isFirstShow) {
+      this.setState({
+        isToggleNotif: true,
+        isFirstShow: !this.state.isFirstShow,
+      });
+    } else {
+      this.setState({
+        isToggleNotif: true,
+        isFirstShow: false,
+      });
+    }
+  };
+
+  handleNotifUpdate = (i) => {
+    console.log(this.props.notif.result[i].id);
+    this.props.handleUpdateNotifAction(this.props.notif.result[i].id);
+  };
 
   handleLogout = () => {
     this.props.logoutUser();
@@ -55,6 +85,7 @@ class Header extends Component {
     });
   };
   componentWillMount() {
+    this.props.handleNotifAction();
     fetch(HEADERS.URL + `site/logo`, {
       method: "GET",
       headers: {
@@ -121,7 +152,8 @@ class Header extends Component {
     }).then((result) => {});
   }
   render() {
-    const { isShowNotif, isDay } = this.state;
+    const { isShowNotif, isDay, isToggleNotif, isFirstShow } = this.state;
+    console.log("NOTIF CLIENT", typeof this.props.notif);
     return (
       // <!-- Top Header Area -->
       <header
@@ -311,6 +343,90 @@ class Header extends Component {
                 </DropdownMenu>
               </UncontrolledButtonDropdown>
             </div>
+            <div className="nav-item dropdown">
+              <UncontrolledButtonDropdown>
+                <DropdownToggle caret className="nohover">
+                  {this.props.notif !== undefined &&
+                  this.props.notif.result !== undefined &&
+                  this.props.notif.result.length > 0 ? (
+                    <i className="fa fa-bell-o"></i>
+                  ) : (
+                    <i className="fa fa-bell-slash-o"></i>
+                  )}
+
+                  <span
+                    style={{
+                      borderRadius: "100%",
+                      padding: "5px",
+                      backgroundColor:
+                        this.props.notif !== undefined &&
+                        this.props.notif.result !== undefined &&
+                        this.props.notif.result.length > 0
+                          ? "red"
+                          : "transparent",
+                      fontSize: "12px",
+                      marginTop: "-5px",
+                      marginLeft: "-5px",
+                      position: "absolute",
+                      color: "white",
+                    }}
+                  ></span>
+                </DropdownToggle>
+                <DropdownMenu
+                  style={{
+                    zIndex: "99",
+                    overflowY: "auto",
+                    maxHeight: "400px",
+                    width: "400px",
+                    padding: "0px",
+                  }}
+                  right
+                >
+                  <div className="user-profile-area" style={{ padding: "0" }}>
+                    <div style={{ padding: "10px", fontSize: "14px" }}>
+                      notifikasi transaksi
+                    </div>
+                    <DropdownItem style={{ padding: "0px" }} toggle={false}>
+                      {this.props.notif !== undefined &&
+                      this.props.notif.result !== undefined &&
+                      this.props.notif.result.length > 0 ? (
+                        this.props.notif.result.map((row, i) => {
+                          return (
+                            <p
+                              onClick={(e) => {
+                                e.isPropagationStopped();
+                                if (row.status === 0) {
+                                  this.handleNotifUpdate(i);
+                                }
+                              }}
+                              key={i}
+                              style={{
+                                cursor:
+                                  row.status === 1 ? "not-allowed" : "pointer",
+                                borderBottom: "1px solid #EEEEEE",
+                                background:
+                                  row.status === 0 ? "white" : "#EEEEEE",
+                                padding: "10px",
+                                marginBottom: "0px",
+                              }}
+                            >
+                              <a>{row.pesan}</a>
+                              <br />
+                              <span style={{ color: "grey", fontSize: "10px" }}>
+                                <i className="fa fa-clock-o"></i>
+                                {moment(row.created_at).format("llll")}
+                              </span>
+                            </p>
+                          );
+                        })
+                      ) : (
+                        <center>tidak ada pesan yang masuk</center>
+                      )}
+                    </DropdownItem>
+                  </div>
+                </DropdownMenu>
+              </UncontrolledButtonDropdown>
+            </div>
           </ul>
         </div>
       </header>
@@ -318,10 +434,13 @@ class Header extends Component {
   }
 }
 Header.propTypes = {
+  handleUpdateNotifAction: PropTypes.func.isRequired,
+  handleNotifAction: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   setEcaps: PropTypes.func.isRequired,
   setMobileEcaps: PropTypes.func.isRequired,
   auth: PropTypes.object,
+  notif: PropTypes.any,
   triggerEcaps: PropTypes.bool,
   triggerMobileEcaps: PropTypes.bool,
 };
@@ -329,11 +448,14 @@ Header.propTypes = {
 const mapStateToProps = ({ auth, siteReducer }) => {
   return {
     auth: auth,
+    notif: siteReducer.dataNotif,
     triggerEcaps: siteReducer.triggerEcaps,
     triggerMobileEcaps: siteReducer.triggerMobileEcaps,
   };
 };
 export default connect(mapStateToProps, {
+  handleUpdateNotifAction,
+  handleNotifAction,
   logoutUser,
   setEcaps,
   setMobileEcaps,
