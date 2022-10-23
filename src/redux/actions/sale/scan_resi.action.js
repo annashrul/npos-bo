@@ -1,4 +1,4 @@
-import { SCAN_RESI, HEADERS } from "../../_constants";
+import { SCAN_RESI, HEADERS } from "../_constants";
 // import axios from "axios";
 // import Swal from "sweetalert2";
 // import { destroy } from "components/model/app.model";

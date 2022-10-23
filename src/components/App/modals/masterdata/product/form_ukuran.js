@@ -74,12 +74,12 @@ class FormUkuran extends Component {
 
   render() {
     const { dataUkuran } = this.state;
-    const varian = ["S", "M", "L", "XL"];
+    const varian = ["Abu-Abu", "Biru", "Coklat", "Emas", "Hijau","Hitam","Kuning","Merah","Marun","Jingga","Putih","Ungu","Violet"];
     return dataUkuran.map((res, i) => {
       return (
         <div key={i} className="row">
           <div className="col-md-12">
-            <label>Ukuran ke-{i + 1}</label>
+            <label>Warna</label>
             <div class="input-group mb-3">
               <select
                 onChange={(e) => this.handleChange(e, i)}
@@ -94,7 +94,7 @@ class FormUkuran extends Component {
                   );
                 })}
               </select>
-              {dataUkuran.length - 1 === i ? (
+              {/* {dataUkuran.length - 1 === i ? (
                 <div className="input-group-append">
                   <button
                     className="btn btn-primary"
@@ -118,7 +118,7 @@ class FormUkuran extends Component {
                     <i className="fa fa-close"></i>
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* <div className="form-group">
