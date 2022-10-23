@@ -1,24 +1,72 @@
 import React, { Component } from "react";
+import { storeScanResi } from "../../../../redux/actions/sale/s";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import StickyBox from "react-sticky-box";
 import Spinner from "Spinner";
 import gambar_scan from './../../../../assets/gambar_scan.png';
+import TableCommon from "../../common/TableCommon";
+import moment from "moment";
+import {
+    get,
+} from "components/model/app.model";
+import {
+    handleError,
+    rmComma,
+    setFocus,
+    swallOption,
+} from "../../../../helper";
 
 
+const table = "scan_opname";
 class ScanResi extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            no_resi:"",
-            any: "",
-            tgl: "",
-            catatan: "",
+            no_resi: "",
+            tgl: moment(new Date()).format("yyyy-MM-DD"),
+            catatan: "-",
             perpage: 5,
             scrollPage: 0,
             isScroll: false,
-          };
+        };
     }
+    HandleSubmit(e) {
+        e.preventDefault();
+    
+        const data = get(table);
+        data.then((res) => {
+          if (res.length === 0) {
+            handleError("scanresi");
+            return;
+          } else {
+            swallOption("Pastikan data yang anda masukan sudah benar!", () => {
+              let detail = [];
+              let data = {};
+              const { tgl, no_resi, catatan } = this.state;
+              const { auth } = this.props;
+              data["kd_kasir"] = auth.user.id;
+              data["tgl"] = moment(tgl).format("yyyy-MM-DD");
+              data["catatan"] = catatan.value;   
+              for (let i = 0; i < no_resi.length; i++) {
+                let item = res[i];
+                let no_resi = rmComma(item.no_resi);
+                if (no_resi < 0) {
+                  setFocus(this, `${no_resi - btoa(item.no_resi)}`);
+                  handleError("", "Nomor resi tidak boleh kosong");
+                  return;
+                }
+              }
+              this.props.dispatch(
+                storeScanResi(data, () => {
+                  this.handleClear();
+                  this.getData();
+                })
+              );
+            });
+          }
+        });
+      }
 
     render() {
         return (
@@ -32,9 +80,9 @@ class ScanResi extends Component {
                     >
                         <input
                             type="date"
-                            // name={"tgl"}
+                            name={"tgl"}
                             className={"form-control nbt nbr nbl bt"}
-                            // value={tgl}
+                            value={tgl}
                             onChange={this.handleChange}
                         />
                         <input
@@ -42,9 +90,9 @@ class ScanResi extends Component {
                             type="text"
                             style={{ height: "39px" }}
                             className="form-control nbt nbr nbl bt"
-                            // value={catatan}
+                            value={catatan}
                             onChange={this.handleChange}
-                        // name="note"
+                            name="note"
                         />
                     </h4>
                 </div>
@@ -56,17 +104,17 @@ class ScanResi extends Component {
                                 <div className="form-group">
                                     <div className="input-group input-group-sm">
                                         <input
-                                            // ref={(input) => (this[`any`] = input)}
+                                            ref={(input) => (this[`no_resi`] = input)}
                                             autoFocus
                                             type="text"
                                             placeholder="Scan nomor resi disini ...."
-                                            // name="any"
+                                            name="no_resi"
                                             className="form-control form-control-sm"
-                                            // value={any}
+                                            value={no_resi}
                                             onChange={(e) => this.handleChange(e)}
                                             onKeyPress={(event) => {
                                                 if (event.key === "Enter") {
-                                                    this.handleSearch(event);
+                                                    this.HandleSubmit(event);
                                                 }
                                             }}
                                         />
@@ -74,7 +122,7 @@ class ScanResi extends Component {
                                             <button
                                                 type="button"
                                                 className="btn btn-primary"
-                                                onClick={this.handleSearch}
+                                                onClick={this.HandleSubmit}
                                             >
                                                 <i className="fa fa-paper-plane" />
                                             </button>
