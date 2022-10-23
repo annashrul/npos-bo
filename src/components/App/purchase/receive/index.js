@@ -986,8 +986,6 @@ class Receive extends Component {
     }
 
     let namaHarga = this.props.auth.user.nama_harga;
-    console.log("namaHarga", namaHarga);
-
     const data = get(table);
     data.then((res) => {
       if (res.length === 0) {
@@ -1050,11 +1048,7 @@ class Receive extends Component {
                 item.tambahan[0][keyHrg === 0 ? "harga" : `harga${keyHrg + 1}`],
             });
           }
-          // namaHarga.map((row,key)=>{
-          //     Object.assign(dataDetailUpdate,{
-          //         [key===0?'harga':`harga${key+1}`] : item.tambahan[0][key===0?'harga':`harga${key+1}`]
-          //     })
-          // });
+
           detail.push(dataDetailUpdate);
           return null;
         });
@@ -1114,7 +1108,6 @@ class Receive extends Component {
 
   handleStore(parsedata, location) {
     parsedata["detail"]["lokasi_harga"] = location;
-    console.log(parsedata);
     swallOption("Pastikan data anda sudah benar ", () => {
       if (
         this.props.match.params.slug !== undefined &&
@@ -1123,12 +1116,26 @@ class Receive extends Component {
         this.props.dispatch(
           updateReceive(parsedata, this.props.match.params.slug)
         );
+        destroy(table);
+        localStorage.removeItem("sp");
+        localStorage.removeItem("lk");
+        localStorage.removeItem("ambil_data");
+        localStorage.removeItem("nota");
+        localStorage.removeItem("catatan");
+        this.getData();
       } else {
         this.props.dispatch(
           storeReceive(parsedata, (arr) => {
             this.props.dispatch(FetchNota(localStorage.receiveLocationStorage));
             this.setState({ notasupplier: "" });
             this.props.history.push(arr);
+            destroy(table);
+            localStorage.removeItem("sp");
+            localStorage.removeItem("lk");
+            localStorage.removeItem("ambil_data");
+            localStorage.removeItem("nota");
+            localStorage.removeItem("catatan");
+            this.getData();
           })
         );
       }
@@ -1889,7 +1896,7 @@ class Receive extends Component {
                             borderRadius: "4px",
                             border: "1px solid hsl(0, 0%, 80%)",
                             height: "38px",
-                            zIndex: "99",
+                            // zIndex: "99",
                           }}
                         />
                       </div>

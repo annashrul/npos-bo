@@ -7,6 +7,7 @@ import FreeScrollbar from "react-free-scrollbar";
 import Default from "assets/default.png";
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
+import { handleNotifAction } from "../../../redux/actions/site.action";
 
 class Layout extends Component {
   constructor(props) {
@@ -36,7 +37,10 @@ class Layout extends Component {
       if (nextProps.auth.user.site_title !== undefined) {
         localStorage.setItem("site_title", nextProps.auth.user.site_title);
         document.title = `${nextProps.auth.user.site_title} - ${this.props.page}`;
-      } else document.title = `${localStorage.getItem("site_title")} - ${this.props.page}`;
+      } else
+        document.title = `${localStorage.getItem("site_title")} - ${
+          this.props.page
+        }`;
     }
   };
 
@@ -65,12 +69,19 @@ class Layout extends Component {
       <div
         className={
           this.props.triggerEcaps
-            ? "ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active"
-            : "ecaps-page-wrapper " + (this.props.triggerMobileEcaps ? "mobile-menu-active" : "")
+            ? "ecaps-page-wrapper sidemenu-hover-" +
+              this.state.sideHover +
+              " menu-collasped-active"
+            : "ecaps-page-wrapper " +
+              (this.props.triggerMobileEcaps ? "mobile-menu-active" : "")
         }
       >
         {/* Side Menu */}
-        <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
+        <div
+          className="ecaps-sidemenu-area"
+          onMouseEnter={this.mouseEnterHandle}
+          onMouseLeave={this.mouseOutHandle}
+        >
           {/* Desktop Logo */}
           <div className="ecaps-logo">
             <Link to="/" style={{ backgroundColor: "#242939" }}>
@@ -96,11 +107,21 @@ class Layout extends Component {
             </Link>
           </div>
           {/* Side Nav */}
-          <div className="slimScrollDiv" style={{ position: "relative", width: "auto", height: "100%" }}>
-            <div className="ecaps-sidenav" id="ecapsSideNav" style={{ overflowY: "unset", width: "auto", height: "100%" }}>
+          <div
+            className="slimScrollDiv"
+            style={{ position: "relative", width: "auto", height: "100%" }}
+          >
+            <div
+              className="ecaps-sidenav"
+              id="ecapsSideNav"
+              style={{ overflowY: "unset", width: "auto", height: "100%" }}
+            >
               <FreeScrollbar>
                 {/* Side Menu Area */}
-                <div className="side-menu-area" style={{ paddingRight: "8px", marginTop: "unset" }}>
+                <div
+                  className="side-menu-area"
+                  style={{ paddingRight: "8px", marginTop: "unset" }}
+                >
                   {/* Sidebar Menu */}
                   <SideMenu />
                 </div>

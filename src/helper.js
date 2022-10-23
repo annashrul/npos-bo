@@ -17,8 +17,6 @@ export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_D
 
 export const noDataImg = Default;
 
-
-
 export const rmPage = (res) => {
   let whereProps = res.split("&");
   whereProps.shift();
@@ -68,7 +66,9 @@ export const toDate = (val, type = "/", isTime = false) => {
   if (isTime) {
     return moment(val).format("hh:mm:ss");
   }
-  return type === "/" ? moment(val).format("DD/MM/YYYY") : moment(val).format("YYYY-MM-DD");
+  return type === "/"
+    ? moment(val).format("DD/MM/YYYY")
+    : moment(val).format("YYYY-MM-DD");
 };
 
 export const isImage = (img = "", className = "img-in-table pointer") => {
@@ -123,7 +123,14 @@ export const headerExcel = (from, to) => {
   return `${toDate(from, "/")} - ${toDate(to, "/")}`;
 };
 
-export const toExcel = (title = "", periode = "", head = [], content = [], foot = [], ext = EXTENSION.XLSX) => {
+export const toExcel = (
+  title = "",
+  periode = "",
+  head = [],
+  content = [],
+  foot = [],
+  ext = EXTENSION.XLSX
+) => {
   let header = [[title.toUpperCase()], [`PERIODE : ${periode}`], [""], head];
   let footer = foot;
   let body = header.concat(content);
@@ -146,14 +153,23 @@ export const toExcel = (title = "", periode = "", head = [], content = [], foot 
   };
 
   let wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, title.length > 31 ? title.toUpperCase().substr(0, 31) : title.toUpperCase());
-  let exportFileName = `${title.replaceAll(" ", "_").toUpperCase()}_${moment(new Date()).format("YYYYMMDDHHMMss")}.${ext}`;
+  XLSX.utils.book_append_sheet(
+    wb,
+    ws,
+    title.length > 31 ? title.toUpperCase().substr(0, 31) : title.toUpperCase()
+  );
+  let exportFileName = `${title.replaceAll(" ", "_").toUpperCase()}_${moment(
+    new Date()
+  ).format("YYYYMMDDHHMMss")}.${ext}`;
   XLSX.writeFile(wb, exportFileName, { type: "file", bookType: ext });
   return;
 };
 
 export const headerPdf = (master) => {
-  return `laporan ${master.title} periode ${master.dateFrom.replaceAll(" ", "")} - ${master.dateTo.replaceAll(" ", "")}`;
+  return `laporan ${master.title} periode ${master.dateFrom.replaceAll(
+    " ",
+    ""
+  )} - ${master.dateTo.replaceAll(" ", "")}`;
   // let stringHtml = "";
   // stringHtml +=
   //   '<div style="text-align:center>' +
@@ -170,7 +186,21 @@ export const headerPdf = (master) => {
   // return stringHtml;
 };
 
-export const myPdf = (filename, title = "", header = [], body = [], footer = [], orientation = "portrait", unit = "in", format = [], fontSize = 10, ml = 10, mt = 10, mr = 10, mb = 10) => {
+export const myPdf = (
+  filename,
+  title = "",
+  header = [],
+  body = [],
+  footer = [],
+  orientation = "portrait",
+  unit = "in",
+  format = [],
+  fontSize = 10,
+  ml = 10,
+  mt = 10,
+  mr = 10,
+  mb = 10
+) => {
   const doc = jsPDF(orientation, unit, format);
   doc.setFontSize(fontSize);
   let content = {
@@ -198,13 +228,24 @@ const addFooters = (doc) => {
   doc.setFontSize(8);
   for (var i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.text("Page " + String(i) + " of " + String(pageCount), doc.internal.pageSize.width / 2, 287, {
-      align: "right",
-    });
+    doc.text(
+      "Page " + String(i) + " of " + String(pageCount),
+      doc.internal.pageSize.width / 2,
+      287,
+      {
+        align: "right",
+      }
+    );
   }
 };
 
-export const to_pdf = (filename, title = "", header = [], body = [], footer = []) => {
+export const to_pdf = (
+  filename,
+  title = "",
+  header = [],
+  body = [],
+  footer = []
+) => {
   const doc = jsPDF("portrait", "pt", "A4");
   doc.setTextColor(40);
   doc.setFontSize(7);
@@ -216,7 +257,13 @@ export const to_pdf = (filename, title = "", header = [], body = [], footer = []
       marginBottom: 10,
       fontSize: 7,
     },
-    bodyStyles: { valign: "top", lineWidth: 1, marginBottom: 10, marginTop: 10, fontSize: 7 },
+    bodyStyles: {
+      valign: "top",
+      lineWidth: 1,
+      marginBottom: 10,
+      marginTop: 10,
+      fontSize: 7,
+    },
     showHead: "everyPage",
     theme: "striped",
     startY: doc.autoTableEndPosY() + 20,
@@ -235,10 +282,18 @@ export const to_pdf = (filename, title = "", header = [], body = [], footer = []
     },
   };
   doc.autoTable(content);
-  return doc.save(`LAPORAN ${filename}_${moment(new Date()).format("YYYYMMDDHHMMss")}.pdf`);
+  return doc.save(
+    `LAPORAN ${filename}_${moment(new Date()).format("YYYYMMDDHHMMss")}.pdf`
+  );
 };
 
-export const to_pdf_l = (filename, title = "", header = [], body = [], footer = []) => {
+export const to_pdf_l = (
+  filename,
+  title = "",
+  header = [],
+  body = [],
+  footer = []
+) => {
   const doc = jsPDF("landscape", "pt", "A4");
   const marginLeft = 10;
   doc.setFontSize(10);
@@ -280,11 +335,20 @@ export const rangeDate = {
   "7 Hari Terakhir": [moment().subtract(7, "days"), moment()],
   "30 Hari Terakhir": [moment().subtract(30, "days"), moment()],
   "Minggu Ini": [moment().startOf("isoWeek"), moment().endOf("isoWeek")],
-  "Minggu Lalu": [moment().subtract(1, "weeks").startOf("isoWeek"), moment().subtract(1, "weeks").endOf("isoWeek")],
+  "Minggu Lalu": [
+    moment().subtract(1, "weeks").startOf("isoWeek"),
+    moment().subtract(1, "weeks").endOf("isoWeek"),
+  ],
   "Bulan Ini": [moment().startOf("month"), moment().endOf("month")],
-  "Bulan Lalu": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+  "Bulan Lalu": [
+    moment().subtract(1, "month").startOf("month"),
+    moment().subtract(1, "month").endOf("month"),
+  ],
   "Tahun Ini": [moment().startOf("year"), moment().endOf("year")],
-  "Tahun Lalu": [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")],
+  "Tahun Lalu": [
+    moment().subtract(1, "year").startOf("year"),
+    moment().subtract(1, "year").endOf("year"),
+  ],
 };
 
 export const toMoney = (angka) => {
@@ -298,7 +362,10 @@ export const toCurrency = (angka) => {
   } else {
     numbers = angka;
   }
-  var number_string = numbers === "" || numbers === undefined ? String(0.0) : numbers.toString().replace(/,|\D/g, ""),
+  var number_string =
+      numbers === "" || numbers === undefined
+        ? String(0.0)
+        : numbers.toString().replace(/,|\D/g, ""),
     split = number_string.split("."),
     sisa = split[0].length % 3,
     rupiah = split[0].substr(0, sisa),
@@ -311,7 +378,10 @@ export const toCurrency = (angka) => {
   }
 
   rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
-  rupiah = parseFloat(angka) < 0 ? "-" + rupiah.replace(/^0+/, "") : rupiah.replace(/^0+/, "");
+  rupiah =
+    parseFloat(angka) < 0
+      ? "-" + rupiah.replace(/^0+/, "")
+      : rupiah.replace(/^0+/, "");
   return rupiah;
 };
 export const rmComma = (angka) => {
@@ -322,7 +392,10 @@ export const rmComma = (angka) => {
   } else {
     numbers = angka;
   }
-  var number_string = numbers === "" || numbers === undefined ? String(0.0) : numbers.toString().replace(/,|\D/g, ""),
+  var number_string =
+      numbers === "" || numbers === undefined
+        ? String(0.0)
+        : numbers.toString().replace(/,|\D/g, ""),
     split = number_string.split("."),
     sisa = split[0].length % 3,
     rupiah = split[0].substr(0, sisa),
@@ -333,7 +406,10 @@ export const rmComma = (angka) => {
   }
 
   rupiah = split[1] !== undefined ? rupiah + "" + split[1] : rupiah;
-  rupiah = parseFloat(angka) < 0 ? "-" + rupiah.replace(/^0+/, "") : rupiah.replace(/^0+/, "");
+  rupiah =
+    parseFloat(angka) < 0
+      ? "-" + rupiah.replace(/^0+/, "")
+      : rupiah.replace(/^0+/, "");
   return parseInt(rupiah, 10);
 };
 // export const rmComma = (angka) => {
@@ -358,7 +434,10 @@ export const toRp = (angka) => {
   } else {
     numbers = angka;
   }
-  var number_string = numbers === "" || numbers === undefined || numbers === null ? String(0.0) : numbers.toString(),
+  var number_string =
+      numbers === "" || numbers === undefined || numbers === null
+        ? String(0.0)
+        : numbers.toString(),
     split = number_string.split("."),
     sisa = split[0].length % 3,
     rupiah = split[0].substr(0, sisa),
@@ -387,31 +466,50 @@ export const ToastQ = Swal.mixin({
 });
 export const statusQ = (lbl, txt) => {
   if (lbl === "success") {
-    return <button className="btn btn-success btn-sm" style={{width:"100%"}}>{txt}</button>;
+    return (
+      <button className="btn btn-success btn-sm" style={{ width: "100%" }}>
+        {txt}
+      </button>
+    );
   } else if (lbl === "danger") {
-    return <button className="btn btn-danger btn-sm" style={{width:"100%"}}>{txt}</button>;
+    return (
+      <button className="btn btn-danger btn-sm" style={{ width: "100%" }}>
+        {txt}
+      </button>
+    );
   } else if (lbl === "warning") {
     return (
-      <button className="btn btn-warning btn-sm" style={{ color: "white",width:"100%" }}>
+      <button
+        className="btn btn-warning btn-sm"
+        style={{ color: "white", width: "100%" }}
+      >
         {txt}
       </button>
     );
   } else if (lbl === "info") {
-    return <button className="btn btn-info btn-sm" style={{width:"100%"}}>{txt}</button>;
+    return (
+      <button className="btn btn-info btn-sm" style={{ width: "100%" }}>
+        {txt}
+      </button>
+    );
   } else if (lbl === "primary") {
-    return <button className="btn btn-primary btn-sm" style={{width:"100%"}}>{txt}</button>;
+    return (
+      <button className="btn btn-primary btn-sm" style={{ width: "100%" }}>
+        {txt}
+      </button>
+    );
   }
 };
 
 export const getMargin = (input, field, name = "") => {
-    input = parseInt(rmComma(input),10);
-    field = parseInt(rmComma(field),10);
-    console.log(field)
-    if (name === "margin") {
-        return ((input - field) / field) * 100;
-    } else {
-      return field * (input / 100) + field;
-    }
+  input = parseInt(rmComma(input), 10);
+  field = parseInt(rmComma(field), 10);
+  console.log(field);
+  if (name === "margin") {
+    return ((input - field) / field) * 100;
+  } else {
+    return field * (input / 100) + field;
+  }
 };
 
 export const kassa = (param = "") => {
@@ -457,7 +555,8 @@ export const lengthBrg = (str) => {
 export const CapitalizeEachWord = (str) => {
   let splitStr = str.toLowerCase().split(" ");
   for (let i = 0; i < splitStr.length; i++) {
-    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
   return splitStr.join(" ");
 };
@@ -477,9 +576,15 @@ export const convertBase64 = (file) => {
   });
 };
 
-export const swallOption = (msg, callback, isCancel,confirmButtonText='Oke',cancelButtonText='Batal') => {
-  if(confirmButtonText==='') confirmButtonText='oke';
-  if(cancelButtonText==='') cancelButtonText='Batal';
+export const swallOption = (
+  msg,
+  callback,
+  isCancel,
+  confirmButtonText = "Oke",
+  cancelButtonText = "Batal"
+) => {
+  if (confirmButtonText === "") confirmButtonText = "oke";
+  if (cancelButtonText === "") cancelButtonText = "Batal";
   Swal.fire({
     title: "Informasi !!!",
     html: `${msg}`,
@@ -528,7 +633,10 @@ export const swal = (msg) => {
 
 export const btnSave = (className = "", callback, title = "") => {
   return (
-    <button onClick={(e) => callback(e)} className={`btn btn-save ${className}`}>
+    <button
+      onClick={(e) => callback(e)}
+      className={`btn btn-save ${className}`}
+    >
       <i className="fa fa-save"></i>
       {title}
     </button>
@@ -536,18 +644,34 @@ export const btnSave = (className = "", callback, title = "") => {
 };
 export const btnSCancel = (className = "", callback, title = "") => {
   return (
-    <button onClick={(e) => callback(e)} className={`btn btn-cancel ${className}`}>
+    <button
+      onClick={(e) => callback(e)}
+      className={`btn btn-cancel ${className}`}
+    >
       <i className="fa fa-close"></i>
       {title}
     </button>
   );
 };
 
-export const select2Group = (value, onChange, options, onClick, placeholder = "", icon = "fa-plus") => {
+export const select2Group = (
+  value,
+  onChange,
+  options,
+  onClick,
+  placeholder = "",
+  icon = "fa-plus"
+) => {
   return (
     <div className="d-flex align-items-center">
       <div style={{ width: "-webkit-fill-available" }}>
-        <Select autoFocus={true} options={options} placeholder={`Pilih ${placeholder}`} onChange={(value, actionMeta) => onChange(value, actionMeta)} value={value} />
+        <Select
+          autoFocus={true}
+          options={options}
+          placeholder={`Pilih ${placeholder}`}
+          onChange={(value, actionMeta) => onChange(value, actionMeta)}
+          value={value}
+        />
       </div>
       <div style={{ width: "auto", marginLeft: "-2px", zIndex: "99" }}>
         <button
@@ -565,19 +689,34 @@ export const select2Group = (value, onChange, options, onClick, placeholder = ""
   );
 };
 
-export const dateRange = (onApply, value, isActive = "", isShow = true, isLabel = true) => {
+export const dateRange = (
+  onApply,
+  value,
+  isActive = "",
+  isShow = true,
+  isLabel = true
+) => {
   return (
     <div className={`form-group ${!isShow && "none"}`}>
-      <label style={{ display: isLabel || isLabel === undefined ? "block" : "none" }}> Periode </label>
+      <label
+        style={{ display: isLabel || isLabel === undefined ? "block" : "none" }}
+      >
+        {" "}
+        Periode{" "}
+      </label>
       <DateRangePicker
         ranges={rangeDate}
         alwaysShowCalendars={true}
         autoUpdateInput={true}
         onShow={(event, picker) => {
           if (isEmptyOrUndefined(isActive)) {
-            let rmActiveDefault = document.querySelector(`.ranges>ul>li[data-range-key="Hari Ini"]`);
+            let rmActiveDefault = document.querySelector(
+              `.ranges>ul>li[data-range-key="Hari Ini"]`
+            );
             rmActiveDefault.classList.remove("active");
-            let setActive = document.querySelector(`.ranges>ul>li[data-range-key="` + isActive + `"]`);
+            let setActive = document.querySelector(
+              `.ranges>ul>li[data-range-key="` + isActive + `"]`
+            );
             setActive.classList.add("active");
           }
         }}
@@ -587,7 +726,13 @@ export const dateRange = (onApply, value, isActive = "", isShow = true, isLabel 
           onApply(firstDate, lastDate, picker.chosenLabel || "");
         }}
       >
-        <input readOnly={true} type="text" className={`form-control`} name="date" value={value} />
+        <input
+          readOnly={true}
+          type="text"
+          className={`form-control`}
+          name="date"
+          value={value}
+        />
       </DateRangePicker>
     </div>
   );
@@ -605,7 +750,13 @@ export const rmSpaceToStrip = (val) => {
   return val === "" || val === null || val === undefined ? "-" : val;
 };
 export const rmToZero = (val) => {
-  return val === "" || val === "0" || val === null || val === undefined || isNaN(val) ? "0" : val;
+  return val === "" ||
+    val === "0" ||
+    val === null ||
+    val === undefined ||
+    isNaN(val)
+    ? "0"
+    : val;
 };
 
 export const setFocus = (thist, column) => {
@@ -639,7 +790,13 @@ export const onHandleKeyboardChar = function (key, callback) {
 };
 
 export const isEmptyOrUndefined = (val, col, isShowError = true) => {
-  if (val === "" || val === undefined || val === null || val === "null" || val === "undefined") {
+  if (
+    val === "" ||
+    val === undefined ||
+    val === null ||
+    val === "null" ||
+    val === "undefined"
+  ) {
     if (col !== undefined && isShowError === true) {
       handleError(col);
     }
@@ -659,12 +816,17 @@ export const rmStorage = (key) => {
   return localStorage.removeItem(key);
 };
 
-export const noData = (colSpan,msg="") => {
+export const noData = (colSpan, msg = "") => {
   return (
     <tr>
       <td colSpan={colSpan} className="middle text-center">
-        <span className="badge badge-warning" style={{ fontSize: "18px", padding: "10px" }}>
-         {msg===null||msg===""||msg===undefined?"Data tidak tersedia":msg}
+        <span
+          className="badge badge-warning"
+          style={{ fontSize: "18px", padding: "10px" }}
+        >
+          {msg === null || msg === "" || msg === undefined
+            ? "Data tidak tersedia"
+            : msg}
         </span>
       </td>
     </tr>
@@ -710,7 +872,11 @@ export const isProgress = (props, callback) => {
     isDisabled = true;
     loading = (
       <div>
-        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+        <span
+          className="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        />
         <span className="sr-only">Loading...</span>
       </div>
     );
