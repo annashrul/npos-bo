@@ -153,12 +153,7 @@ class ListProduct extends Component {
     const val = e.target.value;
     this.setState({ limit: val }, () => {
       console.log(val);
-      this.props.dispatch(
-        FetchProduct(
-          1,
-          `perpage=${val}&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
-        )
-      );
+      this.props.dispatch(FetchProduct(1, `perpage=${val}`));
     });
   }
 

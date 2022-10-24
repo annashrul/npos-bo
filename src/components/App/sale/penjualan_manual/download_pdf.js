@@ -45,6 +45,7 @@ class DownloadNotaPdf extends Component {
             </p>
             <PDFViewer style={{ width: "100%", height: "400px" }}>
               <MyDocument
+                isReport={this.props.isReport}
                 master={this.props.master}
                 detail={this.props.detail}
               />
@@ -52,6 +53,7 @@ class DownloadNotaPdf extends Component {
             <PDFDownloadLink
               document={
                 <MyDocument
+                  isReport={this.props.isReport}
                   master={this.props.master}
                   detail={this.props.detail}
                 />

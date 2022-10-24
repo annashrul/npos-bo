@@ -1598,6 +1598,7 @@ class Receive extends Component {
                                     {this.props.barang &&
                                     this.props.barang.length > 0 ? (
                                       this.props.barang.map((i, inx) => {
+                                        console.log(i);
                                         return (
                                           <abbr title={i.nm_brg} key={inx}>
                                             <li
@@ -1627,7 +1628,7 @@ class Receive extends Component {
                                                 </div>
                                                 <div className="subtitle">
                                                   {" "}
-                                                  ({i.kd_brg})
+                                                  ({i.kd_brg} - {i.ukuran})
                                                 </div>
                                               </div>
                                             </li>

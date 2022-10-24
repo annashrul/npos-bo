@@ -5,14 +5,29 @@ import Swal from "sweetalert2";
 import { FetchSupplierAll } from "redux/actions/masterdata/supplier/supplier.action";
 import { FetchBrg } from "redux/actions/masterdata/product/product.action";
 import { setProductbrg } from "redux/actions/masterdata/product/product.action";
-import { store, get, update, destroy, cekData, del } from "components/model/app.model";
+import {
+  store,
+  get,
+  update,
+  destroy,
+  cekData,
+  del,
+} from "components/model/app.model";
 import StickyBox from "react-sticky-box";
 import { toRp, ToastQ } from "helper";
 import Select from "react-select";
 import moment from "moment";
 import { storeReturTanpaNota } from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import { withRouter } from "react-router-dom";
-import { handleError, isEmptyOrUndefined, rmComma, setFocus, swal, swallOption, toCurrency } from "../../../../helper";
+import {
+  handleError,
+  isEmptyOrUndefined,
+  rmComma,
+  setFocus,
+  swal,
+  swallOption,
+  toCurrency,
+} from "../../../../helper";
 import Spinner from "Spinner";
 import { HEADERS } from "../../../../redux/actions/_constants";
 import TableCommon from "../../common/TableCommon";
@@ -83,7 +98,9 @@ class ReturTanpaNota extends Component {
       });
     }
     if (localStorage.lk !== undefined && localStorage.lk !== "") {
-      this.props.dispatch(FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5));
+      this.props.dispatch(
+        FetchBrg(1, "barcode", "", localStorage.lk, null, this.autoSetQty, 5)
+      );
     }
   }
   componentWillReceiveProps = (nextProps) => {
@@ -115,7 +132,9 @@ class ReturTanpaNota extends Component {
     }
   };
   componentWillUnmount() {
-    this.props.dispatch(setProductbrg({ status: "", msg: "", result: { data: [] } }));
+    this.props.dispatch(
+      setProductbrg({ status: "", msg: "", result: { data: [] } })
+    );
     destroy(table);
     localStorage.removeItem("sp");
     localStorage.removeItem("lk");
@@ -140,7 +159,9 @@ class ReturTanpaNota extends Component {
     localStorage.setItem("lk", lk.value);
     localStorage.setItem("lk_nama", lk.label);
 
-    this.props.dispatch(FetchBrg(1, "barcode", "", lk.value, null, this.autoSetQty, 5));
+    this.props.dispatch(
+      FetchBrg(1, "barcode", "", lk.value, null, this.autoSetQty, 5)
+    );
 
     destroy(table);
     this.getData();
@@ -391,7 +412,7 @@ class ReturTanpaNota extends Component {
           data["userid"] = this.state.userid;
           console.log(res);
           res.map((item) => {
-            if(!isEmptyOrUndefined(item.kondisi)){
+            if (!isEmptyOrUndefined(item.kondisi)) {
               handleError(`kondisi barang ${item.nm_brg}`);
               setFocus(this, `kondisi_${item.barcode}`);
               return;
@@ -416,7 +437,13 @@ class ReturTanpaNota extends Component {
           parsedata["user"] = this.props.auth.user.username;
           parsedata["lokasi"] = this.state.location_val;
           // console.log({ master: masterOther, detail: detail });
-          this.props.dispatch(storeReturTanpaNota(parsedata, { master: masterOther, detail: res }, (arr) => this.props.history.push(arr)));
+          this.props.dispatch(
+            storeReturTanpaNota(
+              parsedata,
+              { master: masterOther, detail: res },
+              (arr) => this.props.history.push(arr)
+            )
+          );
         });
       }
     });
@@ -461,12 +488,31 @@ class ReturTanpaNota extends Component {
   }
   HandleSearch() {
     if (this.state.supplier === "" || this.state.location === "") {
-      Swal.fire("Gagal!", "Pilih lokasi dan supplier terlebih dahulu.", "error");
+      Swal.fire(
+        "Gagal!",
+        "Pilih lokasi dan supplier terlebih dahulu.",
+        "error"
+      );
     } else {
       localStorage.setItem("anyReturTanpaNota", this.state.search);
 
-      const searchby = parseInt(this.state.searchby, 10) === 1 ? "kd_brg" : parseInt(this.state.searchby, 10) === 2 ? "barcode" : "deskripsi";
-      this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, null, this.autoSetQty, 5));
+      const searchby =
+        parseInt(this.state.searchby, 10) === 1
+          ? "kd_brg"
+          : parseInt(this.state.searchby, 10) === 2
+          ? "barcode"
+          : "deskripsi";
+      this.props.dispatch(
+        FetchBrg(
+          1,
+          searchby,
+          this.state.search,
+          this.state.location,
+          null,
+          this.autoSetQty,
+          5
+        )
+      );
       this.setState({ search: "" });
     }
   }
@@ -498,7 +544,10 @@ class ReturTanpaNota extends Component {
     let lengthBrg = parseInt(this.props.barang.length, 10);
     if (perpage === lengthBrg || perpage < lengthBrg) {
       let searchby = "";
-      if (parseInt(this.state.searchby, 10) === 1 || this.state.searchby === "") {
+      if (
+        parseInt(this.state.searchby, 10) === 1 ||
+        this.state.searchby === ""
+      ) {
         searchby = "kd_brg";
       }
       if (parseInt(this.state.searchby, 10) === 2) {
@@ -507,10 +556,27 @@ class ReturTanpaNota extends Component {
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
       }
-      this.props.dispatch(FetchBrg(1, searchby, localStorage.anyReturTanpaNota !== undefined ? localStorage.anyReturTanpaNota : "", this.state.location, null, this.autoSetQty, this.state.perpage));
+      this.props.dispatch(
+        FetchBrg(
+          1,
+          searchby,
+          localStorage.anyReturTanpaNota !== undefined
+            ? localStorage.anyReturTanpaNota
+            : "",
+          this.state.location,
+          null,
+          this.autoSetQty,
+          this.state.perpage
+        )
+      );
       this.setState({ scrollPage: this.state.scrollPage + 5 });
     } else {
-      Swal.fire({ allowOutsideClick: false, title: "Perhatian", icon: "warning", text: "Tidak ada data." });
+      Swal.fire({
+        allowOutsideClick: false,
+        title: "Perhatian",
+        icon: "warning",
+        text: "Tidak ada data.",
+      });
     }
   }
 
@@ -518,7 +584,11 @@ class ReturTanpaNota extends Component {
     let divToScrollTo;
     divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
     if (divToScrollTo) {
-      divToScrollTo.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "end" });
+      divToScrollTo.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "end",
+      });
     }
   }
 
@@ -557,19 +627,35 @@ class ReturTanpaNota extends Component {
             <h5>Retur Tanpa Nota {this.state.isScroll}</h5>
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
-            <StickyBox offsetTop={100} offsetBottom={20} style={{ width: "25%" }}>
+            <StickyBox
+              offsetTop={100}
+              offsetBottom={20}
+              style={{ width: "25%" }}
+            >
               <div className="card">
                 <div className="card-body">
                   <div className="form-group">
                     <div className="input-group input-group-sm">
-                      <select name="searchby" className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
+                      <select
+                        name="searchby"
+                        className="form-control form-control-sm"
+                        onChange={(e) => this.HandleCommonInputChange(e, false)}
+                      >
                         <option value={1}>Kode Barang</option>
                         <option value={2}>Barcode</option>
                         <option value={3}>Deskripsi</option>
                       </select>
                     </div>
-                    <small id="passwordHelpBlock" className="form-text text-muted">
-                      Cari berdasarkan {parseInt(this.state.searchby, 10) === 1 ? "Kode Barang" : parseInt(this.state.searchby, 10) === 2 ? "Barcode" : "Deskripsi"}
+                    <small
+                      id="passwordHelpBlock"
+                      className="form-text text-muted"
+                    >
+                      Cari berdasarkan{" "}
+                      {parseInt(this.state.searchby, 10) === 1
+                        ? "Kode Barang"
+                        : parseInt(this.state.searchby, 10) === 2
+                        ? "Barcode"
+                        : "Deskripsi"}
                     </small>
                   </div>
                   <div className="form-group">
@@ -580,7 +666,11 @@ class ReturTanpaNota extends Component {
                         id="chat-search"
                         name="search"
                         className="form-control form-control-sm"
-                        placeholder={`Search ${localStorage.anyReturTanpaNota !== undefined ? localStorage.anyReturTanpaNota : ""}`}
+                        placeholder={`Search ${
+                          localStorage.anyReturTanpaNota !== undefined
+                            ? localStorage.anyReturTanpaNota
+                            : ""
+                        }`}
                         value={this.state.search}
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
                         onKeyPress={(event) => {
@@ -603,7 +693,15 @@ class ReturTanpaNota extends Component {
                       </span>
                     </div>
                   </div>
-                  <div className="people-list" style={{ zoom: "90%", height: "300px", maxHeight: "100%", overflowY: "scroll" }}>
+                  <div
+                    className="people-list"
+                    style={{
+                      zoom: "90%",
+                      height: "300px",
+                      maxHeight: "100%",
+                      overflowY: "scroll",
+                    }}
+                  >
                     {!this.props.loadingbrg ? (
                       <div id="chat_user_2">
                         <ul className="chat-list list-unstyled">
@@ -611,7 +709,13 @@ class ReturTanpaNota extends Component {
                             this.props.barang.map((i, inx) => {
                               return (
                                 <li
-                                  style={{ backgroundColor: this.state.scrollPage === inx || this.state.isClick === inx ? "#eeeeee" : "" }}
+                                  style={{
+                                    backgroundColor:
+                                      this.state.scrollPage === inx ||
+                                      this.state.isClick === inx
+                                        ? "#eeeeee"
+                                        : "",
+                                  }}
                                   id={`item${inx}`}
                                   className="clearfix"
                                   key={inx}
@@ -637,11 +741,27 @@ class ReturTanpaNota extends Component {
                                   }
                                 >
                                   <div className="about">
-                                    <div className="status" style={{ color: "black", fontWeight: "bold", wordBreak: "break-all", fontSize: "12px" }}>
+                                    <div
+                                      className="status"
+                                      style={{
+                                        color: "black",
+                                        fontWeight: "bold",
+                                        wordBreak: "break-all",
+                                        fontSize: "12px",
+                                      }}
+                                    >
                                       {i.nm_brg}
                                     </div>
-                                    <div className="status" style={{ color: "#a1887f", fontWeight: "bold", wordBreak: "break-all", fontSize: "12px" }}>
-                                      ({i.kd_brg}) {i.supplier}
+                                    <div
+                                      className="status"
+                                      style={{
+                                        color: "#a1887f",
+                                        fontWeight: "bold",
+                                        wordBreak: "break-all",
+                                        fontSize: "12px",
+                                      }}
+                                    >
+                                      ({i.kd_brg}) {i.supplier} - {i.ukuran}
                                     </div>
                                   </div>
                                 </li>
@@ -666,8 +786,14 @@ class ReturTanpaNota extends Component {
                   </div>
                   <hr />
                   <div className="form-group">
-                    <button className={"btn btn-primary"} style={{ width: "100%" }} onClick={this.handleLoadMore}>
-                      {this.props.loadingbrg ? "tunggu sebentar ..." : "tampilkan lebih banyak"}
+                    <button
+                      className={"btn btn-primary"}
+                      style={{ width: "100%" }}
+                      onClick={this.handleLoadMore}
+                    >
+                      {this.props.loadingbrg
+                        ? "tunggu sebentar ..."
+                        : "tampilkan lebih banyak"}
                     </button>
                   </div>
                 </div>
@@ -680,13 +806,23 @@ class ReturTanpaNota extends Component {
                     <div className="row">
                       <div className="col-md-3">
                         <div className="form-group">
-                          <label className="control-label font-12">Tanggal Order</label>
-                          <input type="date" name={"tanggal"} className={"form-control form-control-lg"} value={this.state.tanggal} onChange={(e) => this.HandleCommonInputChange(e)} />
+                          <label className="control-label font-12">
+                            Tanggal Order
+                          </label>
+                          <input
+                            type="date"
+                            name={"tanggal"}
+                            className={"form-control form-control-lg"}
+                            value={this.state.tanggal}
+                            onChange={(e) => this.HandleCommonInputChange(e)}
+                          />
                         </div>
                       </div>
                       <div className="col-md-3">
                         <div className="form-group">
-                          <label className="control-label font-12">Lokasi</label>
+                          <label className="control-label font-12">
+                            Lokasi
+                          </label>
                           <Select
                             options={this.state.location_data}
                             placeholder="Pilih Lokasi"
@@ -695,14 +831,23 @@ class ReturTanpaNota extends Component {
                               return op.value === this.state.location;
                             })}
                           />
-                          <div className="invalid-feedback" style={this.state.error.location !== "" ? { display: "block" } : { display: "none" }}>
+                          <div
+                            className="invalid-feedback"
+                            style={
+                              this.state.error.location !== ""
+                                ? { display: "block" }
+                                : { display: "none" }
+                            }
+                          >
                             {this.state.error.location}
                           </div>
                         </div>
                       </div>
                       <div className="col-md-3">
                         <div className="form-group">
-                          <label className="control-label font-12">Supplier</label>
+                          <label className="control-label font-12">
+                            Supplier
+                          </label>
                           <Select
                             options={opSupplier}
                             placeholder="Pilih Supplier"
@@ -711,14 +856,23 @@ class ReturTanpaNota extends Component {
                               return op.value === this.state.supplier;
                             })}
                           />
-                          <div className="invalid-feedback" style={this.state.error.supplier !== "" ? { display: "block" } : { display: "none" }}>
+                          <div
+                            className="invalid-feedback"
+                            style={
+                              this.state.error.supplier !== ""
+                                ? { display: "block" }
+                                : { display: "none" }
+                            }
+                          >
                             {this.state.error.supplier}
                           </div>
                         </div>
                       </div>
                       <div className="col-md-3">
                         <div className="form-group">
-                          <label className="control-label font-12">Catatan</label>
+                          <label className="control-label font-12">
+                            Catatan
+                          </label>
                           <textarea
                             className="form-control"
                             id="exampleTextarea1"
@@ -728,7 +882,14 @@ class ReturTanpaNota extends Component {
                             value={this.state.catatan}
                             style={{ height: "39px" }}
                           />
-                          <div className="invalid-feedback" style={this.state.error.catatan !== "" ? { display: "block" } : { display: "none" }}>
+                          <div
+                            className="invalid-feedback"
+                            style={
+                              this.state.error.catatan !== ""
+                                ? { display: "block" }
+                                : { display: "none" }
+                            }
+                          >
                             {this.state.error.catatan}
                           </div>
                         </div>
@@ -739,24 +900,44 @@ class ReturTanpaNota extends Component {
                   <TableCommon
                     head={head}
                     renderRow={this.state.databrg.map((item, index) => {
-                      let total_retur = parseInt(item.qty_retur, 10) * parseInt(rmComma(item.harga_beli), 10);
+                      let total_retur =
+                        parseInt(item.qty_retur, 10) *
+                        parseInt(rmComma(item.harga_beli), 10);
                       grand_total = grand_total + total_retur;
                       localStorage.setItem("grand_total", grand_total);
                       qty_retur = qty_retur + parseInt(item.qty_retur, 10);
                       total_stock = total_stock + parseInt(item.stock, 10);
                       return (
                         <tr key={index}>
-                          <td className="middle nowrap text-center">{index + 1}</td>
+                          <td className="middle nowrap text-center">
+                            {index + 1}
+                          </td>
                           <td className="middle nowrap">
                             {item.nm_brg} <br />
                             {item.barcode}
                           </td>
 
                           <td className="middle nowrap">
-                            <select disabled={item.tambahan.length <= 1} className="form-control in-table" style={{ width: "100px" }} name="satuan" onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                            <select
+                              disabled={item.tambahan.length <= 1}
+                              className="form-control in-table"
+                              style={{ width: "100px" }}
+                              name="satuan"
+                              onChange={(e) =>
+                                this.HandleChangeInputValue(
+                                  e,
+                                  index,
+                                  item.barcode,
+                                  item.tambahan
+                                )
+                              }
+                            >
                               {item.tambahan.map((i) => {
                                 return (
-                                  <option value={i.satuan} selected={i.satuan === item.satuan}>
+                                  <option
+                                    value={i.satuan}
+                                    selected={i.satuan === item.satuan}
+                                  >
                                     {i.satuan}
                                   </option>
                                 );
@@ -769,9 +950,15 @@ class ReturTanpaNota extends Component {
                               style={{ width: "100px", textAlign: "right" }}
                               type="text"
                               name="harga_beli"
-                              onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                              onChange={(e) => this.HandleChangeInputValue(e, index)}
-                              value={toCurrency(this.state.brgval[index].harga_beli)}
+                              onBlur={(e) =>
+                                this.HandleChangeInput(e, item.barcode)
+                              }
+                              onChange={(e) =>
+                                this.HandleChangeInputValue(e, index)
+                              }
+                              value={toCurrency(
+                                this.state.brgval[index].harga_beli
+                              )}
                             />
                           </td>
                           <td className="middle nowrap">
@@ -779,10 +966,14 @@ class ReturTanpaNota extends Component {
                               className="form-control in-table"
                               style={{ width: "140px" }}
                               name="kondisi"
-                              onChange={(e) => this.HandleChangeInput(e, item.barcode)}
+                              onChange={(e) =>
+                                this.HandleChangeInput(e, item.barcode)
+                              }
                               value={this.state.brgval[index].kondisi}
                               defaultValue={this.state.brgval[index].kondisi}
-                              ref={(input) => (this[`kondisi_${item.barcode}`] = input)}
+                              ref={(input) =>
+                                (this[`kondisi_${item.barcode}`] = input)
+                              }
                             >
                               <option value="">Pilih Kondisi</option>
                               <option value="bad_stock">Bad Stock</option>
@@ -799,22 +990,37 @@ class ReturTanpaNota extends Component {
                               style={{ width: "100px" }}
                               type="text"
                               name="ket"
-                              onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                              onChange={(e) => this.HandleChangeInputValue(e, index)}
+                              onBlur={(e) =>
+                                this.HandleChangeInput(e, item.barcode)
+                              }
+                              onChange={(e) =>
+                                this.HandleChangeInputValue(e, index)
+                              }
                               value={this.state.brgval[index].ket}
                             />
                           </td>
-                          <td className="middle nowrap text-right">{item.stock}</td>
+                          <td className="middle nowrap text-right">
+                            {item.stock}
+                          </td>
                           <td className="middle nowrap">
                             <input
                               className="form-control in-table"
                               style={{ width: "100px", textAlign: "right" }}
                               type="text"
                               name="qty_retur"
-                              onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                              onChange={(e) => this.HandleChangeInputValue(e, index)}
-                              onFocus={(e) => this.HandleFocusInputReset(e, index)}
-                              ref={(input) => (this[`qty_retur-${btoa(item.barcode)}`] = input)}
+                              onBlur={(e) =>
+                                this.HandleChangeInput(e, item.barcode)
+                              }
+                              onChange={(e) =>
+                                this.HandleChangeInputValue(e, index)
+                              }
+                              onFocus={(e) =>
+                                this.HandleFocusInputReset(e, index)
+                              }
+                              ref={(input) =>
+                                (this[`qty_retur-${btoa(item.barcode)}`] =
+                                  input)
+                              }
                               value={this.state.brgval[index].qty_retur}
                             />
                           </td>
@@ -822,26 +1028,31 @@ class ReturTanpaNota extends Component {
                             {toRp(total_retur)}
                           </td>
                           <td className="middle nowrap">
-                            <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
+                            <button
+                              className="btn btn-primary btn-sm"
+                              onClick={(e) => this.HandleRemove(e, item.id)}
+                            >
                               <i className="fa fa-trash" />
                             </button>
                           </td>
                         </tr>
                       );
                     })}
-                    footer={
-                      [
-                        {
-                          data:[
-                            {label:"Total",colSpan:6,className:"text-left"},
-                            {label:toRp(total_stock),colSpan:1},
-                            {label:toRp(qty_retur),colSpan:1},
-                            {label:toRp(grand_total),colSpan:1},
-                            {label:"",colSpan:1},
-                          ]
-                        }
-                      ]
-                    }
+                    footer={[
+                      {
+                        data: [
+                          {
+                            label: "Total",
+                            colSpan: 6,
+                            className: "text-left",
+                          },
+                          { label: toRp(total_stock), colSpan: 1 },
+                          { label: toRp(qty_retur), colSpan: 1 },
+                          { label: toRp(grand_total), colSpan: 1 },
+                          { label: "", colSpan: 1 },
+                        ],
+                      },
+                    ]}
                   />
                   <hr />
                   <div className="row">
@@ -856,7 +1067,6 @@ class ReturTanpaNota extends Component {
                         />
                       </div>
                     </div>
-                    
                   </div>
                 </div>
               </div>

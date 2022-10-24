@@ -337,6 +337,7 @@ class SaleArchiveManual extends Component {
         ) : null}
         {isModalRePrint && this.props.isOpen ? (
           <DownloadNotaPdf
+            isReport={true}
             master={detail}
             detail={detail.detail}
             kdTrx={kd_trx}
