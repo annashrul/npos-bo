@@ -32,7 +32,7 @@ export function setScanResiData(data = []) {
 }
 export const storeScanResi = (data, callback) => {
   return (dispatch) => {
-    handlePost("scanresi", data, (res, msg, status) => {
+    handlePost("scanresi/create", data, (res, msg, status) => {
       if (status) {
         swallOption("transaksi berhasil", () => {
           callback();
