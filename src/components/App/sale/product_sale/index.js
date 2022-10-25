@@ -1097,7 +1097,7 @@ class Sale extends Component {
                                         {i.nm_brg}
                                       </div>
                                       <div className="subtitle">
-                                        ({i.barcode})
+                                        ({i.barcode} - {i.ukuran})
                                       </div>
                                     </div>
                                   </li>

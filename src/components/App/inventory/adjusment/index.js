@@ -1,15 +1,40 @@
 import React, { Component } from "react";
-import { store, get, update, destroy, cekData, del } from "components/model/app.model";
+import {
+  store,
+  get,
+  update,
+  destroy,
+  cekData,
+  del,
+} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
-import { FetchCodeAdjustment, storeAdjusment } from "redux/actions/adjustment/adjustment.action";
+import {
+  FetchCodeAdjustment,
+  storeAdjusment,
+} from "redux/actions/adjustment/adjustment.action";
 import { withRouter } from "react-router-dom";
-import { float, getStorage, handleError, isEmptyOrUndefined, noData, rmComma, setFocus, setStorage, swallOption, toCurrency } from "../../../../helper";
+import {
+  float,
+  getStorage,
+  handleError,
+  isEmptyOrUndefined,
+  noData,
+  rmComma,
+  setFocus,
+  setStorage,
+  swallOption,
+  toCurrency,
+} from "../../../../helper";
 import TransaksiWrapper from "../../common/TransaksiWrapper";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import TableCommon from "../../common/TableCommon";
 import LokasiCommon from "../../common/LokasiCommon";
-import { actionDataCommon, getDataCommon, handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
+import {
+  actionDataCommon,
+  getDataCommon,
+  handleInputOnBlurCommon,
+} from "../../common/FlowTrxCommon";
 import { readProductTrx } from "../../../../redux/actions/masterdata/product/product.action";
 
 const table = "adjusment";
@@ -90,10 +115,14 @@ class TrxAdjustment extends Component {
     if (data.status === "kurang") {
       saldo_stock = parseInt(data.stock, 10) - parseInt(rmComma(val), 10);
     }
-    if (data.status === "tambah" || data.status === "" || data.status === undefined) {
+    if (
+      data.status === "tambah" ||
+      data.status === "" ||
+      data.status === undefined
+    ) {
       saldo_stock = parseInt(data.stock, 10) + parseInt(rmComma(val), 10);
     }
-   
+
     return saldo_stock;
   }
 
@@ -147,9 +176,13 @@ class TrxAdjustment extends Component {
         return;
       }
     }
-    handleInputOnBlurCommon(e, { id: this.state.brgval[i].barcode, table: table, where: "barcode" }, () => {
-      this.getData();
-    });
+    handleInputOnBlurCommon(
+      e,
+      { id: this.state.brgval[i].barcode, table: table, where: "barcode" },
+      () => {
+        this.getData();
+      }
+    );
   }
   HandleFocusInputReset(e, i) {
     let col = e.target.name;
@@ -227,7 +260,10 @@ class TrxAdjustment extends Component {
           data["user"] = auth.user.username;
           data["lokasi_val"] = location.value;
           data["alamat"] = auth.user.alamat;
-          data["site_title"] = auth.user.site_title === undefined ? auth.user.title : auth.user.site_title;
+          data["site_title"] =
+            auth.user.site_title === undefined
+              ? auth.user.title
+              : auth.user.site_title;
           this.props.dispatch(
             storeAdjusment(data, () => {
               this.handleClear();
@@ -271,14 +307,23 @@ class TrxAdjustment extends Component {
           }
         }}
         callbackAdd={(res) => this.HandleAdd(res)}
-        data={this.props.dataTrx.data !== undefined && this.props.dataTrx.data.length > 0 ? this.props.dataTrx.data : []}
+        data={
+          this.props.dataTrx.data !== undefined &&
+          this.props.dataTrx.data.length > 0
+            ? this.props.dataTrx.data
+            : []
+        }
         renderRow={
           <div style={{ width: !toggleSide ? "70%" : "100%" }}>
             <div className="card">
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-4">
-                    <LokasiCommon callback={(val) => this.HandleChangeSelect(val, "lokasi")} dataEdit={location.value} isRequired={true} />
+                    <LokasiCommon
+                      callback={(val) => this.HandleChangeSelect(val, "lokasi")}
+                      dataEdit={location.value}
+                      isRequired={true}
+                    />
                   </div>
                 </div>
                 <TableCommon
@@ -292,7 +337,8 @@ class TrxAdjustment extends Component {
                               <td className="middle nowrap">
                                 {item.nm_brg}
                                 <div className="subtitle">
-                                  {item.barcode} ( {toCurrency(parseInt(item.harga_beli, 10))} )
+                                  {item.barcode} ({" "}
+                                  {toCurrency(parseInt(item.harga_beli, 10))} )
                                 </div>
                               </td>
                               <td className="middle nowrap">
@@ -301,12 +347,20 @@ class TrxAdjustment extends Component {
                                   className="form-control in-table"
                                   name="satuan"
                                   style={{ width: "100px" }}
-                                  disabled={item.tambahan.length <= 1 ? true : false}
-                                  onChange={(e) => this.HandleOnChange(e, index, item.tambahan)}
+                                  disabled={
+                                    item.tambahan.length <= 1 ? true : false
+                                  }
+                                  onChange={(e) =>
+                                    this.HandleOnChange(e, index, item.tambahan)
+                                  }
                                 >
                                   {item.tambahan.map((i, key) => {
                                     return (
-                                      <option key={key} value={i.satuan} selected={i.satuan === item.satuan}>
+                                      <option
+                                        key={key}
+                                        value={i.satuan}
+                                        selected={i.satuan === item.satuan}
+                                      >
                                         {i.satuan}
                                       </option>
                                     );
@@ -318,7 +372,9 @@ class TrxAdjustment extends Component {
                                 <select
                                   style={{ width: "100px" }}
                                   name="status"
-                                  onChange={(e) => this.HandleOnChange(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleOnChange(e, index)
+                                  }
                                   value={this.state.brgval[index].status}
                                   className="form-control in-table"
                                 >
@@ -331,16 +387,29 @@ class TrxAdjustment extends Component {
                                   style={{ width: "100px" }}
                                   type="text"
                                   name="qty"
-                                  ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)}
-                                  onFocus={(e) => this.HandleFocusInputReset(e, index)}
+                                  ref={(input) =>
+                                    (this[`qty-${btoa(item.barcode)}`] = input)
+                                  }
+                                  onFocus={(e) =>
+                                    this.HandleFocusInputReset(e, index)
+                                  }
                                   onBlur={(e) => this.HandleOnBlur(e, index)}
-                                  onChange={(e) => this.HandleOnChange(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleOnChange(e, index)
+                                  }
                                   value={toCurrency(brgval[index].qty)}
                                   className="form-control in-table text-right"
                                 />
                               </td>
                               <td className="middle nowrap">
-                                <input style={{ width: "100px" }} disabled={true} type="text" name="stock" value={toCurrency(parseInt(item.stock, 10))} className="form-control in-table text-right" />
+                                <input
+                                  style={{ width: "100px" }}
+                                  disabled={true}
+                                  type="text"
+                                  name="stock"
+                                  value={toCurrency(parseInt(item.stock, 10))}
+                                  className="form-control in-table text-right"
+                                />
                               </td>
                               <td className="middle nowrap">
                                 <input
@@ -348,13 +417,18 @@ class TrxAdjustment extends Component {
                                   disabled={true}
                                   type="text"
                                   name="saldo_stock"
-                                  value={toCurrency(this.getSaldoStock(item.qty, index))}
+                                  value={toCurrency(
+                                    this.getSaldoStock(item.qty, index)
+                                  )}
                                   className="form-control in-table text-right"
                                 />
                               </td>
 
                               <td className="middle nowrap">
-                                <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
+                                <button
+                                  className="btn btn-primary btn-sm"
+                                  onClick={(e) => this.HandleRemove(e, item.id)}
+                                >
                                   <i className="fa fa-trash" />
                                 </button>
                               </td>

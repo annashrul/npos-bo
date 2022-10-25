@@ -8,7 +8,7 @@ import ReactPDF, {
   PDFViewer,
   PDFDownloadLink,
 } from "@react-pdf/renderer";
-import { toRp } from "../../../../helper";
+import { parseToRp, toRp } from "../../../../helper";
 // Create styles
 const borderColor = "black";
 
@@ -186,6 +186,23 @@ class MyDocument extends Component {
   }
 
   render() {
+    console.log(this.props.isReport ? "aya" : "eweh");
+
+    const { master, detail } = this.props;
+    if (this.props.isReport) {
+      let splitPenerima = master.penerima.split("|");
+      let splitPengirim = master.pengirim.split("|");
+      Object.assign(master, {
+        nama_penerima: splitPenerima[0],
+        no_telepon_penerima: splitPenerima[1],
+        alamat_penerima: splitPenerima[2],
+        nama_pengirim: splitPengirim[0],
+        no_telepon_pengirim: splitPengirim[1],
+        alamat_pengirim: splitPengirim[2],
+      });
+    }
+    let totalQty = 0;
+    let totalTrx = 0;
     return (
       <Document>
         <Page style={styles.page} size="A4" wrap>
@@ -231,13 +248,13 @@ class MyDocument extends Component {
                   Penerima
                 </Text>
                 <Text style={{ textAlign: "left" }}>
-                  {this.props.master.nama_penerima}
+                  {master.nama_penerima}
                 </Text>
                 <Text style={{ textAlign: "left" }}>
-                  {this.props.master.alamat_penerima}
+                  {master.alamat_penerima}
                 </Text>
                 <Text style={{ textAlign: "left" }}>
-                  Telp. {this.props.master.no_telepon_penerima}
+                  Telp. {master.no_telepon_penerima}
                 </Text>
               </View>
               <View style={{ width: "40%" }}>
@@ -262,13 +279,13 @@ class MyDocument extends Component {
                   Pengirim
                 </Text>
                 <Text style={{ textAlign: "left" }}>
-                  {this.props.master.nama_pengirim}
+                  {master.nama_pengirim}
                 </Text>
                 <Text style={{ textAlign: "left" }}>
-                  {this.props.master.alamat_pengirim}
+                  {master.alamat_pengirim}
                 </Text>
                 <Text style={{ textAlign: "left" }}>
-                  Telp. {this.props.master.no_telepon_pengirim}
+                  Telp. {master.no_telepon_pengirim}
                 </Text>
               </View>
             </View>
@@ -282,17 +299,19 @@ class MyDocument extends Component {
               <Text style={styles.harga}>HARGA</Text>
               <Text style={styles.jumlah}>JUMLAH</Text>
             </View>
-            {this.props.detail.map((res, i) => {
+            {detail.map((res, i) => {
+              totalQty += Number(res.qty);
+              totalTrx += Number(res.qty) * Number(res.harga);
               return (
                 <View style={styles.row} key={i}>
                   <Text style={styles.rowNo}>{i + 1}</Text>
                   <Text style={styles.rowSKU}>{res.sku}</Text>
                   <Text style={styles.rowNama}>{res.nama}</Text>
                   <Text style={styles.rowMotif}>{res.motif}</Text>
-                  <Text style={styles.rowQty}>{res.qty}</Text>
-                  <Text style={styles.rowHarga}>{toRp(res.harga)}</Text>
+                  <Text style={styles.rowQty}>{parseToRp(res.qty)}</Text>
+                  <Text style={styles.rowHarga}>{parseToRp(res.harga)}</Text>
                   <Text style={styles.rowJumlah}>
-                    {toRp(Number(res.qty) * Number(res.harga))}
+                    {parseToRp(Number(res.qty) * Number(res.harga))}
                   </Text>
                 </View>
               );
@@ -330,7 +349,7 @@ class MyDocument extends Component {
                 color: "white",
               }}
             >
-              10
+              {parseToRp(totalQty)}
             </Text>
             <Text
               style={{
@@ -345,7 +364,7 @@ class MyDocument extends Component {
                 color: "white",
               }}
             >
-              1.350.000
+              {parseToRp(totalTrx)}
             </Text>
           </View>
           <View

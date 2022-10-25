@@ -928,7 +928,7 @@ class PurchaseOrder extends Component {
                                         fontSize: "12px",
                                       }}
                                     >
-                                      ({i.kd_brg}) {i.supplier}
+                                      ({i.kd_brg}) {i.supplier} - {i.ukuran}
                                     </div>
                                   </div>
                                 </li>
