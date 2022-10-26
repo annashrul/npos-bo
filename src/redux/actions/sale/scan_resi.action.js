@@ -4,7 +4,7 @@ import { SCAN_RESI, HEADERS } from "../_constants";
 // import { destroy } from "components/model/app.model";
 import { handlePost } from "../handleHttp";
 // import { ModalToggle, ModalType } from "../modal.action";
-import { swal, swallOption } from "../../../helper";
+import { swal, swalWithCallback } from "../../../helper";
 export function setLoading(load) {
   return {
     type: SCAN_RESI.LOADING,
@@ -34,7 +34,7 @@ export const storeScanResi = (data, callback) => {
   return (dispatch) => {
     handlePost("scanresi/create", data, (res, msg, status) => {
       if (status) {
-        swallOption("transaksi berhasil", () => {
+        swalWithCallback("Nomor resi disimpan", () => {
           callback();
         });
       } else {
