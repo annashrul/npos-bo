@@ -7,6 +7,7 @@ import {
   handleGet,
   handleGetExport,
   handlePost,
+  handlePut,
 } from "../handleHttp";
 import { ModalToggle } from "redux/actions/modal.action";
 import { ToastQ, getStorage, rmStorage } from "../../../helper";
@@ -38,11 +39,40 @@ export function setLoadingApproval(load) {
   };
 }
 
+export const getApprovalSoAction = (where = "") => {
+  return (dispatch) => {
+    let url = `so`;
+    if (where !== "") {
+      url += `?${where}`;
+    }
+    handleGet(url, (res) => {
+      dispatch(setDataApproval(res.data));
+    });
+  };
+};
+
 export const getCodeSoAction = (val) => {
   return (dispatch) => {
     handleGet(`so/code?lokasi=${btoa(val)}`, (res) => {
       console.log("sales order", res);
       dispatch(setSoCode(res.data));
+    });
+  };
+};
+
+export const postSalesOrderAction = (data, callback) => {
+  return (dispatch) => {
+    handlePost(`so`, data, (res, msg, isTrue) => {
+      console.log(res);
+      callback(isTrue);
+    });
+  };
+};
+
+export const putApprovalSalesOrderAction = (kd_so) => {
+  return (dispatch) => {
+    handlePut(`so`, { kd_so: kd_so }, (res, msg, isTrue) => {
+      dispatch(getApprovalSoAction());
     });
   };
 };
