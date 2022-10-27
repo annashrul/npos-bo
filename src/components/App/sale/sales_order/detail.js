@@ -6,11 +6,21 @@ import connect from "react-redux/es/connect/connect";
 import HeaderDetailCommon from "../../common/HeaderDetailCommon";
 import TableCommon from "../../common/TableCommon";
 import moment from "moment";
-import { noData, parseToRp } from "../../../../helper";
+import { noData, parseToRp, rmComma, toRp } from "../../../../helper";
+import ButtonTrxCommon from "../../common/ButtonTrxCommon";
+import { putApprovalSalesOrderAction } from "../../../../redux/actions/sale/sales_order.action";
 class DetailApprovalSalesOrder extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      dataDetail: [],
+      totalQty: 0,
+      timer: 0,
+    };
     this.toggle = this.toggle.bind(this);
+    this.handleSum = this.handleSum.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   toggle(e) {
     e.preventDefault();
@@ -18,7 +28,63 @@ class DetailApprovalSalesOrder extends Component {
     this.props.dispatch(ModalToggle(bool));
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ dataDetail: nextProps.data.detail });
+  }
+  componentWillMount() {
+    this.setState({ dataDetail: this.props.data.detail });
+  }
+  handleSum() {
+    let totalQty = 0;
+    this.state.dataDetail.map((res) => {
+      console.log(res);
+      totalQty += Number(res.qty_brg);
+    });
+    clearTimeout(this.state.timer);
+    const timer = setTimeout(() => {
+      this.setState({ totalQty }, () => {
+        console.log("total qty", totalQty);
+      });
+    }, 1000);
+    this.setState({ timer });
+  }
+  handleChange(e, i) {
+    const val = e.target.value;
+    const dataDetail = this.state.dataDetail;
+    dataDetail[i]["qty_brg"] = rmComma(val);
+    this.setState({ dataDetail }, () => {
+      this.handleSum();
+    });
+    console.log(val);
+  }
+
+  handleSubmit() {
+    const newDatas = this.state.dataDetail;
+    let subtotal_so = 0;
+    let qty_so = 0;
+    let detail = [];
+    let kd_so = this.props.data.kd_so;
+    newDatas.map((res, i) => {
+      qty_so += Number(res.qty_brg);
+      subtotal_so += Number(res.harga);
+      detail.push({
+        qty_brg: res.qty_brg,
+        kd_brg: res.kd_brg,
+        kd_so,
+      });
+    });
+    let master = {
+      kd_so,
+      subtotal_so,
+      qty_so,
+    };
+    this.props.dispatch(putApprovalSalesOrderAction({ master, detail }));
+
+    // console.log(newDatas);
+  }
+
   render() {
+    console.log("data detail", this.state.dataDetail);
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { colSpan: 3, label: "Barang" },
@@ -71,7 +137,9 @@ class DetailApprovalSalesOrder extends Component {
             head={head}
             rowSpan={rowSpan}
             renderRow={
-              typeof data.detail === "object" && data.detail.length > 0
+              typeof data.detail === "object" &&
+              data.detail.length > 0 &&
+              this.state.dataDetail.length > 0
                 ? data.detail.map((v, i) => {
                     totalQtyPerHalaman += parseFloat(v.qty_brg);
                     return (
@@ -81,7 +149,18 @@ class DetailApprovalSalesOrder extends Component {
                         <td className="middle nowrap">{v.barcode}</td>
                         <td className="middle nowrap">{v.nm_brg}</td>
                         <td className="middle nowrap text-right">
-                          {parseToRp(v.qty_brg)}
+                          <input
+                            style={{ width: "100px", textAlign: "right" }}
+                            onChange={(e) => this.handleChange(e, i)}
+                            name={`qty_brg_${i}`}
+                            value={toRp(
+                              this.state.dataDetail[i].qty_brg > 0
+                                ? this.state.dataDetail[i].qty_brg
+                                : v.qty_brg
+                            )}
+                            className="form-control in-table"
+                          />
+                          {/* {parseToRp(v.qty_brg)} */}
                         </td>
                       </tr>
                     );
@@ -93,14 +172,36 @@ class DetailApprovalSalesOrder extends Component {
                 data: [
                   {
                     colSpan: 4,
-                    label: "Total perhalaman",
+                    label: "Total",
                     className: "text-left",
                   },
-                  { colSpan: 1, label: parseToRp(totalQtyPerHalaman) },
+                  {
+                    colSpan: 1,
+                    label: (
+                      <input
+                        readOnly
+                        className="form-control in-table text-right"
+                        value={toRp(
+                          this.state.totalQty > 1
+                            ? this.state.totalQty
+                            : totalQtyPerHalaman
+                        )}
+                      />
+                    ),
+                  },
                 ],
               },
             ]}
           />
+          <div style={{ float: "right" }}>
+            <ButtonTrxCommon
+              disabled={false}
+              callback={(e, res) => {
+                console.log(res);
+                this.handleSubmit();
+              }}
+            />
+          </div>
         </ModalBody>
       </WrapperModal>
     );

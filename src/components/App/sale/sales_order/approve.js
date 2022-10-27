@@ -5,7 +5,9 @@ import {
   getFetchWhere,
   noData,
   parseToRp,
+  rmComma,
   swallOption,
+  toRp,
 } from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
@@ -28,6 +30,7 @@ class ApproveSo extends Component {
       isModalDetail: false,
       detail: {},
       periode: "",
+      dataApprove: [],
     };
     this.handleModal = this.handleModal.bind(this);
     this.handleService = this.handleService.bind(this);
@@ -142,6 +145,13 @@ class ApproveSo extends Component {
                           {parseToRp(Number(v.detail.length))}
                         </td>
                         <td className="middle nowrap text-right">
+                          {/* <input
+                            style={{ width: "100px", textAlign: "right" }}
+                            onChange={(e) => this.handleChange(e, i)}
+                            name={`qty_so_${i}`}
+                            value={toRp(this.state.dataApprove[i].qty_so)}
+                            className="form-control in-table"
+                          /> */}
                           {parseToRp(Number(v.qty_so))}
                         </td>
                         <td className="middle nowrap text-right">
@@ -187,7 +197,10 @@ class ApproveSo extends Component {
           ]}
         />
         {this.state.isModalDetail && this.props.isOpen ? (
-          <DetailApprovalSalesOrder data={this.state.detail} />
+          <DetailApprovalSalesOrder
+            data={this.state.detail}
+            dataApprove={this.state.dataApprove}
+          />
         ) : null}
       </Layout>
     );

@@ -66,7 +66,7 @@ export const getSoAction = () => {
     });
   };
 };
-export const getApprovalSoAction = (where = "") => {
+export const getApprovalSoAction = (where = "", callback = null) => {
   return (dispatch) => {
     let url = `so/approval`;
     if (where !== "") {
@@ -74,6 +74,9 @@ export const getApprovalSoAction = (where = "") => {
     }
     handleGet(url, (res) => {
       dispatch(setDataApproval(res.data));
+      if (callback !== null) {
+        callback(res.data.result.data);
+      }
     });
   };
 };
@@ -96,10 +99,11 @@ export const postSalesOrderAction = (data, callback) => {
   };
 };
 
-export const putApprovalSalesOrderAction = (kd_so) => {
+export const putApprovalSalesOrderAction = (data) => {
   return (dispatch) => {
-    handlePut(`so`, { kd_so: kd_so }, (res, msg, isTrue) => {
+    handlePut(`so`, data, (res, msg, isTrue) => {
       dispatch(getApprovalSoAction());
+      dispatch(ModalToggle(!isTrue));
     });
   };
 };

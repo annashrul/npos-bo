@@ -638,7 +638,7 @@ class CreateSO extends Component {
                                         wordBreak: "break-all",
                                       }}
                                     >
-                                      ({i.kd_brg}) {i.supplier}
+                                      ({i.kd_brg}) {i.supplier} - {i.ukuran}
                                     </div>
                                   </div>
                                 </li>
