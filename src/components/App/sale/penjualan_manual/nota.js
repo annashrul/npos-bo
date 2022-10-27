@@ -161,14 +161,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 24,
     fontStyle: "bold",
-    backgroundColor: "#a1887f",
+    backgroundColor: "white",
   },
   header2: {
     // marginTop: "5px",
     flexDirection: "row",
     // borderBottomColor: "black",
     // borderBottomWidth: 1,
-    backgroundColor: "#a1887f",
+    backgroundColor: "white",
     alignItems: "center",
     height: 24,
     fontStyle: "bold",
@@ -223,7 +223,7 @@ class MyDocument extends Component {
                 justifyContent: "flex-end",
               }}
             >
-              <Text style={{ backgroundColor: "#a1887f", padding: 5 }}>
+              <Text style={{ backgroundColor: "white", padding: 5 }}>
                 Tanggal: 11/10/2022
               </Text>
             </View>
@@ -294,7 +294,7 @@ class MyDocument extends Component {
               <Text style={styles.no}>NO</Text>
               <Text style={styles.sku}>SKU</Text>
               <Text style={styles.nama}>NAMA</Text>
-              <Text style={styles.motif}>MOTIF</Text>
+              <Text style={styles.motif}>VARIAN</Text>
               <Text style={styles.qty}>QTY</Text>
               <Text style={styles.harga}>HARGA</Text>
               <Text style={styles.jumlah}>JUMLAH</Text>
@@ -387,7 +387,7 @@ class MyDocument extends Component {
                 Penerima
               </Text>
               <Text style={{ textAlign: "left", height: "30px" }}></Text>
-              <Text style={{ textAlign: "center" }}>Morp Apparel</Text>
+              <Text style={{ textAlign: "center" }}></Text>
             </View>
             <View style={{ width: "40%" }}>
               <Text
@@ -408,7 +408,7 @@ class MyDocument extends Component {
                 Hormat Kami,
               </Text>
               <Text style={{ textAlign: "left", height: "30px" }}></Text>
-              <Text style={{ textAlign: "center" }}>Elz Calza</Text>
+              <Text style={{ textAlign: "center" }}>Morph Apparel</Text>
             </View>
           </View>
         </Page>
