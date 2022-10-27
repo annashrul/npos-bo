@@ -4541,7 +4541,7 @@ class FormProducts extends Component {
                     ) : (
                       ""
                     )}
-                    {document
+                    {/* {document
                       .getElementById("tambahan_barang")
                       .value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
                       <div className="row">
@@ -4575,7 +4575,7 @@ class FormProducts extends Component {
                       </div>
                     ) : (
                       ""
-                    )}
+                    )} */}
 
                     <div className="form-group">
                       {select2Group(
