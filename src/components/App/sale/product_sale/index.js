@@ -709,7 +709,7 @@ class Sale extends Component {
           kassa:
             atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
             atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
-            atob(atob(Cookies.get("tnt="))) !== "morph-apparel" ||
+            atob(atob(Cookies.get("tnt="))) === "morph-apparel" ||
             atob(atob(Cookies.get("tnt="))) === "npos" ||
             atob(atob(Cookies.get("tnt="))) === "miski"
               ? "Z"
@@ -1579,7 +1579,7 @@ class Sale extends Component {
                           )}
                           {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
                           atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
-                          atob(atob(Cookies.get("tnt="))) !== "morph-apparel" ||
+                          atob(atob(Cookies.get("tnt="))) === "morph-apparel" ||
                           atob(atob(Cookies.get("tnt="))) === "npos" ||
                           atob(atob(Cookies.get("tnt="))) === "miski" ? (
                             <div>
