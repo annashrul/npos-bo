@@ -120,6 +120,7 @@ class Sale extends Component {
       modalListHoldBill: false,
       isModalForm: false,
       idxQty: 0,
+      isSo: false,
     };
     this.HandleRemove = this.HandleRemove.bind(this);
     this.HandleAddBrg = this.HandleAddBrg.bind(this);
@@ -136,6 +137,7 @@ class Sale extends Component {
     this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this);
     this.handleHoldBill = this.handleHoldBill.bind(this);
     this.fetchDataEdit = this.fetchDataEdit.bind(this);
+    this.handleChangeIsSo = this.handleChangeIsSo.bind(this);
   }
 
   handleClickToggle(e) {
@@ -271,37 +273,6 @@ class Sale extends Component {
   }
   getProps(props) {
     let state = {};
-    if (this.state.isModalForm === false) {
-      if (props.detailSo !== undefined || props.detailSale.length > 0) {
-        // this.handleClear();
-        props.detailSo.map((res, key) => {
-          const col = {
-            barcode: res.barcode,
-            diskon_nominal: 0,
-            diskon_persen: 0,
-            harga: res.harga,
-            harga2: "0",
-            harga3: "0",
-            harga4: "0",
-            harga_old: "0",
-            hrg_beli: res.hrg_beli,
-            isOpenPrice: false,
-            kategori: res.kategori,
-            kd_brg: res.kd_brg,
-            nm_brg: res.nm_brg,
-            ppn: res.ppn,
-            qty: res.qty_brg,
-            satuan: res.satuan,
-            services: "0",
-            stock: res.stock,
-            tambahan: undefined,
-          };
-          // this.HanldeSetAddBrg(col, "", key);
-        });
-        console.log("detail so", props.detailSo);
-      }
-    }
-
     if (props.dataSo !== undefined && props.dataSo.length > 0) {
       let newSo = handleDataSelect(props.dataSo, "kd_so", "kd_so");
       Object.assign(state, { so_data: newSo });
@@ -434,13 +405,16 @@ class Sale extends Component {
     }
   }
 
+  handleChangeIsSo(e) {
+    this.setState({ isSo: e.target.checked });
+  }
+
   HandleChangeSelect(state, res) {
     if (state === "so") {
-      this.setState({ so: state }, () => {
+      this.setState({ so: res }, () => {
         this.props.dispatch(
           getDetailSoAction(res.value, (row) => {
-            console.log("row detail so", row);
-
+            console.log("######################", row);
             this.handleClear();
             row.map((val, key) => {
               const col = {
@@ -625,6 +599,7 @@ class Sale extends Component {
   HandleReset(e) {
     e.preventDefault();
     swallOption("anda yakin akan membatalkan transaksi ini ?", () => {
+      this.setState({ isSo: false, so: "", so_data: [] });
       this.handleClear();
     });
   }
@@ -744,7 +719,12 @@ class Sale extends Component {
             ? this.state.catatan
             : "-",
         };
-
+        if (this.state.so !== "" && this.state.isSo) {
+          Object.assign(master, { kd_so: this.state.so.value });
+        } else {
+          Object.assign(master, { kd_so: "" });
+        }
+        console.log("handle submit", master);
         if (this.props.match.params.slug !== undefined) {
           Object.assign(master, { idLog: getStorage("idLogEdit") });
         }
@@ -1068,12 +1048,20 @@ class Sale extends Component {
                 <div className="card">
                   <div className="card-body">
                     <div className="form-group">
-                      <SelectCommon
-                        label="Tarik Data Dari SO"
-                        options={this.state.so_data}
-                        callback={(res) => this.HandleChangeSelect("so", res)}
-                        dataEdit={this.state.so}
-                      />
+                      <input
+                        type="checkbox"
+                        value={this.state.isSo}
+                        onChange={this.handleChangeIsSo}
+                      />{" "}
+                      tarik data so
+                      {this.state.isSo && (
+                        <SelectCommon
+                          isLabel={false}
+                          options={this.state.so_data}
+                          callback={(res) => this.HandleChangeSelect("so", res)}
+                          dataEdit={this.state.so}
+                        />
+                      )}
                     </div>
                     <div className="form-group">
                       <div className="input-group input-group-sm">
@@ -1765,6 +1753,14 @@ class Sale extends Component {
               detail={this.state.detail}
               subtotal={totalsub}
               lokasi={this.props.dataDetailLocation}
+              callback={() => {
+                console.log("########################################");
+                // this.props.dispatch(getSoAction());
+                // this.setState();
+                this.setState({ isSo: false, so: "", so_data: [] }, () => {
+                  this.props.dispatch(getSoAction());
+                });
+              }}
             />
           ) : null}
 

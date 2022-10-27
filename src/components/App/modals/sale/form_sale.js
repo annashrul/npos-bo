@@ -15,6 +15,7 @@ import KeyHandler, { KEYPRESS } from "react-key-handler";
 import SelectCommon from "../../common/SelectCommon";
 
 import { handleError, setFocus } from "../../../../helper";
+import { getSoAction } from "../../../../redux/actions/sale/sales_order.action";
 class FormSale extends Component {
   constructor(props) {
     super(props);
@@ -192,6 +193,7 @@ class FormSale extends Component {
     console.log(propsMaster);
 
     field["master"] = {
+      kd_so: propsMaster.kd_so,
       cetak_nota: true,
       tempo: propsMaster.tempo,
       kd_cust: propsMaster.kd_cust,
@@ -324,11 +326,17 @@ class FormSale extends Component {
         parsedata["master"]["kartu"] = bank[0];
       }
       newparse["parsedata"] = parsedata;
+
       if (propsMaster.idLog !== undefined) {
         this.props.dispatch(storeSaleEdit(newparse));
       } else {
+        console.log("submit");
+        this.props.callback();
         this.props.dispatch(
-          storeSale(newparse, (arr) => this.props.history.push(arr))
+          storeSale(newparse, (arr) => {
+            this.props.callback();
+            this.props.history.push(arr);
+          })
         );
       }
 

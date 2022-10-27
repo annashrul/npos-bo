@@ -28,7 +28,9 @@ class SelectCommon extends Component {
       if (props.dataEdit === "-") {
         Object.assign(state, { value: "" });
       } else {
-        const check = props.options.filter((val) => val.value === props.dataEdit);
+        const check = props.options.filter(
+          (val) => val.value === props.dataEdit
+        );
         Object.assign(state, { value: check[0] });
       }
     }
@@ -63,18 +65,24 @@ class SelectCommon extends Component {
       <div className="form-group">
         <label
           style={{
-            display: !this.props.isLabel && this.props.isLabel !== undefined ? "none" : "block",
+            display:
+              !this.props.isLabel && this.props.isLabel !== undefined
+                ? "none"
+                : "block",
           }}
         >
-          {this.props.label} <span className="text-danger">{this.props.isRequired && "*"}</span>
+          {this.props.label}{" "}
+          <span className="text-danger">{this.props.isRequired && "*"}</span>
         </label>
         <Select
           // autoFocus={true}
           options={this.state.value_data}
-          placeholder={`Pilih ${this.state.label}`}
+          placeholder={`Pilih ${this.state.label ? this.state.label : ""}`}
           onChange={(value, actionMeta) => this.onChange(value)}
           value={this.state.value}
-          isDisabled={this.props.isDisabled === undefined ? false : this.props.isDisabled}
+          isDisabled={
+            this.props.isDisabled === undefined ? false : this.props.isDisabled
+          }
         />
       </div>
     );
