@@ -13,7 +13,18 @@ import { ModalToggle } from "redux/actions/modal.action";
 import { ToastQ, getStorage, rmStorage } from "../../../helper";
 import { ModalType } from "../modal.action";
 import Cookies from "js-cookie";
-
+export function setDataDetailSo(data = []) {
+  return {
+    type: SALES_ORDER.GET_DATA_DETAIL_SO,
+    data,
+  };
+}
+export function setData(data = []) {
+  return {
+    type: SALES_ORDER.GET_SO_DATA,
+    data,
+  };
+}
 export function setDataApproval(data = []) {
   return {
     type: SALES_ORDER.APPROVAL_SO_GET,
@@ -38,10 +49,25 @@ export function setLoadingApproval(load) {
     load,
   };
 }
-
-export const getApprovalSoAction = (where = "") => {
+export const getDetailSoAction = (kd_so) => {
+  return (dispatch) => {
+    let url = `so/detail-so/${kd_so}`;
+    handleGet(url, (res) => {
+      dispatch(setDataDetailSo(res.data));
+    });
+  };
+};
+export const getSoAction = () => {
   return (dispatch) => {
     let url = `so`;
+    handleGet(url, (res) => {
+      dispatch(setData(res.data));
+    });
+  };
+};
+export const getApprovalSoAction = (where = "") => {
+  return (dispatch) => {
+    let url = `so/approval`;
     if (where !== "") {
       url += `?${where}`;
     }
