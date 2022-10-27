@@ -49,11 +49,12 @@ export function setLoadingApproval(load) {
     load,
   };
 }
-export const getDetailSoAction = (kd_so) => {
+export const getDetailSoAction = (kd_so, callback) => {
   return (dispatch) => {
     let url = `so/detail-so/${kd_so}`;
     handleGet(url, (res) => {
-      dispatch(setDataDetailSo(res.data));
+      // dispatch(setDataDetailSo(res.data));
+      callback(res.data.result);
     });
   };
 };

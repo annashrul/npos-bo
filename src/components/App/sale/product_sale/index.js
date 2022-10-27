@@ -271,34 +271,37 @@ class Sale extends Component {
   }
   getProps(props) {
     let state = {};
-    if (props.detailSo !== undefined || props.detailSale.length > 0) {
-      this.handleClear();
-      props.detailSo.map((res, key) => {
-        const col = {
-          barcode: res.barcode,
-          diskon_nominal: 0,
-          diskon_persen: 0,
-          harga: res.harga,
-          harga2: "0",
-          harga3: "0",
-          harga4: "0",
-          harga_old: "0",
-          hrg_beli: res.hrg_beli,
-          isOpenPrice: false,
-          kategori: res.kategori,
-          kd_brg: res.kd_brg,
-          nm_brg: res.nm_brg,
-          ppn: res.ppn,
-          qty: res.qty_brg,
-          satuan: res.satuan,
-          services: "0",
-          stock: res.stock,
-          tambahan: undefined,
-        };
-        this.HanldeSetAddBrg(col, "", key);
-      });
-      console.log("detail so", props.detailSo);
+    if (this.state.isModalForm === false) {
+      if (props.detailSo !== undefined || props.detailSale.length > 0) {
+        // this.handleClear();
+        props.detailSo.map((res, key) => {
+          const col = {
+            barcode: res.barcode,
+            diskon_nominal: 0,
+            diskon_persen: 0,
+            harga: res.harga,
+            harga2: "0",
+            harga3: "0",
+            harga4: "0",
+            harga_old: "0",
+            hrg_beli: res.hrg_beli,
+            isOpenPrice: false,
+            kategori: res.kategori,
+            kd_brg: res.kd_brg,
+            nm_brg: res.nm_brg,
+            ppn: res.ppn,
+            qty: res.qty_brg,
+            satuan: res.satuan,
+            services: "0",
+            stock: res.stock,
+            tambahan: undefined,
+          };
+          // this.HanldeSetAddBrg(col, "", key);
+        });
+        console.log("detail so", props.detailSo);
+      }
     }
+
     if (props.dataSo !== undefined && props.dataSo.length > 0) {
       let newSo = handleDataSelect(props.dataSo, "kd_so", "kd_so");
       Object.assign(state, { so_data: newSo });
@@ -434,7 +437,38 @@ class Sale extends Component {
   HandleChangeSelect(state, res) {
     if (state === "so") {
       this.setState({ so: state }, () => {
-        this.props.dispatch(getDetailSoAction(res.value));
+        this.props.dispatch(
+          getDetailSoAction(res.value, (row) => {
+            console.log("row detail so", row);
+
+            this.handleClear();
+            row.map((val, key) => {
+              const col = {
+                barcode: val.barcode,
+                diskon_nominal: 0,
+                diskon_persen: 0,
+                harga: val.harga,
+                harga2: "0",
+                harga3: "0",
+                harga4: "0",
+                harga_old: "0",
+                hrg_beli: val.hrg_beli,
+                isOpenPrice: false,
+                kategori: val.kategori,
+                kd_brg: val.kd_brg,
+                nm_brg: val.nm_brg,
+                ppn: val.ppn,
+                qty: val.qty_brg,
+                satuan: val.satuan,
+                services: "0",
+                stock: val.stock,
+                tambahan: undefined,
+              };
+
+              this.HanldeSetAddBrg(col, "", key);
+            });
+          })
+        );
       });
     } else {
       if (this.state.objectHoldBill.id !== undefined) {
