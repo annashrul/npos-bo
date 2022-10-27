@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import SelectCommon from "../../../common/SelectCommon";
+// import SelectCommon from "../../../common/SelectCommon";
+import {
+  rmComma,
+} from "../../../../../helper";
 
 class FormUkuran extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isAdd: true,
-      dataUkuran: [{ id: Math.random(100000), nama: "S" }],
+      dataUkuran: [{ id: Math.random(100000), nama: "" }],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
@@ -38,6 +41,20 @@ class FormUkuran extends Component {
     console.log("this.props", this.props.defaultValue);
     console.groupEnd();
   }
+//   handleChange(e, i) {
+//     const col = e.target.name;
+//     let val = e.target.value;
+//     if (i !== null) {
+//         let data = this.state.data;
+//         if (col === "variasi") {
+//             val = rmComma(val);
+//         }
+//         data[i][col] = val;
+//         this.setState({ data });
+//     } else {
+//         this.setState({ [col]: val });
+//     }
+// }
 
   handleChange(e, i) {
     let dataUkuran = this.state.dataUkuran;
@@ -74,14 +91,24 @@ class FormUkuran extends Component {
 
   render() {
     const { dataUkuran } = this.state;
-    const varian = ["Abu-Abu", "Biru", "Coklat", "Emas", "Hijau","Hitam","Kuning","Merah","Marun","Jingga","Putih","Ungu","Violet"];
+    // const varian = [];
     return dataUkuran.map((res, i) => {
       return (
         <div key={i} className="row">
           <div className="col-md-12">
-            <label>Warna</label>
-            <div class="input-group mb-3">
-              <select
+            {/* <label>Warna</label> */}
+            <div class="input-group">
+              <input
+                placeholder="Variasi"
+                type="text"
+                style={{ height: "39px" }}
+                className="form-control form-control-sm"
+                value={res.nama}
+                onChange={(e) => this.handleChange(e, i)}
+                name={`ukuran_${res.id}`}
+              // ref={(input) => (this[`catatan`] = input)}
+              />
+              {/* <select
                 onChange={(e) => this.handleChange(e, i)}
                 className="form-control"
                 name={`ukuran_${res.id}`}
@@ -93,7 +120,7 @@ class FormUkuran extends Component {
                     </option>
                   );
                 })}
-              </select>
+              </select> */}
               {/* {dataUkuran.length - 1 === i ? (
                 <div className="input-group-append">
                   <button
