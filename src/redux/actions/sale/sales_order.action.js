@@ -7,12 +7,24 @@ import {
   handleGet,
   handleGetExport,
   handlePost,
+  handlePut,
 } from "../handleHttp";
 import { ModalToggle } from "redux/actions/modal.action";
 import { ToastQ, getStorage, rmStorage } from "../../../helper";
 import { ModalType } from "../modal.action";
 import Cookies from "js-cookie";
-
+export function setDataDetailSo(data = []) {
+  return {
+    type: SALES_ORDER.GET_DATA_DETAIL_SO,
+    data,
+  };
+}
+export function setData(data = []) {
+  return {
+    type: SALES_ORDER.GET_SO_DATA,
+    data,
+  };
+}
 export function setDataApproval(data = []) {
   return {
     type: SALES_ORDER.APPROVAL_SO_GET,
@@ -37,12 +49,57 @@ export function setLoadingApproval(load) {
     load,
   };
 }
+export const getDetailSoAction = (kd_so, callback) => {
+  return (dispatch) => {
+    let url = `so/detail-so/${kd_so}`;
+    handleGet(url, (res) => {
+      // dispatch(setDataDetailSo(res.data));
+      callback(res.data.result);
+    });
+  };
+};
+export const getSoAction = () => {
+  return (dispatch) => {
+    let url = `so`;
+    handleGet(url, (res) => {
+      dispatch(setData(res.data));
+    });
+  };
+};
+export const getApprovalSoAction = (where = "") => {
+  return (dispatch) => {
+    let url = `so/approval`;
+    if (where !== "") {
+      url += `?${where}`;
+    }
+    handleGet(url, (res) => {
+      dispatch(setDataApproval(res.data));
+    });
+  };
+};
 
 export const getCodeSoAction = (val) => {
   return (dispatch) => {
     handleGet(`so/code?lokasi=${btoa(val)}`, (res) => {
       console.log("sales order", res);
       dispatch(setSoCode(res.data));
+    });
+  };
+};
+
+export const postSalesOrderAction = (data, callback) => {
+  return (dispatch) => {
+    handlePost(`so`, data, (res, msg, isTrue) => {
+      console.log(res);
+      callback(isTrue);
+    });
+  };
+};
+
+export const putApprovalSalesOrderAction = (kd_so) => {
+  return (dispatch) => {
+    handlePut(`so`, { kd_so: kd_so }, (res, msg, isTrue) => {
+      dispatch(getApprovalSoAction());
     });
   };
 };

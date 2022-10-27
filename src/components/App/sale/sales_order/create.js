@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import { getCodeSoAction } from "../../../../redux/actions/sale/sales_order.action";
+import {
+  getCodeSoAction,
+  postSalesOrderAction,
+} from "../../../../redux/actions/sale/sales_order.action";
 import StickyBox from "react-sticky-box";
 import Select from "react-select";
 // import { FetchBrg } from "redux/actions/masterdata/product/product.action";
@@ -18,15 +21,19 @@ import {
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import {
   handleDataSelect,
+  handleError,
   isEmptyOrUndefined,
+  parseToRp,
   rmComma,
   swal,
   swallOption,
+  swalWithCallback,
   ToastQ,
   toRp,
 } from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
+import moment from "moment";
 
 const table = "sales_order";
 
@@ -46,8 +53,8 @@ class CreateSO extends Component {
         { value: 3, label: "Deskripsi" },
       ],
       any: "",
-      createdAt: "",
-      note: "",
+      createdAt: moment().format("YYYY-MM-DD"),
+      note: "-",
       databrg: [],
       brgval: [],
       perpage: 5,
@@ -370,7 +377,67 @@ class CreateSO extends Component {
       return true;
     });
   }
-  handleSubmit(e) {}
+  handleSubmit(e) {
+    const data = get(table);
+    data.then((res) => {
+      if (res.length === 0) {
+        handleError("barang");
+        return;
+      } else {
+        swallOption("Pastikan data yang anda masukan sudah benar!", () => {
+          console.log(res);
+          let detail = [];
+          let data = {};
+          const { note, location, databrg, customer } = this.state;
+          let qtySo = 0;
+          let subtotal = 0;
+          for (let i = 0; i < databrg.length; i++) {
+            let item = res[i];
+            let qty = rmComma(item.qty);
+            qtySo = qtySo + qty;
+            subtotal = subtotal + qty * rmComma(item.harga_jual);
+            detail.push({
+              kd_brg: item.barcode,
+              qty_brg: qty,
+            });
+          }
+          data["detail"] = detail;
+          data["master"] = {
+            catatan_so: note,
+            qty_so: qtySo,
+            subtotal_so: subtotal,
+            kd_lokasi: location,
+            kd_cust: customer,
+          };
+          this.props.dispatch(
+            postSalesOrderAction(data, (isTrue) => {
+              swalWithCallback("transaksi berhasil disimpan", () => {
+                this.setState(
+                  {
+                    note: "-",
+                    location: "",
+                    databrg: [],
+                    customer: "",
+                  },
+                  () => {
+                    destroy(table);
+                    this.getData();
+                  }
+                );
+              });
+            })
+          );
+          // this.props.dispatch(
+          //   storeAdjusment(data, () => {
+          // this.handleClear();
+          // this.getData();
+          //     this.props.dispatch(FetchCodeAdjustment(location.value));
+          //   })
+          // );
+        });
+      }
+    });
+  }
   handleReset(e) {
     e.preventDefault();
     swallOption("anda yakin akan membatalkan transaksi ini ?", () => {
@@ -408,6 +475,7 @@ class CreateSO extends Component {
     ];
     const rowSpan = [{ label: "Beli" }, { label: "Jual" }];
     let subtotal = 0;
+    let totalQty = 0;
     return (
       <Layout page="Transaksi Sales Order">
         <div className="card">
@@ -651,6 +719,7 @@ class CreateSO extends Component {
                       renderRow={databrg.map((item, index) => {
                         const sub = Number(item.harga_jual) * Number(item.qty);
                         subtotal = subtotal + sub;
+                        totalQty = totalQty + Number(item.qty);
                         return (
                           <tr key={index}>
                             <td className="middle nowrap text-center">
@@ -700,9 +769,19 @@ class CreateSO extends Component {
                         {
                           data: [
                             {
-                              colSpan: 6,
+                              colSpan: 5,
                               label: "Total",
                               className: "text-left",
+                            },
+                            {
+                              colSpan: 1,
+                              label: (
+                                <input
+                                  className="form-control in-table text-right"
+                                  value={parseToRp(totalQty)}
+                                  disabled
+                                />
+                              ),
                             },
                             { colSpan: 1, label: toRp(subtotal) },
                             { colSpan: 1, label: "" },
