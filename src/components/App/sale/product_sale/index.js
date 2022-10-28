@@ -448,7 +448,7 @@ class Sale extends Component {
       if (this.state.objectHoldBill.id !== undefined) {
         swallOption(
           "anda yakin akan mereset transaksi atas nama " +
-            this.state.objectHoldBill.nama,
+          this.state.objectHoldBill.nama,
           () => {
             this.setCoreState();
             this.filterState(state, res);
@@ -708,10 +708,10 @@ class Sale extends Component {
           lokasi: this.state.location,
           kassa:
             atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
-            atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
-            atob(atob(Cookies.get("tnt="))) === "morph-apparel" ||
-            atob(atob(Cookies.get("tnt="))) === "npos" ||
-            atob(atob(Cookies.get("tnt="))) === "miski"
+              atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
+              atob(atob(Cookies.get("tnt="))) === "morph-apparel" ||
+              atob(atob(Cookies.get("tnt="))) === "npos" ||
+              atob(atob(Cookies.get("tnt="))) === "miski"
               ? "Z"
               : "Q",
           jns_kartu: "Debit",
@@ -1073,9 +1073,9 @@ class Sale extends Component {
                             this.HandleCommonInputChange(e, false)
                           }
                         >
+                          <option value={3}>Nama Barang</option>
                           <option value={1}>Kode Barang</option>
-                          <option value={2}>Barcode</option>
-                          <option value={3}>Deskripsi</option>
+                          {/* <option value={2}>Barcode</option> */}
                         </select>
                       </div>
                       <small
@@ -1086,8 +1086,8 @@ class Sale extends Component {
                         {parseInt(this.state.searchby, 10) === 1
                           ? "Kode Barang"
                           : parseInt(this.state.searchby, 10) === 2
-                          ? "Barcode"
-                          : "Deskripsi"}
+                            ? "Barcode"
+                            : "Deskripsi"}
                       </small>
                     </div>
                     <div className="form-group">
@@ -1103,11 +1103,10 @@ class Sale extends Component {
                             }
                           }}
                           className="form-control form-control-sm"
-                          placeholder={`Search ${
-                            localStorage.anySaleTrx !== undefined
+                          placeholder={`Search ${localStorage.anySaleTrx !== undefined
                               ? localStorage.anySaleTrx
                               : ""
-                          }`}
+                            }`}
                           value={this.state.search}
                           onChange={(e) =>
                             this.HandleCommonInputChange(e, false)
@@ -1150,7 +1149,7 @@ class Sale extends Component {
                                     style={{
                                       backgroundColor:
                                         this.state.scrollPage === inx ||
-                                        this.state.isClick === inx
+                                          this.state.isClick === inx
                                           ? "#eeeeee"
                                           : "",
                                     }}
@@ -1257,296 +1256,296 @@ class Sale extends Component {
                       renderRow={
                         this.state.databrg.length > 0
                           ? this.state.databrg.map((item, index) => {
-                              let disc1 = 0;
-                              let disc2 = 0;
-                              let ppn = 0;
-                              let hrg = parseFloat(rmComma(item.harga));
-                              let ppnInt = parseFloat(item.ppn);
-                              let disc_rp = parseFloat(item.diskon_nominal);
-                              let disc_per = parseFloat(item.diskon_persen);
+                            let disc1 = 0;
+                            let disc2 = 0;
+                            let ppn = 0;
+                            let hrg = parseFloat(rmComma(item.harga));
+                            let ppnInt = parseFloat(item.ppn);
+                            let disc_rp = parseFloat(item.diskon_nominal);
+                            let disc_per = parseFloat(item.diskon_persen);
+                            if (disc_per !== 0) {
+                              disc1 = hrg - hrg * (disc_per / 100);
+                              disc2 = disc1;
+                              if (disc_rp !== 0) {
+                                disc2 = disc1 - disc1 * (disc_rp / 100);
+                              }
+                            } else if (disc_rp !== 0) {
+                              disc1 = hrg - hrg * (disc_rp / 100);
+                              disc2 = disc1;
                               if (disc_per !== 0) {
-                                disc1 = hrg - hrg * (disc_per / 100);
-                                disc2 = disc1;
-                                if (disc_rp !== 0) {
-                                  disc2 = disc1 - disc1 * (disc_rp / 100);
-                                }
-                              } else if (disc_rp !== 0) {
-                                disc1 = hrg - hrg * (disc_rp / 100);
-                                disc2 = disc1;
-                                if (disc_per !== 0) {
-                                  disc2 = disc1 - disc1 * (disc_per / 100);
-                                }
+                                disc2 = disc1 - disc1 * (disc_per / 100);
                               }
+                            }
 
-                              if (ppnInt !== 0) {
-                                ppn = hrg * (ppnInt / 100);
-                              }
-                              const subtot =
-                                (disc2 === 0 ? hrg + ppn : disc2 + ppn) *
-                                parseFloat(item.qty);
-                              totalsub += subtot;
+                            if (ppnInt !== 0) {
+                              ppn = hrg * (ppnInt / 100);
+                            }
+                            const subtot =
+                              (disc2 === 0 ? hrg + ppn : disc2 + ppn) *
+                              parseFloat(item.qty);
+                            totalsub += subtot;
 
-                              return (
-                                <tr key={index}>
-                                  <td className="middle nowrap">
-                                    {item.nm_brg} <br />
-                                    <div className="subtitle">
-                                      {item.kd_brg} ( {item.satuan} )
-                                    </div>
-                                  </td>
-                                  <td className="middle nowrap">
-                                    {this.state.brgval[index].isOpenPrice ? (
-                                      <input
-                                        type="text"
-                                        style={{ width: "100px" }}
-                                        className={"form-control in-table"}
-                                        value={toCurrency(
+                            return (
+                              <tr key={index}>
+                                <td className="middle nowrap">
+                                  {item.nm_brg} <br />
+                                  <div className="subtitle">
+                                    {item.kd_brg} ( {item.satuan} )
+                                  </div>
+                                </td>
+                                <td className="middle nowrap">
+                                  {this.state.brgval[index].isOpenPrice ? (
+                                    <input
+                                      type="text"
+                                      style={{ width: "100px" }}
+                                      className={"form-control in-table"}
+                                      value={toCurrency(
+                                        this.state.brgval[index].harga
+                                      )}
+                                      name="harga"
+                                      onBlur={(e) =>
+                                        this.HandleOnBlur(e, index)
+                                      }
+                                      onChange={(e) =>
+                                        this.HandleChangeInputValue(e, index)
+                                      }
+                                    />
+                                  ) : (
+                                    <select
+                                      className="form-control in-table"
+                                      style={{ width: "100px" }}
+                                      name="harga"
+                                      onBlur={(e) =>
+                                        this.HandleOnBlur(e, index)
+                                      }
+                                      onChange={(e) =>
+                                        this.HandleChangeInputValue(e, index)
+                                      }
+                                    >
+                                      <option
+                                        value={this.state.brgval[index].harga}
+                                        style={{
+                                          display:
+                                            this.state.brgval[index].harga ===
+                                              "" ||
+                                              this.state.brgval[index].harga ===
+                                              "0"
+                                              ? "none"
+                                              : "",
+                                        }}
+                                      >
+                                        {toCurrency(
                                           this.state.brgval[index].harga
                                         )}
-                                        name="harga"
-                                        onBlur={(e) =>
-                                          this.HandleOnBlur(e, index)
+                                      </option>
+                                      <option
+                                        value={
+                                          this.state.brgval[index].harga2
                                         }
-                                        onChange={(e) =>
-                                          this.HandleChangeInputValue(e, index)
-                                        }
-                                      />
-                                    ) : (
-                                      <select
-                                        className="form-control in-table"
-                                        style={{ width: "100px" }}
-                                        name="harga"
-                                        onBlur={(e) =>
-                                          this.HandleOnBlur(e, index)
-                                        }
-                                        onChange={(e) =>
-                                          this.HandleChangeInputValue(e, index)
-                                        }
-                                      >
-                                        <option
-                                          value={this.state.brgval[index].harga}
-                                          style={{
-                                            display:
-                                              this.state.brgval[index].harga ===
-                                                "" ||
-                                              this.state.brgval[index].harga ===
-                                                "0"
-                                                ? "none"
-                                                : "",
-                                          }}
-                                        >
-                                          {toCurrency(
-                                            this.state.brgval[index].harga
-                                          )}
-                                        </option>
-                                        <option
-                                          value={
-                                            this.state.brgval[index].harga2
-                                          }
-                                          style={{
-                                            display:
-                                              this.state.brgval[index]
-                                                .harga2 === "" ||
+                                        style={{
+                                          display:
+                                            this.state.brgval[index]
+                                              .harga2 === "" ||
                                               this.state.brgval[index]
                                                 .harga2 === "0"
-                                                ? "none"
-                                                : "",
-                                          }}
-                                        >
-                                          {toCurrency(
-                                            this.state.brgval[index].harga2
-                                          )}
-                                        </option>
-                                        <option
-                                          value={
-                                            this.state.brgval[index].harga3
-                                          }
-                                          style={{
-                                            display:
-                                              this.state.brgval[index]
-                                                .harga3 === "" ||
+                                              ? "none"
+                                              : "",
+                                        }}
+                                      >
+                                        {toCurrency(
+                                          this.state.brgval[index].harga2
+                                        )}
+                                      </option>
+                                      <option
+                                        value={
+                                          this.state.brgval[index].harga3
+                                        }
+                                        style={{
+                                          display:
+                                            this.state.brgval[index]
+                                              .harga3 === "" ||
                                               this.state.brgval[index]
                                                 .harga3 === "0"
-                                                ? "none"
-                                                : "",
-                                          }}
-                                        >
-                                          {toCurrency(
-                                            this.state.brgval[index].harga3
-                                          )}
-                                        </option>
-                                        <option
-                                          value={
-                                            this.state.brgval[index].harga4
-                                          }
-                                          style={{
-                                            display:
-                                              this.state.brgval[index]
-                                                .harga4 === "" ||
+                                              ? "none"
+                                              : "",
+                                        }}
+                                      >
+                                        {toCurrency(
+                                          this.state.brgval[index].harga3
+                                        )}
+                                      </option>
+                                      <option
+                                        value={
+                                          this.state.brgval[index].harga4
+                                        }
+                                        style={{
+                                          display:
+                                            this.state.brgval[index]
+                                              .harga4 === "" ||
                                               this.state.brgval[index]
                                                 .harga4 === "0"
-                                                ? "none"
-                                                : "",
-                                          }}
-                                        >
-                                          {toCurrency(
-                                            this.state.brgval[index].harga4
-                                          )}
-                                        </option>
-                                      </select>
+                                              ? "none"
+                                              : "",
+                                        }}
+                                      >
+                                        {toCurrency(
+                                          this.state.brgval[index].harga4
+                                        )}
+                                      </option>
+                                    </select>
+                                  )}
+                                  <div
+                                    className="row"
+                                    style={{
+                                      marginTop: "1px",
+                                    }}
+                                  >
+                                    <div
+                                      className="col-md-3"
+                                      style={{
+                                        paddingRight: "0px",
+                                        paddingLeft: "0px",
+                                      }}
+                                    ></div>
+                                    <div
+                                      className="col-md-"
+                                      style={{
+                                        marginTop: "-3px",
+                                        textAlign: "left",
+                                        paddingLeft: "0px",
+                                      }}
+                                    ></div>
+                                  </div>
+                                  <input
+                                    style={{
+                                      height: "17px",
+                                      width: "17px",
+                                    }}
+                                    id="isOpenPrice"
+                                    type="checkbox"
+                                    name="isOpenPrice"
+                                    checked={
+                                      this.state.brgval[index].isOpenPrice
+                                    }
+                                    onChange={(e) =>
+                                      this.handleChecked(
+                                        e,
+                                        index,
+                                        item.barcode
+                                      )
+                                    }
+                                  />{" "}
+                                  <label
+                                    htmlFor="isOpenPrice"
+                                    style={{ fontSize: "10px" }}
+                                  >
+                                    Open Price
+                                  </label>
+                                </td>
+                                <td className="middle nowrap">
+                                  <input
+                                    disabled={true}
+                                    type="text"
+                                    value={toCurrency(item.stock)}
+                                    className="form-control text-right in-table"
+                                    style={{ width: "70px" }}
+                                  />
+                                </td>
+
+                                <td className="middle nowrap">
+                                  <input
+                                    type="text"
+                                    name="qty"
+                                    style={{ width: "100px" }}
+                                    ref={(input) => {
+                                      if (input !== null) {
+                                        this[`qty-${btoa(item.barcode)}`] =
+                                          input;
+                                      }
+                                    }}
+                                    onFocus={(e) =>
+                                      this.HandleFocusInputReset(e, index)
+                                    }
+                                    onBlur={(e) =>
+                                      this.HandleOnBlur(e, index)
+                                    }
+                                    className="form-control text-right in-table"
+                                    onChange={(e) =>
+                                      this.HandleChangeInputValue(e, index)
+                                    }
+                                    value={this.state.brgval[index].qty}
+                                  />
+                                  <div
+                                    className="invalid-feedback text-left"
+                                    style={
+                                      parseInt(
+                                        this.state.brgval[index].qty,
+                                        10
+                                      ) > parseInt(item.stock, 10)
+                                        ? { display: "block" }
+                                        : { display: "none" }
+                                    }
+                                  >
+                                    Qty Melebihi Stock.
+                                  </div>
+                                </td>
+                                <td className="middle nowrap">
+                                  <input
+                                    type="text"
+                                    name="diskon_persen"
+                                    style={{ width: "70px" }}
+                                    className="form-control in-table text-right"
+                                    onBlur={(e) =>
+                                      this.HandleOnBlur(e, index)
+                                    }
+                                    onChange={(e) =>
+                                      this.HandleChangeInputValue(e, index)
+                                    }
+                                    value={toCurrency(
+                                      this.state.brgval[index].diskon_persen
                                     )}
-                                    <div
-                                      className="row"
-                                      style={{
-                                        marginTop: "1px",
-                                      }}
-                                    >
-                                      <div
-                                        className="col-md-3"
-                                        style={{
-                                          paddingRight: "0px",
-                                          paddingLeft: "0px",
-                                        }}
-                                      ></div>
-                                      <div
-                                        className="col-md-"
-                                        style={{
-                                          marginTop: "-3px",
-                                          textAlign: "left",
-                                          paddingLeft: "0px",
-                                        }}
-                                      ></div>
-                                    </div>
-                                    <input
-                                      style={{
-                                        height: "17px",
-                                        width: "17px",
-                                      }}
-                                      id="isOpenPrice"
-                                      type="checkbox"
-                                      name="isOpenPrice"
-                                      checked={
-                                        this.state.brgval[index].isOpenPrice
-                                      }
-                                      onChange={(e) =>
-                                        this.handleChecked(
-                                          e,
-                                          index,
-                                          item.barcode
-                                        )
-                                      }
-                                    />{" "}
-                                    <label
-                                      htmlFor="isOpenPrice"
-                                      style={{ fontSize: "10px" }}
-                                    >
-                                      Open Price
-                                    </label>
-                                  </td>
-                                  <td className="middle nowrap">
-                                    <input
-                                      disabled={true}
-                                      type="text"
-                                      value={toCurrency(item.stock)}
-                                      className="form-control text-right in-table"
-                                      style={{ width: "70px" }}
-                                    />
-                                  </td>
+                                  />
+                                </td>
+                                <td className="middle nowrap">
+                                  <input
+                                    type="text"
+                                    name="ppn"
+                                    style={{ width: "70px" }}
+                                    className="form-control in-table text-right"
+                                    onBlur={(e) =>
+                                      this.HandleOnBlur(e, index)
+                                    }
+                                    onChange={(e) =>
+                                      this.HandleChangeInputValue(e, index)
+                                    }
+                                    value={toCurrency(
+                                      this.state.brgval[index].ppn
+                                    )}
+                                  />
+                                </td>
 
-                                  <td className="middle nowrap">
-                                    <input
-                                      type="text"
-                                      name="qty"
-                                      style={{ width: "100px" }}
-                                      ref={(input) => {
-                                        if (input !== null) {
-                                          this[`qty-${btoa(item.barcode)}`] =
-                                            input;
-                                        }
-                                      }}
-                                      onFocus={(e) =>
-                                        this.HandleFocusInputReset(e, index)
-                                      }
-                                      onBlur={(e) =>
-                                        this.HandleOnBlur(e, index)
-                                      }
-                                      className="form-control text-right in-table"
-                                      onChange={(e) =>
-                                        this.HandleChangeInputValue(e, index)
-                                      }
-                                      value={this.state.brgval[index].qty}
-                                    />
-                                    <div
-                                      className="invalid-feedback text-left"
-                                      style={
-                                        parseInt(
-                                          this.state.brgval[index].qty,
-                                          10
-                                        ) > parseInt(item.stock, 10)
-                                          ? { display: "block" }
-                                          : { display: "none" }
-                                      }
-                                    >
-                                      Qty Melebihi Stock.
-                                    </div>
-                                  </td>
-                                  <td className="middle nowrap">
-                                    <input
-                                      type="text"
-                                      name="diskon_persen"
-                                      style={{ width: "70px" }}
-                                      className="form-control in-table text-right"
-                                      onBlur={(e) =>
-                                        this.HandleOnBlur(e, index)
-                                      }
-                                      onChange={(e) =>
-                                        this.HandleChangeInputValue(e, index)
-                                      }
-                                      value={toCurrency(
-                                        this.state.brgval[index].diskon_persen
-                                      )}
-                                    />
-                                  </td>
-                                  <td className="middle nowrap">
-                                    <input
-                                      type="text"
-                                      name="ppn"
-                                      style={{ width: "70px" }}
-                                      className="form-control in-table text-right"
-                                      onBlur={(e) =>
-                                        this.HandleOnBlur(e, index)
-                                      }
-                                      onChange={(e) =>
-                                        this.HandleChangeInputValue(e, index)
-                                      }
-                                      value={toCurrency(
-                                        this.state.brgval[index].ppn
-                                      )}
-                                    />
-                                  </td>
-
-                                  <td className="middle nowrap">
-                                    <input
-                                      disabled={true}
-                                      type="text"
-                                      value={toCurrency(subtot)}
-                                      className="form-control text-right in-table"
-                                      style={{ width: "100px" }}
-                                    />
-                                  </td>
-                                  <td className="middle nowrap text-center">
-                                    <button
-                                      className="btn btn-primary btn-sm"
-                                      onClick={(e) =>
-                                        this.HandleRemove(e, item.id)
-                                      }
-                                    >
-                                      <i className="fa fa-trash" />
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })
+                                <td className="middle nowrap">
+                                  <input
+                                    disabled={true}
+                                    type="text"
+                                    value={toCurrency(subtot)}
+                                    className="form-control text-right in-table"
+                                    style={{ width: "100px" }}
+                                  />
+                                </td>
+                                <td className="middle nowrap text-center">
+                                  <button
+                                    className="btn btn-primary btn-sm"
+                                    onClick={(e) =>
+                                      this.HandleRemove(e, item.id)
+                                    }
+                                  >
+                                    <i className="fa fa-trash" />
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })
                           : noData(head.length)
                       }
                     />
@@ -1563,9 +1562,9 @@ class Sale extends Component {
                           </button>
 
                           {atob(atob(Cookies.get("tnt="))) !== "nov-jkt" ||
-                          atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ||
-                          atob(atob(Cookies.get("tnt="))) !== "morph-apparel" ||
-                          atob(atob(Cookies.get("tnt="))) !== "miski" ? (
+                            atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ||
+                            atob(atob(Cookies.get("tnt="))) !== "morph-apparel" ||
+                            atob(atob(Cookies.get("tnt="))) !== "miski" ? (
                             ""
                           ) : (
                             <button
@@ -1578,10 +1577,10 @@ class Sale extends Component {
                             </button>
                           )}
                           {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
-                          atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
-                          atob(atob(Cookies.get("tnt="))) === "morph-apparel" ||
-                          atob(atob(Cookies.get("tnt="))) === "npos" ||
-                          atob(atob(Cookies.get("tnt="))) === "miski" ? (
+                            atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
+                            atob(atob(Cookies.get("tnt="))) === "morph-apparel" ||
+                            atob(atob(Cookies.get("tnt="))) === "npos" ||
+                            atob(atob(Cookies.get("tnt="))) === "miski" ? (
                             <div>
                               <button
                                 className={"btn btn-outline-info ml-1"}
@@ -1729,13 +1728,13 @@ class Sale extends Component {
                                   readOnly
                                   value={toCurrency(
                                     totalsub -
-                                      totalsub *
-                                        (parseFloat(
-                                          this.state.discount_persen
-                                        ) /
-                                          100) +
-                                      totalsub *
-                                        (parseFloat(this.state.pajak) / 100)
+                                    totalsub *
+                                    (parseFloat(
+                                      this.state.discount_persen
+                                    ) /
+                                      100) +
+                                    totalsub *
+                                    (parseFloat(this.state.pajak) / 100)
                                   )}
                                 />
                               </div>

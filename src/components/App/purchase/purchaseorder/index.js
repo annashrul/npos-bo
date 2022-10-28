@@ -612,8 +612,8 @@ class PurchaseOrder extends Component {
       const searchby =
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
-          : parseInt(this.state.searchby, 10) === 2
-          ? "barcode"
+          // : parseInt(this.state.searchby, 10) === 2
+          // ? "barcode"
           : "deskripsi";
       if (this.getConfigSupplier() === 0) {
         this.props.dispatch(
@@ -678,9 +678,9 @@ class PurchaseOrder extends Component {
       ) {
         searchby = "kd_brg";
       }
-      if (parseInt(this.state.searchby, 10) === 2) {
-        searchby = "barcode";
-      }
+      // if (parseInt(this.state.searchby, 10) === 2) {
+      //   searchby = "barcode";
+      // }
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
       }
@@ -813,9 +813,9 @@ class PurchaseOrder extends Component {
                         className="form-control form-control-sm"
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
                       >
+                        <option value={3}>Nama Barang</option>
                         <option value={1}>Kode Barang</option>
-                        <option value={2}>Barcode</option>
-                        <option value={3}>Deskripsi</option>
+                        {/* <option value={2}>Barcode</option> */}
                       </select>
                     </div>
                     <small
@@ -826,8 +826,8 @@ class PurchaseOrder extends Component {
                       {parseInt(this.state.searchby, 10) === 1
                         ? "Kode Barang"
                         : parseInt(this.state.searchby, 10) === 2
-                        ? "Barcode"
-                        : "Deskripsi"}
+                          ? "Barcode"
+                          : "Deskripsi"}
                     </small>
                   </div>
                   <div className="form-group">
@@ -838,11 +838,10 @@ class PurchaseOrder extends Component {
                         id="chat-search"
                         name="search"
                         className="form-control form-control-sm"
-                        placeholder={`Search ${
-                          localStorage.anyPurchaseOrder !== undefined
+                        placeholder={`Search ${localStorage.anyPurchaseOrder !== undefined
                             ? localStorage.anyPurchaseOrder
                             : ""
-                        }`}
+                          }`}
                         value={this.state.search}
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
                         onKeyPress={(event) => {
@@ -878,7 +877,7 @@ class PurchaseOrder extends Component {
                       <div id="chat_user_2">
                         <ul className="chat-list list-unstyled">
                           {this.props.barang &&
-                          this.props.barang.length !== 0 ? (
+                            this.props.barang.length !== 0 ? (
                             this.props.barang.map((i, inx) => {
                               return (
                                 <li
@@ -1065,7 +1064,7 @@ class PurchaseOrder extends Component {
                                 style={{
                                   marginTop:
                                     atob(atob(Cookies.get("tnt="))) === "rb" ||
-                                    atob(atob(Cookies.get("tnt="))) === "npos"
+                                      atob(atob(Cookies.get("tnt="))) === "npos"
                                       ? "-10px"
                                       : "0px",
                                 }}
@@ -1133,7 +1132,7 @@ class PurchaseOrder extends Component {
                                   marginTop: "-15px",
                                   display:
                                     atob(atob(Cookies.get("tnt="))) === "rb" ||
-                                    atob(atob(Cookies.get("tnt="))) === "npos"
+                                      atob(atob(Cookies.get("tnt="))) === "npos"
                                       ? "block"
                                       : "none",
                                 }}
@@ -1336,7 +1335,7 @@ class PurchaseOrder extends Component {
                               (parseInt(rmComma(item.harga_beli), 10) -
                                 disc2 +
                                 ppn) *
-                                parseFloat(item.qty)
+                              parseFloat(item.qty)
                             )}
                           </td>
                           <td className="middle nowrap">

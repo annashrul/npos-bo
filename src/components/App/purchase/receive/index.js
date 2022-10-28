@@ -1523,9 +1523,9 @@ class Receive extends Component {
                               Cari berdasarkan{" "}
                               {parseInt(this.state.searchby, 10) === 1
                                 ? "Kode Barang"
-                                : parseInt(this.state.searchby, 10) === 2
-                                ? "Barcode"
-                                : "Deskripsi"}
+                                // : parseInt(this.state.searchby, 10) === 2
+                                // ? "Barcode"
+                                : "Nama Barang"}
                             </label>
                             <div className="input-group input-group-sm">
                               <select
@@ -1535,11 +1535,11 @@ class Receive extends Component {
                                   this.HandleCommonInputChange(e, false)
                                 }
                               >
+                                <option value={3}>Nama Barang</option>
                                 <option value={1}>Kode Barang</option>
-                                <option value={2}>Barcode</option>
-                                <option value={3}>Deskripsi</option>
+                                {/* <option value={2}>Barcode</option> */}
                               </select>
-                            </div>
+                            </div> 
                           </div>
                         </div>
                         <div className="col-md-12">

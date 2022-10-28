@@ -1119,21 +1119,42 @@ class SideMenu extends Component {
           </li>
           {/* DASHBOARD MODUL END */}
 
+          {/* Stock */}
+
+
+          <li
+            className={path === linkReportStock ? "active" : ""}
+            style={
+              this.state.r_stock === "0"
+                ? { display: "none" }
+                : { display: "block" }
+            }
+          >
+            <Link to={linkReportStock} style={{ width: "fit-content" }}>
+              {" "}
+              <i className="zmdi zmdi-chart" />
+              Stock Barang
+            </Link>
+          </li>
+
+          {/* Stock */}
+
+
           {/* MASTERDATA MODUL START */}
           <li
             className={
               "treeview" +
               (this.state.isMasterdata === true ||
-              path === linkDepartment ||
-              path === linkSupplier ||
-              path === linkSales ||
-              path === linkKas ||
-              path === linkCustomer ||
-              path === linkBarang ||
-              path === linkPromo ||
-              path === linkBank ||
-              path === linkPrinter ||
-              path === linkPaket
+                path === linkDepartment ||
+                path === linkSupplier ||
+                path === linkSales ||
+                path === linkKas ||
+                path === linkCustomer ||
+                path === linkBarang ||
+                path === linkPromo ||
+                path === linkBank ||
+                path === linkPrinter ||
+                path === linkPaket
                 ? " active menu-open"
                 : "")
             }
@@ -1312,8 +1333,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isArea === true ||
-                  path === linkArea ||
-                  path === linkMeja
+                    path === linkArea ||
+                    path === linkMeja
                     ? " active menu-open"
                     : "")
                 }
@@ -1389,15 +1410,15 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isInventory === true ||
-              this.state.isTrxMutasi ||
-              path === linkDeliveryNote ||
-              path === linkAlokasi ||
-              path === linkAdjustment ||
-              path === linkApprovalMutasi ||
-              path === linkOpnameTransaksi ||
-              path === linkOpnameApproval ||
-              path === linkPengirimanPacking ||
-              path === linkPengirimanExpedisi
+                this.state.isTrxMutasi ||
+                path === linkDeliveryNote ||
+                path === linkAlokasi ||
+                path === linkAdjustment ||
+                path === linkApprovalMutasi ||
+                path === linkOpnameTransaksi ||
+                path === linkOpnameApproval ||
+                path === linkPengirimanPacking ||
+                path === linkPengirimanExpedisi
                 ? " active menu-open"
                 : "")
             }
@@ -1477,8 +1498,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isTrxOpname === true ||
-                  path === linkOpnameTransaksi ||
-                  path === linkOpnameApproval
+                    path === linkOpnameTransaksi ||
+                    path === linkOpnameApproval
                     ? " active menu-open"
                     : "")
                 }
@@ -1538,8 +1559,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isTrxPengiriman === true ||
-                  path === linkPengirimanPacking ||
-                  path === linkPengirimanExpedisi
+                    path === linkPengirimanPacking ||
+                    path === linkPengirimanExpedisi
                     ? " active menu-open"
                     : "")
                 }
@@ -1603,8 +1624,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isTrxMutasi === true ||
-                  path === linkMutasiJualBeliApproval ||
-                  path === linkMutasiJualBeliBayar
+                    path === linkMutasiJualBeliApproval ||
+                    path === linkMutasiJualBeliBayar
                     ? " active menu-open"
                     : "")
                 }
@@ -1672,9 +1693,9 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isReceive === true ||
-              path === linkReceivePembelian ||
-              path === linkPurchaseOrder ||
-              path === linkReturTanpaNota
+                path === linkReceivePembelian ||
+                path === linkPurchaseOrder ||
+                path === linkReturTanpaNota
                 ? " active menu-open"
                 : "")
             }
@@ -1748,12 +1769,12 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isSale === true ||
-              path === linkTransaksiSalesOrder ||
-              path === linkTransaksiApprovalSalesOrder ||
-              path === linkTransaksiBarang ||
-              path === linkTransaksiKas ||
-              path === linkTransaksiManual ||
-              path === linkScanResi
+                path === linkTransaksiSalesOrder ||
+                path === linkTransaksiApprovalSalesOrder ||
+                path === linkTransaksiBarang ||
+                path === linkTransaksiKas ||
+                path === linkTransaksiManual ||
+                path === linkScanResi
                 ? " active menu-open"
                 : "")
             }
@@ -1858,8 +1879,8 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isPaid === true ||
-              path === linkPembayaranHutang ||
-              path === linkPembayaranPiutang
+                path === linkPembayaranHutang ||
+                path === linkPembayaranPiutang
                 ? " active menu-open"
                 : "")
             }
@@ -1920,8 +1941,8 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isResi === true ||
-              path === linkScanResi ||
-              path === linkScanResiLaporan
+                path === linkScanResi ||
+                path === linkScanResiLaporan
                 ? " active menu-open"
                 : "")
             }
@@ -1976,13 +1997,13 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isReport === true ||
-              this.state.isReportInventory === true ||
-              this.state.isReportPembelian === true ||
-              this.state.isReportPenjualan === true ||
-              this.state.isReportPembayaran === true ||
-              this.state.isReportLog === true ||
-              path === linkReportKas ||
-              path === linkReportClosing
+                this.state.isReportInventory === true ||
+                this.state.isReportPembelian === true ||
+                this.state.isReportPenjualan === true ||
+                this.state.isReportPembayaran === true ||
+                this.state.isReportLog === true ||
+                path === linkReportKas ||
+                path === linkReportClosing
                 ? " active menu-open"
                 : "")
             }
@@ -1999,8 +2020,8 @@ class SideMenu extends Component {
               style={{
                 display:
                   this.state.isReport === true ||
-                  this.state.isReportInventory === true ||
-                  this.state.isReportPembelian === true
+                    this.state.isReportInventory === true ||
+                    this.state.isReportPembelian === true
                     ? "block"
                     : "none",
               }}
@@ -2067,14 +2088,14 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPenjualan === true ||
-                  path === linkReportArsipPenjualan ||
-                  path === linkReportArsipReturPenjualan ||
-                  path === linkReportArsipPenjualanByCustomer ||
-                  path === linkReportArsipPenjualanBySales ||
-                  path === linkReportOmsetPenjualan ||
-                  path === linkReportOmsetPenjualanByPeriode ||
-                  path === linkReportArsipPenjualanByBarang ||
-                  path === linkReportArsipPenjualanByKelompokBarang
+                    path === linkReportArsipPenjualan ||
+                    path === linkReportArsipReturPenjualan ||
+                    path === linkReportArsipPenjualanByCustomer ||
+                    path === linkReportArsipPenjualanBySales ||
+                    path === linkReportOmsetPenjualan ||
+                    path === linkReportOmsetPenjualanByPeriode ||
+                    path === linkReportArsipPenjualanByBarang ||
+                    path === linkReportArsipPenjualanByKelompokBarang
                     ? " active menu-open"
                     : "")
                 }
@@ -2204,9 +2225,8 @@ class SideMenu extends Component {
                     </Link>
                   </li>
                   <li
-                    className={`${
-                      path === linkReportOmsetPenjualanByPeriode ? "active" : ""
-                    }`}
+                    className={`${path === linkReportOmsetPenjualanByPeriode ? "active" : ""
+                      }`}
                     style={{
                       display:
                         this.state.r_sale_omset_periode === "0"
@@ -2222,11 +2242,10 @@ class SideMenu extends Component {
                     </Link>
                   </li>
                   <li
-                    className={`${
-                      path === linkReportArsipPenjualanByKelompokBarang
-                        ? "active"
-                        : ""
-                    }`}
+                    className={`${path === linkReportArsipPenjualanByKelompokBarang
+                      ? "active"
+                      : ""
+                      }`}
                     style={{
                       display:
                         this.state.r_penjualan_by_kel_barang === "0"
@@ -2250,16 +2269,16 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportInventory === true ||
-                  path === linkReportStock ||
-                  path === linkReportNilaiPersediaan ||
-                  path === linkReportAdjustment ||
-                  path === linkReportAlokasi ||
-                  path === linkReportOpname ||
-                  path === linkReportPacking ||
-                  path === linkReportExpedisi ||
-                  path === linkReportMutasi ||
-                  path === linkReportAlokasiTransaksi ||
-                  path === linkReportDeliveryNote
+                    path === linkReportStock ||
+                    path === linkReportNilaiPersediaan ||
+                    path === linkReportAdjustment ||
+                    path === linkReportAlokasi ||
+                    path === linkReportOpname ||
+                    path === linkReportPacking ||
+                    path === linkReportExpedisi ||
+                    path === linkReportMutasi ||
+                    path === linkReportAlokasiTransaksi ||
+                    path === linkReportDeliveryNote
                     ? " active menu-open"
                     : "")
                 }
@@ -2283,7 +2302,7 @@ class SideMenu extends Component {
                       this.state.isReportInventory === true ? "block" : "none",
                   }}
                 >
-                  <li
+                  {/* <li
                     className={path === linkReportStock ? "active" : ""}
                     style={
                       this.state.r_stock === "0"
@@ -2296,7 +2315,7 @@ class SideMenu extends Component {
                       <i className="zmdi zmdi-chart" />
                       Stock
                     </Link>
-                  </li>
+                  </li> */}
                   <li
                     className={
                       path === linkReportNilaiPersediaan ? "active" : ""
@@ -2463,10 +2482,10 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPembelian === true ||
-                  path === linkReportPurchaseOrder ||
-                  path === linkReportReceive ||
-                  path === linkReportPembelianBySupplier ||
-                  path === linkReportReturPembelian
+                    path === linkReportPurchaseOrder ||
+                    path === linkReportReceive ||
+                    path === linkReportPembelianBySupplier ||
+                    path === linkReportReturPembelian
                     ? " active menu-open"
                     : "")
                 }
@@ -2563,8 +2582,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportPembayaran === true ||
-                  path === linkReportHutang ||
-                  path === linkReportPiutang
+                    path === linkReportHutang ||
+                    path === linkReportPiutang
                     ? " active menu-open"
                     : "")
                 }
@@ -2631,8 +2650,8 @@ class SideMenu extends Component {
                 className={
                   "treeview" +
                   (this.state.isReportLog === true ||
-                  path === linkReportLogTransaksi ||
-                  path === linkReportLogAktifitas
+                    path === linkReportLogTransaksi ||
+                    path === linkReportLogAktifitas
                     ? " active menu-open"
                     : "")
                 }
@@ -2715,9 +2734,9 @@ class SideMenu extends Component {
             className={
               "treeview" +
               (this.state.isSetting === true ||
-              path === linkPengaturanPengguna ||
-              path === linkPengaturanLokasi ||
-              path === linkPengaturanUmum
+                path === linkPengaturanPengguna ||
+                path === linkPengaturanLokasi ||
+                path === linkPengaturanUmum
                 ? " active menu-open"
                 : "")
             }
