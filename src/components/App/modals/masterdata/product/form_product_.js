@@ -4526,18 +4526,18 @@ class FormProducts extends Component {
                     {/* {document
                       .getElementById("tambahan_barang")
                       .value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? ( */}
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          ref={(input) => (this[`nama_singkat`] = input)}
-                          className="form-control"
-                          placeholder="Nama Singkat"
-                          name="nama_singkat"
-                          maxLength={20}
-                          value={this.state.nama_singkat}
-                          onChange={(e) => this.handleChange(e, null)}
-                        />
-                      </div>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        ref={(input) => (this[`nama_singkat`] = input)}
+                        className="form-control"
+                        placeholder="Nama Singkat"
+                        name="nama_singkat"
+                        maxLength={20}
+                        value={this.state.nama_singkat}
+                        onChange={(e) => this.handleChange(e, null)}
+                      />
+                    </div>
                     {/* ) : (
                       ""
                     )} */}
@@ -4718,10 +4718,10 @@ class FormProducts extends Component {
                                     placeholder="Input barcode"
                                     name="barcode"
                                     id={`${x === 0
-                                        ? "barcode1"
-                                        : x === 1
-                                          ? "barcode2"
-                                          : "barcode3"
+                                      ? "barcode1"
+                                      : x === 1
+                                        ? "barcode2"
+                                        : "barcode3"
                                       }`}
                                     maxLength={20}
                                     value={this.state.barangSku[x].barcode}
@@ -5279,8 +5279,8 @@ class FormProducts extends Component {
                                                       : ""
                                                     }`;
                                                   let hrg = `hrgJual${z + 1}${satuan !== undefined
-                                                      ? satuan.toUpperCase()
-                                                      : ""
+                                                    ? satuan.toUpperCase()
+                                                    : ""
                                                     }`;
                                                   let hrgValue = v[x][hrg];
                                                   container.push(
