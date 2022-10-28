@@ -75,7 +75,7 @@ class DetailProduct extends Component {
               { title: "Kelompok", desc: master.kel_brg },
               { title: "Sub dept", desc: master.subdept },
               {
-                title: "Warna",
+                title: "Variasi/Motif",
                 desc: this.props.dataDetail ? this.props.dataDetail.ukuran : "",
               },
             ]}

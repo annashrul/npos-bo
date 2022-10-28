@@ -78,6 +78,7 @@ class ListProduct extends Component {
       detail: {},
       any_kode_barang: "",
       any_nama_barang: "",
+      any_nama_singkat: "",
       any_kelompok_barang: "",
       any_supplier_barang: "",
       any_dept_barang: "",
@@ -189,6 +190,7 @@ class ListProduct extends Component {
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
+    let nama_singkat = this.state.any_nama_singkat;
     let kelompok = this.state.any_kelompok_barang;
     let supplier = this.state.any_supplier_barang;
     let dept = this.state.any_dept_barang;
@@ -199,6 +201,7 @@ class ListProduct extends Component {
     if (
       kode !== "" ||
       nama !== "" ||
+      nama_singkat !== "" ||
       kelompok !== "" ||
       supplier !== "" ||
       subdept !== "" ||
@@ -219,6 +222,13 @@ class ListProduct extends Component {
         }
         where += `searchby=nm_brg&q=${btoa(nama)}`;
         localStorage.setItem(`${que}_nama_barang`, nama);
+      }
+      if (column === "any_nama_singkat") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=nama_singkat&q=${btoa(nama_singkat)}`;
+        localStorage.setItem(`${que}_nama_singkat`, nama_singkat);
       }
       if (column === "any_kelompok_barang") {
         if (where !== "") {
@@ -273,6 +283,7 @@ class ListProduct extends Component {
     } else {
       localStorage.removeItem(`${que}_kode_barang`);
       localStorage.removeItem(`${que}_nama_barang`);
+      localStorage.removeItem(`${que}_nama_singkat`);
       localStorage.removeItem(`${que}_kelompok_barang`);
       localStorage.removeItem(`${que}_supplier_barang`);
       localStorage.removeItem(`${que}_dept_barang`);
@@ -318,6 +329,7 @@ class ListProduct extends Component {
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
+    let nama_singkat = this.state.any_nama_singkat;
     let kelompok = this.state.any_kelompok_barang;
     let supplier = this.state.any_supplier_barang;
     let dept = this.state.any_dept_barang;
@@ -329,6 +341,7 @@ class ListProduct extends Component {
     if (
       kode !== "" ||
       nama !== "" ||
+      nama_singkat !== "" ||
       kelompok !== "" ||
       supplier !== "" ||
       dept !== "" ||
@@ -350,6 +363,13 @@ class ListProduct extends Component {
         }
         where += `searchby=nm_brg&q=${btoa(nama)}`;
         localStorage.setItem(`${que}_nama_barang`, nama);
+      }
+      if (column === "any_nama_singkat") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=nama_singkat&q=${btoa(nama)}`;
+        localStorage.setItem(`${que}_nama_singkat`, nama);
       }
       if (column === "any_kelompok_barang") {
         if (where !== "") {
@@ -405,6 +425,7 @@ class ListProduct extends Component {
     } else {
       localStorage.removeItem(`${que}_kode_barang`);
       localStorage.removeItem(`${que}_nama_barang`);
+      localStorage.removeItem(`${que}_nama_singkat`);
       localStorage.removeItem(`${que}_kelompok_barang`);
       localStorage.removeItem(`${que}_supplier_barang`);
       localStorage.removeItem(`${que}_dept_barang`);
@@ -561,6 +582,7 @@ class ListProduct extends Component {
       "No",
       "Code",
       "Name",
+      "Nama Singkat",
       "Group",
       "Supplier",
       "Dept",
@@ -577,6 +599,7 @@ class ListProduct extends Component {
           i + 1,
           v.kd_brg,
           v.nm_brg,
+          v.nama_singkat,
           v.kel_brg,
           v.supplier,
           v.dept,
@@ -737,6 +760,9 @@ class ListProduct extends Component {
                 <th className="middle">
                   {this.handleInput("any_nama_barang")}
                 </th>
+                <th className="middle">
+                  {this.handleInput("any_nama_singkat")}
+                </th>
                 <th className="middle" width="10%">
                   {this.handleInput("any_kelompok_barang")}
                 </th>
@@ -823,6 +849,7 @@ class ListProduct extends Component {
                         </td>
                         <td className={`middle nowrap`}>{v.kd_brg}</td>
                         <td className={`middle nowrap`}>{v.nm_brg}</td>
+                        <td className={`middle nowrap`}>{v.nama_singkat}</td>
                         <td className={`middle nowrap`}>{v.kel_brg}</td>
                         <td className={`middle nowrap`}>{v.supplier}</td>
                         <td className={`middle nowrap`}>{v.dept}</td>

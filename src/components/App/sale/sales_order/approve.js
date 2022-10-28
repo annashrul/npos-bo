@@ -115,7 +115,7 @@ class ApproveSo extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let btnAction = [{ label: "Approve" }, { label: "Detail" }];
+                    let btnAction = [{ label: "#" }, { label: "Approve" }];
                     totalItemPerHalaman += Number(v.detail.length);
                     totalBayarPerHalaman += Number(v.subtotal_so);
                     totalQtyPerHalaman += Number(v.qty_so);

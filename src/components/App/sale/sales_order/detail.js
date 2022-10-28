@@ -7,7 +7,7 @@ import HeaderDetailCommon from "../../common/HeaderDetailCommon";
 import TableCommon from "../../common/TableCommon";
 import moment from "moment";
 import { noData, parseToRp, rmComma, toRp } from "../../../../helper";
-import ButtonTrxCommon from "../../common/ButtonTrxCommon";
+import ButtonTrxSo from "../../common/ButtonTrxSo";
 import { putApprovalSalesOrderAction } from "../../../../redux/actions/sale/sales_order.action";
 class DetailApprovalSalesOrder extends Component {
   constructor(props) {
@@ -106,7 +106,7 @@ class DetailApprovalSalesOrder extends Component {
         size="lg"
       >
         <ModalHeader toggle={this.toggle}>
-          Detail Approval Sales Order
+          Edit Approval Sales Order
         </ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
@@ -194,7 +194,7 @@ class DetailApprovalSalesOrder extends Component {
             ]}
           />
           <div style={{ float: "right" }}>
-            <ButtonTrxCommon
+            <ButtonTrxSo
               disabled={false}
               callback={(e, res) => {
                 console.log(res);

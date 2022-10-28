@@ -43,7 +43,7 @@ class ScanResiReport extends Component {
     }
   }
 
-  handleModal(param = "detail", index, total = 0) {
+  handleModal(param = "#", index, total = 0) {
     let whereState = this.state.where_data;
     let where = getFetchWhere(whereState);
     let periode = getPeriode(where.split("&"));
@@ -74,7 +74,7 @@ class ScanResiReport extends Component {
     const head = [
       { label: "No", className: "text-center", width: "1%" },
       { label: "#", width: "1%" },
-      { label: "Nomor Resi" },
+      { label: "Nomor Resi" , width: "50%"},
       { label: "Tanggal", width: "5%" },
       { label: "Operator", width: "5%" },
     ];
@@ -114,6 +114,7 @@ class ScanResiReport extends Component {
                         <td className="middle nowrap">{val.no_resi}</td>
                         <td className="middle nowrap">{toDate(val.tgl)}</td>
                         <td className="middle nowrap">{val.kd_kasir}</td>
+                        {/* <td className="middle nowrap">{val.caatatan}</td> */}
                       </tr>
                     );
                   })

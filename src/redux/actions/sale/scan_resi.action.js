@@ -5,6 +5,8 @@ import { SCAN_RESI, HEADERS } from "../_constants";
 import { handlePost } from "../handleHttp";
 // import { ModalToggle, ModalType } from "../modal.action";
 import { swal, swalWithCallback } from "../../../helper";
+import { ToastQ } from "../../../helper";
+
 export function setLoading(load) {
   return {
     type: SCAN_RESI.LOADING,
@@ -33,10 +35,9 @@ export function setScanResiData(data = []) {
 export const storeScanResi = (data, callback) => {
   return (dispatch) => {
     handlePost("scanresi/create", data, (res, msg, status) => {
-      if (status) {
-        swalWithCallback("Nomor resi disimpan", () => {
+      if (status) { 
+          ToastQ.fire({ icon: "success", title: ` Resi Disimpan ` });
           callback();
-        });
       } else {
         swal(msg);
       }
