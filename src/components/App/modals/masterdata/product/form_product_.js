@@ -4523,9 +4523,9 @@ class FormProducts extends Component {
                         onChange={(e) => this.handleChange(e, null)}
                       />
                     </div>
-                    {document
+                    {/* {document
                       .getElementById("tambahan_barang")
-                      .value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
+                      .value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? ( */}
                       <div className="form-group">
                         <input
                           type="text"
@@ -4538,9 +4538,9 @@ class FormProducts extends Component {
                           onChange={(e) => this.handleChange(e, null)}
                         />
                       </div>
-                    ) : (
+                    {/* ) : (
                       ""
-                    )}
+                    )} */}
                     {/* {document
                       .getElementById("tambahan_barang")
                       .value.search(atob(atob(Cookies.get("tnt=")))) >= 0 ? (
