@@ -1025,15 +1025,15 @@ class Sale extends Component {
                   value={this.state.tgl_order}
                   onChange={(e) => this.HandleCommonInputChange(e)}
                 />
-                <input
-                  placeholder="Tambahkan catatan disini ...."
-                  type="text"
-                  style={{ height: "39px" }}
-                  className="form-control nbt nbr nbl bt"
-                  value={this.state.catatan}
-                  onChange={(e) => this.HandleCommonInputChange(e)}
-                  name="catatan"
-                />
+                  <input
+                    placeholder="Tambahkan alamat penerima disini ..."
+                    type="text"
+                    style={{ height: "39px" }}
+                    className="form-control nbt nbr nbl bt"
+                    value={this.state.catatan}
+                    onChange={(e) => this.HandleCommonInputChange(e)}
+                    name="catatan"
+                  />
               </h4>
             </div>
             <div style={{ display: "flex", alignItems: "flex-start" }}>

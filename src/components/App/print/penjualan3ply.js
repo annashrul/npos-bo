@@ -121,7 +121,7 @@ class Print3ply extends Component {
                 <td>Jenis Trx</td>
                 <td>:</td>
                 <td>{master.jenis_trx}</td>
-                <td>Keterangan</td>
+                <td>Alamat Pengirim</td>
                 <td>:</td>
                 <td>{master.keterangan}</td>
               </tr>
