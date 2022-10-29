@@ -101,8 +101,8 @@ class FormUkuran extends Component {
               <input
                 placeholder="Variasi"
                 type="text"
-                style={{ height: "39px" }}
-                className="form-control form-control-sm"
+                // style={{ height: "39px" }}
+                className="form-control"
                 value={res.nama}
                 onChange={(e) => this.handleChange(e, i)}
                 name={`ukuran_${res.id}`}

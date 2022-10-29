@@ -319,7 +319,7 @@ class PenjualanManual extends Component {
                       }}
                       ref={(input) => (this[`no_telepon_penerima`] = input)}
                     />
-                    <input
+                    <textarea
                       placeholder="alamat"
                       type="text"
                       className="form-control"
@@ -369,7 +369,7 @@ class PenjualanManual extends Component {
                       }}
                       ref={(input) => (this[`no_telepon_pengirim`] = input)}
                     />
-                    <input
+                    <textarea
                       placeholder="alamat"
                       type="text"
                       className="form-control"

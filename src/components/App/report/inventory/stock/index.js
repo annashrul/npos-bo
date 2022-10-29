@@ -97,15 +97,16 @@ class InventoryReport extends Component {
     let head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
-      { colSpan: "5", label: "Barang" },
+      { colSpan: "4", label: "Barang" },
     ];
     bukaHarga && head.push({ colSpan: "2", label: "Harga" });
     head.push({ colSpan: "5", label: "Stok" });
     bukaHarga && head.push({ colSpan: "2", label: "Total" });
+    head.push({ rowSpan: "2", label: "Satuan" });
     head.push({ rowSpan: "2", label: "Supplier" });
     head.push({ rowSpan: "2", label: "Sub dept" });
 
-    let rowSpan = [{ label: "Kode" }, { label: "barcode" }, { label: "Nama" }, { label: "Satuan" }, { label: "Kelompok" }];
+    let rowSpan = [{ label: "Kelompok" }, { label: "barcode" }, { label: "Nama" }, , { label: "Variasi" }];
 
     bukaHarga && rowSpan.push({ label: "Beli" });
     bukaHarga && rowSpan.push({ label: "Jual" });
@@ -175,11 +176,11 @@ class InventoryReport extends Component {
                           }}
                         />
                       </td>
-                      <td className="middle nowrap">{v.kd_brg}</td>
+                      {/* <td className="middle nowrap">{v.kd_brg}</td> */}
+                      <td className="middle nowrap">{v.nama_kel}</td>
                       <td className="middle nowrap">{v.barcode}</td>
                       <td className="middle nowrap">{v.nm_brg}</td>
-                      <td className="middle nowrap">{v.satuan}</td>
-                      <td className="middle nowrap">{v.nama_kel}</td>
+                      <td className="middle nowrap">{v.variasi}</td>
 
                       <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgBeliPerLokasi)}</td>
                       <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgJualPerLokasi)}</td>
@@ -191,6 +192,7 @@ class InventoryReport extends Component {
                       <td className="text-right middle nowrap">{parseToRp(stockAkhir)}</td>
                       <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgBeliPerLokasi * stockAkhir)}</td>
                       <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{parseToRp(hrgJualPerLokasi * stockAkhir)}</td>
+                      <td className="middle nowrap">{v.satuan}</td>
                       <td className="middle nowrap">{v.supplier}</td>
                       <td className="middle nowrap">{v.sub_dept}</td>
                     </tr>
@@ -201,7 +203,7 @@ class InventoryReport extends Component {
           footer={[
             {
               data: [
-                { colSpan: 7, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 6, label: "Total perhalaman", className: "text-left" },
                 { colSpan: 1, label: parseToRp(total_stock_harga_beli_item_per), className: `text-right ${bukaHarga ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_stock_harga_jual_item_per), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_stock_awal_per) },
@@ -216,7 +218,7 @@ class InventoryReport extends Component {
             },
             {
               data: [
-                { colSpan: 7, label: "Total keseluruhan", className: "text-left" },
+                { colSpan: 6, label: "Total keseluruhan", className: "text-left" },
                 { colSpan: 1, label: parseToRp(total_harga_beli), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_harga_jual), className: `text-right  ${bukaHarga ? "" : "dNone"}` },
                 { colSpan: 1, label: parseToRp(total_stock_awal) },

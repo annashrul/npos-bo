@@ -153,7 +153,7 @@ class ConfirmPenjualanManual extends Component {
               >
                 <option value={0}>Tunai</option>
                 <option value={1}>Transfer</option>
-                <option value={2}>Kas</option>
+                {/* <option value={2}>Kredit</option> */}
               </select>
             </div>
             <div className="form-group">
