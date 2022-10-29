@@ -1025,15 +1025,15 @@ class Sale extends Component {
                   value={this.state.tgl_order}
                   onChange={(e) => this.HandleCommonInputChange(e)}
                 />
-                  <input
-                    placeholder="Tambahkan alamat penerima disini ..."
-                    type="text"
-                    style={{ height: "39px" }}
-                    className="form-control nbt nbr nbl bt"
-                    value={this.state.catatan}
-                    onChange={(e) => this.HandleCommonInputChange(e)}
-                    name="catatan"
-                  />
+                <input
+                  placeholder="Tambahkan catatan disini ..."
+                  type="text"
+                  style={{ height: "39px" }}
+                  className="form-control nbt nbr nbl bt"
+                  value={this.state.catatan}
+                  onChange={(e) => this.HandleCommonInputChange(e)}
+                  name="catatan"
+                />
               </h4>
             </div>
             <div style={{ display: "flex", alignItems: "flex-start" }}>
@@ -1104,8 +1104,8 @@ class Sale extends Component {
                           }}
                           className="form-control form-control-sm"
                           placeholder={`Search ${localStorage.anySaleTrx !== undefined
-                              ? localStorage.anySaleTrx
-                              : ""
+                            ? localStorage.anySaleTrx
+                            : ""
                             }`}
                           value={this.state.search}
                           onChange={(e) =>
@@ -1221,7 +1221,7 @@ class Sale extends Component {
                   <div className="card-body">
                     <form className="">
                       <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <LokasiCommon
                             callback={(res) =>
                               this.HandleChangeSelect("location_tr", res)
@@ -1229,9 +1229,9 @@ class Sale extends Component {
                             dataEdit={this.state.location}
                           />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <SelectCommon
-                            label="Customer"
+                            label="Nama Penerima"
                             options={this.state.customer_data}
                             callback={(res) =>
                               this.HandleChangeSelect("customer_tr", res)
@@ -1239,7 +1239,36 @@ class Sale extends Component {
                             dataEdit={this.state.customer}
                           />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
+                          <label>Nomor Penerima</label>
+                          <input
+                            placeholder="Nomor Penerima"
+                            type="text"
+                            className="form-control"
+                            // value={no_telepon_pengirim}
+                            onChange={(e) => this.HandleChangeInputValue(e, null)}
+                          // name="no_telepon_pengirim"
+
+                          // ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                          />
+                        </div>
+                        <div className="col-md-3">
+                          <label>Alamat Penerima</label>
+                          <textarea
+                            placeholder="Alamat Penerima"
+                            type="text"
+                            className="form-control"
+                            // value={no_telepon_pengirim}
+                            onChange={(e) => this.HandleChangeInputValue(e, null)}
+                          // name="no_telepon_pengirim"
+
+                          // ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                          />
+                        </div>
+
+
+
+                        {/* <div className="col-md-3">
                           <SelectCommon
                             label="Sales"
                             options={this.state.opSales}
@@ -1248,7 +1277,7 @@ class Sale extends Component {
                             }
                             dataEdit={this.state.sales}
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </form>
                     <TableCommon
@@ -1549,7 +1578,6 @@ class Sale extends Component {
                           : noData(head.length)
                       }
                     />
-
                     <hr />
                     <div className="row">
                       <div className="col-md-7">
@@ -1740,7 +1768,60 @@ class Sale extends Component {
                               </div>
                             </div>
                           </form>
+
                         </div>
+                      </div>
+                    </div>
+                    {/* PENGIRIM PENJUAL */}
+
+
+                    <div className="card">
+                      <div className="card-body">
+                        <form className="">
+                        <label> <h5>Identitas Pengirim :</h5></label>
+
+                          <div className="row">
+                            <div className="col-md-3">
+                              {/* <label>Nama Pengirim</label> */}
+                              <input
+                                placeholder="Nama Pengirim"
+                                type="text"
+                                className="form-control"
+                                // value={no_telepon_pengirim}
+                                onChange={(e) => this.HandleChangeInputValue(e, null)}
+                              // name="no_telepon_pengirim"
+
+                              // ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                              />
+                            </div>
+                            <div className="col-md-3">
+                              {/* <label>Nomor Pengirim</label> */}
+                              <input
+                                placeholder="Nomor Pengirim"
+                                type="text"
+                                className="form-control"
+                                // value={no_telepon_pengirim}
+                                onChange={(e) => this.HandleChangeInputValue(e, null)}
+                              // name="no_telepon_pengirim"
+
+                              // ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                              />
+                            </div>
+                            <div className="col-md-6">
+                              {/* <label>Alamat Pengirim</label> */}
+                              <textarea
+                                placeholder="Alamat Pengirim"
+                                type="text"
+                                className="form-control"
+                                // value={no_telepon_pengirim}
+                                onChange={(e) => this.HandleChangeInputValue(e, null)}
+                              // name="no_telepon_pengirim"
+
+                              // ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                              />
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -1748,6 +1829,7 @@ class Sale extends Component {
               </div>
             </div>
           </div>
+
 
           {this.props.isOpen && this.state.isModalForm ? (
             <FormSale

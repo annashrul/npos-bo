@@ -26,6 +26,7 @@ class InventoryReport extends Component {
         { value: "br.kd_brg", label: "Kode Barang" },
         { value: "br.nm_brg", label: "Nama Barang" },
         { value: "br.nama_kel", label: "Kelompok Barang" },
+        { value: "br.variasi", label: "Variasi" },
         { value: "br.group1", label: "Supplier" },
       ],
       isModalExcel: false,

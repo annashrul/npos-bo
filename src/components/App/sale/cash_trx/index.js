@@ -244,14 +244,14 @@ class Sale extends Component {
                     </div>
                     <div className="row">
                       <div className="col-md-6">
-                        <SelectCommon
+                        {/* <SelectCommon
                           label="kassa"
                           options={kassa("")}
                           callback={(res) => this.HandleSelect(res, "kassa")}
                           isLabel={false}
                           isDisabled={atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg"}
                           dataEdit={this.state.dataEdit}
-                        />
+                        /> */}
                       </div>
 
                       <div className="col-md-6">
