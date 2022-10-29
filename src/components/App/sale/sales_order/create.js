@@ -34,7 +34,8 @@ import {
 import TableCommon from "../../common/TableCommon";
 import ButtonTrxCommon from "../../common/ButtonTrxCommon";
 import moment from "moment";
-
+import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
+import DownloadNotaPdfSo from "./nota";
 const table = "sales_order";
 
 class CreateSO extends Component {
@@ -48,7 +49,6 @@ class CreateSO extends Component {
       toggleSide: false,
       searchBy: 3,
       searchByData: [
-        // { value: 1, label: "Barcode" },
         { value: 2, label: "Kode Barang" },
         { value: 3, label: "Nama Barang" },
       ],
@@ -60,6 +60,11 @@ class CreateSO extends Component {
       perpage: 5,
       scrollPage: 0,
       isScroll: false,
+      detail: [],
+      master: {},
+      isNota: false,
+      namaLokasi: "",
+      namaCustomer: "",
     };
     this.handleClickToggle = this.handleClickToggle.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
@@ -162,15 +167,21 @@ class CreateSO extends Component {
 
   handleSelect(e, state) {
     if (state === "location") {
+      this.setState({ namaLokasi: e.label });
       this.props.dispatch(FetchCustomerAll(e.value));
       this.props.dispatch(getCodeSoAction(e.value));
       const searchBy = this.handleCheckSearchBy();
       this.props.dispatch(
         FetchBrg(1, searchBy, "", e.value, null, this.autoSetQty, 5)
       );
+    } else {
+      this.setState({ namaCustomer: e.label });
     }
     localStorage.setItem(state, e.value);
-    this.setState({ [state]: e.value, any: "" });
+    this.setState({
+      [state]: e.value,
+      any: "",
+    });
   }
 
   handleSearch(e) {
@@ -204,13 +215,20 @@ class CreateSO extends Component {
       let loc = param.auth.user.lokasi;
       if (isEmptyOrUndefined(loc)) {
         let location = handleDataSelect(loc, "kode", "nama");
-        Object.assign(state, { locationData: location });
+        console.log(location);
+        Object.assign(state, {
+          locationData: location,
+          namaLokasi: location[0].label,
+        });
       }
     }
     if (isEmptyOrUndefined(param.customer)) {
       if (param.customer.length > 0) {
         let customer = handleDataSelect(param.customer, "kd_cust", "nama");
-        Object.assign(state, { customerData: customer });
+        Object.assign(state, {
+          customerData: customer,
+          namaCustomer: customer[0].label,
+        });
       }
     }
     if (param.barang && param.barang.length > 0) {
@@ -409,17 +427,41 @@ class CreateSO extends Component {
             kd_lokasi: location,
             kd_cust: customer,
           };
+          let newMaster = data["master"];
+          // this.setState(
+          //   {
+          //     detail: databrg,
+          //     master: Object.assign(newMaster, {
+          //       namaLokasi: this.state.namaLokasi,
+          //       namaCustomer: this.state.namaCustomer,
+          //     }),
+          //     isNota: true,
+          //   },
+          //   () => {
+          //     this.props.dispatch(ModalToggle(true));
+          //     this.props.dispatch(ModalType("downloadNotaPdfSo"));
+          //   }
+          // );
+
           this.props.dispatch(
             postSalesOrderAction(data, (isTrue) => {
               swalWithCallback("transaksi berhasil disimpan", () => {
                 this.setState(
                   {
+                    detail: databrg,
+                    master: Object.assign(newMaster, {
+                      namaLokasi: this.state.namaLokasi,
+                      namaCustomer: this.state.namaCustomer,
+                    }),
+                    isNota: true,
                     note: "-",
                     location: "",
                     databrg: [],
                     customer: "",
                   },
                   () => {
+                    this.props.dispatch(ModalToggle(true));
+                    this.props.dispatch(ModalType("downloadNotaPdfSo"));
                     destroy(table);
                     this.getData();
                   }
@@ -427,13 +469,6 @@ class CreateSO extends Component {
               });
             })
           );
-          // this.props.dispatch(
-          //   storeAdjusment(data, () => {
-          // this.handleClear();
-          // this.getData();
-          //     this.props.dispatch(FetchCodeAdjustment(location.value));
-          //   })
-          // );
         });
       }
     });
@@ -447,6 +482,7 @@ class CreateSO extends Component {
   }
 
   render() {
+    console.log(moment().format("YYYYMMDDhhmmss"));
     const {
       toggleSide,
       searchBy,
@@ -807,6 +843,20 @@ class CreateSO extends Component {
             </div>
           </div>
         </div>
+        {this.state.isNota && this.props.isOpen ? (
+          <DownloadNotaPdfSo
+            master={this.state.master}
+            detail={this.state.detail}
+            callbackDownload={() => {
+              destroy(table);
+              this.getData();
+              // if (isEmptyOrUndefined(this.props.match.params.slug)) {
+              //   this.props.history.push(`${linkTransaksiManual}`);
+              //   rmStorage("isEditTrxManual");
+              // }
+            }}
+          />
+        ) : null}
       </Layout>
     );
   }
@@ -820,6 +870,7 @@ const mapStateToPropsCreateItem = (state) => {
     customer: state.customerReducer.all,
     paginBrg: state.productReducer.pagin_brg,
     auth: state.auth,
+    isOpen: state.modalReducer,
   };
 };
 
