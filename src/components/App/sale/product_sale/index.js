@@ -85,7 +85,12 @@ class Sale extends Component {
           label: "UMUM",
         },
       ],
-
+      nama_penerima: "",
+      no_telepon_penerima: "",
+      alamat_penerima: "",
+      nama_pengirim: "",
+      no_telepon_pengirim: "",
+      alamat_pengirim: "",
       so: "",
       so_data: [],
       catatan: "",
@@ -126,6 +131,7 @@ class Sale extends Component {
     this.HandleAddBrg = this.HandleAddBrg.bind(this);
     this.HandleOnBlur = this.HandleOnBlur.bind(this);
     this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this);
+    this.HandleChangeTambahan = this.HandleChangeTambahan.bind(this);
     this.HandleChangeSelect = this.HandleChangeSelect.bind(this);
     this.setTglOrder = this.setTglOrder.bind(this);
     this.HandleReset = this.HandleReset.bind(this);
@@ -145,6 +151,20 @@ class Sale extends Component {
     this.setState({
       toggleSide: !this.state.toggleSide,
     });
+  }
+  HandleChangeTambahan(e, i) {
+    const col = e.target.name;
+    let val = e.target.value;
+    if (i !== null) {
+      let data = this.state.data;
+      if (col === "harga") {
+        val = rmComma(val);
+      }
+      data[i][col] = val;
+      this.setState({ data });
+    } else {
+      this.setState({ [col]: val });
+    }
   }
 
   fetchByLocation(val) {
@@ -299,6 +319,44 @@ class Sale extends Component {
         userid: props.auth.user.id,
       });
     }
+    if (isEmptyOrUndefined(props.match.params.slug)) {
+      props.dispatch(
+        getEditTrx(
+          `kd_trx=${atob(props.match.params.slug)}&perpage=999`,
+          false,
+          (res) => {
+            setStorage("isEditTrxManual", true);
+            var retrievedObject = localStorage.getItem("masterTrxManual");
+            retrievedObject = JSON.parse(retrievedObject);
+            const arrPenerima = retrievedObject.penerima.split("|");
+            const arrPengirim = retrievedObject.pengirim.split("|");
+            console.log(retrievedObject);
+            const newData = [];
+            res.result.data.map((row, key) => {
+              newData.push({
+                sku: row.sku,
+                nama: row.nama,
+                motif: row.motif,
+                qty: row.qty,
+                harga: row.harga,
+                no: Math.random(10000000),
+              });
+            });
+
+            this.setState({
+              data: newData,
+              catatan: retrievedObject.catatan,
+              nama_penerima: arrPenerima[0],
+              no_telepon_penerima: arrPenerima[1],
+              alamat_penerima: arrPenerima[2],
+              nama_pengirim: arrPengirim[0],
+              no_telepon_pengirim: arrPengirim[1],
+              alamat_pengirim: arrPengirim[2],
+            });
+          }
+        )
+      );
+    } 
 
     this.setState(state);
   }
@@ -693,6 +751,12 @@ class Sale extends Component {
           nominal_poin: 0,
           tunai: 0,
           poin_tukar: 0,
+          nama_penerima: this.state.nama_penerima,
+          no_telepon_penerima: this.state.no_telepon_penerima,
+          alamat_penerima: this.state.alamat_penerima,
+          nama_pengirim: this.state.nama_pengirim,
+          no_telepon_pengirim: this.state.no_telepon_pengirim,
+          alamat_pengirim: this.state.alamat_pengirim,
           gt:
             subtotal -
             subtotal * (parseFloat(this.state.discount_persen) / 100) +
@@ -1231,45 +1295,6 @@ class Sale extends Component {
                         </div>
                         <div className="col-md-3">
                           <SelectCommon
-                            label="Nama Penerima"
-                            options={this.state.customer_data}
-                            callback={(res) =>
-                              this.HandleChangeSelect("customer_tr", res)
-                            }
-                            dataEdit={this.state.customer}
-                          />
-                        </div>
-                        <div className="col-md-3">
-                          <label>Nomor Penerima</label>
-                          <input
-                            placeholder="Nomor Penerima"
-                            type="text"
-                            className="form-control"
-                            // value={no_telepon_pengirim}
-                            onChange={(e) => this.HandleChangeInputValue(e, null)}
-                          // name="no_telepon_pengirim"
-
-                          // ref={(input) => (this[`no_telepon_pengirim`] = input)}
-                          />
-                        </div>
-                        <div className="col-md-3">
-                          <label>Alamat Penerima</label>
-                          <textarea
-                            placeholder="Alamat Penerima"
-                            type="text"
-                            className="form-control"
-                            // value={no_telepon_pengirim}
-                            onChange={(e) => this.HandleChangeInputValue(e, null)}
-                          // name="no_telepon_pengirim"
-
-                          // ref={(input) => (this[`no_telepon_pengirim`] = input)}
-                          />
-                        </div>
-
-
-
-                        {/* <div className="col-md-3">
-                          <SelectCommon
                             label="Sales"
                             options={this.state.opSales}
                             callback={(res) =>
@@ -1277,7 +1302,109 @@ class Sale extends Component {
                             }
                             dataEdit={this.state.sales}
                           />
-                        </div> */}
+                        </div>
+                      </div>
+                      <div className="col-md-12 d-flex justify-content-between">
+                        <div className="form-group">
+                          <label className="bold">Penerima</label>
+                          <div className="d-flex">
+                            <input
+                              placeholder="nama"
+                              type="text"
+                              className="form-control"
+                              dataEdit={this.state.nama_penerima}
+                              onChange={(e) => this.HandleChangeTambahan(e, null)}
+                              name="nama_penerima"
+                              style={{
+                                borderRight: "0px",
+                                borderTopRightRadius: "0px",
+                                borderBottomRightRadius: "0px",
+                              }}
+                              ref={(input) => (this[`nama_penerima`] = input)}
+                            />
+                            <input
+                              placeholder="no telepon"
+                              type="text"
+                              className="form-control"
+                              dataEdit={this.state.no_telepon_penerima}
+                              onChange={(e) => this.HandleChangeTambahan(e, null)}
+                              name="no_telepon_penerima"
+                              style={{
+                                borderRight: "0px",
+                                borderTopRightRadius: "0px",
+                                borderBottomRightRadius: "0px",
+                                borderLeft: "0px",
+                                borderTopLeftRadius: "0px",
+                                borderBottomLeftRadius: "0px",
+                              }}
+                              ref={(input) => (this[`no_telepon_penerima`] = input)}
+                            />
+                            <textarea
+                              placeholder="alamat"
+                              type="text"
+                              className="form-control"
+                              dataEdit={this.state.alamat_penerima}
+                              onChange={(e) => this.HandleChangeTambahan(e, null)}
+                              name="alamat_penerima"
+                              style={{
+                                borderLeft: "0px",
+                                borderTopLeftRadius: "0px",
+                                borderBottomLeftRadius: "0px",
+                              }}
+                              ref={(input) => (this[`alamat_penerima`] = input)}
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group">
+                          <label className="bold">Pengirim</label>
+                          <div className="d-flex">
+                            <input
+                              placeholder="nama"
+                              type="text"
+                              className="form-control"
+                              dataEdit={this.state.nama_pengirim}
+                              onChange={(e) => this.HandleChangeTambahan(e, null)}
+                              name="nama_pengirim"
+                              style={{
+                                borderRight: "0px",
+                                borderTopRightRadius: "0px",
+                                borderBottomRightRadius: "0px",
+                              }}
+                              ref={(input) => (this[`nama_pengirim`] = input)}
+                            />
+                            <input
+                              placeholder="no telepon"
+                              type="text"
+                              className="form-control"
+                              dataEdit={this.state.no_telepon_pengirim}
+                              onChange={(e) => this.HandleChangeTambahan(e, null)}
+                              name="no_telepon_pengirim"
+                              style={{
+                                borderRight: "0px",
+                                borderTopRightRadius: "0px",
+                                borderBottomRightRadius: "0px",
+                                borderLeft: "0px",
+                                borderTopLeftRadius: "0px",
+                                borderBottomLeftRadius: "0px",
+                              }}
+                              ref={(input) => (this[`no_telepon_pengirim`] = input)}
+                            />
+                            <textarea
+                              placeholder="alamat"
+                              type="text"
+                              className="form-control"
+                              dataEdit={this.state.alamat_pengirim}
+                              onChange={(e) => this.HandleChangeTambahan(e, null)}
+                              name="alamat_pengirim"
+                              style={{
+                                borderLeft: "0px",
+                                borderTopLeftRadius: "0px",
+                                borderBottomLeftRadius: "0px",
+                              }}
+                              ref={(input) => (this[`alamat_pengirim`] = input)}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </form>
                     <TableCommon
@@ -1770,58 +1897,6 @@ class Sale extends Component {
                           </form>
 
                         </div>
-                      </div>
-                    </div>
-                    {/* PENGIRIM PENJUAL */}
-
-
-                    <div className="card">
-                      <div className="card-body">
-                        <form className="">
-                        <label> <h5>Identitas Pengirim :</h5></label>
-
-                          <div className="row">
-                            <div className="col-md-3">
-                              {/* <label>Nama Pengirim</label> */}
-                              <input
-                                placeholder="Nama Pengirim"
-                                type="text"
-                                className="form-control"
-                                // value={no_telepon_pengirim}
-                                onChange={(e) => this.HandleChangeInputValue(e, null)}
-                              // name="no_telepon_pengirim"
-
-                              // ref={(input) => (this[`no_telepon_pengirim`] = input)}
-                              />
-                            </div>
-                            <div className="col-md-3">
-                              {/* <label>Nomor Pengirim</label> */}
-                              <input
-                                placeholder="Nomor Pengirim"
-                                type="text"
-                                className="form-control"
-                                // value={no_telepon_pengirim}
-                                onChange={(e) => this.HandleChangeInputValue(e, null)}
-                              // name="no_telepon_pengirim"
-
-                              // ref={(input) => (this[`no_telepon_pengirim`] = input)}
-                              />
-                            </div>
-                            <div className="col-md-6">
-                              {/* <label>Alamat Pengirim</label> */}
-                              <textarea
-                                placeholder="Alamat Pengirim"
-                                type="text"
-                                className="form-control"
-                                // value={no_telepon_pengirim}
-                                onChange={(e) => this.HandleChangeInputValue(e, null)}
-                              // name="no_telepon_pengirim"
-
-                              // ref={(input) => (this[`no_telepon_pengirim`] = input)}
-                              />
-                            </div>
-                          </div>
-                        </form>
                       </div>
                     </div>
                   </div>
