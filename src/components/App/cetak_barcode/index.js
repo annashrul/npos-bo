@@ -754,9 +754,9 @@ class CetakBarcode extends Component {
                         className="form-control form-control-sm"
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
                       >
+                        <option value={3}>Nam barang</option>
                         <option value={1}>Kode Barang</option>
-                        <option value={2}>Barcode</option>
-                        <option value={3}>Deskripsi</option>
+                        <option value={2}>Variasi</option>
                       </select>
                     </div>
                     <small
@@ -767,8 +767,8 @@ class CetakBarcode extends Component {
                       {parseInt(this.state.searchby, 10) === 1
                         ? "Kode Barang"
                         : parseInt(this.state.searchby, 10) === 2
-                        ? "Barcode"
-                        : "Deskripsi"}
+                          ? "Barcode"
+                          : "Deskripsi"}
                     </small>
                   </div>
                   <div className="form-group">

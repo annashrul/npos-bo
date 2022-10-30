@@ -51,6 +51,7 @@ class CreateSO extends Component {
       searchByData: [
         { value: 2, label: "Kode Barang" },
         { value: 3, label: "Nama Barang" },
+        { value: 1, label: "Variasi" }
       ],
       any: "",
       createdAt: moment().format("YYYY-MM-DD"),

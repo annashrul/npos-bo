@@ -500,8 +500,8 @@ class ReturTanpaNota extends Component {
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
           : parseInt(this.state.searchby, 10) === 2
-          ? "barcode"
-          : "deskripsi";
+            ? "variasi"
+            : "deskripsi";
       this.props.dispatch(
         FetchBrg(
           1,
@@ -551,7 +551,7 @@ class ReturTanpaNota extends Component {
         searchby = "kd_brg";
       }
       if (parseInt(this.state.searchby, 10) === 2) {
-        searchby = "barcode";
+        searchby = "variasi";
       }
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
@@ -641,9 +641,9 @@ class ReturTanpaNota extends Component {
                         className="form-control form-control-sm"
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
                       >
+                        <option value={3}>Nama Barang</option>
                         <option value={1}>Kode Barang</option>
-                        <option value={2}>Barcode</option>
-                        <option value={3}>Deskripsi</option>
+                        <option value={2}>Variasi</option>
                       </select>
                     </div>
                     <small
@@ -654,8 +654,8 @@ class ReturTanpaNota extends Component {
                       {parseInt(this.state.searchby, 10) === 1
                         ? "Kode Barang"
                         : parseInt(this.state.searchby, 10) === 2
-                        ? "Barcode"
-                        : "Deskripsi"}
+                          ? "Barcode"
+                          : "Deskripsi"}
                     </small>
                   </div>
                   <div className="form-group">
@@ -666,11 +666,10 @@ class ReturTanpaNota extends Component {
                         id="chat-search"
                         name="search"
                         className="form-control form-control-sm"
-                        placeholder={`Search ${
-                          localStorage.anyReturTanpaNota !== undefined
+                        placeholder={`Search ${localStorage.anyReturTanpaNota !== undefined
                             ? localStorage.anyReturTanpaNota
                             : ""
-                        }`}
+                          }`}
                         value={this.state.search}
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
                         onKeyPress={(event) => {
@@ -712,7 +711,7 @@ class ReturTanpaNota extends Component {
                                   style={{
                                     backgroundColor:
                                       this.state.scrollPage === inx ||
-                                      this.state.isClick === inx
+                                        this.state.isClick === inx
                                         ? "#eeeeee"
                                         : "",
                                   }}
@@ -1018,8 +1017,8 @@ class ReturTanpaNota extends Component {
                                 this.HandleFocusInputReset(e, index)
                               }
                               ref={(input) =>
-                                (this[`qty_retur-${btoa(item.barcode)}`] =
-                                  input)
+                              (this[`qty_retur-${btoa(item.barcode)}`] =
+                                input)
                               }
                               value={this.state.brgval[index].qty_retur}
                             />

@@ -612,8 +612,8 @@ class PurchaseOrder extends Component {
       const searchby =
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
-          // : parseInt(this.state.searchby, 10) === 2
-          // ? "barcode"
+          : parseInt(this.state.searchby, 10) === 2
+          ? "variasi"
           : "deskripsi";
       if (this.getConfigSupplier() === 0) {
         this.props.dispatch(
@@ -815,7 +815,7 @@ class PurchaseOrder extends Component {
                       >
                         <option value={3}>Nama Barang</option>
                         <option value={1}>Kode Barang</option>
-                        {/* <option value={2}>Barcode</option> */}
+                        <option value={2}>Variasi</option>
                       </select>
                     </div>
                     <small

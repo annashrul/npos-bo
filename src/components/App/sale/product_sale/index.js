@@ -849,7 +849,7 @@ class Sale extends Component {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=barcode`;
+        where += `searchby=variasi`;
       }
       if (parseInt(this.state.searchby, 10) === 3) {
         if (where !== "") {
@@ -919,7 +919,7 @@ class Sale extends Component {
           if (where !== "") {
             where += "&";
           }
-          where += `searchby=barcode`;
+          where += `searchby=variasi`;
         }
         if (parseInt(this.state.searchby, 10) === 3) {
           if (where !== "") {
@@ -1139,7 +1139,7 @@ class Sale extends Component {
                         >
                           <option value={3}>Nama Barang</option>
                           <option value={1}>Kode Barang</option>
-                          {/* <option value={2}>Barcode</option> */}
+                          <option value={2}>Variasi</option>
                         </select>
                       </div>
                       <small
@@ -1150,7 +1150,7 @@ class Sale extends Component {
                         {parseInt(this.state.searchby, 10) === 1
                           ? "Kode Barang"
                           : parseInt(this.state.searchby, 10) === 2
-                            ? "Barcode"
+                            ? "Variasi"
                             : "Deskripsi"}
                       </small>
                     </div>

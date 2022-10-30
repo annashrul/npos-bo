@@ -1209,7 +1209,7 @@ class Receive extends Component {
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
           : parseInt(this.state.searchby, 10) === 2
-          ? "barcode"
+          ? "variasi"
           : "deskripsi";
       if (this.getConfigSupplier() === 0) {
         this.props.dispatch(
@@ -1250,6 +1250,7 @@ class Receive extends Component {
           kd_brg: i.kd_brg,
           nm_brg: i.nm_brg,
           barcode: i.barcode,
+          variasi:i.variasi,
           index: 1000000000000000,
         });
         brg.push({
@@ -1293,7 +1294,7 @@ class Receive extends Component {
         searchby = "kd_brg";
       }
       if (parseInt(this.state.searchby, 10) === 2) {
-        searchby = "barcode";
+        searchby = "variasi";
       }
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
@@ -1523,8 +1524,8 @@ class Receive extends Component {
                               Cari berdasarkan{" "}
                               {parseInt(this.state.searchby, 10) === 1
                                 ? "Kode Barang"
-                                // : parseInt(this.state.searchby, 10) === 2
-                                // ? "Barcode"
+                                : parseInt(this.state.searchby, 10) === 2
+                                ? "Variasi"
                                 : "Nama Barang"}
                             </label>
                             <div className="input-group input-group-sm">
@@ -1537,7 +1538,7 @@ class Receive extends Component {
                               >
                                 <option value={3}>Nama Barang</option>
                                 <option value={1}>Kode Barang</option>
-                                {/* <option value={2}>Barcode</option> */}
+                                <option value={2}>Variasi</option>
                               </select>
                             </div> 
                           </div>
