@@ -356,7 +356,7 @@ class Sale extends Component {
           }
         )
       );
-    } 
+    }
 
     this.setState(state);
   }
@@ -1137,9 +1137,9 @@ class Sale extends Component {
                             this.HandleCommonInputChange(e, false)
                           }
                         >
+                          <option value={2}>Variasi</option>
                           <option value={3}>Nama Barang</option>
                           <option value={1}>Kode Barang</option>
-                          <option value={2}>Variasi</option>
                         </select>
                       </div>
                       <small
