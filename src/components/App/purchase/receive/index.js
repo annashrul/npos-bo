@@ -900,6 +900,7 @@ class Receive extends Component {
 
     const finaldt = {
       kd_brg: item.kd_brg,
+      variasi: item.variasi,
       barcode: item.barcode,
       satuan: item.satuan,
       diskon: item.diskon,
@@ -1250,7 +1251,7 @@ class Receive extends Component {
           kd_brg: i.kd_brg,
           nm_brg: i.nm_brg,
           barcode: i.barcode,
-          variasi:i.variasi,
+          variasi: i.variasi,
           index: 1000000000000000,
         });
         brg.push({
@@ -1611,6 +1612,7 @@ class Receive extends Component {
                                                   kd_brg: i.kd_brg,
                                                   barcode: i.barcode,
                                                   satuan: i.satuan,
+                                                  variasi: i.variasi,
                                                   diskon: 0,
                                                   diskon2: 0,
                                                   ppn: 0,
@@ -1627,7 +1629,7 @@ class Receive extends Component {
                                                 <div className="status titles bold">
                                                   {lengthBrg(i.nm_brg)}
                                                 </div>
-                                                <div className="subtitle">
+                                                <div className="about">
                                                   {" "}
                                                   ({i.kd_brg} - {i.ukuran})
                                                 </div>
@@ -1912,6 +1914,9 @@ class Receive extends Component {
                             Barang
                           </th>
                           <th rowSpan={2} className="text-black middle nowrap">
+                            Variasi
+                          </th>
+                          <th rowSpan={2} className="text-black middle nowrap">
                             satuan
                           </th>
                           {this.props.auth.user.lvl !==
@@ -2038,6 +2043,9 @@ class Receive extends Component {
                               <td className="middle nowrap">
                                 {item.nm_brg} <br />
                                 {item.kd_brg}
+                              </td>
+                              <td className="middle nowrap">
+                                {item.variasi}
                               </td>
                               <td className="middle nowrap">
                                 <select

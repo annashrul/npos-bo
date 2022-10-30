@@ -414,6 +414,7 @@ class PurchaseOrder extends Component {
       barcode: item.barcode,
       satuan: item.satuan,
       diskon: item.diskon,
+      variasi: item.variasi,
       diskon2: 0,
       diskon3: 0,
       diskon4: 0,
@@ -762,6 +763,7 @@ class PurchaseOrder extends Component {
     const head = [
       { rowSpan: 2, label: "No" },
       { rowSpan: 2, label: "Barang" },
+      { rowSpan: 2, label: "Variasi" },
       { rowSpan: 2, label: "Satuan", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
       { colSpan: 2, label: "Diskon", width: "1%" },
@@ -894,6 +896,7 @@ class PurchaseOrder extends Component {
                                     this.HandleAddBrg(e, {
                                       kd_brg: i.kd_brg,
                                       barcode: i.barcode,
+                                      variasi: i.variasi,
                                       satuan: i.satuan,
                                       diskon: 0,
                                       diskon2: 0,
@@ -921,7 +924,7 @@ class PurchaseOrder extends Component {
                                     <div
                                       className="status"
                                       style={{
-                                        color: "#a1887f",
+                                        color: "black",
                                         fontWeight: "bold",
                                         wordBreak: "break-all",
                                         fontSize: "12px",
@@ -1211,6 +1214,9 @@ class PurchaseOrder extends Component {
                               {item.nm_brg} <br />
                               {item.barcode}
                             </small>
+                          </td>
+                          <td className="middle nowrap">
+                              {item.variasi}
                           </td>
                           <td className="middle nowrap">
                             <select

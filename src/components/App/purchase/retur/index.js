@@ -327,6 +327,7 @@ class ReturTanpaNota extends Component {
     const finaldt = {
       kd_brg: item.kd_brg,
       nm_brg: item.nm_brg,
+      variasi: item.variasi,
       barcode: item.barcode,
       satuan: item.satuan,
       deskripsi: item.deskripsi,
@@ -611,6 +612,7 @@ class ReturTanpaNota extends Component {
     const head = [
       { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang" },
+      { rowSpan: 2, label: "Variasi" },
       { rowSpan: 2, label: "Satuan", width: "1%" },
       { rowSpan: 2, label: "Harga beli", width: "1%" },
       { rowSpan: 2, label: "Kondisi", width: "1%" },
@@ -724,6 +726,7 @@ class ReturTanpaNota extends Component {
                                       {
                                         kd_brg: i.kd_brg,
                                         nm_brg: i.nm_brg,
+                                        variasi: i.variasi,
                                         barcode: i.barcode,
                                         satuan: i.satuan,
                                         deskripsi: i.deskripsi,
@@ -752,7 +755,7 @@ class ReturTanpaNota extends Component {
                                       {i.nm_brg}
                                     </div>
                                     <div
-                                      className="status"
+                                      className="about"
                                       style={{
                                         color: "#a1887f",
                                         fontWeight: "bold",
@@ -914,6 +917,9 @@ class ReturTanpaNota extends Component {
                           <td className="middle nowrap">
                             {item.nm_brg} <br />
                             {item.barcode}
+                          </td>
+                          <td className="middle nowrap">
+                            {item.variasi} 
                           </td>
 
                           <td className="middle nowrap">

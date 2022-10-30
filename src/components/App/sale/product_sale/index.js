@@ -374,6 +374,7 @@ class Sale extends Component {
     const finaldt = {
       kd_brg: item.kd_brg,
       nm_brg: item.nm_brg,
+      variasi: item.variasi,
       barcode: item.barcode,
       satuan: item.satuan,
       harga_old: !isEmptyOrUndefined(item.harga) ? "0" : item.harga,
@@ -488,6 +489,7 @@ class Sale extends Component {
                 isOpenPrice: false,
                 kategori: val.kategori,
                 kd_brg: val.kd_brg,
+                variasi: val.variasi,
                 nm_brg: val.nm_brg,
                 ppn: val.ppn,
                 qty: val.qty_brg,
@@ -1017,6 +1019,7 @@ class Sale extends Component {
     let totalsub = 0;
     const head = [
       { label: "Barang" },
+      { label: "Variasi" },
       { label: "Harga" },
       { label: "Stok" },
       { label: "Qty" },
@@ -1448,6 +1451,9 @@ class Sale extends Component {
                                   <div className="subtitle">
                                     {item.kd_brg} ( {item.satuan} )
                                   </div>
+                                </td>
+                                <td className="middle nowrap">
+                                  {item.variasi} 
                                 </td>
                                 <td className="middle nowrap">
                                   {this.state.brgval[index].isOpenPrice ? (
