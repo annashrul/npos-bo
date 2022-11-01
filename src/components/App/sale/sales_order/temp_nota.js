@@ -194,7 +194,7 @@ class TempNota extends Component {
         <Page style={styles.page} size="A4" wrap>
           <View style={styles.tableContainer}>
             <View style={styles.header1}>
-              <Text style={styles.fontHeader}>SURAT MASUK BARANG</Text>
+              <Text style={styles.fontHeader}>SURAT SALES ORDERAN</Text>
             </View>
             <View style={styles.header2}>
               <Text style={styles.fontHeader}>MORP APPAREL</Text>
