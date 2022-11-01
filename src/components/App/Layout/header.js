@@ -395,7 +395,7 @@ class Header extends Component {
                             <p
                               onClick={(e) => {
                                 e.isPropagationStopped();
-                                if (row.status === 0) {
+                                if (row.status !== 1) {
                                   this.handleNotifUpdate(i);
                                 }
                               }}
@@ -405,7 +405,7 @@ class Header extends Component {
                                   row.status === 1 ? "not-allowed" : "pointer",
                                 borderBottom: "1px solid #EEEEEE",
                                 background:
-                                  row.status === 0 ? "white" : "#EEEEEE",
+                                  row.status !== 1 ? "white" : "#EEEEEE",
                                 padding: "10px",
                                 marginBottom: "0px",
                               }}
