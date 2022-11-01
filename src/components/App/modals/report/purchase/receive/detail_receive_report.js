@@ -27,7 +27,7 @@ class DetailReceiveReport extends Component {
     const { master, total, per_page, current_page, data } = this.props.receiveReportDetail;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
-      { colSpan: 2, label: "Barang" },
+      { colSpan: 3, label: "Barang" },
       { colSpan: 2, label: "Harga" },
       { rowSpan: 2, label: "Margin" },
       { colSpan: 2, label: "Diskon (%)" },
@@ -38,6 +38,7 @@ class DetailReceiveReport extends Component {
     const rowSpan = [
       { label: "Kode" },
       { label: "Nama" },
+      { label: "Variasi" },
       { label: "Beli" },
       { label: "Jual" },
       { label: "1" },
@@ -106,6 +107,7 @@ class DetailReceiveReport extends Component {
                           <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                           <td className="middle nowrap">{v.kode_barang}</td>
                           <td className="middle nowrap">{v.nm_brg}</td>
+                          <td className="middle nowrap">{v.ukuran}</td>
                           <td className="middle nowrap text-right">{parseToRp(hrgBeli)}</td>
                           <td className="middle nowrap text-right">{parseToRp(hrgJual)}</td>
                           <td className="middle nowrap text-right">{parseToRp(getMargin(hrgJual, hrgBeli))}</td>
