@@ -48,7 +48,7 @@ class TrxAdjustment extends Component {
       location: { value: "", label: "" },
       catatan: "-",
       tgl_order: moment(new Date()).format("yyyy-MM-DD"),
-      searchby: "kd_brg",
+      searchby: "deskripsi",
       search: "",
       toggleSide: false,
     };
@@ -142,6 +142,7 @@ class TrxAdjustment extends Component {
         id: data.id,
         kd_brg: data.kd_brg,
         nm_brg: data.nm_brg,
+        ukuran: data.ukuran,
         barcode: newData.barcode,
         satuan: newData.satuan,
         harga_beli: newData.harga_beli,
@@ -280,6 +281,7 @@ class TrxAdjustment extends Component {
     const { searchby, databrg, brgval, location, toggleSide } = this.state;
     const head = [
       { rowSpan: 2, label: "Barang" },
+      { rowSpan: 2, label: "Variasi", width: "20%" },
       { rowSpan: 2, label: "Satuan", width: "1%" },
       { rowSpan: 2, label: "Jenis", width: "1%" },
       { rowSpan: 2, label: "Qty", width: "1%" },
@@ -340,6 +342,9 @@ class TrxAdjustment extends Component {
                                   {item.barcode} ({" "}
                                   {toCurrency(parseInt(item.harga_beli, 10))} )
                                 </div>
+                              </td>
+                              <td className="middle nowrap">
+                                {item.ukuran}
                               </td>
                               <td className="middle nowrap">
                                 <select

@@ -96,7 +96,7 @@ class Sale extends Component {
       catatan: "",
       jenis_trx: "Tunai",
       userid: 0,
-      searchby: 1,
+      searchby: 3,
       search: "",
       subtotal: 0,
       discount_persen: 0,
@@ -225,6 +225,7 @@ class Sale extends Component {
             dataFinal.push({
               kd_brg: row.kd_brg,
               nm_brg: val.nm_brg,
+              ukuran: val.ukuran,
               barcode: row.barcode,
               satuan: row.satuan_jual,
               harga_old: !isEmptyOrUndefined(row.harga) ? "0" : row.harga,
@@ -374,7 +375,7 @@ class Sale extends Component {
     const finaldt = {
       kd_brg: item.kd_brg,
       nm_brg: item.nm_brg,
-      variasi: item.variasi,
+      ukuran: item.ukuran,
       barcode: item.barcode,
       satuan: item.satuan,
       harga_old: !isEmptyOrUndefined(item.harga) ? "0" : item.harga,
@@ -489,7 +490,7 @@ class Sale extends Component {
                 isOpenPrice: false,
                 kategori: val.kategori,
                 kd_brg: val.kd_brg,
-                variasi: val.variasi,
+                ukuran: val.ukuran,
                 nm_brg: val.nm_brg,
                 ppn: val.ppn,
                 qty: val.qty_brg,
@@ -719,6 +720,7 @@ class Sale extends Component {
             hrg_beli: item.hrg_beli,
             nm_brg: item.nm_brg,
             satuan: item.satuan,
+            ukuran: item.ukuran,
           });
           return null;
         });
@@ -851,7 +853,7 @@ class Sale extends Component {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=variasi`;
+        where += `searchby=ukuran`;
       }
       if (parseInt(this.state.searchby, 10) === 3) {
         if (where !== "") {
@@ -883,6 +885,7 @@ class Sale extends Component {
           harga2: i.harga2,
           harga3: i.harga3,
           harga4: i.harga4,
+          ukuran: i.ukuran,
           diskon_persen: i.diskon_persen,
           diskon_nominal: i.diskon_nominal,
           ppn: i.ppn,
@@ -921,7 +924,7 @@ class Sale extends Component {
           if (where !== "") {
             where += "&";
           }
-          where += `searchby=variasi`;
+          where += `searchby=ukuran`;
         }
         if (parseInt(this.state.searchby, 10) === 3) {
           if (where !== "") {
@@ -1140,9 +1143,9 @@ class Sale extends Component {
                             this.HandleCommonInputChange(e, false)
                           }
                         >
-                          <option value={2}>Variasi</option>
                           <option value={3}>Nama Barang</option>
                           <option value={1}>Kode Barang</option>
+                          <option value={2}>Variasi</option>
                         </select>
                       </div>
                       <small
@@ -1154,7 +1157,7 @@ class Sale extends Component {
                           ? "Kode Barang"
                           : parseInt(this.state.searchby, 10) === 2
                             ? "Variasi"
-                            : "Deskripsi"}
+                            : "Nama Barang"}
                       </small>
                     </div>
                     <div className="form-group">
@@ -1235,13 +1238,20 @@ class Sale extends Component {
                                           color: "black",
                                           fontWeight: "bold",
                                           wordBreak: "break-all",
-                                          fontSize: "12px",
+                                          fontSize: "14px",
                                         }}
                                       >
                                         {i.nm_brg}
                                       </div>
-                                      <div className="subtitle">
-                                        ({i.barcode} - {i.ukuran})
+                                      <div className="status"
+                                      style={{
+                                        color: "black",
+                                        fontWeight: "bold",
+                                        wordBreak: "break-all",
+                                        fontSize: "12px",
+                                      }}>
+                                        
+                                        ({i.ukuran})
                                       </div>
                                     </div>
                                   </li>
@@ -1453,7 +1463,7 @@ class Sale extends Component {
                                   </div>
                                 </td>
                                 <td className="middle nowrap">
-                                  {item.variasi} 
+                                  {item.ukuran} 
                                 </td>
                                 <td className="middle nowrap">
                                   {this.state.brgval[index].isOpenPrice ? (

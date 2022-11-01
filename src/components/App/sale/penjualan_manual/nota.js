@@ -227,69 +227,6 @@ class MyDocument extends Component {
                 Tanggal: 11/10/2022
               </Text>
             </View>
-            <View
-              style={{
-                paddingLeft: 8,
-                paddingRight: 8,
-                paddingBottom: 8,
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ width: "30%" }}>
-                <Text
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid black",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Penerima
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.nama_penerima}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.alamat_penerima}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  Telp. {master.no_telepon_penerima}
-                </Text>
-              </View>
-              <View style={{ width: "40%" }}>
-                <Text
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid black",
-                    marginBottom: "5px",
-                  }}
-                >
-                  &nbsp;
-                </Text>
-              </View>
-              <View style={{ width: "30%" }}>
-                <Text
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid black",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Pengirim
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.nama_pengirim}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.alamat_pengirim}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  Telp. {master.no_telepon_pengirim}
-                </Text>
-              </View>
-            </View>
-
             <View style={styles.container}>
               <Text style={styles.no}>NO</Text>
               <Text style={styles.sku}>SKU</Text>
@@ -411,6 +348,68 @@ class MyDocument extends Component {
               <Text style={{ textAlign: "center" }}>Morph Apparel</Text>
             </View>
           </View>
+          <View
+              style={{
+                paddingLeft: 8,
+                paddingRight: 8,
+                paddingBottom: 8,
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ width: "30%" }}>
+                <Text
+                  style={{
+                    textAlign: "left",
+                    borderBottom: "1px solid black",
+                    marginBottom: "5px",
+                  }}
+                >
+                  Penerima
+                </Text>
+                <Text style={{ textAlign: "left" }}>
+                  {master.nama_penerima}
+                </Text>
+                <Text style={{ textAlign: "left" }}>
+                  {master.alamat_penerima}
+                </Text>
+                <Text style={{ textAlign: "left" }}>
+                  Telp. {master.no_telepon_penerima}
+                </Text>
+              </View>
+              <View style={{ width: "40%" }}>
+                <Text
+                  style={{
+                    textAlign: "left",
+                    borderBottom: "1px solid black",
+                    marginBottom: "5px",
+                  }}
+                >
+                  &nbsp;
+                </Text>
+              </View>
+              <View style={{ width: "30%" }}>
+                <Text
+                  style={{
+                    textAlign: "left",
+                    borderBottom: "1px solid black",
+                    marginBottom: "5px",
+                  }}
+                >
+                  Pengirim
+                </Text>
+                <Text style={{ textAlign: "left" }}>
+                  {master.nama_pengirim}
+                </Text>
+                <Text style={{ textAlign: "left" }}>
+                  {master.alamat_pengirim}
+                </Text>
+                <Text style={{ textAlign: "left" }}>
+                  Telp. {master.no_telepon_pengirim}
+                </Text>
+              </View>
+            </View>
         </Page>
       </Document>
     );

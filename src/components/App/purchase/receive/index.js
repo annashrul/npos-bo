@@ -77,7 +77,7 @@ class Receive extends Component {
       penerima: "",
       jenis_trx: "Tunai",
       userid: 0,
-      searchby: 1,
+      searchby: 3,
       qty_bonus: 0,
       discount_persen: 0,
       discount_harga: 0,
@@ -432,6 +432,7 @@ class Receive extends Component {
             const datas = {
               kd_brg: item.kode_barang,
               barcode: item.barcode,
+              ukuran: item.ukuran,
               satuan: item.satuan,
               diskon: item.diskon,
               diskon2: item.disc2,
@@ -900,7 +901,7 @@ class Receive extends Component {
 
     const finaldt = {
       kd_brg: item.kd_brg,
-      variasi: item.variasi,
+      ukuran: item.ukuran,
       barcode: item.barcode,
       satuan: item.satuan,
       diskon: item.diskon,
@@ -934,6 +935,7 @@ class Receive extends Component {
           qty_po: parseFloat(res.qty_po),
           kd_brg: res.kd_brg,
           barcode: res.barcode,
+          ukuran: res.ukuran,
           satuan: res.satuan,
           diskon: res.diskon,
           diskon2: res.diskon2,
@@ -1032,6 +1034,7 @@ class Receive extends Component {
           const dataDetailUpdate = {
             kd_brg: item.kd_brg,
             barcode: item.barcode,
+            ukuran: item.ukuran,
             satuan: item.satuan,
             diskon: item.diskon,
             diskon2: item.diskon2,
@@ -1151,6 +1154,7 @@ class Receive extends Component {
           kd_brg: data[0].kd_brg,
           barcode: data[0].barcode,
           satuan: data[0].satuan,
+          ukuran: data[0].ukuran,
           diskon: 0,
           diskon2: 0,
           diskon3: 0,
@@ -1176,16 +1180,15 @@ class Receive extends Component {
           kd_brg: res.kd_brg,
           barcode: res.barcode,
           satuan: res.satuan,
+          ukuran: res.ukuran,
           diskon: res.diskon,
           diskon2: res.diskon2,
           diskon3: 0,
           diskon4: 0,
-
           harga: res.harga,
           harga2: res.harga2,
           harga3: res.harga3,
           harga4: res.harga4,
-
           ppn: res.ppn,
           qty_bonus: res.qty_bonus,
           stock: res.stock,
@@ -1210,7 +1213,7 @@ class Receive extends Component {
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
           : parseInt(this.state.searchby, 10) === 2
-          ? "variasi"
+          ? "ukuran"
           : "deskripsi";
       if (this.getConfigSupplier() === 0) {
         this.props.dispatch(
@@ -1251,7 +1254,7 @@ class Receive extends Component {
           kd_brg: i.kd_brg,
           nm_brg: i.nm_brg,
           barcode: i.barcode,
-          variasi: i.variasi,
+          ukuran: i.ukuran,
           index: 1000000000000000,
         });
         brg.push({
@@ -1295,7 +1298,7 @@ class Receive extends Component {
         searchby = "kd_brg";
       }
       if (parseInt(this.state.searchby, 10) === 2) {
-        searchby = "variasi";
+        searchby = "ukuran";
       }
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
@@ -1612,7 +1615,7 @@ class Receive extends Component {
                                                   kd_brg: i.kd_brg,
                                                   barcode: i.barcode,
                                                   satuan: i.satuan,
-                                                  variasi: i.variasi,
+                                                  ukuran: i.ukuran,
                                                   diskon: 0,
                                                   diskon2: 0,
                                                   ppn: 0,
@@ -1629,9 +1632,9 @@ class Receive extends Component {
                                                 <div className="status titles bold">
                                                   {lengthBrg(i.nm_brg)}
                                                 </div>
-                                                <div className="about">
+                                                <div className="status titles bold">
                                                   {" "}
-                                                  ({i.kd_brg} - {i.ukuran})
+                                                  ({i.ukuran})
                                                 </div>
                                               </div>
                                             </li>
@@ -2045,7 +2048,7 @@ class Receive extends Component {
                                 {item.kd_brg}
                               </td>
                               <td className="middle nowrap">
-                                {item.variasi}
+                                {item.ukuran}
                               </td>
                               <td className="middle nowrap">
                                 <select

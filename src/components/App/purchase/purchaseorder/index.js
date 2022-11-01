@@ -53,7 +53,7 @@ class PurchaseOrder extends Component {
       catatan: "-",
       jenis_trx: "Tunai",
       userid: 0,
-      searchby: 1,
+      searchby: 3,
       search: "",
       perpage: 5,
       scrollPage: 0,
@@ -412,9 +412,9 @@ class PurchaseOrder extends Component {
     const finaldt = {
       kd_brg: item.kd_brg,
       barcode: item.barcode,
+      ukuran: item.ukuran,
       satuan: item.satuan,
       diskon: item.diskon,
-      variasi: item.variasi,
       diskon2: 0,
       diskon3: 0,
       diskon4: 0,
@@ -434,6 +434,7 @@ class PurchaseOrder extends Component {
           id: res.id,
           qty: parseFloat(res.qty) + 1,
           kd_brg: res.kd_brg,
+          ukuran: item.ukuran,
           barcode: res.barcode,
           satuan: res.satuan,
           diskon: res.diskon,
@@ -568,6 +569,7 @@ class PurchaseOrder extends Component {
         store(table, {
           kd_brg: data[0].kd_brg,
           barcode: data[0].barcode,
+          ukuran: data[0].ukuran,
           satuan: data[0].satuan,
           diskon: 0,
           diskon2: 0,
@@ -586,6 +588,7 @@ class PurchaseOrder extends Component {
           qty: parseFloat(res.qty) + 1,
           kd_brg: res.kd_brg,
           barcode: res.barcode,
+          ukuran: res.ukuran,
           satuan: res.satuan,
           diskon: res.diskon,
           diskon2: res.diskon2,
@@ -614,8 +617,8 @@ class PurchaseOrder extends Component {
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
           : parseInt(this.state.searchby, 10) === 2
-          ? "variasi"
-          : "deskripsi";
+            ? "ukuran"
+            : "deskripsi";
       if (this.getConfigSupplier() === 0) {
         this.props.dispatch(
           FetchBrg(
@@ -679,9 +682,9 @@ class PurchaseOrder extends Component {
       ) {
         searchby = "kd_brg";
       }
-      // if (parseInt(this.state.searchby, 10) === 2) {
-      //   searchby = "barcode";
-      // }
+      if (parseInt(this.state.searchby, 10) === 2) {
+        searchby = "ukuran";
+      }
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
       }
@@ -828,7 +831,7 @@ class PurchaseOrder extends Component {
                       {parseInt(this.state.searchby, 10) === 1
                         ? "Kode Barang"
                         : parseInt(this.state.searchby, 10) === 2
-                          ? "Barcode"
+                          ? "Ukuran"
                           : "Deskripsi"}
                     </small>
                   </div>
@@ -841,8 +844,8 @@ class PurchaseOrder extends Component {
                         name="search"
                         className="form-control form-control-sm"
                         placeholder={`Search ${localStorage.anyPurchaseOrder !== undefined
-                            ? localStorage.anyPurchaseOrder
-                            : ""
+                          ? localStorage.anyPurchaseOrder
+                          : ""
                           }`}
                         value={this.state.search}
                         onChange={(e) => this.HandleCommonInputChange(e, false)}
@@ -896,7 +899,7 @@ class PurchaseOrder extends Component {
                                     this.HandleAddBrg(e, {
                                       kd_brg: i.kd_brg,
                                       barcode: i.barcode,
-                                      variasi: i.variasi,
+                                      ukuran: i.ukuran,
                                       satuan: i.satuan,
                                       diskon: 0,
                                       diskon2: 0,
@@ -930,7 +933,7 @@ class PurchaseOrder extends Component {
                                         fontSize: "12px",
                                       }}
                                     >
-                                      ({i.kd_brg}) {i.supplier} - {i.ukuran}
+                                      ({i.ukuran})
                                     </div>
                                   </div>
                                 </li>
@@ -1216,7 +1219,7 @@ class PurchaseOrder extends Component {
                             </small>
                           </td>
                           <td className="middle nowrap">
-                              {item.variasi}
+                            {item.ukuran}
                           </td>
                           <td className="middle nowrap">
                             <select

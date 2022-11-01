@@ -15,15 +15,15 @@ class TransaksiWrapper extends Component {
       toggleSide: false,
       nota: "",
       search: "",
-      searchby: { value: "kd_brg", label: "Kode barang" },
+      searchby: { value: "deskripsi", label: "Nama Barang" },
       perpage: 5,
       isScroll: false,
       isAdd: true,
       scrollPage: 0,
       searchby_data: [
         { value: "kd_brg", label: "Kode barang" },
-        { value: "barcode", label: "Barcode" },
-        { value: "deskripsi", label: "Deskripsi" },
+        { value: "ukuran", label: "Variasi" },
+        { value: "deskripsi", label: "Nama Barang" },
       ],
     };
     this.HandleCommonInputChange = this.HandleCommonInputChange.bind(this);
@@ -221,8 +221,8 @@ class TransaksiWrapper extends Component {
                                   <div className="status titles">
                                     {i.nm_brg}
                                   </div>
-                                  <div className="subtitle">
-                                    ({i.kd_brg} - {i.ukuran})
+                                  <div className="status titles">
+                                    ({i.ukuran})
                                   </div>
                                 </div>
                               </li>

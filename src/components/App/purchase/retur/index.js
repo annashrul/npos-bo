@@ -52,7 +52,7 @@ class ReturTanpaNota extends Component {
       catatan: "-",
       userid: 0,
       ambil_nota: "",
-      searchby: 1,
+      searchby: 3,
       search: "",
       perpage: 5,
       scrollPage: 0,
@@ -283,6 +283,7 @@ class ReturTanpaNota extends Component {
 
             kd_brg: res.kd_brg,
             nm_brg: res.nm_brg,
+            ukuran: res.ukuran,
             barcode: newbrg.barcode,
             satuan: newbrg.satuan,
             deskripsi: res.deskripsi,
@@ -327,7 +328,7 @@ class ReturTanpaNota extends Component {
     const finaldt = {
       kd_brg: item.kd_brg,
       nm_brg: item.nm_brg,
-      variasi: item.variasi,
+      ukuran: item.ukuran,
       barcode: item.barcode,
       satuan: item.satuan,
       deskripsi: item.deskripsi,
@@ -349,6 +350,7 @@ class ReturTanpaNota extends Component {
           kd_brg: res.kd_brg,
           nm_brg: res.nm_brg,
           barcode: res.barcode,
+          ukuran: res.ukuran,
           satuan: res.satuan,
           deskripsi: res.deskripsi,
           kondisi: res.kondisi,
@@ -421,6 +423,7 @@ class ReturTanpaNota extends Component {
             detail.push({
               kd_brg: item.kd_brg,
               barcode: item.barcode,
+              ukuran: item.ukuran,
               satuan: item.satuan,
               qty: item.qty_retur,
               harga_beli: rmComma(item.harga_beli),
@@ -457,6 +460,7 @@ class ReturTanpaNota extends Component {
           kd_brg: data[0].kd_brg,
           nm_brg: data[0].nm_brg,
           barcode: data[0].barcode,
+          ukuran: data[0].ukuran,
           satuan: data[0].satuan,
           deskripsi: data[0].deskripsi,
           kondisi: data[0].kondisi,
@@ -472,6 +476,7 @@ class ReturTanpaNota extends Component {
           id: res.id,
           kd_brg: res.kd_brg,
           nm_brg: res.nm_brg,
+          ukuran: res.ukuran,
           barcode: res.barcode,
           satuan: res.satuan,
           deskripsi: res.deskripsi,
@@ -501,7 +506,7 @@ class ReturTanpaNota extends Component {
         parseInt(this.state.searchby, 10) === 1
           ? "kd_brg"
           : parseInt(this.state.searchby, 10) === 2
-            ? "variasi"
+            ? "ukuran"
             : "deskripsi";
       this.props.dispatch(
         FetchBrg(
@@ -552,7 +557,7 @@ class ReturTanpaNota extends Component {
         searchby = "kd_brg";
       }
       if (parseInt(this.state.searchby, 10) === 2) {
-        searchby = "variasi";
+        searchby = "ukuran";
       }
       if (parseInt(this.state.searchby, 10) === 3) {
         searchby = "deskripsi";
@@ -656,8 +661,8 @@ class ReturTanpaNota extends Component {
                       {parseInt(this.state.searchby, 10) === 1
                         ? "Kode Barang"
                         : parseInt(this.state.searchby, 10) === 2
-                          ? "Barcode"
-                          : "Deskripsi"}
+                          ? "Variasi"
+                          : "Nama Baarang"}
                     </small>
                   </div>
                   <div className="form-group">
@@ -726,7 +731,7 @@ class ReturTanpaNota extends Component {
                                       {
                                         kd_brg: i.kd_brg,
                                         nm_brg: i.nm_brg,
-                                        variasi: i.variasi,
+                                        ukuran: i.ukuran,
                                         barcode: i.barcode,
                                         satuan: i.satuan,
                                         deskripsi: i.deskripsi,
@@ -763,7 +768,7 @@ class ReturTanpaNota extends Component {
                                         fontSize: "12px",
                                       }}
                                     >
-                                      ({i.kd_brg}) {i.supplier} - {i.ukuran}
+                                      ({i.ukuran})
                                     </div>
                                   </div>
                                 </li>
@@ -919,7 +924,7 @@ class ReturTanpaNota extends Component {
                             {item.barcode}
                           </td>
                           <td className="middle nowrap">
-                            {item.variasi} 
+                            {item.ukuran} 
                           </td>
 
                           <td className="middle nowrap">

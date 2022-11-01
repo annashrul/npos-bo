@@ -7,6 +7,7 @@ export const fieldDataCommon = (item) => {
     barcode: item.barcode,
     harga_beli: item.harga_beli,
     satuan: item.satuan,
+    ukuran:item.ukuran,
     hrg_jual: item.hrg_jual,
     kd_brg: item.kd_brg,
     nm_brg: item.nm_brg,

@@ -143,7 +143,7 @@ class CreateSO extends Component {
       : 1;
     this.setState({ searchBy });
     if (searchBy === 1) {
-      return "barcode";
+      return "ukuran";
     }
     if (searchBy === 2) {
       return "kd_brg";
@@ -243,6 +243,7 @@ class CreateSO extends Component {
       id: res.id,
       kd_brg: res.kd_brg,
       nm_brg: res.nm_brg,
+      ukuran: res.ukuran,
       barcode: res.barcode,
       satuan: res.satuan,
       stock: res.stock,
@@ -366,6 +367,7 @@ class CreateSO extends Component {
         store(table, {
           kd_brg: data[0].kd_brg,
           nm_brg: data[0].nm_brg,
+          ukuran: data[0].ukuran,
           barcode: data[0].barcode,
           satuan: data[0].satuan,
           stock: data[0].stock,
@@ -379,6 +381,7 @@ class CreateSO extends Component {
           id: res.id,
           kd_brg: res.kd_brg,
           nm_brg: res.nm_brg,
+          ukuran: res.ukuran,
           barcode: res.barcode,
           satuan: res.satuan,
           stock: res.stock,
@@ -504,6 +507,7 @@ class CreateSO extends Component {
     const head = [
       { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang" },
+      { rowSpan: 2, label: "variasi", width: "20%"},
       { rowSpan: 2, label: "Stok", width: "1%" },
       { colSpan: 2, label: "Harga", width: "1%" },
       { rowSpan: 2, label: "Qty", width: "1%" },
@@ -568,10 +572,10 @@ class CreateSO extends Component {
                     <label className="control-label font-12">
                       Cari Berdasarkan{" "}
                       {Number(searchBy) === 1
-                        ? "Kode Barang"
+                        ? "Ukuran"
                         : Number(searchBy) === 2
-                        ? "Barcode"
-                        : "Deskripsi"}
+                        ? "Kode Barang"
+                        : "Nama Barang"}
                     </label>
                     <Select
                       options={searchByData}
@@ -643,6 +647,7 @@ class CreateSO extends Component {
                                     this.handleStoreProduct(e, {
                                       kd_brg: i.kd_brg,
                                       nm_brg: i.nm_brg,
+                                      ukuran: i.ukuran,
                                       barcode: i.barcode,
                                       satuan: i.satuan,
                                       stock: i.stock,
@@ -670,12 +675,12 @@ class CreateSO extends Component {
                                     <div
                                       className="status"
                                       style={{
-                                        color: "#a1887f",
+                                        color: "black",
                                         fontWeight: "bold",
                                         wordBreak: "break-all",
                                       }}
                                     >
-                                      ({i.kd_brg}) {i.supplier} - {i.ukuran}
+                                      ({i.ukuran})
                                     </div>
                                   </div>
                                 </li>
@@ -765,6 +770,9 @@ class CreateSO extends Component {
                             <td className="middle nowrap">
                               <span className="bold">{item.nm_brg}</span> <br />
                               {item.barcode}
+                            </td>
+                            <td className="middle nowrap">
+                              <span className="bold">{item.ukuran}</span>
                             </td>
                             <td className="middle nowrap">{item.stock}</td>
                             <td className="middle nowrap text-right">
