@@ -95,7 +95,6 @@ export const storeReceive = (data, param) => {
     axios
       .post(url, data.detail)
       .then(function (response) {
-        dispatch(handleNotifAction(true));
         Swal.close();
         const data = response.data;
         Swal.fire({
@@ -111,6 +110,7 @@ export const storeReceive = (data, param) => {
           showConfirmButton: false,
         }).then((result) => {
           destroy("receive");
+          dispatch(handleNotifAction(true));
           if (result.dismiss === "cancel") {
             param({ pathname: linkReceivePembelian });
           }

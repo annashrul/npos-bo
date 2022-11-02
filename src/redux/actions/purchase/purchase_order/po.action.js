@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import { handleDelete, handleGet, handleGetExport } from "../../handleHttp";
 import { ModalToggle, ModalType } from "../../modal.action";
+import { linkPurchaseOrder } from "../../../../helperLink";
 
 export function setDownloadPoSupplier(load) {
   return {
@@ -160,7 +161,7 @@ export const storePo = (data, param) => {
           localStorage.removeItem("lk");
           if (result.dismiss === "cancel") {
             param({
-              pathname: "/purchase_order",
+              pathname: linkPurchaseOrder,
             });
             // this.props.history.push({ pathname: "/purchase_order" });
             // window.location.reload(false);

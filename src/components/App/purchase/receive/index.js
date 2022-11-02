@@ -1139,6 +1139,7 @@ class Receive extends Component {
             localStorage.removeItem("ambil_data");
             localStorage.removeItem("nota");
             localStorage.removeItem("catatan");
+            window.location.reload(true);
             this.getData();
           })
         );

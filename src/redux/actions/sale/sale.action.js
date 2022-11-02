@@ -204,8 +204,8 @@ export const storeSale = (data, param) => {
             type: "info",
             html:
               "<br>" +
-              '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
-              '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
+              // '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Print Nota</button>     ' +
+              '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Print Nota</button>     ' +
               '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning" ' +
               (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" ||
               atob(atob(Cookies.get("tnt="))) !== "nov-bdg"
@@ -240,14 +240,14 @@ export const storeSale = (data, param) => {
               );
             });
           }
-          document
-            .getElementById("btnNotaPdf")
-            .addEventListener("click", () => {
-              const win = window.open(datum.result.nota, "_blank");
-              if (win != null) {
-                win.focus();
-              }
-            });
+          // document
+          //   .getElementById("btnNotaPdf")
+          //   .addEventListener("click", () => {
+          //     const win = window.open(datum.result.nota, "_blank");
+          //     if (win != null) {
+          //       win.focus();
+          //     }
+          //   });
           document
             .getElementById("btnNota3ply")
             .addEventListener("click", () => {

@@ -203,6 +203,20 @@ class TempNota extends Component {
               style={{
                 // paddingRight: 8,
                 paddingTop: 8,
+                paddingBottom: 1,
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Text style={{ backgroundColor: "white", padding: 1 }}>
+                Kode SO: undefined {master.kd_so}
+              </Text>
+            </View>
+            <View
+              style={{
+                // paddingRight: 8,
+                paddingTop: 8,
                 paddingBottom: 12,
                 flexDirection: "row",
                 width: "100%",
@@ -210,7 +224,7 @@ class TempNota extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 5 }}>
-                Tanggal: 11/10/2022
+                Tanggal: 11/03/2022 {master.created_at}
               </Text>
             </View>
             <View

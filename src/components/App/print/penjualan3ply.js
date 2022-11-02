@@ -78,9 +78,9 @@ class Print3ply extends Component {
                 </td>
               </tr>
               <tr>
-                <td colSpan={5} style={{ textAlign: "center" }}>
+                {/* <td colSpan={5} style={{ textAlign: "center" }}>
                   {alamat}
-                </td>
+                </td> */}
               </tr>
               <tr>
                 <td colSpan={5} style={{ textAlign: "center", bordeColor: "black", borderBottom: "solid", borderWidth: "thin" }}>
@@ -121,7 +121,7 @@ class Print3ply extends Component {
                 <td>Jenis Trx</td>
                 <td>:</td>
                 <td>{master.jenis_trx}</td>
-                <td>Alamat Pengirim</td>
+                <td>Keterangan</td>
                 <td>:</td>
                 <td>{master.keterangan}</td>
               </tr>
@@ -129,45 +129,45 @@ class Print3ply extends Component {
           </table>
           <table width="99%">
             <thead>
-              <tr>
-                <th className="tengah">Banyaknya</th>
-                <th className="tengah">KODE BARANG</th>
-                <th className="tengah">NAMA BARANG</th>
-                <th className="tengah">HARGA @ Rp</th>
-                <th className="tengah">Diskon(%)</th>
-                <th className="tengah">Pajak(%)</th>
-                <th className="tengah">Jumlah</th>
+              <tr style={{border:"1px solid black",borderWidth: "thin"}}>
+                <th  style={{border:"1px solid black",borderWidth: "thin"}} className="tengah">KODE BARANG</th>
+                <th style={{border:"1px solid black",borderWidth: "thin"}} className="tengah">NAMA BARANG</th>
+                <th  style={{border:"1px solid black",borderWidth: "thin"}} className="tengah">VARIASI</th>
+                <th  style={{border:"1px solid black",borderWidth: "thin"}} className="tengah">QTY</th>
+                <th  style={{border:"1px solid black",borderWidth: "thin"}} className="tengah">HARGA @ Rp</th>
+                <th   style={{border:"1px solid black",borderWidth: "thin"}}className="tengah">Diskon(%)</th>
+                <th   style={{border:"1px solid black",borderWidth: "thin"}}className="tengah">Jumlah</th>
               </tr>
             </thead>
             <tbody>
               {data.length > 0
                 ? data.map((item, key) => {
-                    return (
-                      <tr key={key}>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
-                          {item.qty} {item.satuan}
-                        </td>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
-                          {item.sku}
-                        </td>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
-                          {item.nm_brg}
-                        </td>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "5pt" }} className="text-right">
-                          {toRp(parseInt(item.hrg_jual, 10))}
-                        </td>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
-                          {item.dis_persen}
-                        </td>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
-                          {item.tax}
-                        </td>
-                        <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "5pt" }} className="text-right">
-                          {toRp(parseInt(item.subtotal, 10))}
-                        </td>
-                      </tr>
-                    );
-                  })
+                  return (
+                    <tr key={key}>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                        {item.sku}
+                      </td>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                        {item.nm_brg}
+                      </td>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                        {item.ukuran}
+                      </td>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                        {item.qty} {item.satuan}
+                      </td>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "5pt" }} className="text-center">
+                        {toRp(parseInt(item.hrg_jual, 10))}
+                      </td>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                        {item.dis_persen}
+                      </td>
+                      <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt", paddingRight: "5pt" }} className="text-center">
+                        {toRp(parseInt(item.subtotal, 10))}
+                      </td>
+                    </tr>
+                  );
+                })
                 : noData(7)}
             </tbody>
             <tbody>
@@ -220,6 +220,34 @@ class Print3ply extends Component {
                 </td>
                 <td className="borderLR borderTB" />
                 <td className="borderLR borderTB tengah">(_____________)</td>
+              </tr>
+            </thead>
+          </table>
+          <br></br>
+          <br></br>
+          <table width="100%" style={{ marginTop: "0.5cm" }}>
+            <thead>
+              <tr>
+                <th className="isi atas tengah borderTB borderLR" style={{ width: "3cm" }}>
+                  Pengirim
+                </th>
+                <th className="isi tengah" style={{ width: "4cm" }}>-                </th>
+                <th className="isi atas tengah borderTB borderLR" style={{ width: "3cm" }}>
+                  Penerima,
+                </th>
+              </tr>
+              <tr>
+                <td className=" text-center borderLR borderTB tengah" style={{ height: "2cm" }}>
+                  <td style={{width: "20cm",textAlign:"center"}} >{master.nama_penerima}</td><br></br>
+                  <td style={{width: "20cm",textAlign:"center"}}>{master.no_telepon_penerima}</td><br></br>
+                  <td style={{width: "20cm",textAlign:"center"}}>{master.alamat_penerima}</td>
+                </td>
+                <td className="text-center borderLR borderTB" />
+                <td className="borderLR borderTB tengah">
+                  <td style={{width: "20cm",textAlign:"center"}}>{master.nama_pengirim}</td><br></br>
+                  <td style={{width: "20cm",textAlign:"center"}}>{master.no_telepon_pengirim}</td><br></br>
+                  <td style={{width: "20cm",textAlign:"center"}}>{master.alamat_pengirim}</td>
+                </td>
               </tr>
             </thead>
           </table>

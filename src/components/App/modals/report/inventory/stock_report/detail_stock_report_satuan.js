@@ -73,6 +73,7 @@ class DetailStockReportSatuan extends Component {
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "Lokasi" },
+      { rowSpan: 2, label: "Variasi" },
     ];
     !tenant && setHarga>1?head.push({ colSpan: setHarga, label: "Harga" }):head.push({ rowSpan: 2, label: "Harga" });
     head.push({ colSpan: 4, label: "Stok" });
@@ -109,6 +110,7 @@ class DetailStockReportSatuan extends Component {
                 { title: "Kode barang", desc: this.props.detail.kd_brg },
                 { title: "Barcode", desc: this.props.detail.barcode },
                 { title: "Nama barang", desc: this.props.detail.nm_brg },
+                // { title: "Ukuran", desc: this.props.detail.ukuran },
               ]}
             />
             <TableCommon
@@ -151,6 +153,7 @@ class DetailStockReportSatuan extends Component {
                             </button>
                           </td>
                           <td className={`middle nowrap`}>{v.nama_toko}</td>
+                          <td className={`middle nowrap`}>{v.ukuran}</td>
                           <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{parseToRp(v.harga)}</td>
                           <td className={`middle nowrap text-right ${!tenant&&setHarga>1 ? "" : "dNone"}`}>{parseToRp(v.harga2)}</td>
                           <td className={`middle nowrap text-right ${!tenant&&setHarga>2 ? "" : "dNone"}`}>{parseToRp(v.harga3)}</td>

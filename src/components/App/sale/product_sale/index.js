@@ -212,6 +212,12 @@ class Sale extends Component {
         setStorage("customer_tr", master.kd_cust);
         setStorage("location_tr", master.lokasi);
         this.setState({
+          nama_penerima: master.nama_penerima,
+          no_telepon_penerima: master.no_telepon_penerima,
+          alamat_penerima: master.alamat_penerima,
+          nama_pengirim: master.nama_pengirim,
+          no_telepon_pengirim: master.no_telepon_pengirim,
+          alamat_pengirim: master.alamat_pengirim,
           location: master.lokasi,
           customer: master.kd_cust,
           sales: master.kd_sales,
@@ -319,44 +325,6 @@ class Sale extends Component {
       Object.assign(state, {
         userid: props.auth.user.id,
       });
-    }
-    if (isEmptyOrUndefined(props.match.params.slug)) {
-      props.dispatch(
-        getEditTrx(
-          `kd_trx=${atob(props.match.params.slug)}&perpage=999`,
-          false,
-          (res) => {
-            setStorage("isEditTrxManual", true);
-            var retrievedObject = localStorage.getItem("masterTrxManual");
-            retrievedObject = JSON.parse(retrievedObject);
-            const arrPenerima = retrievedObject.penerima.split("|");
-            const arrPengirim = retrievedObject.pengirim.split("|");
-            console.log(retrievedObject);
-            const newData = [];
-            res.result.data.map((row, key) => {
-              newData.push({
-                sku: row.sku,
-                nama: row.nama,
-                motif: row.motif,
-                qty: row.qty,
-                harga: row.harga,
-                no: Math.random(10000000),
-              });
-            });
-
-            this.setState({
-              data: newData,
-              catatan: retrievedObject.catatan,
-              nama_penerima: arrPenerima[0],
-              no_telepon_penerima: arrPenerima[1],
-              alamat_penerima: arrPenerima[2],
-              nama_pengirim: arrPengirim[0],
-              no_telepon_pengirim: arrPengirim[1],
-              alamat_pengirim: arrPengirim[2],
-            });
-          }
-        )
-      );
     }
 
     this.setState(state);
@@ -1244,13 +1212,13 @@ class Sale extends Component {
                                         {i.nm_brg}
                                       </div>
                                       <div className="status"
-                                      style={{
-                                        color: "black",
-                                        fontWeight: "bold",
-                                        wordBreak: "break-all",
-                                        fontSize: "12px",
-                                      }}>
-                                        
+                                        style={{
+                                          color: "black",
+                                          fontWeight: "bold",
+                                          wordBreak: "break-all",
+                                          fontSize: "12px",
+                                        }}>
+
                                         ({i.ukuran})
                                       </div>
                                     </div>
@@ -1314,6 +1282,16 @@ class Sale extends Component {
                               this.HandleChangeSelect("sales_tr", res)
                             }
                             dataEdit={this.state.sales}
+                          />
+                        </div>
+                        <div className="col-md-3">
+                          <SelectCommon
+                            label="Customer"
+                            options={this.state.customer_data}
+                            callback={(res) =>
+                              this.HandleChangeSelect("customer_tr", res)
+                            }
+                            dataEdit={this.state.customer}
                           />
                         </div>
                       </div>
@@ -1463,7 +1441,7 @@ class Sale extends Component {
                                   </div>
                                 </td>
                                 <td className="middle nowrap">
-                                  {item.ukuran} 
+                                  {item.ukuran}
                                 </td>
                                 <td className="middle nowrap">
                                   {this.state.brgval[index].isOpenPrice ? (

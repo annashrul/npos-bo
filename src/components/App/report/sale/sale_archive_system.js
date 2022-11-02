@@ -204,6 +204,8 @@ class SaleArchiveSystem extends Component {
       { rowSpan: "2", label: "Status" },
       { rowSpan: "2", label: "Jenis" },
       { rowSpan: "2", label: "Customer" },
+      { rowSpan: "2", label: "Penerima" },
+      { rowSpan: "2", label: "Alamat Penerima" },
       { rowSpan: "2", label: "Kasir" },
       { rowSpan: "2", label: "Sales" },
       { rowSpan: "2", label: "Jatuh tempo" },
@@ -328,6 +330,8 @@ class SaleArchiveSystem extends Component {
                         </td>
                         <td className="middle nowrap">{v.jenis_trx}</td>
                         <td className="middle nowrap">{v.customer}</td>
+                        <td className="middle nowrap">{v.nama_penerima}</td>
+                        <td className="middle nowrap">{v.alamat_penerima}</td>
                         <td className="middle nowrap">{v.nama}</td>
                         <td className="middle nowrap">{v.sales}</td>
                         <td className="middle nowrap">
@@ -402,7 +406,7 @@ class SaleArchiveSystem extends Component {
             {
               data: [
                 {
-                  colSpan: 12,
+                  colSpan: 14,
                   label: "Total perhalaman",
                   className: "text-left",
                 },
@@ -428,7 +432,7 @@ class SaleArchiveSystem extends Component {
             {
               data: [
                 {
-                  colSpan: 12,
+                  colSpan: 14,
                   label: "Total keseluruhan",
                   className: "text-left",
                 },

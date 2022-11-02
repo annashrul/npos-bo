@@ -85,7 +85,7 @@ class SaleByProductArchive extends Component {
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
-      { colSpan: 5, label: "Barang" },
+      { colSpan: 4, label: "Barang" },
       { rowSpan: 2, label: "Qty" },
       { rowSpan: 2, label: "Gross sales" },
       { rowSpan: 2, label: "Diskon item" },
@@ -96,8 +96,7 @@ class SaleByProductArchive extends Component {
     const rowSpan = [
       { label: "Kode" },
       { label: "Nama" },
-      { label: "Barcode" },
-      { label: "Deskripsi" },
+      { label: "Variasi" },
       { label: "Satuan" },
     ];
 
@@ -163,7 +162,7 @@ class SaleByProductArchive extends Component {
                           {rmSpaceToStrip(val.nm_brg)}
                         </td>
                         <td className="middle nowrap">
-                          {rmSpaceToStrip(val.barcode)}
+                          {rmSpaceToStrip(val.ukuran)}
                         </td>
                         <td className="middle nowrap">
                           {rmSpaceToStrip(val.deskripsi)}

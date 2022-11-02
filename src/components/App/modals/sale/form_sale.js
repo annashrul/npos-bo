@@ -66,6 +66,7 @@ class FormSale extends Component {
       tanggal_tempo: "",
       change: 0,
       bank: "",
+      
     });
   }
 
@@ -222,6 +223,12 @@ class FormSale extends Component {
       charge: propsMaster.charge,
       hr: propsMaster.hr,
       kassa: propsMaster.kassa,
+      nama_penerima: propsMaster.nama_penerima,
+      no_telepon_penerima: propsMaster.no_telepon_penerima,
+      alamat_penerima: propsMaster.alamat_penerima,
+      nama_pengirim: propsMaster.nama_pengirim,
+      no_telepon_pengirim: propsMaster.no_telepon_pengirim,
+      alamat_pengirim: propsMaster.alamat_pengirim,
       pemilik_kartu: propsMaster.pemilik_kartu,
       id_hold: propsMaster.id_hold === undefined ? "-" : propsMaster.id_hold,
       jns_kartu: propsMaster.jns_kartu,

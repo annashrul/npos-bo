@@ -224,7 +224,7 @@ class MyDocument extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 5 }}>
-                Tanggal: 11/10/2022
+               Tanggal : {master.createdAt}
               </Text>
             </View>
             <View style={styles.container}>

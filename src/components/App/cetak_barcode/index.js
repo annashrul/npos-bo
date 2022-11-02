@@ -73,7 +73,7 @@ class CetakBarcode extends Component {
       brgval: [],
       location_data: [],
       location: "",
-      searchby: "",
+      searchby: "3",
       search: "",
       userid: 0,
       ambil_data: 1,
@@ -133,6 +133,7 @@ class CetakBarcode extends Component {
             const datas = {
               title: item.nm_brg,
               barcode: item.barcode,
+              ukuran: item.ukuran,
               harga_jual: item.harga,
               qty: item.qty,
             };
@@ -254,7 +255,7 @@ class CetakBarcode extends Component {
         this.props.dispatch(
           FetchBrgSame(
             1,
-            "barcode",
+            "ukuran",
             this.state.search,
             this.state.location,
             null,
@@ -283,6 +284,7 @@ class CetakBarcode extends Component {
     const finaldt = {
       barcode: item.barcode,
       title: item.title,
+      ukuran: item.ukuran,
       harga_jual: item.harga_jual,
       qty: 0,
     };
@@ -295,6 +297,7 @@ class CetakBarcode extends Component {
           id: res.id,
           barcode: res.barcode,
           title: res.title,
+          ukuran: res.ukuran,
           harga_jual: res.harga_jual,
           qty: parseInt(res.qty, 10) + 1,
         });
@@ -375,6 +378,7 @@ class CetakBarcode extends Component {
             1,
             "barcode",
             "",
+            "",
             this.state.location,
             null,
             this.autoSetQty,
@@ -388,6 +392,7 @@ class CetakBarcode extends Component {
             const datas = {
               title: item.nm_brg,
               barcode: item.barcode,
+              ukuran: item.ukuran,
               harga_jual: item.harga,
               qty: 0,
             };
@@ -517,12 +522,15 @@ class CetakBarcode extends Component {
                       ", " +
                       item.title +
                       ", " +
+                      item.ukuran +
+                      ", " +
                       toRp(item.harga_jual);
                     barcode += "\n";
                   }
                   detail.push({
                     barcode: item.barcode,
                     title: item.title,
+                    ukuran: item.ukuran,
                     harga_jual: item.harga_jual,
                     qty: this.state.price_tag ? 1 : item.qty,
                   });
@@ -595,6 +603,7 @@ class CetakBarcode extends Component {
         store(table, {
           barcode: data[0].barcode,
           title: data[0].nm_brg,
+          ukuran: data[0].ukuran,
           harga_jual: data[0].harga,
           qty: 0,
         });
@@ -602,8 +611,9 @@ class CetakBarcode extends Component {
         update(table, {
           id: res.id,
           barcode: res.barcode,
-          title: data[0].title,
-          harga_jual: data[0].harga_jual,
+          title: data[0].nm_brg,
+          ukuran: data[0].ukuran,
+          harga_jual: data[0].harga,
           qty: parseFloat(res.qty) + 1,
         });
       }
@@ -767,7 +777,7 @@ class CetakBarcode extends Component {
                       {parseInt(this.state.searchby, 10) === 1
                         ? "Kode Barang"
                         : parseInt(this.state.searchby, 10) === 2
-                          ? "Barcode"
+                          ? "Variasi"
                           : "Deskripsi"}
                     </small>
                   </div>
@@ -822,6 +832,7 @@ class CetakBarcode extends Component {
                                     this.HandleAddBrg(e, {
                                       barcode: i.barcode,
                                       title: i.nm_brg,
+                                      ukuran :i.ukuran,
                                       harga_jual: i.harga,
                                       qty: 0,
                                     })
@@ -846,7 +857,7 @@ class CetakBarcode extends Component {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      <small>{i.barcode}</small>
+                                      {i.ukuran}
                                     </div>
                                   </div>
                                 </li>
@@ -909,7 +920,8 @@ class CetakBarcode extends Component {
                           <tr>
                             <th style={columnStyle}>#</th>
                             <th style={columnStyle}>barcode</th>
-                            <th style={columnStyle}>Title</th>
+                            <th style={columnStyle}>Nama Barang</th>
+                            <th style={columnStyle}>Variasi</th>
                             <th style={columnStyle}>Harga Jual</th>
                             <th style={columnStyle}>Qty</th>
                           </tr>
@@ -932,6 +944,7 @@ class CetakBarcode extends Component {
                                 </td>
                                 <td style={columnStyle}>{item.barcode}</td>
                                 <td style={columnStyle}>{item.title}</td>
+                                <td style={columnStyle}>{item.ukuran}</td>
                                 <td style={columnStyle}>{item.harga_jual}</td>
                                 <td style={columnStyle}>
                                   <input

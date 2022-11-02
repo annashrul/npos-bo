@@ -78,6 +78,7 @@ class ListProduct extends Component {
       detail: {},
       any_kode_barang: "",
       any_nama_barang: "",
+      any_ukuran: "",
       any_nama_singkat: "",
       any_kelompok_barang: "",
       any_supplier_barang: "",
@@ -190,6 +191,7 @@ class ListProduct extends Component {
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
+    let ukuran = this.state.any_ukuran;
     let nama_singkat = this.state.any_nama_singkat;
     let kelompok = this.state.any_kelompok_barang;
     let supplier = this.state.any_supplier_barang;
@@ -201,6 +203,7 @@ class ListProduct extends Component {
     if (
       kode !== "" ||
       nama !== "" ||
+      ukuran !== "" ||
       nama_singkat !== "" ||
       kelompok !== "" ||
       supplier !== "" ||
@@ -222,6 +225,13 @@ class ListProduct extends Component {
         }
         where += `searchby=nm_brg&q=${btoa(nama)}`;
         localStorage.setItem(`${que}_nama_barang`, nama);
+      }
+      if (column === "any_ukuran") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=ukuran&q=${btoa(nama)}`;
+        localStorage.setItem(`${que}_ukuran`, nama);
       }
       if (column === "any_nama_singkat") {
         if (where !== "") {
@@ -283,6 +293,7 @@ class ListProduct extends Component {
     } else {
       localStorage.removeItem(`${que}_kode_barang`);
       localStorage.removeItem(`${que}_nama_barang`);
+      localStorage.removeItem(`${que}_ukuran`);
       localStorage.removeItem(`${que}_nama_singkat`);
       localStorage.removeItem(`${que}_kelompok_barang`);
       localStorage.removeItem(`${que}_supplier_barang`);
@@ -329,6 +340,7 @@ class ListProduct extends Component {
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
+    let ukuran = this.state.any_ukuran;
     let nama_singkat = this.state.any_nama_singkat;
     let kelompok = this.state.any_kelompok_barang;
     let supplier = this.state.any_supplier_barang;
@@ -341,6 +353,7 @@ class ListProduct extends Component {
     if (
       kode !== "" ||
       nama !== "" ||
+      ukuran !== "" ||
       nama_singkat !== "" ||
       kelompok !== "" ||
       supplier !== "" ||
@@ -363,6 +376,13 @@ class ListProduct extends Component {
         }
         where += `searchby=nm_brg&q=${btoa(nama)}`;
         localStorage.setItem(`${que}_nama_barang`, nama);
+      }
+      if (column === "any_ukuran") {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `searchby=ukuran&q=${btoa(nama)}`;
+        localStorage.setItem(`${que}_ukuran`, nama);
       }
       if (column === "any_nama_singkat") {
         if (where !== "") {
@@ -425,6 +445,7 @@ class ListProduct extends Component {
     } else {
       localStorage.removeItem(`${que}_kode_barang`);
       localStorage.removeItem(`${que}_nama_barang`);
+      localStorage.removeItem(`${que}_ukuran`);
       localStorage.removeItem(`${que}_nama_singkat`);
       localStorage.removeItem(`${que}_kelompok_barang`);
       localStorage.removeItem(`${que}_supplier_barang`);
@@ -582,6 +603,7 @@ class ListProduct extends Component {
       "No",
       "Code",
       "Name",
+      "Ukuran",
       "Nama Singkat",
       "Group",
       "Supplier",
@@ -599,6 +621,7 @@ class ListProduct extends Component {
           i + 1,
           v.kd_brg,
           v.nm_brg,
+          v.ukuran,
           v.nama_singkat,
           v.kel_brg,
           v.supplier,
@@ -761,6 +784,9 @@ class ListProduct extends Component {
                   {this.handleInput("any_nama_barang")}
                 </th>
                 <th className="middle">
+                  {this.handleInput("any_ukuran")}
+                </th>
+                <th className="middle">
                   {this.handleInput("any_nama_singkat")}
                 </th>
                 <th className="middle" width="10%">
@@ -849,6 +875,7 @@ class ListProduct extends Component {
                         </td>
                         <td className={`middle nowrap`}>{v.kd_brg}</td>
                         <td className={`middle nowrap`}>{v.nm_brg}</td>
+                        <td className={`middle nowrap`}>{v.ukuran}</td>
                         <td className={`middle nowrap`}>{v.nama_singkat}</td>
                         <td className={`middle nowrap`}>{v.kel_brg}</td>
                         <td className={`middle nowrap`}>{v.supplier}</td>
