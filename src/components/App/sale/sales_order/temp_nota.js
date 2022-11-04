@@ -210,7 +210,7 @@ class TempNota extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 1 }}>
-                Kode SO: undefined {master.kd_so}
+                Kode SO: {master.kd_so}
               </Text>
             </View>
             <View
