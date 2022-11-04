@@ -104,8 +104,8 @@ export const storeReceive = (data, param) => {
           html:
             `Disimpan dengan nota: ${data.result.insertId}` +
             "<br><br>" +
-            '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
-            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+            // '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota Print</button>',
           showCancelButton: true,
           showConfirmButton: false,
         }).then((result) => {
@@ -115,12 +115,12 @@ export const storeReceive = (data, param) => {
             param({ pathname: linkReceivePembelian });
           }
         });
-        document.getElementById("btnNotaPdf").addEventListener("click", () => {
-          const win = window.open(data.result.nota, "_blank");
-          if (win != null) {
-            win.focus();
-          }
-        });
+        // document.getElementById("btnNotaPdf").addEventListener("click", () => {
+        //   const win = window.open(data.result.nota, "_blank");
+        //   if (win != null) {
+        //     win.focus();
+        //   }
+        // });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
           const win = window.open(
             `/pembelian3plyId/${data.result.insertId}`,

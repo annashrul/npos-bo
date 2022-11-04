@@ -29,7 +29,7 @@ class DetailPiutangTrx extends Component {
       { rowSpan: 2, label: "Diskon" },
       { rowSpan: 2, label: "Subtotal" },
     ];
-    const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Barcode" }, { label: "Satuan" }];
+    const rowSpan = [{ label: "Kode" }, { label: "Nama" }, { label: "Variasi" }, { label: "Satuan" }];
     let totalSubTotalPerHalaman = 0;
     let totalQtyPerHalaman = 0;
     let totalDiskonPerHalaman = 0;
@@ -62,8 +62,8 @@ class DetailPiutangTrx extends Component {
                         <tr key={i}>
                           <td className="middle nowrap text-center">{i + 1}</td>
                           <td className="middle nowrap">{v.kd_brg}</td>
-                          <td className="middle nowrap">{v.sku}</td>
                           <td className="middle nowrap">{v.nm_brg}</td>
+                          <td className="middle nowrap">{v.ukuran}</td>
                           <td className="middle nowrap">{v.satuan}</td>
                           <td className="middle nowrap text-right">{parseToRp(v.open_price)}</td>
                           <td className="middle nowrap text-right">{parseToRp(v.hrg_jual)}</td>

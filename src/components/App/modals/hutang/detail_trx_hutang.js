@@ -35,7 +35,7 @@ class DetailTrxHutang extends Component {
       this.props.receiveReportDetail;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
-      { colSpan: 2, label: "Barang" },
+      { colSpan: 3, label: "Barang" },
       { colSpan: 2, label: "Harga" },
       { rowSpan: 2, label: "Margin" },
       { colSpan: 2, label: "Diskon (%)" },
@@ -46,6 +46,7 @@ class DetailTrxHutang extends Component {
     const rowSpan = [
       { label: "Kode" },
       { label: "Nama" },
+      { label: "Variasi" },
       { label: "Beli" },
       { label: "Jual" },
       { label: "1" },

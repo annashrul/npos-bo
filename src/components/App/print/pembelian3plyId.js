@@ -115,31 +115,30 @@ class Adjust3ply extends Component {
                   <td style={{ width: "5%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     No
                   </td>
-                  <td style={{ width: "35%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                  <td style={{ width: "15%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     Nama
                   </td>
+                  <td style={{ width: "15%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                    Variasi
+                  </td>                  
                   <td style={{ width: "15%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     Barcode
                   </td>
                   <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     Harga beli
                   </td>
-                  <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                  <td style={{ width: "7%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     Diskon
                   </td>
-                  <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
-                    PPN
-                  </td>
-                  <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                
+                  <td style={{ width: "7%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     QTY
                   </td>
-                  <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                  <td style={{ width: "7%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     QTY PO
                   </td>
-                  <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
-                    Retur
-                  </td>
-                  <td style={{ width: "10%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
+                  
+                  <td style={{ width: "7%", borderBottom: "", borderWidth: "thin", paddingLeft: "5pt" }} className="text-center">
                     Bonus
                   </td>
                   {/* <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual</td> */}
@@ -160,6 +159,9 @@ class Adjust3ply extends Component {
                             {item.nm_brg}
                           </td>
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
+                            {item.variasi}
+                          </td>
+                          <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.barcode}
                           </td>
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
@@ -168,9 +170,9 @@ class Adjust3ply extends Component {
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.diskon}
                           </td>
-                          <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
+                          {/* <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.ppn}
-                          </td>
+                          </td> */}
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.qty}
                           </td>
@@ -180,9 +182,9 @@ class Adjust3ply extends Component {
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.bonus}
                           </td>
-                          <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
+                          {/* <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.retur}
-                          </td>
+                          </td> */}
                           {/* <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_jual)}</td> */}
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-right">
                             {toRp(item.harga_beli * item.qty)}
@@ -194,7 +196,7 @@ class Adjust3ply extends Component {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan={10} style={{ borderTop: "", borderWidth: "thin", paddingLeft: "25pt" }}>
+                  <td colSpan={9} style={{ borderTop: "", borderWidth: "thin", paddingLeft: "25pt" }}>
                     TOTAL
                   </td>
                   <td className="text-right" style={{ borderTop: "", borderWidth: "thin", paddingLeft: "5pt" }}>
