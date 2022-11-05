@@ -344,6 +344,8 @@ class CreateSO extends Component {
     this.getProps(this.props);
     let state = {};
     const location = localStorage.location;
+    console.log("lokasi",location);
+    this.props.dispatch(getCodeSoAction(location));
     const customer = localStorage.customer;
     const createdAt = localStorage.createdAt;
     const kd_so = localStorage.kd_so;
@@ -416,8 +418,8 @@ class CreateSO extends Component {
           console.log(res);
           let detail = [];
           let data = {};
-          const kd_so = this.props.code;
-          const { note, location, databrg, customer, createdAt} = this.state;
+          const { code } = this.props;
+          const { note, location, databrg, customer, createdAt,} = this.state;
           let qtySo = 0;
           let subtotal = 0;
           for (let i = 0; i < databrg.length; i++) {
@@ -430,6 +432,7 @@ class CreateSO extends Component {
               qty_brg: qty,
             });
           }
+          data["kd_so"] = code;
           data["detail"] = detail;
           data["master"] = {
             catatan_so: note,
@@ -438,7 +441,6 @@ class CreateSO extends Component {
             kd_lokasi: location,
             kd_cust: customer,
             created_at: createdAt,
-            kd_so : kd_so
           };
           let newMaster = data["master"];
           // this.setState(
@@ -466,11 +468,13 @@ class CreateSO extends Component {
                       namaLokasi: this.state.namaLokasi,
                       namaCustomer: this.state.namaCustomer,
                     }),
+                    
                     isNota: true,
                     note: "-",
                     location: "",
                     databrg: [],
                     customer: "",
+                    kd_so: this.props.code,
                   },
                   () => {
                     this.props.dispatch(ModalToggle(true));
@@ -504,7 +508,6 @@ class CreateSO extends Component {
       searchByData,
       any,
       createdAt,
-      kd_so,
       note,
       customerData,
       customer,
@@ -542,7 +545,7 @@ class CreateSO extends Component {
               >
                 <i className={toggleSide ? "fa fa-remove" : "fa fa-bars"} />
               </button>{" "}
-              Sales Order #{kd_so}
+              Sales Order #
             </h4>
             <h4
               className="text-right   d-flex justify-content-between"
@@ -886,7 +889,7 @@ const mapStateToPropsCreateItem = (state) => {
   return {
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    code: state.salesOrderReducer.dataGetSo,
+    code: state.salesOrderReducer.code,
     customer: state.customerReducer.all,
     paginBrg: state.productReducer.pagin_brg,
     auth: state.auth,

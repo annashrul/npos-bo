@@ -128,9 +128,8 @@ class DetailTrxHutang extends Component {
                           </td>
                           <td className="middle nowrap">{v.kode_barang}</td>
                           <td className="middle nowrap">{v.nm_brg}</td>
-                          <td className="middle nowrap text-right">
-                            {parseToRp(hrgBeli)}
-                          </td>
+                          <td className="middle nowrap">{v.ukuran}</td>
+       
                           <td className="middle nowrap text-right">
                             {parseToRp(hrgJual)}
                           </td>

@@ -14,7 +14,7 @@ export const TOKEN = {
 
 export const HEADERS = {
   // URL: atob(document.getElementById("hellyeah").value),
-  //URL: "http://ptnetindo.com:6694/",
+  // URL: "http://ptnetindo.com:6694/",
   // URL: "http://192.168.100.17:6692/",
   URL: "http://localhost:6692/",
   TOKEN:

@@ -192,6 +192,7 @@ class TempNota extends Component {
 
   render() {
     const { master, detail } = this.props;
+    const { code } = this.props;
     let totalQty = 0;
     let totalTrx = 0;
     return (
@@ -215,7 +216,7 @@ class TempNota extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 1 }}>
-                Kode SO: {master.kd_so}
+                Kode SO: {code}
               </Text>
             </View>
             <View

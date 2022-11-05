@@ -1,7 +1,7 @@
 import { SALES_ORDER } from "../../actions/_constants";
 
 const initialState = {
-  code: ['kd_so'] ,
+  code: [],
   dataGetApproval: [],
   dataGetSo: [],
   detaDetailSo: [],
@@ -17,7 +17,12 @@ export const salesOrderReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         dataGetSo: action.data.result,
       });
+    case SALES_ORDER.GET_SO_DATA:
+      return Object.assign({}, state, {
+        code_so: action.data.result,
+      });
     case SALES_ORDER.GET_SO_CODE:
+      console.log("reducer so",action.data);
       return Object.assign({}, state, {
         code: action.data.result,
       });

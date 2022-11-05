@@ -301,7 +301,7 @@ class Sale extends Component {
   getProps(props) {
     let state = {};
     if (props.dataSo !== undefined && props.dataSo.length > 0) {
-      let newSo = handleDataSelect(props.dataSo, "kd_so", "kd_so");
+      let newSo = handleDataSelect(props.dataSo, "kd_so","kd_cust","kd_so");
       Object.assign(state, { so_data: newSo });
     }
     if (props.barang.length > 0) this.getData();
@@ -535,7 +535,7 @@ class Sale extends Component {
     const value = e.target.value;
     if (column === "qty") {
       if (value === "") {
-        Object.assign(this.state.brgval[i], { qty: 1 });
+        Object.assign(this.state.brgval[i], { qty: 0 });
         this.handleCheckData(this.state.databrg[i].barcode);
         return;
       }
@@ -578,7 +578,7 @@ class Sale extends Component {
     const column = e.target.name;
     const val = e.target.value;
     let brgval = [...this.state.brgval];
-    if (column === "qty") {
+    if (column === "barcode") {
       if (parseInt(val, 10) < 2) {
         brgval[i] = {
           ...brgval[i],
