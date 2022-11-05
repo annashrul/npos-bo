@@ -55,6 +55,7 @@ class CreateSO extends Component {
       ],
       any: "",
       createdAt: moment().format("YYYY-MM-DD"),
+      kd_so:"",
       note: "-",
       databrg: [],
       brgval: [],
@@ -232,6 +233,7 @@ class CreateSO extends Component {
         });
       }
     }
+
     if (param.barang && param.barang.length > 0) {
       this.getData();
     }
@@ -344,15 +346,19 @@ class CreateSO extends Component {
     const location = localStorage.location;
     const customer = localStorage.customer;
     const createdAt = localStorage.createdAt;
+    const kd_so = localStorage.kd_so;
     const note = localStorage.note;
     if (isEmptyOrUndefined(location)) {
       this.handleSelect({ value: location }, "location");
     }
-    if (isEmptyOrUndefined(customer)) {
-      this.handleSelect({ value: customer }, "customer");
-    }
+    // if (isEmptyOrUndefined(customer)) {
+    //   this.handleSelect({ value: customer }, "customer");
+    // }
     if (isEmptyOrUndefined(createdAt)) {
       Object.assign(state, { createdAt });
+    }
+    if (isEmptyOrUndefined(kd_so)) {
+      Object.assign(state, { kd_so });
     }
     if (isEmptyOrUndefined(note)) {
       Object.assign(state, { note });
@@ -410,7 +416,8 @@ class CreateSO extends Component {
           console.log(res);
           let detail = [];
           let data = {};
-          const { note, location, databrg, customer } = this.state;
+          const kd_so = this.props.code;
+          const { note, location, databrg, customer, createdAt} = this.state;
           let qtySo = 0;
           let subtotal = 0;
           for (let i = 0; i < databrg.length; i++) {
@@ -430,6 +437,8 @@ class CreateSO extends Component {
             subtotal_so: subtotal,
             kd_lokasi: location,
             kd_cust: customer,
+            created_at: createdAt,
+            kd_so : kd_so
           };
           let newMaster = data["master"];
           // this.setState(
@@ -495,6 +504,7 @@ class CreateSO extends Component {
       searchByData,
       any,
       createdAt,
+      kd_so,
       note,
       customerData,
       customer,
@@ -507,7 +517,7 @@ class CreateSO extends Component {
     const head = [
       { rowSpan: 2, label: "No", width: "1%" },
       { rowSpan: 2, label: "Barang" },
-      { rowSpan: 2, label: "variasi", width: "20%"},
+      { rowSpan: 2, label: "variasi", width: "20%" },
       { rowSpan: 2, label: "Stok", width: "1%" },
       { colSpan: 2, label: "Harga", width: "1%" },
       { rowSpan: 2, label: "Qty", width: "1%" },
@@ -532,7 +542,7 @@ class CreateSO extends Component {
               >
                 <i className={toggleSide ? "fa fa-remove" : "fa fa-bars"} />
               </button>{" "}
-              Sales Order #{this.props.code}
+              Sales Order #{kd_so}
             </h4>
             <h4
               className="text-right   d-flex justify-content-between"
@@ -574,8 +584,8 @@ class CreateSO extends Component {
                       {Number(searchBy) === 1
                         ? "Ukuran"
                         : Number(searchBy) === 2
-                        ? "Kode Barang"
-                        : "Nama Barang"}
+                          ? "Kode Barang"
+                          : "Nama Barang"}
                     </label>
                     <Select
                       options={searchByData}
@@ -588,6 +598,7 @@ class CreateSO extends Component {
                   </div>
                   <div className="form-group">
                     <div className="input-group input-group-sm">
+
                       <input
                         ref={(input) => (this[`any`] = input)}
                         autoFocus
@@ -629,7 +640,7 @@ class CreateSO extends Component {
                           style={{ padding: 0 }}
                         >
                           {this.props.barang &&
-                          this.props.barang.length !== 0 ? (
+                            this.props.barang.length !== 0 ? (
                             this.props.barang.map((i, inx) => {
                               return (
                                 <li
@@ -742,13 +753,13 @@ class CreateSO extends Component {
                           <label className="control-label font-12">
                             Customer
                           </label>
-                          <Select
-                            options={customerData}
-                            placeholder="Pilih Customer"
-                            onChange={(e) => this.handleSelect(e, "customer")}
-                            value={customerData.find((op) => {
-                              return op.value === customer;
-                            })}
+                          <input
+                            type="text"
+                            placeholder="Input customer disini...."
+                            name={"customer"}
+                            className="form-control form-control-sm"
+                            value={customer}
+                            onChange={this.handleChange}
                           />
                         </div>
                       </div>
@@ -814,7 +825,7 @@ class CreateSO extends Component {
                         {
                           data: [
                             {
-                              colSpan: 5,
+                              colSpan: 6,
                               label: "Total",
                               className: "text-left",
                             },
@@ -823,7 +834,7 @@ class CreateSO extends Component {
                               label: (
                                 <input
                                   className="form-control in-table text-right"
-                                  value={parseToRp(totalQty)}
+                                  value={(totalQty)}
                                   disabled
                                 />
                               ),
@@ -875,7 +886,7 @@ const mapStateToPropsCreateItem = (state) => {
   return {
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    code: state.salesOrderReducer.code,
+    code: state.salesOrderReducer.dataGetSo,
     customer: state.customerReducer.all,
     paginBrg: state.productReducer.pagin_brg,
     auth: state.auth,

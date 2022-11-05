@@ -139,7 +139,7 @@ class ApproveSo extends Component {
                           {moment(v.created_at).format("LLL")}
                         </td>
                         <td className="middle nowrap">{v.lokasi}</td>
-                        <td className="middle nowrap">{v.customer}</td>
+                        <td className="middle nowrap">{v.kd_cust}</td>
                         <td className="middle nowrap">{v.operator}</td>
                         <td className="middle nowrap text-right">
                           {parseToRp(Number(v.detail.length))}

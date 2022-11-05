@@ -133,6 +133,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderBottom: "1px solid black",
   },
+  rowUkuran: {
+    width: "20%",
+    textAlign: "center",
+    borderBottom: "1px solid black",
+  },
   rowMotif: {
     width: "10%",
     textAlign: "center",
@@ -271,7 +276,7 @@ class TempNota extends Component {
                 >
                   Customer
                 </Text>
-                <Text style={{ textAlign: "left" }}>{master.namaCustomer}</Text>
+                <Text style={{ textAlign: "left" }}>{master.kd_cust}</Text>
               </View>
             </View>
 
@@ -279,6 +284,7 @@ class TempNota extends Component {
               <Text style={styles.no}>NO</Text>
               <Text style={styles.sku}>SKU</Text>
               <Text style={styles.nama}>NAMA</Text>
+              <Text style={styles.ukuran}>Variasi</Text>
               <Text style={styles.motif}>STOK</Text>
               <Text style={styles.qty}>QTY</Text>
               <Text style={styles.harga}>HARGA</Text>
@@ -292,6 +298,7 @@ class TempNota extends Component {
                   <Text style={styles.rowNo}>{i + 1}</Text>
                   <Text style={styles.rowSKU}>{res.barcode}</Text>
                   <Text style={styles.rowNama}>{res.nm_brg}</Text>
+                  <Text style={styles.rowUkuran}>{res.ukuran}</Text>
                   <Text style={styles.rowMotif}>{res.stock}</Text>
                   <Text style={styles.rowQty}>{res.qty}</Text>
                   <Text style={styles.rowHarga}>

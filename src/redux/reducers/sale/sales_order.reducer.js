@@ -1,7 +1,7 @@
 import { SALES_ORDER } from "../../actions/_constants";
 
 const initialState = {
-  code: "-",
+  code: ['kd_so'] ,
   dataGetApproval: [],
   dataGetSo: [],
   detaDetailSo: [],
