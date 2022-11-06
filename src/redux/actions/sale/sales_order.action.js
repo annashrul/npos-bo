@@ -93,8 +93,8 @@ export const getCodeSoAction = (val) => {
 export const postSalesOrderAction = (data, callback) => {
   return (dispatch) => {
     handlePost(`so`, data, (res, msg, isTrue) => {
-      console.log(res);
-      callback(isTrue);
+      console.log("postSalesOrderAction", res);
+      callback(res.result);
     });
   };
 };

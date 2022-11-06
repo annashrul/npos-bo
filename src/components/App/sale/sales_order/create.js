@@ -51,11 +51,11 @@ class CreateSO extends Component {
       searchByData: [
         { value: 2, label: "Kode Barang" },
         { value: 3, label: "Nama Barang" },
-        { value: 1, label: "Variasi" }
+        { value: 1, label: "Variasi" },
       ],
       any: "",
       createdAt: moment().format("YYYY-MM-DD"),
-      kd_so:"",
+      kd_so: "",
       note: "-",
       databrg: [],
       brgval: [],
@@ -344,7 +344,7 @@ class CreateSO extends Component {
     this.getProps(this.props);
     let state = {};
     const location = localStorage.location;
-    console.log("lokasi",location);
+    console.log("lokasi", location);
     this.props.dispatch(getCodeSoAction(location));
     const customer = localStorage.customer;
     const createdAt = localStorage.createdAt;
@@ -419,7 +419,7 @@ class CreateSO extends Component {
           let detail = [];
           let data = {};
           const { code } = this.props;
-          const { note, location, databrg, customer, createdAt,} = this.state;
+          const { note, location, databrg, customer, createdAt } = this.state;
           let qtySo = 0;
           let subtotal = 0;
           for (let i = 0; i < databrg.length; i++) {
@@ -459,8 +459,10 @@ class CreateSO extends Component {
           // );
 
           this.props.dispatch(
-            postSalesOrderAction(data, (isTrue) => {
+            postSalesOrderAction(data, (newRes) => {
+              console.log("create so", newRes);
               swalWithCallback("transaksi berhasil disimpan", () => {
+                Object.assign(newMaster, { kd_so: newRes.master.kd_so });
                 this.setState(
                   {
                     detail: databrg,
@@ -468,7 +470,7 @@ class CreateSO extends Component {
                       namaLokasi: this.state.namaLokasi,
                       namaCustomer: this.state.namaCustomer,
                     }),
-                    
+
                     isNota: true,
                     note: "-",
                     location: "",
@@ -587,8 +589,8 @@ class CreateSO extends Component {
                       {Number(searchBy) === 1
                         ? "Ukuran"
                         : Number(searchBy) === 2
-                          ? "Kode Barang"
-                          : "Nama Barang"}
+                        ? "Kode Barang"
+                        : "Nama Barang"}
                     </label>
                     <Select
                       options={searchByData}
@@ -601,7 +603,6 @@ class CreateSO extends Component {
                   </div>
                   <div className="form-group">
                     <div className="input-group input-group-sm">
-
                       <input
                         ref={(input) => (this[`any`] = input)}
                         autoFocus
@@ -643,7 +644,7 @@ class CreateSO extends Component {
                           style={{ padding: 0 }}
                         >
                           {this.props.barang &&
-                            this.props.barang.length !== 0 ? (
+                          this.props.barang.length !== 0 ? (
                             this.props.barang.map((i, inx) => {
                               return (
                                 <li
@@ -837,7 +838,7 @@ class CreateSO extends Component {
                               label: (
                                 <input
                                   className="form-control in-table text-right"
-                                  value={(totalQty)}
+                                  value={totalQty}
                                   disabled
                                 />
                               ),

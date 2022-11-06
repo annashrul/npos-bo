@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 class DownloadNotaPdfSo extends Component {
   render() {
-    console.log("master", moment().format("YYYY-MM-DD-h-i-s"));
+    console.log("master", this.props.master);
     console.log("detail", this.props.detail);
     return (
       <div>
