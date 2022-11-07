@@ -19,6 +19,7 @@ import { withRouter } from "react-router-dom";
 import {
   getApprovalSoAction,
   putApprovalSalesOrderAction,
+  deleteSalesOrderAction,
 } from "../../../../redux/actions/sale/sales_order.action";
 import Layout from "components/App/Layout";
 
@@ -35,6 +36,7 @@ class ApproveSo extends Component {
     this.handleModal = this.handleModal.bind(this);
     this.handleService = this.handleService.bind(this);
     this.handleApprove = this.handleApprove.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleService(res, page = 1) {
@@ -69,6 +71,22 @@ class ApproveSo extends Component {
       () => {}
     );
   }
+  
+
+  handleDelete(obj) {
+    Object.assign(obj);
+    this.props.dispatch(deleteSalesOrderAction(obj));
+  }
+
+  // handleDelete(param) {
+  //   swallOption(
+  //     "Data yang dihapus tidak bisa dikembalikan! ",
+  //     () => {
+  //       this.props.dispatch(deleteSalesOrderAction(param.kd_so));
+  //     },
+  //     () => {}
+  //   );
+  // }
 
   render() {
     const { total, last_page, per_page, current_page, data, totalData } =
@@ -115,7 +133,7 @@ class ApproveSo extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let btnAction = [{ label: "#" }, { label: "Approve" }];
+                    let btnAction = [{ label: "Delete" }, { label: "Approve" }];
                     totalItemPerHalaman += Number(v.detail.length);
                     totalBayarPerHalaman += Number(v.subtotal_so);
                     totalQtyPerHalaman += Number(v.qty_so);
@@ -128,7 +146,7 @@ class ApproveSo extends Component {
                           <ButtonActionCommon
                             action={btnAction}
                             callback={(e) => {
-                              if (e === 0) this.handleApprove(v);
+                              if (e === 0) this.handleDelete(v);
                               if (e === 1) this.handleModal(v);
                             }}
                           />
