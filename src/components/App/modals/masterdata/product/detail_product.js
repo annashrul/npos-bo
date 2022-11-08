@@ -71,13 +71,15 @@ class DetailProduct extends Component {
                 desc: master.jenis === "0" ? "TIDAK DIJUAL" : "DIJUAL",
               },
               { title: "Kategori", desc: master.kategori },
-              { title: "dept", desc: master.dept },
+              // { title: "dept", desc: master.dept },
               { title: "Kelompok", desc: master.kel_brg },
-              { title: "Sub dept", desc: master.subdept },
-              {
-                title: "Variasi/Motif",
-                desc: this.props.dataDetail ? this.props.dataDetail.ukuran : "",
-              },
+
+              { title: "Variasi/Motif", desc: master.ukuran },              // { title: "Sub dept", desc: master.subdept },
+              // {
+              //   title: "Variasi/Motif",
+              //   desc: this.props.dataDetail ? this.props.dataDetail.ukuran : "",
+              // },
+              
             ]}
           />
           <TableCommon
