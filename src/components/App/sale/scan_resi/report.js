@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import { 
-  FetchScanResiReport, 
+import {
+  FetchScanResiReport,
   FetchScanResiExport,
-  FetchReportDetailScanResi 
+  FetchReportDetailScanResi
 } from "redux/actions/sale/scan_resi_laporan.action";
 import connect from "react-redux/es/connect/connect";
 // import SaleReturReportExcel from "components/App/modals/report/sale/form_scan_resi_excel";
@@ -11,7 +11,8 @@ import { float, generateNo, getFetchWhere, getPeriode, noData, parseToRp, toDate
 import TableCommon from "../../common/TableCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
-
+import DetailScanresi from "../../modals/report/sale/detail_scan_resi";
+import { ModalToggle, ModalType } from "../../../../redux/actions/modal.action";
 
 class ScanResiReport extends Component {
   constructor(props) {
@@ -23,7 +24,6 @@ class ScanResiReport extends Component {
       periode: "",
       detail: {},
       isModalDetail: false,
-      isModalReport: false,
       column_data: [
         { value: "no_resi", label: "Nomor Resi" },
         { value: "kd_kasir", label: "Operator" },
@@ -31,10 +31,16 @@ class ScanResiReport extends Component {
     };
   }
 
+  componentWillUnmount() {
+    this.setState({
+      isModalDetail: false,
+    });
+  }
+
   handlePageChange(pageNumber) {
     this.handleService(this.state.where_data, pageNumber);
   }
- handleService(res, page = 1) {
+  handleService(res, page = 1) {
     this.setState({ isFirstHit: true });
     if (res !== undefined && this.state.isFirstHit) {
       let where = getFetchWhere(res, page);
@@ -43,24 +49,24 @@ class ScanResiReport extends Component {
     }
   }
 
-  handleModal(param = "#", index, total = 0) {
-    let whereState = this.state.where_data;
-    let where = getFetchWhere(whereState);
-    let periode = getPeriode(where.split("&"));
-    let state = { periode: periode, where_data: where };
-    if (param === "excel") {
-      Object.assign(state, { isModalExport: true });
-      this.props.dispatch(FetchScanResiExport(where, total));
-    } else {
-      let props = this.props.data.data[index];
-      Object.assign(props, { where: where });
-      Object.assign(state, { isModalDetail: true, detail: props });
-      this.props.dispatch(FetchReportDetailScanResi(props.no_resi, where));
-    }
-
-    this.setState(state);
+  handleFetchModal(page) {
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+    this.props.dispatch(ModalType(page));
   }
 
+  handleModal(page, param) {
+    let whereState = this.state.where_data;
+    let where = getFetchWhere(whereState);
+    let state = { where_data: where };
+    if (page === "detail") {
+      this.setState({ isModalDetail: true, detail: param }, () => {
+        this.handleFetchModal("detailScanresi");
+      });
+      return;
+    }
+    this.setState(state);
+  }
   handleSearch(e) {
     e.preventDefault();
     this.handleService();
@@ -68,13 +74,15 @@ class ScanResiReport extends Component {
 
   render() {
     const { per_page, last_page, current_page, total, data } = this.props.data;
-    const { periode, column_data, isModalReport } = this.state;
+    const { periode, column_data, isModalReport,isModalDetail,
+      detail } = this.state;
     const startDate = periode.split("-")[0];
     const endDate = periode.split("-")[1];
+    
     const head = [
       { label: "No", className: "text-center", width: "1%" },
       { label: "#", width: "1%" },
-      { label: "Nomor Resi" , width: "50%"},
+      { label: "Nomor Resi", width: "50%" },
       { label: "Tanggal", width: "5%" },
       { label: "Operator", width: "5%" },
     ];
@@ -91,6 +99,7 @@ class ScanResiReport extends Component {
           callbackExcel={() => this.toggleModal(last_page * per_page, per_page)}
           excelData={this.props.download}
         />
+
         <TableCommon
           head={head}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
@@ -100,30 +109,39 @@ class ScanResiReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((val, key) => {
-                    totalNilaiReturPerHalaman += float(val.nilai_retur);
-                    totalDiskonPerHalaman += float(val.diskon_item);
-                    return (
-                      <tr key={key}>
-                        <td className="middle nowrap">{generateNo(key, current_page)}</td>
-                        <td className="middle nowrap text-center">
-                          <ButtonActionCommon
-                            action={[{ label: "Detail" }]}
-                            callback={(e) => this.handleModal("detail", key)}
-                          />
-                        </td>
-                        <td className="middle nowrap">{val.no_resi}</td>
-                        <td className="middle nowrap">{toDate(val.tgl)}</td>
-                        <td className="middle nowrap">{val.kd_kasir}</td>
-                        {/* <td className="middle nowrap">{val.caatatan}</td> */}
-                      </tr>
-                    );
-                  })
+                  let btnAction = [
+                    { label: "Detail" },
+                    { label: "Hapus" },
+                  ];
+                  return (
+                    <tr key={key}>
+                      <td className="middle nowrap">{generateNo(key, current_page)}</td>
+                      <td className="middle nowrap text-center">
+                        <ButtonActionCommon
+                          action={btnAction}
+                          callback={(e) => {
+                            if (e === 0) this.handleModal("detail", val);
+                            if (e === 1) this.handleDelete(val);
+                          }}
+                        />
+                      </td>
+                      <td className="middle nowrap">{val.no_resi}</td>
+                      <td className="middle nowrap">{toDate(val.tgl)}</td>
+                      <td className="middle nowrap">{val.kd_kasir}</td>
+                      {/* <td className="middle nowrap">{val.caatatan}</td> */}
+                    </tr>
+                  );
+                })
                 : noData(head.length)
               : noData(head.length)
           }
         />
+        {this.props.isOpen && isModalDetail ? (
+          <DetailScanresi detail={detail} />
+        ) : null}
         {/* {this.props.isOpen && isModalReport ? <SaleReturReportExcel startDate={startDate} endDate={endDate} /> : null} */}
       </Layout>
+
     );
   }
 }
