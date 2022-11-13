@@ -598,6 +598,7 @@ class ListProduct extends Component {
     const loc_delete = this.handleDelete;
     const loc_edit = this.handleEdit;
     const loc_edit_per = this.handleEdit;
+    // const loc_edit_ukuran = this.handleEdit;
     const { total, per_page, current_page, data } = this.props.data;
     const headers = [
       "No",
@@ -860,8 +861,9 @@ class ListProduct extends Component {
                               { label: "Set Harga Customer" },
                               { label: "Detail" },
                               { label: "Edit" },
-                              { label: "Edit Harga per Lokasi" },
+                              { label: "Edit Harga" },
                               { label: "Delete" },
+                              { label: "Edit Variasi" },
                             ]}
                             callback={(e) => {
                               if (e === 0)
@@ -870,6 +872,7 @@ class ListProduct extends Component {
                               if (e === 2) loc_edit(v.kd_brg);
                               if (e === 3) loc_edit_per(v.kd_brg, true);
                               if (e === 4) loc_delete(v.kd_brg);
+                              // if (e === 5) loc_edit_ukuran(v.kd_brg);
                             }}
                           />
                         </td>

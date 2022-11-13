@@ -13,7 +13,7 @@ class SaleByProductReportExcel extends Component {
   }
 
   handleHeader() {
-    return ["NO", "KODE", "NAMA", "BARCODE", "SATUAN", "QTY", "G.SALE", "DISC", "PAJAK", "SERVIS", "LOKASI", "TGL"];
+    return ["NO", "KODE", "NAMA", "VARIASI", "SATUAN", "QTY", "G.SALE", "DISC", "PAJAK", "SERVIS", "LOKASI", "TGL"];
   }
 
   handleContent(cek = "excel") {
@@ -30,7 +30,7 @@ class SaleByProductReportExcel extends Component {
             i + 1,
             rmSpaceToStrip(v.kd_brg),
             rmSpaceToStrip(v.nm_brg).toLowerCase(),
-            rmSpaceToStrip(v.barcode),
+            rmSpaceToStrip(v.ukuran),
             rmSpaceToStrip(v.satuan).toLowerCase(),
             parseToRp(v.qty_jual),
             parseToRp(v.gross_sales),

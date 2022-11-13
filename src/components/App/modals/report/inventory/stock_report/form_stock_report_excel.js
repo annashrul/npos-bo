@@ -12,7 +12,7 @@ class StockReportExcel extends Component {
   }
 
   handleHeader() {
-    let head = ["Kode barang", "Barcode", "Satuan", "Nama barang", "Kelompok barang", "Supplier", "Sub departemen"];
+    let head = ["Kode barang", "Nama barang","Variasi", "Satuan", "Kelompok barang", "Supplier", "Sub departemen"];
     if (this.props.lokasi !== "") {
       head.push("Harga beli");
       head.push("Harga jual");
@@ -37,7 +37,7 @@ class StockReportExcel extends Component {
       if (this.props.stockReportExcel.data.length > 0) {
         this.props.stockReportExcel.data.map((v, i) => {
           let stockAkhir = parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - (parseFloat(v.stock_keluar) + parseFloat(v.stock_penjualan));
-          props.push([v.kd_brg, v.barcode, v.satuan, v.nm_brg, v.supplier, v.sub_dept, v.nama_kel]);
+          props.push([v.kd_brg,v.nm_brg, v.variasi, v.satuan, v.nama_kel, v.supplier, v.sub_dept]);
           if (this.props.lokasi !== "") {
             props[i].push(parseFloat(v.harga_beli_lokasi));
             props[i].push(parseFloat(v.harga_lokasi));

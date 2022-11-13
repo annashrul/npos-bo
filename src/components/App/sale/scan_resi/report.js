@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import {
   FetchScanResiReport,
-  FetchScanResiExport,
   FetchReportDetailScanResi
 } from "redux/actions/sale/scan_resi_laporan.action";
 import connect from "react-redux/es/connect/connect";
-// import SaleReturReportExcel from "components/App/modals/report/sale/form_scan_resi_excel";
 import { float, generateNo, getFetchWhere, getPeriode, noData, parseToRp, toDate } from "../../../../helper";
 import TableCommon from "../../common/TableCommon";
 import HeaderReportCommon from "../../common/HeaderReportCommon";
@@ -74,8 +72,7 @@ class ScanResiReport extends Component {
 
   render() {
     const { per_page, last_page, current_page, total, data } = this.props.data;
-    const { periode, column_data, isModalReport,isModalDetail,
-      detail } = this.state;
+    const { periode, column_data, isModalReport,isModalDetail,detail } = this.state;
     const startDate = periode.split("-")[0];
     const endDate = periode.split("-")[1];
     
@@ -150,9 +147,6 @@ const mapStateToProps = (state) => {
   return {
     isOpen: state.modalReducer,
     data: state.scanResiLaporanReducer.data,
-    dataExport: state.scanResiLaporanReducer.dataExport,
-    download: state.scanResiLaporanReducer.download,
-    dataDetail: state.scanResiLaporanReducer.detail,
     auth: state.auth,
   };
 };

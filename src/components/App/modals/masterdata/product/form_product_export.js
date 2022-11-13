@@ -105,24 +105,25 @@ class FormProductExport extends Component {
       [
         "No",
         "Kode Barang",
-        "Barcode",
-        "Satuan",
         "Nama Barang",
+        // "Barcode",
+        "Variasi",
+        "Satuan",
         "Lokasi",
         "Harga Beli",
         "Harga",
-        "Harga 2",
-        "Harga 3",
-        "Harga 4",
-        "PPN",
-        "Service",
-        "TAG",
-        "Rak",
+        // "Harga 2",
+        // "Harga 3",
+        // "Harga 4",
+        // "PPN",
+        // "Service",
+        // "TAG",
+        // "Rak",
         "Kel. Barang",
-        "Kategori",
-        "Sub-Dept",
+        // "Kategori",
+        // "Sub-Dept",
         "Supplier",
-        "Deskripsi Item",
+        // "Deskripsi Item",
         "Tanggal Input",
         "Tanggal Update",
       ],
@@ -132,34 +133,34 @@ class FormProductExport extends Component {
         ? this.props.resBarangAll.map((v, i) => [
             i + 1,
             v.kd_brg,
-            v.barcode,
-            v.satuan,
             v.nm_brg,
+            v.ukuran,
+            v.satuan,
             v.nama_toko,
             v.hrg_beli,
             v.harga,
-            v.harga2,
-            v.harga3,
-            v.harga4,
-            v.ppn,
-            v.service,
-            v.tag,
-            v.rak,
+            // v.harga2,
+            // v.harga3,
+            // v.harga4,
+            // v.ppn,
+            // v.service,
+            // v.tag,
+            // v.rak,
             v.kel_brg,
-            parseInt(v.kategori, 10) === 0
-              ? "Kartonan"
-              : parseInt(v.kategori, 10) === 1
-              ? "Satuan"
-              : parseInt(v.kategori, 10) === 2
-              ? "Paket"
-              : parseInt(v.kategori, 10) === 3
-              ? "Servis"
-              : parseInt(v.kategori, 10) === 4
-              ? "Bahan"
-              : "Tidak diketahui!",
-            v.subdept,
+            // parseInt(v.kategori, 10) === 0
+            //   ? "Kartonan"
+            //   : parseInt(v.kategori, 10) === 1
+            //   ? "Satuan"
+            //   : parseInt(v.kategori, 10) === 2
+            //   ? "Paket"
+            //   : parseInt(v.kategori, 10) === 3
+            //   ? "Servis"
+            //   : parseInt(v.kategori, 10) === 4
+            //   ? "Bahan"
+            //   : "Tidak diketahui!",
+            // v.subdept,
             v.supplier,
-            v.deskripsi,
+            // v.deskripsi,
             v.tgl_input,
             v.tgl_update,
           ])
@@ -184,24 +185,25 @@ class FormProductExport extends Component {
       [
         "No",
         "Kode Barang",
-        "Barcode",
-        "Satuan",
         "Nama Barang",
-        // 'Lokasi',
+        // "Barcode",
+        "Variasi",
+        "Satuan",
+        "Lokasi",
         "Harga Beli",
         "Harga",
-        "Harga 2",
-        "Harga 3",
-        "Harga 4",
-        "PPN",
-        "Service",
-        "TAG",
-        "Rak",
+        // "Harga 2",
+        // "Harga 3",
+        // "Harga 4",
+        // "PPN",
+        // "Service",
+        // "TAG",
+        // "Rak",
         "Kel. Barang",
-        "Kategori",
-        "Sub-Dept",
+        // "Kategori",
+        // "Sub-Dept",
         "Supplier",
-        "Deskripsi Item",
+        // "Deskripsi Item",
         "Tanggal Input",
         "Tanggal Update",
       ],
@@ -211,34 +213,34 @@ class FormProductExport extends Component {
         ? this.props.resBarangAll.map((v, i) => [
             i + 1,
             v.kd_brg,
-            v.barcode,
-            v.satuan,
             v.nm_brg,
-            // v.nama_toko,
+            v.ukuran,
+            v.satuan,
+            v.nama_toko,
             v.hrg_beli,
             v.harga,
-            v.harga2,
-            v.harga3,
-            v.harga4,
-            v.ppn,
-            v.service,
-            v.tag,
-            v.rak,
+            // v.harga2,
+            // v.harga3,
+            // v.harga4,
+            // v.ppn,
+            // v.service,
+            // v.tag,
+            // v.rak,
             v.kel_brg,
-            parseInt(v.kategori, 10) === 0
-              ? "Kartonan"
-              : parseInt(v.kategori, 10) === 1
-              ? "Satuan"
-              : parseInt(v.kategori, 10) === 2
-              ? "Paket"
-              : parseInt(v.kategori, 10) === 3
-              ? "Servis"
-              : parseInt(v.kategori, 10) === 4
-              ? "Bahan"
-              : "Tidak diketahui!",
-            v.subdept,
+            // parseInt(v.kategori, 10) === 0
+            //   ? "Kartonan"
+            //   : parseInt(v.kategori, 10) === 1
+            //   ? "Satuan"
+            //   : parseInt(v.kategori, 10) === 2
+            //   ? "Paket"
+            //   : parseInt(v.kategori, 10) === 3
+            //   ? "Servis"
+            //   : parseInt(v.kategori, 10) === 4
+            //   ? "Bahan"
+            //   : "Tidak diketahui!",
+            // v.subdept,
             v.supplier,
-            v.deskripsi,
+            // v.deskripsi,
             v.tgl_input,
             v.tgl_update,
           ])
@@ -266,24 +268,25 @@ class FormProductExport extends Component {
       [
         "No",
         "Kode Barang",
-        "Barcode",
-        "Satuan",
         "Nama Barang",
+        // "Barcode",
+        "Variasi",
+        "Satuan",
         "Lokasi",
         "Harga Beli",
         "Harga",
-        "Harga 2",
-        "Harga 3",
-        "Harga 4",
-        "PPN",
-        "Service",
-        "TAG",
-        "Rak",
+        // "Harga 2",
+        // "Harga 3",
+        // "Harga 4",
+        // "PPN",
+        // "Service",
+        // "TAG",
+        // "Rak",
         "Kel. Barang",
-        "Kategori",
-        "Sub-Dept",
+        // "Kategori",
+        // "Sub-Dept",
         "Supplier",
-        "Deskripsi Item",
+        // "Deskripsi Item",
         "Tanggal Input",
         "Tanggal Update",
       ],
@@ -293,34 +296,34 @@ class FormProductExport extends Component {
         ? this.props.resBarangAll.map((v, i) => [
             i + 1,
             v.kd_brg,
-            v.barcode,
-            v.satuan,
             v.nm_brg,
+            v.ukuran,
+            v.satuan,
             v.nama_toko,
             v.hrg_beli,
             v.harga,
-            v.harga2,
-            v.harga3,
-            v.harga4,
-            v.ppn,
-            v.service,
-            v.tag,
-            v.rak,
+            // v.harga2,
+            // v.harga3,
+            // v.harga4,
+            // v.ppn,
+            // v.service,
+            // v.tag,
+            // v.rak,
             v.kel_brg,
-            parseInt(v.kategori, 10) === 0
-              ? "Kartonan"
-              : parseInt(v.kategori, 10) === 1
-              ? "Satuan"
-              : parseInt(v.kategori, 10) === 2
-              ? "Paket"
-              : parseInt(v.kategori, 10) === 3
-              ? "Servis"
-              : parseInt(v.kategori, 10) === 4
-              ? "Bahan"
-              : "Tidak diketahui!",
-            v.subdept,
+            // parseInt(v.kategori, 10) === 0
+            //   ? "Kartonan"
+            //   : parseInt(v.kategori, 10) === 1
+            //   ? "Satuan"
+            //   : parseInt(v.kategori, 10) === 2
+            //   ? "Paket"
+            //   : parseInt(v.kategori, 10) === 3
+            //   ? "Servis"
+            //   : parseInt(v.kategori, 10) === 4
+            //   ? "Bahan"
+            //   : "Tidak diketahui!",
+            // v.subdept,
             v.supplier,
-            v.deskripsi,
+            // v.deskripsi,
             v.tgl_input,
             v.tgl_update,
           ])
