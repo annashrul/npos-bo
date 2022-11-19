@@ -9,6 +9,7 @@ import ReactPDF, {
   PDFDownloadLink,
 } from "@react-pdf/renderer";
 import { parseToRp, toRp } from "../../../../helper";
+import moment from "moment";
 // Create styles
 const borderColor = "black";
 
@@ -255,7 +256,7 @@ class TempNota extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 5 }}>
-                Tanggal: {master.created_at}
+                Tanggal: {moment(master.created_at).format("YYYY-MM-DD")}
               </Text>
             </View>
             <View

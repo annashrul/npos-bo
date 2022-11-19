@@ -9,6 +9,7 @@ import ReactPDF, {
   PDFDownloadLink,
 } from "@react-pdf/renderer";
 import { parseToRp, toRp } from "../../../../helper";
+import moment from "moment";
 // Create styles
 const borderColor = "black";
 
@@ -218,6 +219,7 @@ class MyDocument extends Component {
     }
     let totalQty = 0;
     let totalTrx = 0;
+    console.log("master", master);
     return (
       <Document>
         <Page style={styles.page} size="A4" wrap>
@@ -239,7 +241,7 @@ class MyDocument extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 5 }}>
-                Tanggal : {master.createdAt}
+                Tanggal : {moment(master.created_at).format("YYYY-MM-DD")}
               </Text>
             </View>
             <View style={styles.container}>
