@@ -243,7 +243,7 @@ class TempNota extends Component {
                 justifyContent: "space-between",
               }}
             >
-              <View style={{ width: "30%" }}>
+              <View style={{ width: "40%" }}>
                 <Text
                   style={{
                     textAlign: "left",
@@ -314,7 +314,7 @@ class TempNota extends Component {
           </View>
           <View
             style={{
-              backgroundColor: "grey",
+              // backgroundColor: "grey",
               borderBottom: "1px solid grey",
               borderLeft: "1px solid grey",
               borderRight: "1px solid grey",
@@ -322,7 +322,7 @@ class TempNota extends Component {
               //   marginBottom: "10px",
               flexDirection: "row",
               flexWrap: "wrap",
-              color: "white",
+              color: "black",
             }}
           >
             <Text
@@ -330,7 +330,7 @@ class TempNota extends Component {
                 paddingTop: 5,
                 width: "50%",
                 textAlign: "center",
-                color: "white",
+                color: "black",
               }}
             >
               JUMLAH
@@ -341,7 +341,7 @@ class TempNota extends Component {
                 width: "10%",
                 textAlign: "center",
 
-                color: "white",
+                color: "black",
               }}
             >
               {parseToRp(totalQty)}
@@ -356,7 +356,7 @@ class TempNota extends Component {
                 paddingTop: 5,
                 width: "20%",
                 textAlign: "center",
-                color: "white",
+                color: "black",
               }}
             >
               {parseToRp(totalTrx)}
