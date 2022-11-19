@@ -55,11 +55,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: "row",
-    borderBottom: "1px solid black",
+    border: "1px solid black",
     // backgroundColor: "grey",
     alignItems: "center",
-    paddingTop: 5,
-    paddingBottom: 5,
+    // paddingTop: 5,
+    // paddingBottom: 5,
     // height: 24,
     // textAlign: "left",
     fontStyle: "bold",
@@ -68,42 +68,43 @@ const styles = StyleSheet.create({
   no: {
     textAlign: "center",
     width: "5%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    // border: "1px solid black",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     color: "black",
   },
   sku: {
     width: "15%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   nama: {
     width: "20%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   motif: {
     width: "10%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   qty: {
     width: "10%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   harga: {
     width: "20%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
@@ -121,37 +122,51 @@ const styles = StyleSheet.create({
   rowNo: {
     width: "5%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowSKU: {
     width: "15%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowNama: {
     width: "20%",
     textAlign: "center",
     borderBottom: "1px solid black",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
   },
   rowMotif: {
     width: "10%",
     textAlign: "center",
     borderBottom: "1px solid black",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
   },
   rowQty: {
     width: "10%",
     textAlign: "center",
     borderBottom: "1px solid black",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
   },
   rowHarga: {
     width: "20%",
     textAlign: "center",
     borderBottom: "1px solid black",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
   },
   rowJumlah: {
     width: "20%",
     textAlign: "center",
     borderBottom: "1px solid black",
+    // borderRightColor: borderColor,
+    // borderRightWidth: 1,
   },
 
   header1: {
@@ -224,7 +239,7 @@ class MyDocument extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 5 }}>
-               Tanggal : {master.createdAt}
+                Tanggal : {master.createdAt}
               </Text>
             </View>
             <View style={styles.container}>
@@ -256,34 +271,36 @@ class MyDocument extends Component {
           </View>
           <View
             style={{
-              backgroundColor: "grey",
-              borderBottom: "1px solid grey",
-              borderLeft: "1px solid grey",
-              borderRight: "1px solid grey",
+              // backgroundColor: "grey",
+              // borderTop: "1px solid black",
+              borderBottom: "1px solid black",
+              borderLeft: "1px solid black",
+              borderRight: "1px solid black",
               width: "100%",
               //   marginBottom: "10px",
               flexDirection: "row",
               flexWrap: "wrap",
-              color: "white",
+              color: "black",
             }}
           >
             <Text
               style={{
-                paddingTop: 5,
+                // paddingTop: 5,
+                borderRight: "1px solid black",
                 width: "50%",
                 textAlign: "center",
-                color: "white",
+                color: "black",
               }}
             >
               JUMLAH
             </Text>
             <Text
               style={{
-                paddingTop: 5,
+                // paddingTop: 5,
+                borderRight: "1px solid black",
                 width: "10%",
                 textAlign: "center",
-
-                color: "white",
+                color: "black",
               }}
             >
               {parseToRp(totalQty)}
@@ -295,10 +312,11 @@ class MyDocument extends Component {
             ></Text>
             <Text
               style={{
-                paddingTop: 5,
+                // paddingTop: 5,
+                // borderRight: "1px solid black",
                 width: "20%",
                 textAlign: "center",
-                color: "white",
+                color: "black",
               }}
             >
               {parseToRp(totalTrx)}
@@ -349,67 +367,63 @@ class MyDocument extends Component {
             </View>
           </View>
           <View
-              style={{
-                paddingLeft: 8,
-                paddingRight: 8,
-                paddingBottom: 8,
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View style={{ width: "30%" }}>
-                <Text
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid black",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Penerima
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.nama_penerima}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.alamat_penerima}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  Telp. {master.no_telepon_penerima}
-                </Text>
-              </View>
-              <View style={{ width: "40%" }}>
-                <Text
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid black",
-                    marginBottom: "5px",
-                  }}
-                >
-                  &nbsp;
-                </Text>
-              </View>
-              <View style={{ width: "30%" }}>
-                <Text
-                  style={{
-                    textAlign: "left",
-                    borderBottom: "1px solid black",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Pengirim
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.nama_pengirim}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  {master.alamat_pengirim}
-                </Text>
-                <Text style={{ textAlign: "left" }}>
-                  Telp. {master.no_telepon_pengirim}
-                </Text>
-              </View>
+            style={{
+              paddingLeft: 8,
+              paddingRight: 8,
+              paddingBottom: 8,
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ width: "30%" }}>
+              <Text
+                style={{
+                  textAlign: "left",
+                  borderBottom: "1px solid black",
+                  marginBottom: "5px",
+                }}
+              >
+                Penerima
+              </Text>
+              <Text style={{ textAlign: "left" }}>{master.nama_penerima}</Text>
+              <Text style={{ textAlign: "left" }}>
+                {master.alamat_penerima}
+              </Text>
+              <Text style={{ textAlign: "left" }}>
+                Telp. {master.no_telepon_penerima}
+              </Text>
             </View>
+            <View style={{ width: "40%" }}>
+              <Text
+                style={{
+                  textAlign: "left",
+                  borderBottom: "1px solid black",
+                  marginBottom: "5px",
+                }}
+              >
+                &nbsp;
+              </Text>
+            </View>
+            <View style={{ width: "30%" }}>
+              <Text
+                style={{
+                  textAlign: "left",
+                  borderBottom: "1px solid black",
+                  marginBottom: "5px",
+                }}
+              >
+                Pengirim
+              </Text>
+              <Text style={{ textAlign: "left" }}>{master.nama_pengirim}</Text>
+              <Text style={{ textAlign: "left" }}>
+                {master.alamat_pengirim}
+              </Text>
+              <Text style={{ textAlign: "left" }}>
+                Telp. {master.no_telepon_pengirim}
+              </Text>
+            </View>
+          </View>
         </Page>
       </Document>
     );

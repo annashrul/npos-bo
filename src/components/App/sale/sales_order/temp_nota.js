@@ -55,55 +55,64 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: "row",
-    borderBottom: "1px solid black",
+    border: "1px solid black",
     // backgroundColor: "grey",
     alignItems: "center",
-    paddingTop: 5,
-    paddingBottom: 5,
+    // paddingTop: 5,
+    // paddingBottom: 5,
     // height: 24,
     // textAlign: "left",
     fontStyle: "bold",
     flexGrow: 1,
+
+    // flexDirection: "row",
+    // borderBottom: "1px solid black",
+
+    // alignItems: "center",
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    // fontStyle: "bold",
+    // flexGrow: 1,
   },
   no: {
     textAlign: "center",
     width: "5%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     color: "black",
   },
   sku: {
     width: "15%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   nama: {
     width: "20%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   motif: {
     width: "10%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   qty: {
     width: "10%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   harga: {
     width: "20%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
@@ -121,41 +130,57 @@ const styles = StyleSheet.create({
   rowNo: {
     width: "5%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowSKU: {
     width: "15%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowNama: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowUkuran: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowMotif: {
     width: "10%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowQty: {
     width: "10%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowHarga: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowJumlah: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
 
@@ -315,9 +340,9 @@ class TempNota extends Component {
           <View
             style={{
               // backgroundColor: "grey",
-              borderBottom: "1px solid grey",
-              borderLeft: "1px solid grey",
-              borderRight: "1px solid grey",
+              borderBottom: "1px solid black",
+              borderLeft: "1px solid black",
+              borderRight: "1px solid black",
               width: "100%",
               //   marginBottom: "10px",
               flexDirection: "row",
@@ -327,20 +352,19 @@ class TempNota extends Component {
           >
             <Text
               style={{
-                paddingTop: 5,
                 width: "50%",
                 textAlign: "center",
                 color: "black",
+                borderRight: "1px solid black",
               }}
             >
               JUMLAH
             </Text>
             <Text
               style={{
-                paddingTop: 5,
                 width: "10%",
                 textAlign: "center",
-
+                borderRight: "1px solid black",
                 color: "black",
               }}
             >
@@ -353,7 +377,6 @@ class TempNota extends Component {
             ></Text>
             <Text
               style={{
-                paddingTop: 5,
                 width: "20%",
                 textAlign: "center",
                 color: "black",
