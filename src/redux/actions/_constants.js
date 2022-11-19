@@ -14,7 +14,7 @@ export const TOKEN = {
 
 export const HEADERS = {
   // URL: atob(document.getElementById("hellyeah").value),
-  // URL: "http://ptnetindo.com:6694/",
+ //  URL: "http://ptnetindo.com:6694/",
   // URL: "http://192.168.100.17:6692/",
   URL: "http://localhost:6692/",
   TOKEN:
@@ -337,7 +337,7 @@ export const SCAN_RESI = {
 export const SCAN_RESI_REPORT = {
   DOWNLOAD: "SET_SCAN_RESI_REPORT_DOWNLOAD",
   SUCCESS: "SET_SCAN_RESI_REPORT_SUCCESS",
-  DETAIL: "SET_SCAN_RESI_REPORT_DETAIL",
+  GET_DETAIL_REPORT: "GET_DETAIL_REPORT",
   EXPORT: "SET_SCAN_RESI_REPORT_EXPORT",
 };
 /****************

@@ -12,8 +12,8 @@ class FormUkuran extends Component {
       dataUkuran: [{ id: Math.random(100000), nama: "" }],
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    // this.handleAdd = this.handleAdd.bind(this);
+    // this.handleDelete = this.handleDelete.bind(this);
   }
   componentWillMount() {
     console.log("componentWillMount.defaultValue", this.props.defaultValue);
@@ -63,23 +63,23 @@ class FormUkuran extends Component {
       this.setState({ dataUkuran }, () => this.handlePropp());
     }, 300);
   }
-  handleAdd(e) {
-    let dataUkuran = this.state.dataUkuran;
-    dataUkuran.push(e);
-    setTimeout(() => {
-      this.setState({ dataUkuran }, () => this.handlePropp());
-    }, 300);
-  }
+  // handleAdd(e) {
+  //   let dataUkuran = this.state.dataUkuran;
+  //   dataUkuran.push(e);
+  //   setTimeout(() => {
+  //     this.setState({ dataUkuran }, () => this.handlePropp());
+  //   }, 300);
+  // }
 
-  handleDelete(e) {
-    console.log(e);
-    let dataUkuran = this.state.dataUkuran;
-    const newDatas = dataUkuran.filter((res) => res.id !== e);
-    setTimeout(() => {
-      console.log(newDatas);
-      this.setState({ dataUkuran: newDatas }, () => this.handlePropp());
-    }, 300);
-  }
+  // handleDelete(e) {
+  //   console.log(e);
+  //   let dataUkuran = this.state.dataUkuran;
+  //   const newDatas = dataUkuran.filter((res) => res.id !== e);
+  //   setTimeout(() => {
+  //     console.log(newDatas);
+  //     this.setState({ dataUkuran: newDatas }, () => this.handlePropp());
+  //   }, 300);
+  // }
 
   handlePropp() {
     let newDatas = [];
@@ -96,66 +96,16 @@ class FormUkuran extends Component {
       return (
         <div key={i} className="row">
           <div className="col-md-12">
-            {/* <label>Warna</label> */}
             <div class="input-group">
               <input
                 placeholder="Variasi"
                 type="text"
-                // style={{ height: "39px" }}
                 className="form-control"
                 value={res.nama}
                 onChange={(e) => this.handleChange(e, i)}
                 name={`ukuran_${res.id}`}
-              // ref={(input) => (this[`catatan`] = input)}
-              />
-              {/* <select
-                onChange={(e) => this.handleChange(e, i)}
-                className="form-control"
-                name={`ukuran_${res.id}`}
-              >
-                {varian.map((row, x) => {
-                  return (
-                    <option value={row} selected={row === res.nama}>
-                      {row}
-                    </option>
-                  );
-                })}
-              </select> */}
-              {/* {dataUkuran.length - 1 === i ? (
-                <div className="input-group-append">
-                  <button
-                    className="btn btn-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      this.handleAdd({ id: Math.random(100000), nama: "S" });
-                    }}
-                  >
-                    <i className="fa fa-plus"></i>
-                  </button>
-                </div>
-              ) : (
-                <div className="input-group-append">
-                  <button
-                    className="btn btn-danger"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      this.handleDelete(res.id);
-                    }}
-                  >
-                    <i className="fa fa-close"></i>
-                  </button>
-                </div>
-              )} */}
+              />            
             </div>
-
-            {/* <div className="form-group">
-              <label>ukuran</label>
-              <input
-                type="text"
-                name={`ukuran_${res.key}`}
-                className="form-control"
-              />
-            </div> */}
           </div>
         </div>
       );

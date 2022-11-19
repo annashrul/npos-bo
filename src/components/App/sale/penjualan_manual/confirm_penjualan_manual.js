@@ -153,7 +153,7 @@ class ConfirmPenjualanManual extends Component {
               >
                 <option value={0}>Tunai</option>
                 <option value={1}>Transfer</option>
-                {/* <option value={2}>Kredit</option> */}
+                <option value={2}>Kredit</option>
               </select>
             </div>
             <div className="form-group">
@@ -192,14 +192,20 @@ class ConfirmPenjualanManual extends Component {
                   <option value="">pilih bank</option>
                   {typeof this.props.bank.data === "object"
                     ? this.props.bank.data.map((v, i) => {
-                        return (
-                          <option key={i} value={`${v.nama}-${v.akun}`}>
-                            {v.nama} || {v.akun}
-                          </option>
-                        );
-                      })
+                      return (
+                        <option key={i} value={`${v.nama}-${v.akun}`}>
+                          {v.nama} || {v.akun}
+                        </option>
+                      );
+                    })
                     : ""}
                 </select>
+              </div>
+            )}
+
+            {tipe === "2" && (
+              <div className="form-group">
+                <label>Isi nominal sesuai jumlah!</label>
               </div>
             )}
 
@@ -225,7 +231,7 @@ class ConfirmPenjualanManual extends Component {
                   type="submit"
                   className="btn btn-primary"
                   onClick={this.handleSubmit}
-                  //   disabled={this.props.isLoadingSale}
+                //   disabled={this.props.isLoadingSale}
                 >
                   Bayar
                 </button>
