@@ -3057,6 +3057,7 @@ class FormProducts extends Component {
             : event.target.value,
       };
       this.setState({ barangSku });
+      console.log("udiiiii",barangSku)
     }
     if (event.target.name === "jenis") {
       if (event.target.value === "0") {
@@ -4166,6 +4167,7 @@ class FormProducts extends Component {
     }
     if (!this.handleEmptyOrUndefined("kd_brg", "kode barang")) return;
     if (!this.handleEmptyOrUndefined("nm_brg", "nama barang")) return;
+    // if (!this.handleEmptyOrUndefined("ukuran", "variasi")) return;
     // if (!this.handleEmptyOrUndefined("nama_singkat", "nama singkat")) return;
     // if (!this.handleEmptyOrUndefined("tag", "tag", false)) return;
     // if (!this.handleEmptyOrUndefined("rak", "rak", false)) return;
@@ -4349,6 +4351,7 @@ class FormProducts extends Component {
           if (status) this.clearState();
         })
       );
+      console.log("ukuranNewData",newDataUkuran)
     } else {
       this.props.dispatch(
         createProduct(parseData, (status) => {

@@ -23,7 +23,7 @@ class InventoryReport extends Component {
       bukaHarga: false,
       location: "",
       search_by_data: [
-        { value: "br.kd_brg", label: "Kode Barang" },
+        { value: "br.kd_brg", label: "SKU Induk" },
         { value: "br.nm_brg", label: "Nama Barang" },
         { value: "br.nama_kel", label: "Kelompok Barang" },
         { value: "br.variasi", label: "Variasi" },
@@ -107,7 +107,7 @@ class InventoryReport extends Component {
     head.push({ rowSpan: "2", label: "Supplier" });
     head.push({ rowSpan: "2", label: "Sub dept" });
 
-    let rowSpan = [{ label: "Kelompok" }, { label: "barcode" }, { label: "Nama" }, , { label: "Variasi" }];
+    let rowSpan = [{ label: "Kelompok" }, { label: "SKU Induk" }, { label: "Nama" }, , { label: "Variasi" }];
 
     bukaHarga && rowSpan.push({ label: "Beli" });
     bukaHarga && rowSpan.push({ label: "Jual" });

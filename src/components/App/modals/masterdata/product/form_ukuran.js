@@ -57,11 +57,13 @@ class FormUkuran extends Component {
 // }
 
   handleChange(e, i) {
-    let dataUkuran = this.state.dataUkuran;
+    let name = e.target.name;
+    if (name === "ukuran"){
+      let dataUkuran = this.state.dataUkuran;
     dataUkuran[i].nama = e.target.value;
-    setTimeout(() => {
-      this.setState({ dataUkuran }, () => this.handlePropp());
-    }, 300);
+    this.setState({ dataUkuran }, () => this.handlePropp());
+    }
+    
   }
   // handleAdd(e) {
   //   let dataUkuran = this.state.dataUkuran;
@@ -103,7 +105,7 @@ class FormUkuran extends Component {
                 className="form-control"
                 value={res.nama}
                 onChange={(e) => this.handleChange(e, i)}
-                name={`ukuran_${res.id}`}
+                name="ukuran"
               />            
             </div>
           </div>

@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import {
   FetchScanResiReport,
-  FetchReportDetailScanResi
+  FetchReportDetailScanResi,
+  deleteScanResi
 } from "redux/actions/sale/scan_resi_laporan.action";
 import connect from "react-redux/es/connect/connect";
 import { float, generateNo, getFetchWhere, getPeriode, noData, parseToRp, toDate } from "../../../../helper";
@@ -51,6 +52,11 @@ class ScanResiReport extends Component {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType(page));
+  }
+
+  handleDelete(obj) {
+    Object.assign(obj);
+    this.props.dispatch(deleteScanResi(obj));
   }
 
   handleModal(page, param) {
@@ -107,7 +113,7 @@ class ScanResiReport extends Component {
               ? data.length > 0
                 ? data.map((val, key) => {
                   let btnAction = [
-                    { label: "Detail" },
+                    { label: "#" },
                     { label: "Hapus" },
                   ];
                   return (
@@ -117,7 +123,7 @@ class ScanResiReport extends Component {
                         <ButtonActionCommon
                           action={btnAction}
                           callback={(e) => {
-                            if (e === 0) this.handleModal("detail", val);
+                            if (e === 0) this.handleModal("#", val);
                             if (e === 1) this.handleDelete(val);
                           }}
                         />

@@ -14,9 +14,9 @@ export const TOKEN = {
 
 export const HEADERS = {
   // URL: atob(document.getElementById("hellyeah").value),
- //  URL: "http://ptnetindo.com:6694/",
+  URL: "http://ptnetindo.com:6694/",
   // URL: "http://192.168.100.17:6692/",
-  URL: "http://localhost:6692/",
+ // URL: "http://localhost:6692/",
   TOKEN:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",

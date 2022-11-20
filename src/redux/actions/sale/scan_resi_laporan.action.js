@@ -57,11 +57,10 @@ export const FetchReportDetailScanResi = (kelBrg='',where="",isModal=true) => {
       });
   };
 };
-// export const deleteReportPo = (kdTrx) => {
-//   return (dispatch) => {
-//     handleDelete(`purchaseorder/${kdTrx}`, () => {
-//       dispatch(fetchPoReport("page=1"));
-//     });
-//     // handleDelete()
-//   };
-// };
+export const deleteScanResi = (res) => {
+  return (dispatch) => {
+    handleDelete(`scanresi/${res.no_resi}`, () => {
+      dispatch(FetchScanResiReport());
+    });
+  };
+};

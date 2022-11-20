@@ -863,7 +863,7 @@ class ListProduct extends Component {
                               { label: "Edit" },
                               { label: "Edit Harga" },
                               { label: "Delete" },
-                              { label: "Edit Variasi" },
+                              // { label: "Edit Variasi" },
                             ]}
                             callback={(e) => {
                               if (e === 0)
