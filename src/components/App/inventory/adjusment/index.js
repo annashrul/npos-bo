@@ -288,7 +288,7 @@ class TrxAdjustment extends Component {
       { colSpan: 2, label: "Stok", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
     ];
-    const rowSpan = [{ label: "Sistem" }, { label: "Saldo" }];
+    const rowSpan = [{ label: "Stock Awal" }, { label: "Real Stock" }];
 
     return (
       <TransaksiWrapper
