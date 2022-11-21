@@ -229,11 +229,11 @@ class Print3ply extends Component {
             <thead>
               <tr>
                 <th className="isi atas tengah borderTB borderLR" style={{ width: "3cm" }}>
-                  Pengirim
+                  Penerima,
                 </th>
                 <th className="isi tengah" style={{ width: "4cm" }}>-                </th>
                 <th className="isi atas tengah borderTB borderLR" style={{ width: "3cm" }}>
-                  Penerima,
+                  Pengirim,
                 </th>
               </tr>
               <tr>

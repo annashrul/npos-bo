@@ -43,7 +43,7 @@ class SaleArchiveSystem extends Component {
       type_data: [
         { value: "", label: "Semua" },
         { value: "0", label: "Tunai" },
-        { value: "1", label: "Non Tunai" },
+        { value: "1", label: "Transfer" },
         { value: "2", label: "Gabungan" },
         { value: "3", label: "Void" },
       ],
