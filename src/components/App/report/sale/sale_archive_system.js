@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+
 
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
@@ -264,134 +266,141 @@ class SaleArchiveSystem extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    totalOmsetPerHalaman += float(v.omset);
-                    totalProfitPerHalaman += float(v.profit);
-                    totalHppPerHalaman += float(v.hrg_beli);
-                    totalDiskonItemPerHalaman += float(v.diskon_item);
-                    totalDiskonPersenPerHalaman += float(v.dis_persen);
-                    totalDiskonRpPerHalaman += float(v.dis_rp);
-                    totalKasLainPerHalaman += float(v.kas_lain);
-                    totalGtPerHalaman += float(v.gt);
-                    totalBayarPerHalaman += float(v.bayar);
-                    totalJumlahKartuPerHalaman += float(v.jml_kartu);
-                    totalChargePerHalaman += float(v.charge);
-                    totalChangePerHalaman += float(
-                      String(v.jenis_trx).toLowerCase() === "non tunai"
-                        ? 0
-                        : v.change
-                    );
-                    totalRoundingPerHalaman += float(v.rounding);
-                    totalTunaiPerHalaman +=
-                      v.jenis_trx === "Non Tunai"
-                        ? 0
-                        : float(v.bayar) - float(v.change);
-                    let btnAction = [
-                      { label: "Detail" },
-                      { label: "Nota" },
-                      { label: "3ply" },
-                      { label: "Hapus" },
-                    ];
-                    if (
-                      atob(atob(Cookies.get("tnt="))) === "rb" ||
-                      atob(atob(Cookies.get("tnt="))) === "npos"
-                    ) {
-                      btnAction.push({ label: "Edit" });
-                    }
-                    return (
-                      <tr key={i}>
-                        <td className="middle nowrap text-center">
-                          {generateNo(i, current_page)}
-                        </td>
-                        <td className="middle nowrap text-center">
-                          {/* atob(atob(Cookies.get("tnt="))) !== "nov-jkt" */}
-                          <ButtonActionCommon
-                            action={btnAction}
-                            callback={(e) => {
-                              if (e === 0) this.handleModal("detail", v);
-                              if (e === 1)
-                                this.props.dispatch(FetchNotaReceipt(v.kd_trx));
-                              if (e === 2)
-                                this.props.history.push(
-                                  `${linkReportArsipPenjualan}/nota3ply/${v.kd_trx}`
-                                );
-                              if (e === 3) this.handleDelete(v.kd_trx);
-                              if (e === 4) this.handleEdit(v);
-                            }}
-                          />
-                        </td>
-                        <td className="middle nowrap">{v.kd_trx}</td>
-                        <td className="middle nowrap">{toDate(v.tgl)}</td>
-                        <td className="middle nowrap">
-                          {toDate(v.jam, "/", true)}
-                        </td>
-                        {/* <td className="middle nowrap">{v.lokasi}</td> */}
-                        <td className="middle nowrap">
-                          {CapitalizeEachWord(v.status)}
-                        </td>
-                        <td className="middle nowrap">{v.jenis_trx}</td>
-                        <td className="middle nowrap">{v.customer}</td>
-                        <td className="middle nowrap">{v.nama_penerima}</td>
-                        {/* <td className="middle nowrap">{v.alamat_penerima}</td> */}
-                        <td className="middle nowrap">{v.nama}</td>
-                        {/* <td className="middle nowrap">{v.sales}</td> */}
-                        <td className="middle nowrap">
-                          {v.jenis_trx === "Kredit" ? toDate(v.tempo) : "-"}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.gt)}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.diskon_item)}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.dis_rp)}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.dis_persen)}
-                        </td>
-                        {/* <td className="middle nowrap text-right">
+                  totalOmsetPerHalaman += float(v.omset);
+                  totalProfitPerHalaman += float(v.profit);
+                  totalHppPerHalaman += float(v.hrg_beli);
+                  totalDiskonItemPerHalaman += float(v.diskon_item);
+                  totalDiskonPersenPerHalaman += float(v.dis_persen);
+                  totalDiskonRpPerHalaman += float(v.dis_rp);
+                  totalKasLainPerHalaman += float(v.kas_lain);
+                  totalGtPerHalaman += float(v.gt);
+                  totalBayarPerHalaman += float(v.bayar);
+                  totalJumlahKartuPerHalaman += float(v.jml_kartu);
+                  totalChargePerHalaman += float(v.charge);
+                  totalChangePerHalaman += float(
+                    String(v.jenis_trx).toLowerCase() === "non tunai"
+                      ? 0
+                      : v.change
+                  );
+                  totalRoundingPerHalaman += float(v.rounding);
+                  totalTunaiPerHalaman +=
+                    v.jenis_trx === "Non Tunai"
+                      ? 0
+                      : float(v.bayar) - float(v.change);
+                  let btnAction = [
+                    { label: "Detail" },
+                    // { label: "Nota" },
+                    { label: "Print Nota" },
+                    { label: "Hapus" },
+                  ];
+                  if (
+                    atob(atob(Cookies.get("tnt="))) === "rb" ||
+                    atob(atob(Cookies.get("tnt="))) === "npos"
+                  ) {
+                    btnAction.push({ label: "Edit" });
+                  }
+                  return (
+                    <tr key={i}>
+                      <td className="middle nowrap text-center">
+                        {generateNo(i, current_page)}
+                      </td>
+                      <td className="middle nowrap text-center">
+                        {/* atob(atob(Cookies.get("tnt="))) !== "nov-jkt" */}
+                        {/* <Link to="">
+                          <button>Click Me!</button>
+                        </Link> */}
+                        <ButtonActionCommon
+                          action={btnAction}
+                          callback={(e) => {
+                            if (e === 0) this.handleModal("detail", v);
+                            // if (e === 1)
+                            //   this.props.dispatch(FetchNotaReceipt(v.kd_trx));
+                            if (e === 1)
+                            window.open(
+                              `${linkReportArsipPenjualan}/nota3ply/${v.kd_trx}`,
+                              "_blank"
+                              
+                            );
+
+                            if (e === 2) this.handleDelete(v.kd_trx);
+                            if (e === 3) this.handleEdit(v);
+                          }}
+                        />
+
+                      </td>
+                      <td className="middle nowrap">{v.kd_trx}</td>
+                      <td className="middle nowrap">{toDate(v.tgl)}</td>
+                      <td className="middle nowrap">
+                        {toDate(v.jam, "/", true)}
+                      </td>
+                      {/* <td className="middle nowrap">{v.lokasi}</td> */}
+                      <td className="middle nowrap">
+                        {CapitalizeEachWord(v.status)}
+                      </td>
+                      <td className="middle nowrap">{v.jenis_trx}</td>
+                      <td className="middle nowrap">{v.customer}</td>
+                      <td className="middle nowrap">{v.nama_penerima}</td>
+                      {/* <td className="middle nowrap">{v.alamat_penerima}</td> */}
+                      <td className="middle nowrap">{v.nama}</td>
+                      {/* <td className="middle nowrap">{v.sales}</td> */}
+                      <td className="middle nowrap">
+                        {v.jenis_trx === "Kredit" ? toDate(v.tempo) : "-"}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.gt)}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.diskon_item)}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.dis_rp)}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.dis_persen)}
+                      </td>
+                      {/* <td className="middle nowrap text-right">
                           {parseToRp(float(v.hrg_jual) * (float(v.tax) / 100))}
                         </td> */}
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.hrg_beli)}
-                        </td>
-                        {/* <td className="middle nowrap text-right">
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.hrg_beli)}
+                      </td>
+                      {/* <td className="middle nowrap text-right">
                           {parseToRp(v.hrg_jual)}
                         </td> */}
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.omset)}
-                        </td>
-                        {/* <td className="middle nowrap text-right">
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.omset)}
+                      </td>
+                      {/* <td className="middle nowrap text-right">
                           {parseToRp(v.kas_lain)}
                         </td> */}
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.profit)}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.bayar)}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(
-                            String(v.jenis_trx).toLowerCase() === "non tunai"
-                              ? 0
-                              : v.change
-                          )}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(
-                            float(v.bayar) -
-                              (String(v.jenis_trx).toLowerCase() === "non tunai"
-                                ? 0
-                                : float(v.change))
-                          )}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {parseToRp(v.jml_kartu)}
-                        </td>
-                        <td className="middle nowrap">{v.ket_kas_lain}</td>
-                      </tr>
-                    );
-                  })
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.profit)}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.bayar)}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(
+                          String(v.jenis_trx).toLowerCase() === "non tunai"
+                            ? 0
+                            : v.change
+                        )}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(
+                          float(v.bayar) -
+                          (String(v.jenis_trx).toLowerCase() === "non tunai"
+                            ? 0
+                            : float(v.change))
+                        )}
+                      </td>
+                      <td className="middle nowrap text-right">
+                        {parseToRp(v.jml_kartu)}
+                      </td>
+                      <td className="middle nowrap">{v.ket_kas_lain}</td>
+                    </tr>
+                  );
+                })
                 : noData(head.length + rowSpan.length)
               : noData(head.length + rowSpan.length)
           }

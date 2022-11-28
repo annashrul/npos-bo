@@ -53,13 +53,21 @@ class Print3ply extends Component {
               <div className="block-left">
                 <button
                   className="btn btn-blank"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    this.props.history.goBack();
+                  onClick={() => {
+                    window.location.href='http://morph-apparel.ptnetindo.com/'
                   }}
                 >
                   ← Back
                 </button>
+                {/* <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    this.props("feby");
+                  }}
+                >
+                  
+                  Home
+                </button> */}
               </div>
               <div className="block-right">
                 <button

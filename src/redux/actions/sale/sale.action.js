@@ -255,7 +255,9 @@ export const storeSale = (data, param) => {
               const win = window.open(
                 `${linkReportArsipPenjualan}/nota3ply/${datum.result.kode}`,
                 "_blank"
+                
               );
+              console.log("winnn",win)
               if (win != null) {
                 win.focus();
               }

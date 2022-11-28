@@ -59,7 +59,6 @@ import ProductionReport from "../report/inventory/production";
 import LogTrxReport from "../report/log/log_trx";
 import LogActReport from "../report/log/log_act";
 import Closing from "../report/closing";
-
 import SaleArchive from "../report/sale/sale_archive";
 import SaleByCustArchive from "../report/sale/sale_by_cust_archive";
 import SaleByProductArchive from "../report/sale/sale_by_product_archive";
