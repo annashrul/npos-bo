@@ -46,7 +46,6 @@ class Header extends Component {
   }
 
   handleToggleNotif = (e) => {
-    console.log("handleToggleNotif");
     e.preventDefault();
     e.isPropagationStopped();
     if (!this.state.isFirstShow) {

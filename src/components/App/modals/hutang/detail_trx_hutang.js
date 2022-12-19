@@ -73,7 +73,7 @@ class DetailTrxHutang extends Component {
         size="lg"
       >
         <ModalHeader toggle={this.toggle}>
-          Detail #{master.no_faktur_beli} sad
+          Detail #{master.no_faktur_beli}
         </ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
