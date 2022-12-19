@@ -67,6 +67,7 @@
     "rsuite": "^4.10.2",
     "sheetjs-style": "^0.15.6",
     "socket.io-client": "^1.7.4",
+    "stackblur-canvas": "^2.5.0",
     "sweetalert2": "^9.15.3",
     "swiper": "^7.3.1",
     "swr": "^0.5.6",
