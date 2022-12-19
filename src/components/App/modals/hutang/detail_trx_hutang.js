@@ -20,7 +20,8 @@ class DetailTrxHutang extends Component {
     this.toggle = this.toggle.bind(this);
   }
   handlePageChange(pageNumber) {
-    let master = this.props.master;
+    let master = this.props.receiveReportDetail.master;
+    console.log(master);
     this.props.dispatch(
       FetchReportDetail(master.no_faktur_beli, `page=${pageNumber}`, false)
     );
@@ -33,6 +34,7 @@ class DetailTrxHutang extends Component {
   render() {
     const { master, total, per_page, current_page, data } =
       this.props.receiveReportDetail;
+    console.log("first", master);
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { colSpan: 3, label: "Barang" },
@@ -71,10 +73,11 @@ class DetailTrxHutang extends Component {
         size="lg"
       >
         <ModalHeader toggle={this.toggle}>
-          Detail #{master.no_faktur_beli}
+          Detail #{master.no_faktur_beli} sad
         </ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
+            md="8"
             data={[
               { title: "No faktur beli", desc: master.no_faktur_beli },
               { title: "Penerima", desc: master.nama_penerima },
@@ -129,7 +132,7 @@ class DetailTrxHutang extends Component {
                           <td className="middle nowrap">{v.kode_barang}</td>
                           <td className="middle nowrap">{v.nm_brg}</td>
                           <td className="middle nowrap">{v.ukuran}</td>
-       
+
                           <td className="middle nowrap text-right">
                             {parseToRp(hrgJual)}
                           </td>

@@ -78,7 +78,7 @@ class ListProduct extends Component {
       detail: {},
       any_kode_barang: "",
       any_nama_barang: "",
-      any_ukuran: "",
+      any_variasi: "",
       any_nama_singkat: "",
       any_kelompok_barang: "",
       any_supplier_barang: "",
@@ -191,7 +191,7 @@ class ListProduct extends Component {
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
-    let ukuran = this.state.any_ukuran;
+    let ukuran = this.state.any_variasi;
     let nama_singkat = this.state.any_nama_singkat;
     let kelompok = this.state.any_kelompok_barang;
     let supplier = this.state.any_supplier_barang;
@@ -226,12 +226,12 @@ class ListProduct extends Component {
         where += `searchby=nm_brg&q=${btoa(nama)}`;
         localStorage.setItem(`${que}_nama_barang`, nama);
       }
-      if (column === "any_ukuran") {
+      if (column === "any_variasi") {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=ukuran&q=${btoa(nama)}`;
-        localStorage.setItem(`${que}_ukuran`, nama);
+        where += `searchby=ukuran&q=${btoa(ukuran)}`;
+        localStorage.setItem(`${que}_ukuran`, ukuran);
       }
       if (column === "any_nama_singkat") {
         if (where !== "") {
@@ -340,7 +340,7 @@ class ListProduct extends Component {
     let que = "any_master";
     let kode = this.state.any_kode_barang;
     let nama = this.state.any_nama_barang;
-    let ukuran = this.state.any_ukuran;
+    let ukuran = this.state.any_variasi;
     let nama_singkat = this.state.any_nama_singkat;
     let kelompok = this.state.any_kelompok_barang;
     let supplier = this.state.any_supplier_barang;
@@ -377,12 +377,12 @@ class ListProduct extends Component {
         where += `searchby=nm_brg&q=${btoa(nama)}`;
         localStorage.setItem(`${que}_nama_barang`, nama);
       }
-      if (column === "any_ukuran") {
+      if (column === "any_variasi") {
         if (where !== "") {
           where += "&";
         }
-        where += `searchby=ukuran&q=${btoa(nama)}`;
-        localStorage.setItem(`${que}_ukuran`, nama);
+        where += `searchby=ukuran&q=${btoa(ukuran)}`;
+        localStorage.setItem(`${que}_ukuran`, ukuran);
       }
       if (column === "any_nama_singkat") {
         if (where !== "") {
@@ -598,6 +598,7 @@ class ListProduct extends Component {
     const loc_delete = this.handleDelete;
     const loc_edit = this.handleEdit;
     const loc_edit_per = this.handleEdit;
+    // const loc_edit_ukuran = this.handleEdit;
     const { total, per_page, current_page, data } = this.props.data;
     const headers = [
       "No",
@@ -784,7 +785,7 @@ class ListProduct extends Component {
                   {this.handleInput("any_nama_barang")}
                 </th>
                 <th className="middle">
-                  {this.handleInput("any_ukuran")}
+                  {this.handleInput("any_variasi")}
                 </th>
                 <th className="middle">
                   {this.handleInput("any_nama_singkat")}
@@ -860,8 +861,9 @@ class ListProduct extends Component {
                               { label: "Set Harga Customer" },
                               { label: "Detail" },
                               { label: "Edit" },
-                              { label: "Edit Harga per Lokasi" },
+                              { label: "Edit Harga" },
                               { label: "Delete" },
+                              // { label: "Edit Variasi" },
                             ]}
                             callback={(e) => {
                               if (e === 0)
@@ -870,6 +872,7 @@ class ListProduct extends Component {
                               if (e === 2) loc_edit(v.kd_brg);
                               if (e === 3) loc_edit_per(v.kd_brg, true);
                               if (e === 4) loc_delete(v.kd_brg);
+                              // if (e === 5) loc_edit_ukuran(v.kd_brg);
                             }}
                           />
                         </td>

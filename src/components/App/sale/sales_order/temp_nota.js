@@ -9,6 +9,7 @@ import ReactPDF, {
   PDFDownloadLink,
 } from "@react-pdf/renderer";
 import { parseToRp, toRp } from "../../../../helper";
+import moment from "moment";
 // Create styles
 const borderColor = "black";
 
@@ -55,55 +56,64 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: "row",
-    borderBottom: "1px solid black",
+    border: "1px solid black",
     // backgroundColor: "grey",
     alignItems: "center",
-    paddingTop: 5,
-    paddingBottom: 5,
+    // paddingTop: 5,
+    // paddingBottom: 5,
     // height: 24,
     // textAlign: "left",
     fontStyle: "bold",
     flexGrow: 1,
+
+    // flexDirection: "row",
+    // borderBottom: "1px solid black",
+
+    // alignItems: "center",
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    // fontStyle: "bold",
+    // flexGrow: 1,
   },
   no: {
     textAlign: "center",
     width: "5%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     color: "black",
   },
   sku: {
     width: "15%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   nama: {
     width: "20%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   motif: {
     width: "10%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   qty: {
     width: "10%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
   harga: {
     width: "20%",
-    // borderRightColor: borderColor,
-    // borderRightWidth: 1,
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     textAlign: "center",
     color: "black",
   },
@@ -121,41 +131,57 @@ const styles = StyleSheet.create({
   rowNo: {
     width: "5%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowSKU: {
     width: "15%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowNama: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowUkuran: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowMotif: {
     width: "10%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowQty: {
     width: "10%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowHarga: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
   rowJumlah: {
     width: "20%",
     textAlign: "center",
+    borderRightColor: borderColor,
+    borderRightWidth: 1,
     borderBottom: "1px solid black",
   },
 
@@ -230,7 +256,7 @@ class TempNota extends Component {
               }}
             >
               <Text style={{ backgroundColor: "white", padding: 5 }}>
-                Tanggal: {master.created_at}
+                Tanggal: {moment(master.created_at).format("YYYY-MM-DD")}
               </Text>
             </View>
             <View
@@ -243,7 +269,7 @@ class TempNota extends Component {
                 justifyContent: "space-between",
               }}
             >
-              <View style={{ width: "30%" }}>
+              <View style={{ width: "40%" }}>
                 <Text
                   style={{
                     textAlign: "left",
@@ -285,8 +311,8 @@ class TempNota extends Component {
               <Text style={styles.no}>NO</Text>
               <Text style={styles.sku}>SKU</Text>
               <Text style={styles.nama}>NAMA</Text>
-              <Text style={styles.ukuran}>Variasi</Text>
-              <Text style={styles.motif}>STOK</Text>
+              {/* <Text style={styles.ukuran}>Variasi</Text> */}
+              <Text style={styles.motif}>VARIAN</Text>
               <Text style={styles.qty}>QTY</Text>
               <Text style={styles.harga}>HARGA</Text>
               <Text style={styles.jumlah}>JUMLAH</Text>
@@ -299,8 +325,8 @@ class TempNota extends Component {
                   <Text style={styles.rowNo}>{i + 1}</Text>
                   <Text style={styles.rowSKU}>{res.barcode}</Text>
                   <Text style={styles.rowNama}>{res.nm_brg}</Text>
-                  <Text style={styles.rowUkuran}>{res.ukuran}</Text>
-                  <Text style={styles.rowMotif}>{res.stock}</Text>
+                  <Text style={styles.rowMotif}>{res.ukuran}</Text>
+                  {/* <Text style={styles.rowMotif}>{res.stock}</Text> */}
                   <Text style={styles.rowQty}>{res.qty}</Text>
                   <Text style={styles.rowHarga}>
                     {parseToRp(res.harga_jual)}
@@ -314,34 +340,33 @@ class TempNota extends Component {
           </View>
           <View
             style={{
-              backgroundColor: "grey",
-              borderBottom: "1px solid grey",
-              borderLeft: "1px solid grey",
-              borderRight: "1px solid grey",
+              // backgroundColor: "grey",
+              borderBottom: "1px solid black",
+              borderLeft: "1px solid black",
+              borderRight: "1px solid black",
               width: "100%",
               //   marginBottom: "10px",
               flexDirection: "row",
               flexWrap: "wrap",
-              color: "white",
+              color: "black",
             }}
           >
             <Text
               style={{
-                paddingTop: 5,
                 width: "50%",
                 textAlign: "center",
-                color: "white",
+                color: "black",
+                borderRight: "1px solid black",
               }}
             >
               JUMLAH
             </Text>
             <Text
               style={{
-                paddingTop: 5,
                 width: "10%",
                 textAlign: "center",
-
-                color: "white",
+                borderRight: "1px solid black",
+                color: "black",
               }}
             >
               {parseToRp(totalQty)}
@@ -353,10 +378,9 @@ class TempNota extends Component {
             ></Text>
             <Text
               style={{
-                paddingTop: 5,
                 width: "20%",
                 textAlign: "center",
-                color: "white",
+                color: "black",
               }}
             >
               {parseToRp(totalTrx)}

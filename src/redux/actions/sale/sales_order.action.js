@@ -107,3 +107,11 @@ export const putApprovalSalesOrderAction = (data) => {
     });
   };
 };
+
+export const deleteSalesOrderAction = (res) => {
+  return (dispatch) => {
+    handleDelete(`so/${res.kd_so}`, () => {
+      dispatch(getApprovalSoAction());
+    });
+  };
+};

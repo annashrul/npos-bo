@@ -34,6 +34,13 @@ class Login extends Component {
     // const subdomains = btoa("miski");
     // const subdomains = btoa("npos");
     // const subdomains = btoa("morph-apparel");
+    //let host = window.location.host;
+    // let parts = host.split(".");
+    // const subdomains = btoa(parts[0]);
+    // const subdomains = btoa(document.getElementById("coolyeah").value);
+    // const subdomains = btoa("miski");
+    //  const subdomains = btoa("npos");
+    const subdomains = btoa("morph-apparel");
     // const subdomains = btoa("npos");
     // const subdomains = btoa("cff");
     // const subdomains = btoa("rb");

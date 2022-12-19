@@ -159,7 +159,7 @@ class Adjust3ply extends Component {
                             {item.nm_brg}
                           </td>
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
-                            {item.variasi}
+                            {item.ukuran}
                           </td>
                           <td style={{ border: "solid", borderWidth: "thin", paddingLeft: "5pt" }} className="text-left">
                             {item.barcode}

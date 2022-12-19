@@ -35,6 +35,7 @@ class SaleArchiveManual extends Component {
         { value: "", label: "Semua" },
         { value: "0", label: "Tunai" },
         { value: "1", label: "Transfer" },
+        { value: "2", label: "Kredit" },
       ],
       isModalDetail: false,
       isModalOtorisasi: false,
@@ -252,7 +253,7 @@ class SaleArchiveManual extends Component {
                         <td className="middle nowrap">{alamatPengirim}</td>
 
                         <td className="middle nowrap">
-                          {v.tipe === 0 ? "Tunai" : "Transfer"}
+                          {v.tipe == 0 ? "Tunai" : "Transfer"}
                         </td>
                         <td className="middle nowrap">{v.bank}</td>
                         <td className="middle nowrap">{v.catatan}</td>

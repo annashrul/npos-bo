@@ -57,90 +57,10 @@ export const FetchReportDetailScanResi = (kelBrg='',where="",isModal=true) => {
       });
   };
 };
-
-export const FetchScanResiExport = (data, param) => {
+export const deleteScanResi = (res) => {
   return (dispatch) => {
-    // dispatch(setLoading(true));
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Please Wait.",
-      html: "Sending request..",
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      onClose: () => {},
+    handleDelete(`scanresi/${res.no_resi}`, () => {
+      dispatch(FetchScanResiReport());
     });
-    let rawdata = data;
-    const url = HEADERS.URL + `scanresi`;
-    axios
-      .post(url, data.detail)
-      .then(function (response) {
-        Swal.close();
-        const data = response.data;
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "Transaksi berhasil.",
-          type: "info",
-          html:
-            `Disimpan dengan nota: ${data.result.insertId}` +
-            "<br><br>" +
-            '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
-            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
-          showCancelButton: true,
-          showConfirmButton: false,
-          cancelButtonText: "Selesai",
-        }).then((result) => {
-          destroy("purchase_order");
-          localStorage.removeItem("sp");
-          localStorage.removeItem("lk");
-          if (result.dismiss === "cancel") {
-            param({
-              pathname: "/purchase_order",
-            });
-            // this.props.history.push({ pathname: "/purchase_order" });
-            // window.location.reload(false);
-          }
-        });
-        document.getElementById("btnNotaPdf").addEventListener("click", () => {
-          const win = window.open(data.result.nota, "_blank");
-          if (win != null) {
-            win.focus();
-          }
-        });
-        document.getElementById("btnNota3ply").addEventListener("click", () => {
-          param({
-            pathname: "/po3ply",
-            state: {
-              data: rawdata,
-              nota: data.result.kode,
-            },
-          });
-          Swal.closeModal();
-          return false;
-        });
-        // dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        Swal.close();
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "Failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
   };
 };
-
-// export const deleteReportPo = (kdTrx) => {
-//   return (dispatch) => {
-//     handleDelete(`purchaseorder/${kdTrx}`, () => {
-//       dispatch(fetchPoReport("page=1"));
-//     });
-//     // handleDelete()
-//   };
-// };

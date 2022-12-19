@@ -48,6 +48,7 @@ class ListPriceProduct extends Component {
             { width: "1%", rowSpan: "2", label: "Kode"},
             { width: "1%", rowSpan: "2", label: "Barcode"},
             { rowSpan: "2", label: "Nama"},
+            { width: "1%", rowSpan: "2", label: "Variasi"},
             { width: "1%", rowSpan: "2", label: "Lokasi"},
             { width: "1%", rowSpan: "2", label: "Harga beli"},
         ];
@@ -56,6 +57,7 @@ class ListPriceProduct extends Component {
             { label: "kd_brg" },
             { label: "barcode" },
             { label: "nm_brg" },
+            { label: "ukuran" },
             { label: "nama_toko" },
             { label: "harga_beli", className: "text-right", isCurrency: true },
         ];
@@ -83,6 +85,9 @@ class ListPriceProduct extends Component {
         result.push( { label: "service", className: "text-right", isCurrency: true })
         return (
             <div>
+                <label>
+                    Cari berdasarkan Variasi :
+                </label>
                 <HeaderGeneralCommon
                     callbackGet={(res) => {
                         this.setState({ any: res });

@@ -87,13 +87,15 @@ class DetailApprovalSalesOrder extends Component {
     console.log("data detail", this.state.dataDetail);
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
-      { colSpan: 3, label: "Barang" },
+      { colSpan: 4, label: "Barang" },
       { rowSpan: 2, label: "Qty", width: "1%" },
     ];
     const rowSpan = [
       { label: "Kode", width: "1%" },
-      { label: "Barcode", width: "1%" },
-      { label: "Nama" },
+      { label: "Nama", width: "1%" },
+      { label: "Variasi" },
+      { label: "Satuan" },
+
     ];
 
     let totalQtyPerHalaman = 0;
@@ -146,8 +148,9 @@ class DetailApprovalSalesOrder extends Component {
                       <tr key={i}>
                         <td className="middle nowrap text-center">{i + 1}</td>
                         <td className="middle nowrap">{v.kd_brg}</td>
-                        <td className="middle nowrap">{v.barcode}</td>
                         <td className="middle nowrap">{v.nm_brg}</td>
+                        <td className="middle nowrap">{v.ukuran}</td>
+                        <td className="middle nowrap">{v.satuan}</td>
                         <td className="middle nowrap text-right">
                           <input
                             style={{ width: "100px", textAlign: "right" }}
@@ -171,7 +174,7 @@ class DetailApprovalSalesOrder extends Component {
               {
                 data: [
                   {
-                    colSpan: 4,
+                    colSpan: 5,
                     label: "Total",
                     className: "text-left",
                   },

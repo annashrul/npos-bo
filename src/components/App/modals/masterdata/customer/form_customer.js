@@ -22,23 +22,23 @@ class FormCustomer extends Component {
       nama: "",
       alamat: "-",
       status: "",
-      tgl_ultah: "",
+      tgl_ultah: moment(new Date()).format("yyyy-MM-DD"),
       tlp: "",
-      cust_type: "",
-      cust_type_data: [],
-      password: "",
+      cust_type: "CT00003",
+      cust_type_data: ["LK/0001"],
+      password: "1",
       register: "",
       foto: "-",
-      jenis_kelamin: "",
+      jenis_kelamin: "1",
       jenis_kelamin_data: [
         { value: "1", label: "Laki-laki" },
         { value: "0", label: "Perempuan" },
       ],
-      email: "",
+      email: "morph@gmail.com",
       biografi: "-",
-      special_price: "",
-      discount: "",
-      location: "",
+      special_price: "1",
+      discount: "0",
+      location: "LK/0001",
     };
   }
 
@@ -184,7 +184,7 @@ class FormCustomer extends Component {
                   <input ref={(input) => (this[`nama`] = input)} type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
                 </div>
                 <LokasiCommon ref={(input) => (this[`lokasi`] = input)} callback={(res) => this.setState({ location: res.value })} isRequired={true} dataEdit={this.state.location} />
-                <SelectCommon
+                {/* <SelectCommon
                   ref={(input) => (this[`cust_type`] = input)}
                   label="Tipe Customer"
                   options={this.state.cust_type_data}
@@ -200,7 +200,7 @@ class FormCustomer extends Component {
                   callback={(res) => this.setState({ jenis_kelamin: res.value })}
                   dataEdit={this.state.jenis_kelamin}
                   isRequired={true}
-                />
+                /> */}
               </div>
 
               <div className="col-md-4">
@@ -211,12 +211,16 @@ class FormCustomer extends Component {
                   <input type="number" className="form-control" name="tlp" value={this.state.tlp} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
+                  <label>Keterangan</label>
+                  <input type="text" className="form-control" name="biografi" value={this.state.biografi} onChange={this.handleChange} />
+                </div>
+                {/* <div className="form-group">
                   <label>
                     Email <span className="text-danger">*</span>
                   </label>
                   <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} />
-                </div>
-                <div className="form-group">
+                </div> */}
+                {/* <div className="form-group">
                   <label>Password {this.props.detail.id !== "" ? <small>(kosongkan jika tidak diubah)</small> : <span className="text-danger">*</span>}</label>
                   <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                 </div>
@@ -234,7 +238,7 @@ class FormCustomer extends Component {
                     pattern="\d{2}\/\d{2}/\d{4}"
                     onChange={this.handleChange}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="col-md-4">
                 <IsActiveCommon callback={(res) => this.setState({ status: res.value })} isRequired={true} dataEdit={this.state.status} />
@@ -244,15 +248,12 @@ class FormCustomer extends Component {
                   </label>
                   <input type="text" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} />
                 </div>
-                <div className="form-group">
-                  <label>Keterangan</label>
-                  <input type="text" className="form-control" name="biografi" value={this.state.biografi} onChange={this.handleChange} />
-                </div>
-                <div className="form-group">
+                
+                {/* <div className="form-group">
                   <label>Foto {this.props.detail.id !== "" && <small>(kosongkan jika tidak diubah)</small>}</label>
                   <br />
                   <FileBase64 multiple={false} className="form-control " onDone={this.getFiles.bind(this)} />
-                </div>
+                </div> */}
               </div>
             </div>
           </ModalBody>

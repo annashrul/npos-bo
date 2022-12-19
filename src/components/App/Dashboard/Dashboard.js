@@ -349,6 +349,7 @@ class Dashboard extends Component {
           lk.push({
             value: i.kode,
             label: i.nama,
+            label: i.ukuran,
           });
           return null;
         });
@@ -670,7 +671,8 @@ class Dashboard extends Component {
                             <img src="img/filemanager-img/1.png" alt=""></img>
                           </div>
                           <div className="user-text-table">
-                            <h6 className="d-inline-block font-15 mb-0">{i.nm_brg}</h6>
+                            <h6 className="d-inline-block font-15 mb-0">{i.nm_brg}</h6><label>--</label>
+                            <h6 className="d-inline-block font-15 mb-0">{i.ukuran}</h6>
                             <p className="mb-0">Stock {i.stock}</p>
                           </div>
                         </div>

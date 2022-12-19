@@ -443,20 +443,7 @@ class CreateSO extends Component {
             created_at: createdAt,
           };
           let newMaster = data["master"];
-          // this.setState(
-          //   {
-          //     detail: databrg,
-          //     master: Object.assign(newMaster, {
-          //       namaLokasi: this.state.namaLokasi,
-          //       namaCustomer: this.state.namaCustomer,
-          //     }),
-          //     isNota: true,
-          //   },
-          //   () => {
-          //     this.props.dispatch(ModalToggle(true));
-          //     this.props.dispatch(ModalType("downloadNotaPdfSo"));
-          //   }
-          // );
+          console.log("newMaster", newMaster);
 
           this.props.dispatch(
             postSalesOrderAction(data, (newRes) => {

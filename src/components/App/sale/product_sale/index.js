@@ -301,7 +301,7 @@ class Sale extends Component {
   getProps(props) {
     let state = {};
     if (props.dataSo !== undefined && props.dataSo.length > 0) {
-      let newSo = handleDataSelect(props.dataSo, "kd_so","kd_cust","kd_so");
+      let newSo = handleDataSelect(props.dataSo, "kd_so","kd_so");
       Object.assign(state, { so_data: newSo });
     }
     if (props.barang.length > 0) this.getData();

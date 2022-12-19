@@ -107,7 +107,7 @@ class DetailStockReportSatuan extends Component {
             <HeaderDetailCommon
               md="col-md-12"
               data={[
-                { title: "Kode barang", desc: this.props.detail.kd_brg },
+                { title: "SKU Induk", desc: this.props.detail.kd_brg },
                 { title: "Barcode", desc: this.props.detail.barcode },
                 { title: "Nama barang", desc: this.props.detail.nm_brg },
                 // { title: "Ukuran", desc: this.props.detail.ukuran },
