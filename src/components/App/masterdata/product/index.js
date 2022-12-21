@@ -6,6 +6,7 @@ import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_
 import ListGroupProduct from "./src/master_group_product/list";
 import ListPriceProduct from "./src/master_price_product/list";
 import ListProduct from "./src/master_product/list";
+import ListVariasiProduct from "./src/master_variasi/list";
 import { Link } from "react-router-dom";
 import { getStorage } from "../../../../helper";
 import TabCommon from "../../common/TabCommon";
@@ -32,7 +33,11 @@ class Product extends Component {
 
   handleService() {
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
-    if (getIsPeriodeBarang === null || getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
+    if (
+      getIsPeriodeBarang === null ||
+      getIsPeriodeBarang === "null" ||
+      getIsPeriodeBarang === "true"
+    ) {
       this.props.dispatch(FetchProduct());
     }
   }
@@ -52,8 +57,21 @@ class Product extends Component {
     return (
       <TabCommon
         path="barang"
-        tabHead={["Barang", "Harga barang", "Kelompok barang"]}
-        tabBody={[<ListProduct data={this.props.product} group={this.props.groupProduct} />, <ListPriceProduct data={this.props.priceProduct} />, <ListGroupProduct data={this.props.groupProduct} />]}
+        tabHead={[
+          "Barang",
+          "Harga barang",
+          "Kelompok barang",
+          "Variasi barang",
+        ]}
+        tabBody={[
+          <ListProduct
+            data={this.props.product}
+            group={this.props.groupProduct}
+          />,
+          <ListPriceProduct data={this.props.priceProduct} />,
+          <ListGroupProduct data={this.props.groupProduct} />,
+          <ListVariasiProduct data={this.props.groupProduct} />,
+        ]}
         otherWidget={
           <div className={`${!this.state.isShow && "none"}`}>
             <Link to="/upload" className="btn btn-outline-info">
