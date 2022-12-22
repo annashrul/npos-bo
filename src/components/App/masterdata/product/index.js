@@ -57,12 +57,7 @@ class Product extends Component {
     return (
       <TabCommon
         path="barang"
-        tabHead={[
-          "Barang",
-          "Harga barang",
-          "Kelompok barang",
-          "Variasi barang",
-        ]}
+        tabHead={["Barang", "Harga barang", "Kelompok barang"]}
         tabBody={[
           <ListProduct
             data={this.props.product}
@@ -70,7 +65,6 @@ class Product extends Component {
           />,
           <ListPriceProduct data={this.props.priceProduct} />,
           <ListGroupProduct data={this.props.groupProduct} />,
-          <ListVariasiProduct data={this.props.groupProduct} />,
         ]}
         otherWidget={
           <div className={`${!this.state.isShow && "none"}`}>

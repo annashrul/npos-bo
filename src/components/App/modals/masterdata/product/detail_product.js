@@ -36,13 +36,19 @@ class DetailProduct extends Component {
       head.push({ colSpan: setHarga, label: "Margin" });
       for (let i = 0; i < setHarga; i++) {
         rowSpans.push({
-          label: this.props.auth.user.nama_harga[i][`harga${i + 1}`],
+          label:
+            this.props.auth.user.nama_harga[i] === undefined
+              ? this.props.auth.user.nama_harga[`harga${i + 1}`]
+              : this.props.auth.user.nama_harga[i][`harga${i + 1}`],
         });
       }
 
       for (let i = 0; i < setHarga; i++) {
         rowSpans.push({
-          label: this.props.auth.user.nama_harga[i][`harga${i + 1}`],
+          label:
+            this.props.auth.user.nama_harga[i] === undefined
+              ? this.props.auth.user.nama_harga[`harga${i + 1}`]
+              : this.props.auth.user.nama_harga[i][`harga${i + 1}`],
         });
       }
     } else {
@@ -74,12 +80,11 @@ class DetailProduct extends Component {
               // { title: "dept", desc: master.dept },
               { title: "Kelompok", desc: master.kel_brg },
 
-              { title: "Variasi/Motif", desc: master.ukuran },              // { title: "Sub dept", desc: master.subdept },
+              { title: "Variasi/Motif", desc: master.ukuran }, // { title: "Sub dept", desc: master.subdept },
               // {
               //   title: "Variasi/Motif",
               //   desc: this.props.dataDetail ? this.props.dataDetail.ukuran : "",
               // },
-              
             ]}
           />
           <TableCommon

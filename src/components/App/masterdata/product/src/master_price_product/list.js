@@ -41,7 +41,7 @@ class ListPriceProduct extends Component {
   render() {
     const { total, per_page, current_page, data } = this.props.data;
     let setHarga = this.props.auth.user.set_harga;
-
+    console.log("nama", this.props.auth.user.nama_harga);
     const head = [
       { width: "1%", rowSpan: "2", label: "No", className: "text-center" },
       { width: "1%", rowSpan: "2", label: "#", className: "text-center" },
@@ -61,14 +61,16 @@ class ListPriceProduct extends Component {
       { label: "nama_toko" },
       { label: "harga_beli", className: "text-right", isCurrency: true },
     ];
-    head.push({ colSpan: setHarga, label: "Harga jual" });
+    head.push({ colSpan: setHarga, label: "Harga jual", width: "1%" });
     if (typeof this.props.auth.user.nama_harga === "object") {
       let x = 2;
       for (let i = 0; i < setHarga; i++) {
         colSpan.push({
-          label: this.props.auth.user
-            ? this.props.auth.user.nama_harga[i][`harga${i + 1}`]
-            : "",
+          with: "1%",
+          label:
+            this.props.auth.user.nama_harga[i] === undefined
+              ? this.props.auth.user.nama_harga[`harga${i + 1}`]
+              : this.props.auth.user.nama_harga[i][`harga${i + 1}`],
         });
         if (i === 0) {
           result.push({
@@ -86,8 +88,6 @@ class ListPriceProduct extends Component {
         }
       }
     }
-
-    console.log(result);
 
     head.push({ width: "1%", rowSpan: "2", label: "Ppn (%)" });
     head.push({ width: "1%", rowSpan: "2", label: "Servis (%)" });
