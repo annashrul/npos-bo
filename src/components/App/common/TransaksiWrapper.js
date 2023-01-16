@@ -57,7 +57,10 @@ class TransaksiWrapper extends Component {
 
   HandleCommonInputChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-    this.props.callbackInput({ name: e.target.name, value: e.target.value });
+    this.props.callbackInput({
+      name: e.target.name,
+      value: e.target.value,
+    });
   }
   handleClickToggle(e) {
     e.preventDefault();
@@ -76,7 +79,10 @@ class TransaksiWrapper extends Component {
       });
     } else {
       res.preventDefault();
-      this.props.callbackFetch({ label: state, value: this.state.search });
+      this.props.callbackFetch({
+        label: state,
+        value: this.state.search.toLowerCase(),
+      });
     }
   }
   handleScroll() {

@@ -1545,7 +1545,7 @@ class Receive extends Component {
                                 <option value={1}>Kode Barang</option>
                                 <option value={2}>Variasi</option>
                               </select>
-                            </div> 
+                            </div>
                           </div>
                         </div>
                         <div className="col-md-12">
@@ -2048,9 +2048,7 @@ class Receive extends Component {
                                 {item.nm_brg} <br />
                                 {item.kd_brg}
                               </td>
-                              <td className="middle nowrap">
-                                {item.ukuran}
-                              </td>
+                              <td className="middle nowrap">{item.ukuran}</td>
                               <td className="middle nowrap">
                                 <select
                                   disabled={item.tambahan.length <= 1}

@@ -57,6 +57,7 @@ class Login extends Component {
       this.props.history.push("/");
     }
     this.initFetch(false);
+    console.log("#########", this.getSubdomain());
   }
 
   initFetch(check) {

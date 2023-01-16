@@ -302,7 +302,10 @@ class TrxAdjustment extends Component {
             this.handleFetch((this.props.dataTrx.data.length += 5));
           } else {
             if (res.label === "search") {
-              this.handleFetch(10, { searchby: searchby, search: res.value });
+              this.handleFetch(10, {
+                searchby: searchby,
+                search: btoa(res.value),
+              });
             } else {
               this.setState({ searchby: res.value });
             }
@@ -343,9 +346,7 @@ class TrxAdjustment extends Component {
                                   {toCurrency(parseInt(item.harga_beli, 10))} )
                                 </div>
                               </td>
-                              <td className="middle nowrap">
-                                {item.ukuran}
-                              </td>
+                              <td className="middle nowrap">{item.ukuran}</td>
                               <td className="middle nowrap">
                                 <select
                                   value={item.satuan}
