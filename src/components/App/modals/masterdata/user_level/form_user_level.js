@@ -6,7 +6,7 @@ import { createUserLevel, updateUserLevel } from "redux/actions/masterdata/user_
 import { ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 
 import { ModalToggle } from "redux/actions/modal.action";
-import { isEmptyOrUndefined, setFocus } from "../../../../../helper";
+import { isEmptyOrUndefined, setFocus,CapitalizeEachWord } from "../../../../../helper";
 import { menuCetakBarcode, menuInventory, menuMasterdata, menuPembayaran, menuPembelian, menuProduksi, menuReport, menuSetting, menuTransaksi } from "../../../../../helperMenu";
 
 class FormUserLevel extends Component {
@@ -28,6 +28,8 @@ class FormUserLevel extends Component {
       lvl: "",
       access: [],
       array_modul: ["setting", "masterdata", "produksi", "inventory", "pembelian", "transaksi", "pembayaran", "report", "cetak_barcode"],
+      array_access_npos:[{"id":1,"value":"1","isChecked":false,"label":"void"},{"id":2,"value":"2","isChecked":false,"label":"diskon"},{"id":3,"value":"3","isChecked":false,"label":"openprice"},{"id":4,"value":"4","isChecked":false,"label":"harga"},{"id":5,"value":"5","isChecked":false,"label":"pengaturan"},{"id":6,"value":"6","isChecked":false,"label":"laporan_kasir"},{"id":7,"value":"7","isChecked":false,"label":"laporan"},{"id":8,"value":"8","isChecked":false,"label":"print_bill"},{"id":9,"value":"9","isChecked":false,"label":"hold"},{"id":10,"value":"10","isChecked":false,"label":"recall"}],
+      
       error: {
         lvl: "",
       },
@@ -59,7 +61,7 @@ class FormUserLevel extends Component {
         return val;
       });
       this.handleLoopAccess(array, param.detail.access);
-      this.setState({ lvl: param.detail.lvl });
+      this.setState({ lvl: param.detail.lvl,array_access_npos:param.detail.access_npos===null?this.state.array_access_npos:param.detail.access_npos });
     } else {
       this.clearState();
     }
@@ -121,6 +123,8 @@ class FormUserLevel extends Component {
     let err = this.state.error;
     parseData["lvl"] = this.state.lvl;
     parseData["access"] = akses;
+    parseData["access_npos"] = this.state.array_access_npos;
+   
     if (!isEmptyOrUndefined(parseData["lvl"], "Nama Level pengguna")) {
       setFocus(this, "lvl");
       return;
@@ -150,8 +154,16 @@ class FormUserLevel extends Component {
       );
     }
   }
+
+
+  handleCheckedAccessNpos(e,val){
+    const {array_access_npos} = this.state
+    array_access_npos[val].isChecked = e.target.checked
+    this.setState({array_access_npos})
+  }
+
   render() {
-    const { array_modul } = this.state;
+    const { array_modul,array_access_npos } = this.state;
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserLevel"} size="lg">
         <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah" : "Ubah"} level pengguna</ModalHeader>
@@ -184,7 +196,18 @@ class FormUserLevel extends Component {
                         );
                       })}
                     </div>
-                    {val !== "cetak_barcode" && <hr />}
+                    <hr />
+                  </div>
+                );
+              })}
+              <div className="col-12"><b style={{ color: "red" }}>AKSES KASIR</b></div>
+              {array_access_npos.map((val, i) => {
+                return (
+                  <div className="col-3" key={i}>
+                    <div className="form-group">
+                      <input type="checkbox" onChange={(e) => this.handleCheckedAccessNpos(e, i)} checked={val.isChecked} value={val.id} /> <b style={{ fontSize: "12px" }}>{CapitalizeEachWord(val.label.replace("_", " "))}</b>
+                    </div>
+                    <hr />
                   </div>
                 );
               })}

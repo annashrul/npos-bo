@@ -655,7 +655,7 @@ class Sale extends Component {
             atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
             atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
             atob(atob(Cookies.get("tnt="))) === "npos" ||
-            atob(atob(Cookies.get("tnt="))) === "miski"
+            atob(atob(Cookies.get("tnt="))) === "miski" 
               ? "Z"
               : "Q",
           jns_kartu: "Debit",

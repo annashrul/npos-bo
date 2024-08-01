@@ -36,7 +36,6 @@ import {
     DropdownToggle,
 } from "reactstrap";
 import FormProductExport from "../../../../modals/masterdata/product/form_product_export";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import FormProductPricings from "../../../../modals/masterdata/product/form_product_pricing_";
@@ -620,28 +619,7 @@ class ListProduct extends Component {
                     >
                       <i className="fa fa-plus"></i>
                     </button>
-                    <PDFDownloadLink
-                        document={
-                          <MyPdfL
-                              title={[
-                                  "Data Barang per Halaman",
-                                  `${this.state.startDate} sampai ${this.state.endDate}`,
-                              ]}
-                              result={body}
-                          />
-                        }
-                        style={{ marginRight: "2px" }}
-                        fileName="semua_barang.pdf"
-                        className="btn btn-primary py-2 d-none"
-                    >
-                        {({ blob, url, loading, error }) =>
-                            loading ? (
-                                <i className="spinner-border spinner-border-sm"></i>
-                            ) : (
-                                <i className="fa fa-file-pdf-o"></i>
-                            )
-                        }
-                    </PDFDownloadLink>
+                    
                       {/* <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
                 type="button"

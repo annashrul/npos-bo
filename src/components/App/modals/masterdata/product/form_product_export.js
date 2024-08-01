@@ -14,7 +14,6 @@ import Spinner from "../../../../../Spinner";
 // import MyProgressbar from '../../../../../myProgressbar';
 import { RESET_PROPS_ARR } from "../../../../../redux/actions/_constants";
 import MyPdfL from "../../../../../myPdfL";
-import { pdf } from "@react-pdf/renderer";
 import LokasiCommon from "../../../common/LokasiCommon";
 
 // kategori 1 = Dijual, kategori 0 = TIdak Dijual
@@ -329,14 +328,14 @@ class FormProductExport extends Component {
     if (this.props.resBarangAll.length > 0) {
       let body = header.concat(raw);
 
-      const blob = pdf(<MyPdfL title={["Data Barang per Halaman", `${this.state.startDate} sampai ${this.state.endDate}`]} result={body} />).toBlob();
+      // const blob = pdf(<MyPdfL title={["Data Barang per Halaman", `${this.state.startDate} sampai ${this.state.endDate}`]} result={body} />).toBlob();
 
-      console.log("asdasdasd", blob);
-      // window.location.href = blob;
-      blob.then(function (myBlob) {
-        console.log("asdasdasd", myBlob);
-        // do something with myBlob
-      });
+      // console.log("asdasdasd", blob);
+      // // window.location.href = blob;
+      // blob.then(function (myBlob) {
+      //   console.log("asdasdasd", myBlob);
+      //   // do something with myBlob
+      // });
     }
   };
   render() {

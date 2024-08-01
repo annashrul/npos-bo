@@ -6,6 +6,7 @@ node_modules/
 .idea
 
 package-lock.json
+package.json
 # testing
 /coverage
 
